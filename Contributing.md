@@ -12,3 +12,10 @@ provided by the bot. You will only need to do this once across all repos using o
 This project has adopted the [Microsoft Open Source Code of Conduct](https://opensource.microsoft.com/codeofconduct/).
 For more information see the [Code of Conduct FAQ](https://opensource.microsoft.com/codeofconduct/faq/) or
 contact [opencode@microsoft.com](mailto:opencode@microsoft.com) with any additional questions or comments.
+
+
+# How to Contribute
+- Contribute Model to **Model Zoo**
+    - We encourage everyone to contribute their NLP models (namely JSON configuration files). Please follow the structure in model_zoo to  create a pull request.
+- Contribute Block to **Block Zoo**
+    - We encourage everyone to improve this toolkit by contributing code, such as customized Blocks. So other users can further benefit from these new Blocks. 
