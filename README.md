@@ -4,6 +4,7 @@
 * [Get Started](#Get-Started)
 * [Contribute](#Contribute)
 * [License](#License) 
+* [Contact](#Contact)
 
 
 # Overview
@@ -52,7 +53,7 @@ Please refer to [Tutorial.md](Tutorial.md).
 
 
 # Contribute
-NeuronBlocks operates in an open model. It is initially designed and developed by **Microsoft Bing STCA NLP Group**. We are glad to have *Peking University*, *University of Chinese Academy of Sciences* and *Beijing University of Posts and Telecommunications* to join us to develop this toolkit jointly. Contributions from both academia and industry are highly welcome.
+NeuronBlocks operates in an open model. It is designed and developed by **Microsoft STCA NLP Group**. Contributions from academia and industry are also highly welcome.
 
 For more details, please refer to [Contributing.md](Contributing.md).
 
@@ -63,4 +64,7 @@ Paper.
 
 Copyright (c) Microsoft Corporation. All rights reserved.
 
-Licensed under the [MIT](LICENSE.txt) License.
+Licensed under the [MIT](LICENSE) License.
+
+# Contact
+If you have any questions, please contact NeuronBlocks@microsoft.com
