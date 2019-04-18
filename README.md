@@ -53,7 +53,7 @@ Please refer to [Tutorial.md](Tutorial.md).
 
 
 # Contribute
-NeuronBlocks operates in an open model. It is designed and developed by **Microsoft STCA NLP Group**. Contributions from academia and industry are also highly welcome.
+NeuronBlocks operates in an open model. It is designed and developed by **STCA NLP Group, Microsoft**. Contributions from academia and industry are also highly welcome.
 
 For more details, please refer to [Contributing.md](Contributing.md).
 
