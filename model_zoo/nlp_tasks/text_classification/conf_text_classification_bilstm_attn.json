@@ -1,0 +1,106 @@
+{
+  "license": "Copyright (c) Microsoft Corporation. All rights reserved. Licensed under the MIT license.",
+  "tool_version": "1.1.0",
+  "model_description": "this config is used for text classification use LSTM with selfAttn, use 20 newsgroup dataset and achieved acc: 0.9707",
+  "inputs": {
+    "use_cache": true,
+    "dataset_type": "classification",
+    "data_paths": {
+      "train_data_path": "./dataset/20_newsgroups/train.tsv",
+      "valid_data_path": "./dataset/20_newsgroups/test.tsv"
+    },
+    "file_with_col_header": false,
+    "add_start_end_for_seq": true,
+    "file_header": {
+      "label":  0,
+      "sentence_text": 1
+    },
+    "model_inputs": {
+      "sentence": ["sentence_text"]
+    },
+    "target": ["label"]
+  },
+  "outputs":{
+    "save_base_dir": "./models/20_newsgroup_bilstm_attn/",
+    "model_name": "model.nb",
+    "train_log_name": "train.log",
+    "test_log_name": "test.log",
+    "predict_log_name": "predict.log",
+    "predict_fields": ["prediction", "confidence"],
+    "predict_output_name": "predict.tsv",
+    "cache_dir": ".cache.20_newsgroup/"
+  },
+  "training_params": {
+    "vocabulary": {
+      "min_word_frequency": 1
+    },
+    "optimizer": {
+      "name": "Adam",
+      "params": {
+
+      }
+    },
+    "use_gpu": true,
+    "batch_size": 128,
+    "batch_num_to_show_results": 30,
+    "max_epoch": 15,
+    "valid_times_per_epoch": 2,
+    "fixed_lengths":{
+      "sentence": 500
+    }
+  },
+  "architecture":[
+    {
+        "layer": "Embedding",
+        "conf": {
+          "word": {
+            "cols": ["sentence_text"],
+            "dim": 128
+          }
+        }
+    },
+    {
+        "layer_id": "sentence_1",
+        "layer": "BiLSTM",
+        "conf": {
+            "hidden_dim": 128,
+            "dropout": 0,
+            "num_layers": 2
+        },
+        "inputs": ["sentence"]
+    },
+    {
+        "layer_id": "linearAttn",
+        "layer": "LinearAttention",
+        "conf": {
+            "keep_dim": false
+        },
+        "inputs": ["sentence_1"]
+    },
+    {
+        "output_layer_flag": true,
+        "layer_id": "output",
+        "layer": "Linear",
+        "conf": {
+          "hidden_dim": [128,20],
+          "activation": "PReLU",
+          "batch_norm": true,
+          "last_hidden_activation": false,
+          "last_hidden_softmax": true
+        },
+        "inputs": ["linearAttn"]
+    }
+  ],
+  "loss": {
+    "losses":[
+      {
+        "type": "CrossEntropyLoss",
+        "conf": {
+          "size_average": true
+        },
+        "inputs": ["output","label"]
+      }
+    ]
+  },
+  "metrics": ["accuracy"]
+}

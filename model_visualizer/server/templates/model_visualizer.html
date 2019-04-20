@@ -1,0 +1,33 @@
+<!--Copyright (c) Microsoft Corporation. All rights reserved.Licensed under the MIT license.-->
+
+$def with(form, status)
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous">
+</head>
+
+<body>
+
+    <h1 align="center" style="font-family:'Comic Sans MS','Comic Sans',cursive;">Model Visualizer</h1>
+
+    <div class="container">
+    <!-- Content here -->
+        <form method="POST" >
+            <div class="form-group">
+                <label for="json" style="font-family:'Comic Sans MS','Comic Sans',cursive;">Config Json:</label>
+                <textarea class="form-control" id="json" name="json" rows="10">$:form['json'].value</textarea>
+            </div>
+            <div class="form-group" style="text-align:center;font-family:'Comic Sans MS','Comic Sans',cursive;">
+                <button type="submit" class="btn btn-primary" id="submit" name="submit" action = "./mv">Submit</button>
+            </div>
+            $if status == True:
+            <div align="center"><img src="static/graph.gv.svg" class="img-rounded" /></div>
+        </form>
+    </div>
+
+</body>
+

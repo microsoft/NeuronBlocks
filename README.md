@@ -3,8 +3,11 @@
 * [Who should consider using NeuronBlocks](#Who-should-consider-using-NeuronBlocks)
 * [Get Started](#Get-Started)
 * [Contribute](#Contribute)
+* [Reference](#Reference)
+* [Related Project](#Related-Project)
 * [License](#License) 
 * [Contact](#Contact)
+
 
 
 # Overview
@@ -58,7 +61,10 @@ NeuronBlocks operates in an open model. It is designed and developed by **STCA N
 For more details, please refer to [Contributing.md](Contributing.md).
 
 # Reference
-Paper.
+Paper (update soon).
+
+# Related Project
+[OpenPAI](https://github.com/Microsoft/pai) is an open source platform that provides complete AI model training and resource management capabilities, it is easy to extend and supports on-premise, cloud and hybrid environments in various scale.
 
 # License
 
@@ -68,3 +74,4 @@ Licensed under the [MIT](LICENSE) License.
 
 # Contact
 If you have any questions, please contact NeuronBlocks@microsoft.com
+

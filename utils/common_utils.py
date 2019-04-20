@@ -1,0 +1,219 @@
+# Copyright (c) Microsoft Corporation. All rights reserved.
+# Licensed under the MIT license.
+
+import logging
+import pickle as pkl
+import torch
+import os
+import shutil
+import time
+import tempfile
+import subprocess
+
+def log_set(log_path, console_level='INFO', console_detailed=False, disable_log_file=False):
+    """
+
+    Args:
+        log_path:
+        console_level: 'INFO', 'DEBUG'
+
+    Returns:
+
+    """
+    if not disable_log_file:
+        logging.basicConfig(filename=log_path, filemode='w',
+            format='%(asctime)s %(levelname)s %(filename)s %(funcName)s %(lineno)d: %(message)s',
+            level=logging.DEBUG)
+    console = logging.StreamHandler()
+    console.setLevel(getattr(logging, console_level.upper()))
+    if console_detailed:
+        console.setFormatter(logging.Formatter(
+            '%(asctime)s %(levelname)s %(filename)s %(funcName)s %(lineno)d: %(message)s'))
+    else:
+        console.setFormatter(logging.Formatter(
+            '%(asctime)s %(levelname)s %(message)s'))
+    logging.getLogger().addHandler(console)
+
+
+def load_from_pkl(pkl_path):
+    with open(pkl_path, 'rb') as fin:
+        obj = pkl.load(fin)
+    logging.debug("%s loaded!" % pkl_path)
+    return obj
+
+
+def dump_to_pkl(obj, pkl_path):
+    with open(pkl_path, 'wb') as fout:
+        pkl.dump(obj, fout, protocol=pkl.HIGHEST_PROTOCOL)
+    logging.debug("Obj dumped to %s!" % pkl_path)
+
+
+def get_trainable_param_num(model):
+    """ get the number of trainable parameters
+
+    Args:
+        model:
+
+    Returns:
+
+    """
+    return sum(p.numel() for p in model.parameters() if p.requires_grad)
+
+
+def get_param_num(model):
+    """ get the number of parameters
+
+    Args:
+        model:
+
+    Returns:
+
+    """
+    return sum(p.numel() for p in model.parameters())
+
+
+def transfer_to_gpu(cpu_element):
+    """
+
+    Args:
+        cpu_element: either a tensor or a module
+
+    Returns:
+
+    """
+    return cpu_element.to(torch.device("cuda" if torch.cuda.is_available() else "cpu"))
+
+
+def transform_params2tensors(inputs, lengths):
+    """ Because DataParallel only splits Tensor-like parameters, we have to transform dict parameter into tensors and keeps the information for forward().
+
+    Args:
+        inputs: dict.
+                {
+                    "string1":{
+                        'word': word ids, [batch size, seq len]
+                        'postag': postag ids,[batch size, seq len]
+                        ...
+                    }
+                    "string2":{
+                        'word': word ids,[batch size, seq len]
+                        'postag': postag ids,[batch size, seq len]
+                        ...
+                    }
+                }
+        lengths: dict.
+                {
+                    "string1": [...]
+                    "string2": [...]
+                }
+
+    Returns:
+        param_list (list): records all the tensors in inputs and lengths
+        inputs_desc (dict): the key records the information of inputs, the value indicate the index of a tensor in param_list
+            e.g. {
+                "string1_word": index in the param_list
+                "string1_postag": index in the param_list
+                ...
+            }
+        lengths_desc (dict): similar to inputs_desc
+            e.g. {
+                "string1": index in the param_list,
+                "string2": index in the param_list
+            }
+
+    """
+    param_list = []
+    inputs_desc = {}
+    cnt = 0
+    for input in inputs:
+        for input_type in inputs[input]:
+            inputs_desc[input + '___' + input_type] = cnt
+            param_list.append(inputs[input][input_type])
+            cnt += 1
+
+    length_desc = {}
+    for length in lengths:
+        if isinstance(lengths[length], dict):
+            for length_type in lengths[length]:
+                length_desc[length + '__' + length_type] = cnt
+                cnt += 1
+                param_list.append(lengths[length][length_type])
+        else:
+            length_desc[length] = cnt
+            param_list.append(lengths[length])
+        cnt += 1
+
+    return param_list, inputs_desc, length_desc
+
+
+def transform_tensors2params(inputs_desc, length_desc, param_list):
+    """ Inverse function of transform_params2tensors
+
+    Args:
+        param_list:
+        inputs_desc:
+        length_desc:
+
+    Returns:
+
+    """
+    inputs = {}
+    for key in inputs_desc:
+        input, input_type = key.split('___')
+        if not input in inputs:
+            inputs[input] = dict()
+
+        inputs[input][input_type] = param_list[inputs_desc[key]]
+
+    lengths = {}
+    for key in length_desc:
+        if '__' in key:
+            input, input_type = key.split('__')
+            if not input in lengths:
+                lengths[input] = dict()
+            lengths[input][input_type] = param_list[length_desc[key]]
+        else:
+            lengths[key] = param_list[length_desc[key]]
+
+    return inputs, lengths
+
+
+def prepare_dir(path, is_dir, allow_overwrite=False, clear_dir_if_exist=False, extra_info=None):
+    """ to make dir if a dir or the parent dir of a file does not exist
+
+    Args:
+        path: can be a file path or a dir path.
+
+    Returns:
+
+    """
+    if is_dir:
+        if clear_dir_if_exist:
+            allow_overwrite = True
+
+        if not os.path.exists(path):
+            os.makedirs(path)
+        else:
+            if not allow_overwrite:
+                overwrite_option = input('The directory %s already exists, input "yes" to allow us to overwrite the directory contents and "no" to exit. (default:no): ' % path) \
+                    if not extra_info else \
+                    input('The directory %s already exists, %s, \ninput "yes" to allow us to operate and "no" to exit. (default:no): ' % (path, extra_info))
+                if overwrite_option.lower() != 'yes':
+                    exit(0)
+            if (allow_overwrite or overwrite_option == 'yes') and clear_dir_if_exist:
+                shutil.rmtree(path)
+                logging.info('Clear dir %s...' % path)
+                while os.path.exists(path):
+                    time.sleep(0.3)
+                os.makedirs(path)
+    else:
+        dir = os.path.dirname(path)
+        if dir == '':       # when the path is only a file name, the dir would be empty and raise exception when making dir
+            dir = '.'
+        if not os.path.exists(dir):
+            os.makedirs(dir)
+        else:
+            if os.path.exists(path) and allow_overwrite is False:
+                overwrite_option = input('The file %s already exists, input "yes" to allow us to overwrite it or "no" to exit. (default:no): ' % path)
+                if overwrite_option.lower() != 'yes':
+                    exit(0)

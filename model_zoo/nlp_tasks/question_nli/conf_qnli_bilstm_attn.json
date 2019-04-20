@@ -1,0 +1,200 @@
+{
+  "license": "Copyright (c) Microsoft Corporation. All rights reserved. Licensed under the MIT license.",
+  "tool_version": "1.1.0",
+  "model_description": "This model is used for question nature language inference task, it achieved acc: 0.810727 on dev set",
+  "inputs": {
+    "use_cache": true,
+    "dataset_type": "classification",
+    "data_paths": {
+      "train_data_path": "./dataset/QNLI/train.tsv",
+      "valid_data_path": "./dataset/QNLI/dev.tsv",
+      "pre_trained_emb": "./dataset/GloVe/glove.840B.300d.txt"
+    },
+    "file_with_col_header": true,
+    "add_start_end_for_seq": true,
+    "file_header": {
+      "index": 0,
+      "question_text": 1,
+      "sentence_text": 2,
+      "label": 3
+    },
+    "model_inputs": {
+      "question": ["question_text"],
+      "sentence": ["sentence_text"]
+    },
+    "target": ["label"]
+  },
+  "outputs":{
+    "save_base_dir": "./models/QNLI_bilstm_attn/",
+    "model_name": "model.nb",
+    "train_log_name": "train.log",
+    "test_log_name": "test.log",
+    "predict_log_name": "predict.log",
+    "predict_fields": ["prediction", "confidence"],
+    "predict_output_name": "predict.tsv",
+    "cache_dir": ".cache.QNLI/"
+  },
+  "training_params": {
+    "optimizer": {
+      "name": "Adam",
+      "params": {
+      }
+    },
+    "vocabulary": {
+      "max_vocabulary": 1000000,
+      "min_word_frequency": 1
+    },
+    "lr_decay": 0.95,
+    "minimum_lr": 0.0001,
+    "epoch_start_lr_decay": 1,
+    "use_gpu": true,
+    "batch_size": 128,
+    "batch_num_to_show_results": 300,
+    "max_epoch": 30,
+    "valid_times_per_epoch": 2
+  },
+  "architecture":[
+    {
+        "layer": "Embedding",
+        "conf": {
+          "word": {
+            "cols": ["question_text", "sentence_text"],
+            "dim": 300,
+            "fix_weight": true
+          }
+        }
+    },
+    {
+      "layer_id": "question_dropout",
+      "layer": "Dropout",
+      "conf": {
+          "dropout": 0.2
+      },
+      "inputs": ["question"]
+    },
+    {
+      "layer_id": "sentence_dropout",
+      "layer": "Dropout",
+      "conf": {
+          "dropout": 0.2
+      },
+      "inputs": ["sentence"]
+    },
+    {
+        "layer_id": "question_bilstm",
+        "layer": "BiLSTM",
+        "conf": {
+          "hidden_dim": 256,
+          "dropout": 0.2,
+          "num_layers": 2
+        },
+        "inputs": ["question_dropout"]
+    },
+    {
+        "layer_id": "sentence_bilstm",
+        "layer": "question_bilstm",
+        "inputs": ["sentence_dropout"]
+    },
+        {
+        "layer_id": "sentence_attn",
+        "layer": "Attention",
+        "conf": {
+        },
+        "inputs": ["sentence_bilstm","question_bilstm"]
+    },
+    {
+        "layer_id": "question_attn",
+        "layer": "Attention",
+        "conf": {
+        },
+        "inputs": ["question_bilstm","sentence_bilstm"]
+    },
+    {
+        "layer_id": "question_comb",
+        "layer": "Combination",
+        "conf": {
+            "operations": ["origin"]
+        },
+        "inputs": ["question_bilstm", "question_attn"]
+    },
+    {
+        "layer_id": "sentence_comb",
+        "layer": "Combination",
+        "conf": {
+            "operations": ["origin"]
+        },
+        "inputs": ["sentence_bilstm", "sentence_attn"]
+    },
+    {
+        "layer_id": "question_bilstm2",
+        "layer": "BiLSTM",
+        "conf": {
+          "hidden_dim": 128,
+          "dropout": 0.2,
+          "num_layers": 1
+        },
+        "inputs": ["question_comb"]
+    },
+    {
+        "layer_id": "sentence_bilstm2",
+        "layer": "BiLSTM",
+        "conf": {
+          "hidden_dim": 128,
+          "dropout": 0.2,
+          "num_layers": 1
+        },
+        "inputs": ["sentence_comb"]
+    },
+    {
+        "layer_id": "question_pooling",
+        "layer": "Pooling",
+        "conf": {
+          "pool_axis": 1,
+          "pool_type": "max"
+        },
+        "inputs": ["question_bilstm2"]
+    },
+    {
+        "layer_id": "sentence_pooling",
+        "layer": "Pooling",
+        "conf": {
+          "pool_axis": 1,
+          "pool_type": "max"
+        },
+        "inputs": ["sentence_bilstm2"]
+    },
+    {
+        "layer_id": "comb",
+        "layer": "Combination",
+        "conf": {
+            "operations": ["origin", "difference", "dot_multiply"]
+        },
+        "inputs": ["question_pooling", "sentence_pooling"]
+    },
+    {
+        "output_layer_flag": true,
+        "layer_id": "output",
+        "layer": "Linear",
+        "conf": {
+          "hidden_dim": [128, 2],
+          "activation": "PReLU",
+          "batch_norm": true,
+          "last_hidden_activation": false,
+          "last_hidden_softmax": false
+        },
+        "inputs": ["comb"]
+    }
+  ],
+  "loss": {
+    "losses": [
+      {
+        "type": "CrossEntropyLoss",
+        "conf": {
+          "size_average": true
+        },
+        "inputs": ["output","label"]
+      }
+    ]
+  },
+  "metrics": ["accuracy"]
+}

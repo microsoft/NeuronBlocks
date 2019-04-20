@@ -1,0 +1,180 @@
+{
+  "license": "Copyright (c) Microsoft Corporation. All rights reserved. Licensed under the MIT license.",
+  "tool_version": "1.1.0",
+  "model_description": "This model is used for regression task",
+  "inputs": {
+    "use_cache": true,
+    "dataset_type": "regression",
+    "data_paths": {
+      "train_data_path": "./dataset/regression/train.tsv",
+      "valid_data_path": "./dataset/regression/dev.tsv",
+      "pre_trained_emb": "./dataset/GloVe/glove.840B.300d.txt"
+    },
+    "file_with_col_header": false,
+    "add_start_end_for_seq": true,
+    "file_header": {
+      "query_text": 0,
+      "answer_text": 1,
+      "label_score": 2
+    },
+    "model_inputs": {
+      "query": ["query_text"],
+      "answer": ["answer_text"]
+    },
+    "target": ["label_score"]
+  },
+  "outputs":{
+    "save_base_dir": "./models/regression_attn/",
+    "model_name": "model.nb",
+    "train_log_name": "train.log",
+    "test_log_name": "test.log",
+    "predict_log_name": "predict.log",
+    "predict_fields": ["prediction"],
+    "predict_output_name": "predict.tsv",
+    "cache_dir": ".cache.regression/"
+  },
+  "training_params": {
+    "vocabulary": {
+      "min_word_frequency": 1
+    },
+    "optimizer": {
+      "name": "SGD",
+      "params": {
+        "lr": 0.2,
+        "momentum": 0.9,
+        "nesterov": true
+      }
+    },
+    "lr_decay": 0.95,
+    "minimum_lr": 0.005,
+    "epoch_start_lr_decay": 3,
+    "use_gpu": false,
+    "batch_size": 30,
+    "batch_num_to_show_results": 10,
+    "max_epoch": 3,
+    "valid_times_per_epoch": 1
+  },
+  "architecture":[
+    {
+        "layer": "Embedding",
+        "conf": {
+          "word": {
+            "cols": ["query_text", "answer_text"],
+            "dim": 300
+          }
+        }
+    },
+    {
+        "layer_id": "query_dropout",
+        "layer": "Dropout",
+        "conf": {
+            "dropout": 0.3
+        },
+        "inputs": ["query"]
+    },
+    {
+        "layer_id": "answer_dropout",
+        "layer": "Dropout",
+        "conf": {
+            "dropout": 0.3
+        },
+        "inputs": ["answer"]
+    },
+    {
+        "layer_id": "query_1",
+        "layer": "BiLSTM",
+        "conf": {
+            "hidden_dim": 128,
+            "dropout": 0.3,
+            "num_layers": 3
+        },
+        "inputs": ["query_dropout"]
+    },
+    {
+        "layer_id": "answer_matched",
+        "layer": "MatchAttention",
+        "conf": {
+        },
+        "inputs": ["answer_dropout", "query_dropout"]
+    },
+    {
+        "layer_id": "answer_combined",
+        "layer": "Combination",
+        "conf": {
+          "operations": ["origin"]
+        },
+        "inputs": ["answer_dropout","answer_matched"]
+    },
+    {
+        "layer_id": "answer_1",
+        "layer": "BiLSTM",
+        "conf": {
+          "hidden_dim": 128,
+          "dropout": 0.3,
+          "num_layers": 3
+        },
+        "inputs": ["answer_combined"]
+    },
+    {
+        "layer_id": "query_linear_att",
+        "layer": "LinearAttention",
+        "conf": {
+          "attention_weight_dim": 256,
+          "keep_dim": false
+        },
+        "inputs": ["query_1"]
+    },
+    {
+        "layer_id": "answer_linear_att",
+        "layer": "LinearAttention",
+        "conf": {
+          "attention_weight_dim": 256,
+          "keep_dim": false
+        },
+        "inputs": ["answer_1"]
+    },
+    {
+        "layer_id": "comb",
+        "layer": "Combination",
+        "conf": {
+          "operations": ["origin"]
+        },
+        "inputs": ["query_linear_att","answer_linear_att"]
+    },
+    {
+        "layer_id": "linear",
+        "layer": "Linear",
+        "conf": {
+          "hidden_dim": [512],
+          "activation": "PReLU",
+          "batch_norm": true,
+          "last_hidden_activation": true,
+          "last_hidden_softmax": false
+        },
+        "inputs": ["comb"]
+    },
+    {
+        "output_layer_flag": true,
+        "layer_id": "output",
+        "layer": "Linear",
+        "conf": {
+          "hidden_dim": [1],
+          "activation": "Sigmoid",
+          "last_hidden_activation": true,
+          "last_hidden_softmax": false
+        },
+        "inputs": ["linear"]
+    }
+  ],
+  "loss": {
+    "losses": [
+      {
+        "type": "MSELoss",
+        "conf": {
+        },
+        "inputs": ["output","label_score"]
+      }
+    ]
+  },
+  "metrics": ["RMSE", "MSE"]
+}

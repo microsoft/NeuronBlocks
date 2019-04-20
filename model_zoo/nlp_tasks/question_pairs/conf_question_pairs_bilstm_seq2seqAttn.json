@@ -1,0 +1,158 @@
+{
+  "license": "Copyright (c) Microsoft Corporation. All rights reserved. Licensed under the MIT license.",
+  "tool_version": "1.1.0",
+  "model_description": "This model is used for query query pairs task. It achieved acc:0.8335",
+  "inputs": {
+    "use_cache": true,
+    "dataset_type": "classification",
+    "data_paths": {
+      "train_data_path": "./dataset/QQP/train.tsv",
+      "valid_data_path": "./dataset/QQP/dev.tsv",
+      "pre_trained_emb": "./dataset/GloVe/glove.840B.300d.txt"
+    },
+    "file_with_col_header": true,
+    "add_start_end_for_seq": true,
+    "file_header": {
+      "id": 0,
+      "qid1": 1,
+      "qid2": 2,
+      "question1_text": 3,
+      "question2_text": 4,
+      "label":   5
+    },
+    "model_inputs": {
+      "question1": ["question1_text"],
+      "question2": ["question2_text"]
+    },
+    "target": ["label"]
+  },
+  "outputs":{
+    "save_base_dir": "./models/question_pairs_bilstm_seq2seqAttn/",
+    "model_name": "model.nb",
+    "train_log_name": "train.log",
+    "test_log_name": "test.log",
+    "predict_log_name": "predict.log",
+    "predict_fields": ["prediction", "confidence"],
+    "predict_output_name": "predict.tsv",
+    "cache_dir": ".cache.QQP/"
+  },
+  "training_params": {
+    "vocabulary": {
+      "min_word_frequency": 1
+    },
+    "optimizer": {
+      "name": "SGD",
+      "params": {
+        "lr": 0.15,
+        "momentum": 0.9,
+        "nesterov": true
+      }
+    },
+    "lr_decay": 0.95,
+    "minimum_lr": 0.005,
+    "epoch_start_lr_decay": 1,
+    "use_gpu": true,
+    "batch_size": 32,
+    "batch_num_to_show_results": 300,
+    "max_epoch": 30,
+    "valid_times_per_epoch": 5
+  },
+  "architecture":[
+    {
+        "layer": "Embedding",
+        "conf": {
+          "word": {
+            "cols": ["question1_text", "question2_text"],
+            "dim": 300
+          }
+        }
+    },
+    {
+        "layer_id": "question_1",
+        "layer": "BiLSTM",
+        "conf": {
+          "hidden_dim": 128,
+          "dropout": 0,
+          "num_layers": 2
+        },
+        "inputs": ["question1"]
+    },
+    {
+        "layer_id": "question_2",
+        "layer": "BiLSTM",
+        "conf": {
+          "hidden_dim": 128,
+          "dropout": 0,
+          "num_layers": 2
+        },
+        "inputs": ["question2"]
+    },
+    {
+      "layer_id": "att_qq_1",
+      "layer": "Seq2SeqAttention",
+      "conf": {
+        "attention_dropout": 0.1
+      },
+      "inputs": ["question_2","question_1"]
+    },
+    {
+      "layer_id": "att_qq_2",
+      "layer": "Seq2SeqAttention",
+      "conf": {
+        "attention_dropout": 0.1
+      },
+      "inputs": ["question_1","question_2"]
+    },
+    {
+        "layer_id": "pooling_1",
+        "layer": "Pooling",
+        "conf": {
+          "pool_axis": 1,
+          "pool_type": "max"
+        },
+        "inputs": ["att_qq_1"]
+    },
+    {
+        "layer_id": "pooling_2",
+        "layer": "Pooling",
+        "conf": {
+          "pool_axis": 1,
+          "pool_type": "max"
+        },
+        "inputs": ["att_qq_2"]
+    },
+    {
+        "layer_id": "comb_qq",
+        "layer": "Combination",
+        "conf": {
+            "operations": ["origin", "difference", "dot_multiply"]
+        },
+        "inputs": ["pooling_1", "pooling_2"]
+    },
+    {
+        "output_layer_flag": true,
+        "layer_id": "output",
+        "layer": "Linear",
+        "conf": {
+          "hidden_dim": [512, 512, 2],
+          "activation": "PReLU",
+          "batch_norm": true,
+          "last_hidden_activation": false,
+          "last_hidden_softmax": true
+        },
+        "inputs": ["comb_qq"]
+    }
+  ],
+  "loss": {
+    "losses": [
+      {
+        "type": "CrossEntropyLoss",
+        "conf": {
+          "size_average": true
+        },
+        "inputs": ["output","label"]
+      }
+    ]
+  },
+  "metrics": ["accuracy","micro_f1","macro_f1"]
+}

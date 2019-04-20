@@ -1,0 +1,133 @@
+{
+  "license": "Copyright (c) Microsoft Corporation. All rights reserved. Licensed under the MIT license.",
+  "tool_version": "1.1.0",
+  "model_description": "This model is used for question answer matching task, and it achieved auc: 0.7479 in WikiQACorpus test set.",
+  "inputs": {
+    "use_cache": true,
+    "dataset_type": "classification",
+    "data_paths": {
+      "train_data_path": "./dataset/WikiQACorpus/WikiQA-train.tsv",
+      "valid_data_path": "./dataset/WikiQACorpus/WikiQA-dev.tsv",
+      "test_data_path": "./dataset/WikiQACorpus/WikiQA-test.tsv",
+      "pre_trained_emb": "./dataset/GloVe/glove.840B.300d.txt"
+    },
+    "file_with_col_header": true,
+    "add_start_end_for_seq": true,
+    "file_header": {
+      "question_id": 0,
+      "question_text": 1,
+      "document_id": 2,
+      "document_title": 3,
+      "passage_id": 4,
+      "passage_text": 5,
+      "label":  6
+    },
+    "model_inputs": {
+      "question": ["question_text"],
+      "passage": ["passage_text"]
+    },
+    "target": ["label"]
+  },
+  "outputs":{
+    "save_base_dir": "./models/wikiqa_cnn/",
+    "model_name": "model.nb",
+    "train_log_name": "train.log",
+    "test_log_name": "test.log",
+    "predict_log_name": "predict.log",
+    "predict_fields": ["prediction"],
+    "predict_output_name": "predict.tsv",
+    "cache_dir": ".cache.wikiqa/"
+  },
+  "training_params": {
+    "optimizer": {
+      "name": "Adam",
+      "params": {
+      }
+    },
+    "vocabulary": {
+      "min_word_frequency": 1
+    },
+    "use_gpu": true,
+    "batch_size": 20,
+    "batch_num_to_show_results": 500,
+    "max_epoch": 10,
+    "valid_times_per_epoch": 1
+  },
+  "architecture":[
+    {
+        "layer": "Embedding",
+        "conf": {
+          "word": {
+            "cols": ["question_text", "passage_text"],
+            "dim": 300,
+            "fix_weight": true
+          }
+        }
+    },
+    {
+        "layer_id": "question_1",
+        "layer": "ConvPooling",
+        "conf": {
+          "stride": 1,
+          "padding": 0,
+          "window_sizes": [2],
+          "input_channel_num": 1,
+          "output_channel_num": 128,
+          "batch_norm": true,
+          "activation": "ReLU",
+          "pool_type": "max",
+          "pool_axis": 1
+        },
+        "inputs": ["question"]
+    },
+    {
+        "layer_id": "passage_1",
+        "layer": "ConvPooling",
+        "conf": {
+          "stride": 1,
+          "padding": 0,
+          "window_sizes": [2],
+          "input_channel_num": 1,
+          "output_channel_num": 128,
+          "batch_norm": true,
+          "activation": "ReLU",
+          "pool_type": "max",
+          "pool_axis": 1
+        },
+        "inputs": ["passage"]
+    },
+    {
+        "layer_id": "comb_qp",
+        "layer": "Combination",
+        "conf": {
+            "operations": ["origin"]
+        },
+        "inputs": ["question_1", "passage_1"]
+    },
+    {
+        "output_layer_flag": true,
+        "layer_id": "output",
+        "layer": "Linear",
+        "conf": {
+          "hidden_dim": [128,2],
+          "activation": "PReLU",
+          "last_hidden_activation": false,
+          "last_hidden_softmax": false
+        },
+        "inputs": ["comb_qp"]
+    }
+  ],
+  "loss": {
+    "losses": [
+      {
+        "type": "CrossEntropyLoss",
+        "conf": {
+          "weight": [0.1,0.9],
+          "size_average": true
+        },
+        "inputs": ["output","label"]
+      }
+    ]
+  },
+  "metrics": ["auc","accuracy"]
+}

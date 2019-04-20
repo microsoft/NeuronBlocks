@@ -1,0 +1,168 @@
+{
+  "license": "Copyright (c) Microsoft Corporation. All rights reserved. Licensed under the MIT license.",
+  "tool_version": "1.1.0",
+  "model_description": "This model is used for question nature language inference task, it achieved acc: 0.8004 on dev set",
+  "inputs": {
+    "use_cache": true,
+    "dataset_type": "classification",
+    "data_paths": {
+      "train_data_path": "./dataset/QNLI/train.tsv",
+      "valid_data_path": "./dataset/QNLI/dev.tsv",
+      "pre_trained_emb": "./dataset/GloVe/glove.840B.300d.txt"
+    },
+    "file_with_col_header": true,
+    "add_start_end_for_seq": true,
+    "file_header": {
+      "index": 0,
+      "question_text": 1,
+      "sentence_text": 2,
+      "label": 3
+    },
+    "model_inputs": {
+      "question": ["question_text"],
+      "sentence": ["sentence_text"]
+    },
+    "target": ["label"]
+  },
+  "outputs":{
+    "save_base_dir": "./models/QNLI_matchAttn/",
+    "model_name": "model.nb",
+    "train_log_name": "train.log",
+    "test_log_name": "test.log",
+    "predict_log_name": "predict.log",
+    "predict_fields": ["prediction", "confidence"],
+    "predict_output_name": "predict.tsv",
+    "cache_dir": ".cache.QNLI/"
+  },
+  "training_params": {
+    "vocabulary": {
+      "min_word_frequency": 1
+    },
+    "optimizer": {
+      "name": "Adamax",
+      "params": {
+      }
+    },
+    "lr_decay": 0.95,
+    "minimum_lr": 0.0001,
+    "epoch_start_lr_decay": 3,
+    "use_gpu": true,
+    "batch_size": 64,
+    "batch_num_to_show_results": 100,
+    "max_epoch": 40,
+    "valid_times_per_epoch": 2
+  },
+  "architecture":[
+    {
+        "layer": "Embedding",
+        "conf": {
+          "word": {
+            "cols": ["question_text", "sentence_text"],
+            "dim": 300
+          }
+        }
+    },
+    {
+        "layer_id": "question_dropout",
+        "layer": "Dropout",
+        "conf": {
+            "dropout": 0.3
+        },
+        "inputs": ["question"]
+    },
+    {
+        "layer_id": "sentence_dropout",
+        "layer": "Dropout",
+        "conf": {
+            "dropout": 0.3
+        },
+        "inputs": ["sentence"]
+    },
+    {
+        "layer_id": "question_1",
+        "layer": "BiLSTM",
+        "conf": {
+            "hidden_dim": 128,
+            "dropout": 0.3,
+            "num_layers": 3
+        },
+        "inputs": ["question_dropout"]
+    },
+    {
+        "layer_id": "sentence_matched",
+        "layer": "MatchAttention",
+        "conf": {
+        },
+        "inputs": ["sentence_dropout", "question_dropout"]
+    },
+    {
+        "layer_id": "sentence_combined",
+        "layer": "Combination",
+        "conf": {
+          "operations": ["origin"]
+        },
+        "inputs": ["sentence_dropout","sentence_matched"]
+    },
+    {
+        "layer_id": "sentence_1",
+        "layer": "BiLSTM",
+        "conf": {
+          "hidden_dim": 128,
+          "dropout": 0.3,
+          "num_layers": 3
+        },
+        "inputs": ["sentence_combined"]
+    },
+    {
+        "layer_id": "question_linear_att",
+        "layer": "LinearAttention",
+        "conf": {
+          "attention_weight_dim": 256,
+          "keep_dim": false
+        },
+        "inputs": ["question_1"]
+    },
+    {
+        "layer_id": "sentence_linear_att",
+        "layer": "LinearAttention",
+        "conf": {
+          "attention_weight_dim": 256,
+          "keep_dim": false
+        },
+        "inputs": ["sentence_1"]
+    },
+    {
+        "layer_id": "comb",
+        "layer": "Combination",
+        "conf": {
+          "operations": ["origin"]
+        },
+        "inputs": ["question_linear_att","sentence_linear_att"]
+    },
+    {
+        "output_layer_flag": true,
+        "layer_id": "output",
+        "layer": "Linear",
+        "conf": {
+          "hidden_dim": [512, 2],
+          "activation": "PReLU",
+          "batch_norm": true,
+          "last_hidden_activation": false,
+          "last_hidden_softmax": true
+        },
+        "inputs": ["comb"]
+    }
+  ],
+  "loss": {
+    "losses": [
+      {
+        "type": "CrossEntropyLoss",
+        "conf": {
+          "size_average": true
+        },
+        "inputs": ["output","label"]
+      }
+    ]
+  },
+  "metrics": ["accuracy"]
+}

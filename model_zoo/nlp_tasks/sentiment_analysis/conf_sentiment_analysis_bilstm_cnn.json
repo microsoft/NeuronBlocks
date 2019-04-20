@@ -1,0 +1,115 @@
+{
+  "license": "Copyright (c) Microsoft Corporation. All rights reserved. Licensed under the MIT license.",
+  "tool_version": "1.1.0",
+  "model_description": "this config is used for sentiment analysis task with SST-2 dataset, it achieved acc:0.8497; auc:0.9148 on dev set.",
+  "inputs": {
+    "use_cache": true,
+    "dataset_type": "classification",
+    "data_paths": {
+      "train_data_path": "./dataset/SST-2/train.tsv",
+      "valid_data_path": "./dataset/SST-2/dev.tsv",
+      "pre_trained_emb": "./dataset/GloVe/glove.840B.300d.txt"
+    },
+    "file_with_col_header": true,
+    "add_start_end_for_seq": true,
+    "file_header": {
+      "sentence_text": 0,
+      "label":  1
+    },
+    "model_inputs": {
+      "sentence": ["sentence_text"]
+    },
+    "target": ["label"]
+  },
+  "outputs":{
+    "save_base_dir": "./models/sentiment_analysis_bilstm_cnn/",
+    "model_name": "model.nb",
+    "train_log_name": "train.log",
+    "test_log_name": "test.log",
+    "predict_log_name": "predict.log",
+    "predict_fields": ["prediction", "confidence"],
+    "predict_output_name": "predict.tsv",
+    "cache_dir": ".cache.SST-2/"
+  },
+  "training_params": {
+    "vocabulary": {
+      "min_word_frequency": 1
+    },
+    "optimizer": {
+      "name": "SGD",
+      "params": {
+        "lr": 0.05,
+        "momentum": 0.9,
+        "nesterov": true
+      }
+    },
+    "lr_decay": 0.95,
+    "minimum_lr": 0.005,
+    "epoch_start_lr_decay": 1,
+    "use_gpu": true,
+    "batch_size": 64,
+    "batch_num_to_show_results": 100,
+    "max_epoch": 20,
+    "valid_times_per_epoch": 3
+  },
+  "architecture":[
+    {
+        "layer": "Embedding",
+        "conf": {
+          "word": {
+            "cols": ["sentence_text"],
+            "dim": 300
+          }
+        }
+    },
+    {
+        "layer_id": "sentence_1",
+        "layer": "BiLSTM",
+        "conf": {
+          "hidden_dim": 256,
+          "dropout": 0,
+          "num_layers": 2
+        },
+        "inputs": ["sentence"]
+    },
+    {
+        "layer_id": "hierarchical_cnn",
+        "layer": "ConvPooling",
+        "conf": {
+            "stride": 1,
+            "window_size": [1,2,3,4,5],
+            "output_channel_num": 128,
+            "batch_norm": true,
+            "activation": "ReLU",
+            "pool_type": "max",
+            "pool_axis": 1
+        },
+        "inputs": ["sentence_1"]
+    },
+    {
+        "output_layer_flag": true,
+        "layer_id": "output",
+        "layer": "Linear",
+        "conf": {
+          "hidden_dim": [128, 2],
+          "activation": "PReLU",
+          "batch_norm": true,
+          "last_hidden_activation": false,
+          "last_hidden_softmax": true
+        },
+        "inputs": ["hierarchical_cnn"]
+    }
+  ],
+  "loss": {
+    "losses":[
+      {
+        "type": "CrossEntropyLoss",
+        "conf": {
+          "size_average": true
+        },
+        "inputs": ["output","label"]
+      }
+    ]
+  },
+  "metrics": ["accuracy", "auc"]
+}

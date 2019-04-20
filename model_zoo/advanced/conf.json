@@ -1,0 +1,200 @@
+{
+  "license": "Copyright (c) Microsoft Corporation. All rights reserved. Licensed under the MIT license.",
+  "tool_version": "1.1.0",
+  "model_description": "This example shows how to use some advanced configs.",
+  "inputs": {
+    "use_cache": true,
+    "dataset_type": "classification",
+    "data_paths": {
+      "train_data_path": "./dataset/advanced_demo/train.tsv",
+      "valid_data_path": "./dataset/advanced_demo/valid.tsv",
+      "test_data_path": "./dataset/advanced_demo/test.tsv",
+      "predict_data_path": "./dataset/advanced_demo/predict.tsv",
+      "pre_trained_emb": "./dataset/GloVe/glove.840B.300d.txt"
+    },
+    "file_with_col_header": false,
+    "pretrained_emb_type": "glove",
+    "pretrained_emb_binary_or_text": "text",
+    "involve_all_words_in_pretrained_emb": false,
+    "add_start_end_for_seq": true,
+    "file_header": {
+      "question_text": 0,
+      "answer_text": 1,
+      "label":   2,
+      "question_postag": 3,
+      "answer_postag": 4
+    },
+    "predict_file_header": {
+      "question_text": 0,
+      "answer_text": 1,
+      "question_postag": 2,
+      "answer_postag": 3
+    },
+    "model_inputs": {
+      "question": ["question_text","question_postag","question_char"],
+      "answer": ["answer_text","answer_postag","answer_char"]
+    },
+    "target": ["label"]
+  },
+  "outputs":{
+    "save_base_dir": "./models/advanced_demo/",
+    "model_name": "model.nb",
+    "train_log_name": "train.log",
+    "test_log_name": "test.log",
+    "predict_log_name": "predict.log",
+    "predict_fields": ["prediction", "confidence"],
+    "predict_output_name": "predict.tsv",
+    "cache_dir": ".cache.advanced_demo/"
+  },
+  "training_params": {
+    "vocabulary": {
+      "min_word_frequency": 1,
+      "max_vocabulary": 100000
+    },
+    "optimizer": {
+      "name": "Adam",
+      "params": {
+        "lr": 0.001
+      }
+    },
+    "lr_decay": 0.95,
+    "minimum_lr": 0.0001,
+    "epoch_start_lr_decay": 1,
+    "use_gpu": false,
+    "batch_size": 30,
+    "batch_num_to_show_results": 10,
+    "max_epoch": 3,
+    "valid_times_per_epoch": 1,
+    "text_preprocessing": ["DBC2SBC"],
+    "max_lengths":{
+      "question": 30,
+      "answer": 100
+    }
+  },
+  "architecture":[
+    {
+        "layer": "Embedding",
+        "conf": {
+          "word": {
+            "cols": ["question_text", "answer_text"],
+            "dim": 300,
+            "fix_weight": true
+          },
+          "postag": {
+            "cols": ["question_postag","answer_postag"],
+            "dim": 20
+          },
+          "char": {
+            "cols": ["question_char", "answer_char"],
+            "type": "CNNCharEmbedding",
+            "dropout": 0.2,
+            "dim": 30,
+            "embedding_matrix_dim": 8,
+            "stride":1,
+            "window_size": 5,
+            "activation": null
+          }
+        }
+    },
+    {
+        "layer_id": "question_1",
+        "layer": "BiLSTM",
+        "conf": {
+          "hidden_dim": 64,
+          "dropout": 0
+        },
+        "inputs": ["question"]
+    },
+    {
+        "layer_id": "question_2",
+        "layer": "LayerNorm",
+        "conf": {
+        },
+        "inputs": ["question_1"]
+    },
+    {
+        "layer_id": "answer_1",
+        "layer": "BiLSTMAtt",
+        "conf": {
+          "hidden_dim": 64,
+          "dropout": 0
+        },
+        "inputs": ["answer"]
+    },
+    {
+        "layer_id": "question_3",
+        "layer": "Linear",
+        "conf": {
+          "hidden_dim": 128,
+          "batch_norm": false,
+          "activation": "PReLU"
+        },
+        "inputs": ["question_2"]
+    },
+    {
+        "layer_id": "answer_2",
+        "layer": "Linear",
+        "conf": {
+          "hidden_dim": 128,
+          "batch_norm": true,
+          "activation": "PReLU"
+        },
+        "inputs": ["answer_1"]
+    },
+    {
+        "layer_id": "answer_3",
+        "layer": "Dropout",
+        "conf": {
+            "dropout": 0.5
+        },
+        "inputs": ["answer_2"]
+    },
+    {
+        "layer_id": "question_4",
+        "layer": "Pooling",
+        "conf": {
+            "pool_axis": 1,
+            "pool_type": "mean"
+        },
+        "inputs": ["question_3"]
+    },
+    {
+        "layer_id": "answer_4",
+        "layer": "question_4",
+        "inputs": ["answer_3"]
+    },
+    {
+        "layer_id": "comb",
+        "layer": "Combination",
+        "conf": {
+            "operations": ["origin", "difference", "dot_multiply"]
+        },
+        "inputs": ["question_4", "answer_4"]
+    },
+    {
+        "output_layer_flag": true,
+        "layer_id": "output",
+        "layer": "Linear",
+        "conf": {
+          "hidden_dim": [128, 2],
+          "activation": "PReLU",
+          "batch_norm": true,
+          "last_hidden_activation": false,
+          "last_hidden_softmax": false
+        },
+        "inputs": ["comb"]
+    }
+  ],
+  "loss": {
+    "losses": [
+      {
+        "type":"CrossEntropyLoss",
+        "conf":{
+          "size_average": true
+        },
+        "inputs": ["output","label"]
+      }
+    ]
+  },
+  "metrics": ["auc", "accuracy", "auc@1", "auc@0", "auc@average"]
+}

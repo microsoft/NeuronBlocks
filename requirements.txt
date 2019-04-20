@@ -1,0 +1,10 @@
+matplotlib==2.1.0
+six==1.11.0
+nltk==3.4
+gensim==3.2.0
+tqdm==4.19.5
+ujson==1.35
+numpy==1.13.3
+scikit_learn==0.19.2
+PyYAML==3.13
+ftfy==5.5.0

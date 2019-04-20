@@ -1,0 +1,140 @@
+{
+  "license": "Copyright (c) Microsoft Corporation. All rights reserved. Licensed under the MIT license.",
+  "tool_version": "1.1.0",
+  "model_description": "This example shows how to train/test/predict.",
+  "inputs": {
+    "use_cache": true,
+    "dataset_type": "classification",
+    "data_paths": {
+      "train_data_path": "./dataset/demo/train.tsv",
+      "valid_data_path": "./dataset/demo/valid.tsv",
+      "test_data_path": "./dataset/demo/test.tsv",
+      "predict_data_path": "./dataset/demo/predict.tsv",
+      "pre_trained_emb": "./dataset/GloVe/glove.840B.300d.txt"
+    },
+    "file_with_col_header": false,
+    "pretrained_emb_type": "glove",
+    "pretrained_emb_binary_or_text": "text",
+    "involve_all_words_in_pretrained_emb": false,
+    "add_start_end_for_seq": true,
+    "file_header": {
+      "question_text": 0,
+      "answer_text": 1,
+      "label": 2
+    },
+    "predict_file_header": {
+      "question_text": 0,
+      "answer_text": 1
+    },
+    "model_inputs": {
+      "question": ["question_text"],
+      "answer": ["answer_text"]
+    },
+    "target": ["label"]
+  },
+  "outputs": {
+    "save_base_dir": "./models/demo/",
+    "model_name": "model.nb",
+    "train_log_name": "train.log",
+    "test_log_name": "test.log",
+    "predict_log_name": "predict.log",
+    "predict_fields": ["prediction", "confidence"],
+    "predict_output_name": "predict.tsv",
+    "cache_dir": ".cache.demo/"
+  },
+  "training_params": {
+    "optimizer": {
+      "name": "Adam",
+      "params": {
+        "lr": 0.001
+      }
+    },
+    "use_gpu": false,
+    "batch_size": 30,
+    "batch_num_to_show_results": 10,
+    "max_epoch": 3,
+    "valid_times_per_epoch": 1,
+    "max_lengths": {
+      "question_text": 30,
+      "answer_text": 100
+    }
+  },
+  "architecture": [
+    {
+      "layer": "Embedding",
+      "conf": {
+        "word": {
+          "cols": ["question_text", "answer_text"],
+          "dim": 300
+        }
+      }
+    },
+    {
+      "layer_id": "question_1",
+      "layer": "BiLSTM",
+      "conf": {
+        "hidden_dim": 64,
+        "dropout": 0.2,
+        "num_layers": 2
+      },
+      "inputs": ["question"]
+    },
+    {
+      "layer_id": "answer_1",
+      "layer": "BiLSTM",
+      "conf": {
+        "hidden_dim": 64,
+        "dropout": 0.2,
+        "num_layers": 2
+      },
+      "inputs": ["answer"]
+    },
+    {
+      "layer_id": "question_2",
+      "layer": "Pooling",
+      "conf": {
+        "pool_axis": 1,
+        "pool_type": "max"
+      },
+      "inputs": ["question_1"]
+    },
+    {
+      "layer_id": "answer_2",
+      "layer": "question_2",
+      "inputs": ["answer_1"]
+    },
+    {
+      "layer_id": "comb",
+      "layer": "Combination",
+      "conf": {
+        "operations": ["origin", "difference", "dot_multiply"]
+      },
+      "inputs": ["question_2", "answer_2"]
+    },
+    {
+      "output_layer_flag": true,
+      "layer_id": "output",
+      "layer": "Linear",
+      "conf": {
+        "hidden_dim": [128, 2],
+        "activation": "PReLU",
+        "batch_norm": true,
+        "last_hidden_activation": false,
+        "last_hidden_softmax": false
+      },
+      "inputs": ["comb"]
+    }
+  ],
+  "loss": {
+    "losses": [
+      {
+        "type": "CrossEntropyLoss",
+        "conf": {
+          "size_average": true
+        },
+        "inputs": ["output", "label"]
+      }
+    ]
+  },
+  "metrics": ["auc", "accuracy"]
+}

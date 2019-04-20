@@ -1,0 +1,97 @@
+{
+  "license": "Copyright (c) Microsoft Corporation. All rights reserved. Licensed under the MIT license.",
+  "tool_version": "1.1.0",
+  "model_description": "This model is used for slot tagging task. It achieved a f1-score of 94.66 on the dataset below",
+  "inputs": {
+    "use_cache": true,
+    "dataset_type": "sequence_tagging",
+    "tagging_scheme": "BIO",
+    "data_paths": {
+      "train_data_path": "./dataset/atis/atis.train.iob",
+      "test_data_path": "./dataset/atis/atis.test.iob",
+      "pre_trained_emb": "./dataset/GloVe/glove.840B.300d.txt"
+    },
+    "add_start_end_for_seq": true,
+    "file_header": {
+      "word": 0,
+      "tag": 1
+    },
+    "model_inputs": {
+      "words": ["word"]
+    },
+    "target": ["tag"]
+  },
+  "outputs":{
+    "save_base_dir": "./models/slot_tagging_encoder_decoder/",
+    "model_name": "model_debug.nb",
+    "train_log_name": "train_debug.log",
+    "test_log_name": "test_debug.log",
+    "predict_log_name": "predict_debug.log",
+    "predict_fields": ["prediction"],
+    "predict_output_name": "predict_debug.tsv",
+    "cache_dir": ".cache.atis/"
+  },
+  "training_params": {
+    "vocabulary": {
+      "min_word_frequency": 1
+    },
+    "optimizer": {
+      "name": "Adam",
+      "params": {
+        "lr": 0.001
+      }
+    },
+    "lr_decay": 1,
+    "minimum_lr": 0.0001,
+    "epoch_start_lr_decay": 1,
+    "use_gpu": true,
+    "batch_size": 32,
+    "batch_num_to_show_results": 50,
+    "max_epoch": 20,
+    "valid_times_per_epoch": 1
+  },
+  "architecture":[
+    {
+        "layer": "Embedding",
+        "conf": {
+          "word": {
+            "cols": ["word"],
+            "dim": 300
+          }
+        }
+    },
+    {
+        "output_layer_flag": true,
+        "layer_id": "encoder_decoder_1",
+        "layer": "EncoderDecoder",
+        "conf": {
+            "encoder": "SLUEncoder",
+            "encoder_conf": {
+              "hidden_dim": 128,
+              "dropout": 0,
+              "num_layers": 1
+            },
+            "decoder": "SLUDecoder",
+            "decoder_conf": {
+              "hidden_dim": 256,
+              "dropout": 0,
+              "num_layers": 1,
+              "decoder_emb_dim": 30
+            }
+        },
+        "inputs": ["words"]
+    }
+  ],
+  "loss": {
+      "losses": [
+        {
+          "type": "CrossEntropyLoss",
+          "conf": {
+              "size_average": true
+          },
+          "inputs": ["encoder_decoder_1","tag"]
+        }
+      ]
+  },
+  "metrics": ["seq_tag_f1"]
+}
