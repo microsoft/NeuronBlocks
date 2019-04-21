@@ -1,1 +1,0 @@
-NeuronBlocks is a **NLP deep learning modeling toolkit** that helps engineers to build end-to-end pipelines for neural network model training for NLP tasks. The main goal of this toolkit is to minimize developing cost for NLP deep neural network model building, including both training and inferencing stages. For more details, please check our paper.

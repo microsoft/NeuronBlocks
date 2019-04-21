@@ -1,0 +1,70 @@
+block\_zoo.math package
+=======================
+
+Submodules
+----------
+
+block\_zoo.math.Add2D module
+----------------------------
+
+.. automodule:: block_zoo.math.Add2D
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+block\_zoo.math.Add3D module
+----------------------------
+
+.. automodule:: block_zoo.math.Add3D
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+block\_zoo.math.ElementWisedMultiply2D module
+---------------------------------------------
+
+.. automodule:: block_zoo.math.ElementWisedMultiply2D
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+block\_zoo.math.ElementWisedMultiply3D module
+---------------------------------------------
+
+.. automodule:: block_zoo.math.ElementWisedMultiply3D
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+block\_zoo.math.MatrixMultiply module
+-------------------------------------
+
+.. automodule:: block_zoo.math.MatrixMultiply
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+block\_zoo.math.Minus2D module
+------------------------------
+
+.. automodule:: block_zoo.math.Minus2D
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+block\_zoo.math.Minus3D module
+------------------------------
+
+.. automodule:: block_zoo.math.Minus3D
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: block_zoo.math
+    :members:
+    :undoc-members:
+    :show-inheritance:

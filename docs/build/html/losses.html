@@ -1,0 +1,355 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>losses package &mdash; NeuronBlocks 1.1.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+        <script type="text/javascript" src="_static/language_data.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> NeuronBlocks
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.1.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="overview.html">Basic block_zoo</a></li>
+<li class="toctree-l1"><a class="reference internal" href="overview.html#id15">Attention</a></li>
+<li class="toctree-l1"><a class="reference internal" href="overview.html#id25">embedding</a></li>
+<li class="toctree-l1"><a class="reference internal" href="overview.html#id27">Operations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="overview.html#id31">Math</a></li>
+<li class="toctree-l1"><a class="reference internal" href="overview.html#id38">Transformer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="overview.html#id43">Encoder_Decoder</a></li>
+<li class="toctree-l1"><a class="reference internal" href="overview.html#id47">Normalizations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="overview.html#id49">Loss Functions</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">NeuronBlocks</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>losses package</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/losses.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="losses-package">
+<h1>losses package<a class="headerlink" href="#losses-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-losses.BaseLossConf">
+<span id="losses-baselossconf-module"></span><h2>losses.BaseLossConf module<a class="headerlink" href="#module-losses.BaseLossConf" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="losses.BaseLossConf.BaseLossConf">
+<em class="property">class </em><code class="descclassname">losses.BaseLossConf.</code><code class="descname">BaseLossConf</code><a class="reference internal" href="_modules/losses/BaseLossConf.html#BaseLossConf"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#losses.BaseLossConf.BaseLossConf" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<dl class="staticmethod">
+<dt id="losses.BaseLossConf.BaseLossConf.get_conf">
+<em class="property">static </em><code class="descname">get_conf</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/losses/BaseLossConf.html#BaseLossConf.get_conf"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#losses.BaseLossConf.BaseLossConf.get_conf" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-losses.FocalLoss">
+<span id="losses-focalloss-module"></span><h2>losses.FocalLoss module<a class="headerlink" href="#module-losses.FocalLoss" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="losses.FocalLoss.FocalLoss">
+<em class="property">class </em><code class="descclassname">losses.FocalLoss.</code><code class="descname">FocalLoss</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/losses/FocalLoss.html#FocalLoss"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#losses.FocalLoss.FocalLoss" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.modules.module.Module</span></code></p>
+<dl class="docutils">
+<dt>Focal loss</dt>
+<dd>reference: Lin T Y, Goyal P, Girshick R, et al. Focal loss for dense object detection[J]. arXiv preprint arXiv:1708.02002, 2017.</dd>
+</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>gamma</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – gamma &gt;= 0.</li>
+<li><strong>alpha</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – 0 &lt;= alpha &lt;= 1</li>
+<li><strong>size_average</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.7)"><em>bool</em></a><em>, </em><em>optional</em>) – By default, the losses are averaged over observations for each minibatch. However, if the field size_average is set to False, the losses are instead summed for each minibatch. Default is True</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="losses.FocalLoss.FocalLoss.forward">
+<code class="descname">forward</code><span class="sig-paren">(</span><em>input</em>, <em>target</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/losses/FocalLoss.html#FocalLoss.forward"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#losses.FocalLoss.FocalLoss.forward" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get focal loss</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>input</strong> (<em>Variable</em>) – the prediction with shape [batch_size, number of classes]</li>
+<li><strong>target</strong> (<em>Variable</em>) – the answer with shape [batch_size, number of classes]</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">loss</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">Variable (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)">float</a>)</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-losses.Loss">
+<span id="losses-loss-module"></span><h2>losses.Loss module<a class="headerlink" href="#module-losses.Loss" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="losses.Loss.Loss">
+<em class="property">class </em><code class="descclassname">losses.Loss.</code><code class="descname">Loss</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/losses/Loss.html#Loss"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#losses.Loss.Loss" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.modules.module.Module</span></code></p>
+<p>For support multi_task or multi_output, the loss type changes to list.
+Using class Loss for parsing and constructing the loss list.
+:param loss_conf: the loss for multi_task or multi_output.</p>
+<blockquote>
+<div><p>multi_loss_op: the operation for multi_loss
+losses: list type. Each element is single loss.
+eg: “loss”: {</p>
+<blockquote>
+<div><blockquote>
+<div><p>“multi_loss_op”: “weighted_sum”,
+“losses”: [</p>
+<blockquote>
+<div><dl class="docutils">
+<dt>{</dt>
+<dd><p class="first">“type”: “CrossEntropyLoss”,
+“conf”: {</p>
+<blockquote>
+<div>“gamma”: 0,
+“alpha”: 0.5,
+“size_average”: true</div></blockquote>
+<p class="last">},
+“inputs”: [“start_output”, “start_label”]</p>
+</dd>
+</dl>
+<p>},
+{</p>
+<blockquote>
+<div><p>“type”: “CrossEntropyLoss”,
+“conf”: {</p>
+<blockquote>
+<div>“gamma”: 0,
+“alpha”: 0.5,
+“size_average”: true</div></blockquote>
+<p>},
+“inputs”: [“end_output”, “end_label”]</p>
+</div></blockquote>
+<p>}</p>
+</div></blockquote>
+<p>],
+“weights”: [0.5, 0.5]</p>
+</div></blockquote>
+<p>}</p>
+</div></blockquote>
+</div></blockquote>
+<dl class="method">
+<dt id="losses.Loss.Loss.forward">
+<code class="descname">forward</code><span class="sig-paren">(</span><em>model_outputs</em>, <em>targets</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/losses/Loss.html#Loss.forward"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#losses.Loss.Loss.forward" title="Permalink to this definition">¶</a></dt>
+<dd><p>compute multi_loss according to multi_loss_op
+:param model_outputs: the representation of model output layer</p>
+<blockquote>
+<div><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">type:</th><td class="field-body">dict {output_layer_id: output layer data}</td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>targets</strong> – the label of raw data
+:type: dict {target: data}</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-losses">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-losses" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, Quantus STCA team&lt;quantus_stca@microsoft.com&gt;
+
+    </p>
+  </div> 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

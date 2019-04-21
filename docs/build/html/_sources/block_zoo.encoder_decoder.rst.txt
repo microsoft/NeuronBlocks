@@ -1,0 +1,30 @@
+block\_zoo.encoder\_decoder package
+===================================
+
+Submodules
+----------
+
+block\_zoo.encoder\_decoder.SLUDecoder module
+---------------------------------------------
+
+.. automodule:: block_zoo.encoder_decoder.SLUDecoder
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+block\_zoo.encoder\_decoder.SLUEncoder module
+---------------------------------------------
+
+.. automodule:: block_zoo.encoder_decoder.SLUEncoder
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: block_zoo.encoder_decoder
+    :members:
+    :undoc-members:
+    :show-inheritance:

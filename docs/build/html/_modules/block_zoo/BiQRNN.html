@@ -1,0 +1,502 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>block_zoo.BiQRNN &mdash; NeuronBlocks 1.1.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../_static/language_data.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> NeuronBlocks
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.1.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../overview.html">Basic block_zoo</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../overview.html#id15">Attention</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../overview.html#id25">embedding</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../overview.html#id27">Operations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../overview.html#id31">Math</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../overview.html#id38">Transformer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../overview.html#id43">Encoder_Decoder</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../overview.html#id47">Normalizations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../overview.html#id49">Loss Functions</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">NeuronBlocks</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+        
+      <li>block_zoo.BiQRNN</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for block_zoo.BiQRNN</h1><div class="highlight"><pre>
+<span></span><span class="c1"># Copyright (c) Microsoft Corporation. All rights reserved.</span>
+<span class="c1"># Licensed under the MIT license.</span>
+
+<span class="kn">import</span> <span class="nn">torch</span>
+<span class="kn">import</span> <span class="nn">torch.nn</span> <span class="k">as</span> <span class="nn">nn</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">block_zoo.BaseLayer</span> <span class="k">import</span> <span class="n">BaseLayer</span><span class="p">,</span> <span class="n">BaseConf</span>
+<span class="kn">from</span> <span class="nn">utils.DocInherit</span> <span class="k">import</span> <span class="n">DocInherit</span>
+<span class="kn">import</span> <span class="nn">copy</span>
+
+
+<div class="viewcode-block" id="ForgetMult"><a class="viewcode-back" href="../../block_zoo.html#block_zoo.BiQRNN.ForgetMult">[docs]</a><span class="k">class</span> <span class="nc">ForgetMult</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;ForgetMult computes a simple recurrent equation:</span>
+<span class="sd">    h_t = f_t * x_t + (1 - f_t) * h_{t-1}</span>
+
+<span class="sd">    This equation is equivalent to dynamic weighted averaging.</span>
+
+<span class="sd">    Inputs: X, hidden</span>
+<span class="sd">        - X (seq_len, batch, input_size): tensor containing the features of the input sequence.</span>
+<span class="sd">        - F (seq_len, batch, input_size): tensor containing the forget gate values, assumed in range [0, 1].</span>
+<span class="sd">        - hidden_init (batch, input_size): tensor containing the initial hidden state for the recurrence (h_{t-1}).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">ForgetMult</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+
+<div class="viewcode-block" id="ForgetMult.forward"><a class="viewcode-back" href="../../block_zoo.html#block_zoo.BiQRNN.ForgetMult.forward">[docs]</a>    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">hidden_init</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">forgets</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">prev_h</span> <span class="o">=</span> <span class="n">hidden_init</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">h</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">((</span><span class="n">f</span> <span class="o">*</span> <span class="n">x</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="mi">0</span><span class="p">)):</span>
+            <span class="k">if</span> <span class="n">prev_h</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span> <span class="n">h</span> <span class="o">=</span> <span class="n">h</span> <span class="o">+</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">forgets</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="o">*</span> <span class="n">prev_h</span>
+            <span class="c1"># h is (1, batch, hidden) when it needs to be (batch_hidden)</span>
+            <span class="c1"># Calling squeeze will result in badness if batch size is 1</span>
+            <span class="n">h</span> <span class="o">=</span> <span class="n">h</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="n">h</span><span class="o">.</span><span class="n">size</span><span class="p">()[</span><span class="mi">1</span><span class="p">:])</span>
+            <span class="n">result</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">h</span><span class="p">)</span>
+            <span class="n">prev_h</span> <span class="o">=</span> <span class="n">h</span>
+        <span class="k">return</span> <span class="n">torch</span><span class="o">.</span><span class="n">stack</span><span class="p">(</span><span class="n">result</span><span class="p">)</span></div></div>
+
+
+<div class="viewcode-block" id="QRNNLayer"><a class="viewcode-back" href="../../block_zoo.html#block_zoo.BiQRNN.QRNNLayer">[docs]</a><span class="k">class</span> <span class="nc">QRNNLayer</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Applies a single layer Quasi-Recurrent Neural Network (QRNN) to an input sequence.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        input_size: The number of expected features in the input x.</span>
+<span class="sd">        hidden_size: The number of features in the hidden state h. If not specified, the input size is used.</span>
+<span class="sd">        save_prev_x: Whether to store previous inputs for use in future convolutional windows (i.e. for a continuing sequence such as in language modeling). If true, you must call reset to remove cached previous values of x. Default: False.</span>
+<span class="sd">        window: Defines the size of the convolutional window (how many previous tokens to look when computing the QRNN values). Supports 1 and 2. Default: 1.</span>
+<span class="sd">        zoneout: Whether to apply zoneout (i.e. failing to update elements in the hidden state) to the hidden state updates. Default: 0.</span>
+<span class="sd">        output_gate: If True, performs QRNN-fo (applying an output gate to the output). If False, performs QRNN-f. Default: True.</span>
+
+<span class="sd">    Inputs: X, hidden</span>
+<span class="sd">        - X (seq_len, batch, input_size): tensor containing the features of the input sequence.</span>
+<span class="sd">        - hidden (batch, hidden_size): tensor containing the initial hidden state for the QRNN.</span>
+
+<span class="sd">    Outputs: output, h_n</span>
+<span class="sd">        - output (seq_len, batch, hidden_size): tensor containing the output of the QRNN for each timestep.</span>
+<span class="sd">        - h_n (1, batch, hidden_size): tensor containing the hidden state for t=seq_len</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">input_size</span><span class="p">,</span> <span class="n">hidden_size</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">save_prev_x</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">zoneout</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">window</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">output_gate</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">QRNNLayer</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+
+        <span class="k">assert</span> <span class="n">window</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span> <span class="s2">&quot;This QRNN implementation currently only handles convolutional window of size 1 or size 2&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">window</span> <span class="o">=</span> <span class="n">window</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">input_size</span> <span class="o">=</span> <span class="n">input_size</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">hidden_size</span> <span class="o">=</span> <span class="n">hidden_size</span> <span class="k">if</span> <span class="n">hidden_size</span> <span class="k">else</span> <span class="n">input_size</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">zoneout</span> <span class="o">=</span> <span class="n">zoneout</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">save_prev_x</span> <span class="o">=</span> <span class="n">save_prev_x</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">prevX</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">output_gate</span> <span class="o">=</span> <span class="n">output_gate</span>
+
+        <span class="c1"># One large matmul with concat is faster than N small matmuls and no concat</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">linear</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">window</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">input_size</span><span class="p">,</span> <span class="mi">3</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">hidden_size</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">output_gate</span> <span class="k">else</span> <span class="mi">2</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">hidden_size</span><span class="p">)</span>
+
+<div class="viewcode-block" id="QRNNLayer.reset"><a class="viewcode-back" href="../../block_zoo.html#block_zoo.BiQRNN.QRNNLayer.reset">[docs]</a>    <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># If you are saving the previous value of x, you should call this when starting with a new state</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">prevX</span> <span class="o">=</span> <span class="kc">None</span></div>
+
+<div class="viewcode-block" id="QRNNLayer.forward"><a class="viewcode-back" href="../../block_zoo.html#block_zoo.BiQRNN.QRNNLayer.forward">[docs]</a>    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">hidden</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="n">seq_len</span><span class="p">,</span> <span class="n">batch_size</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">size</span><span class="p">()</span>
+
+        <span class="n">source</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">window</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">source</span> <span class="o">=</span> <span class="n">X</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">window</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="c1"># Construct the x_{t-1} tensor with optional x_{-1}, otherwise a zeroed out value for x_{-1}</span>
+            <span class="n">Xm1</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="n">Xm1</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">prevX</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">prevX</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">X</span><span class="p">[:</span><span class="mi">1</span><span class="p">,</span> <span class="p">:,</span> <span class="p">:]</span> <span class="o">*</span> <span class="mi">0</span><span class="p">)</span>
+            <span class="c1"># Note: in case of len(X) == 1, X[:-1, :, :] results in slicing of empty tensor == bad</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">X</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="n">Xm1</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">X</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="p">:,</span> <span class="p">:])</span>
+            <span class="n">Xm1</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">(</span><span class="n">Xm1</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+            <span class="c1"># Convert two (seq_len, batch_size, hidden) tensors to (seq_len, batch_size, 2 * hidden)</span>
+            <span class="n">source</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">([</span><span class="n">X</span><span class="p">,</span> <span class="n">Xm1</span><span class="p">],</span> <span class="mi">2</span><span class="p">)</span>
+
+        <span class="c1"># Matrix multiplication for the three outputs: Z, F, O</span>
+        <span class="n">Y</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">linear</span><span class="p">(</span><span class="n">source</span><span class="p">)</span>
+        <span class="c1"># Convert the tensor back to (batch, seq_len, len([Z, F, O]) * hidden_size)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">output_gate</span><span class="p">:</span>
+            <span class="n">Y</span> <span class="o">=</span> <span class="n">Y</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="n">seq_len</span><span class="p">,</span> <span class="n">batch_size</span><span class="p">,</span> <span class="mi">3</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">hidden_size</span><span class="p">)</span>
+            <span class="n">Z</span><span class="p">,</span> <span class="n">F</span><span class="p">,</span> <span class="n">O</span> <span class="o">=</span> <span class="n">Y</span><span class="o">.</span><span class="n">chunk</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">Y</span> <span class="o">=</span> <span class="n">Y</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="n">seq_len</span><span class="p">,</span> <span class="n">batch_size</span><span class="p">,</span> <span class="mi">2</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">hidden_size</span><span class="p">)</span>
+            <span class="n">Z</span><span class="p">,</span> <span class="n">F</span> <span class="o">=</span> <span class="n">Y</span><span class="o">.</span><span class="n">chunk</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+        <span class="c1">###</span>
+        <span class="n">Z</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tanh</span><span class="p">(</span><span class="n">Z</span><span class="p">)</span>
+        <span class="n">F</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">sigmoid</span><span class="p">(</span><span class="n">F</span><span class="p">)</span>
+
+        <span class="c1"># If zoneout is specified, we perform dropout on the forget gates in F</span>
+        <span class="c1"># If an element of F is zero, that means the corresponding neuron keeps the old value</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">zoneout</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">training</span><span class="p">:</span>
+                <span class="c1"># mask = Variable(F.data.new(*F.size()).bernoulli_(1 - self.zoneout), requires_grad=False)</span>
+                <span class="n">mask</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">new_empty</span><span class="p">(</span><span class="n">F</span><span class="o">.</span><span class="n">size</span><span class="p">(),</span> <span class="n">requires_grad</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">bernoulli_</span><span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">zoneout</span><span class="p">)</span>
+                <span class="n">F</span> <span class="o">=</span> <span class="n">F</span> <span class="o">*</span> <span class="n">mask</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">F</span> <span class="o">*=</span> <span class="mi">1</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">zoneout</span>
+
+        <span class="c1"># Forget Mult</span>
+        <span class="n">C</span> <span class="o">=</span> <span class="n">ForgetMult</span><span class="p">()(</span><span class="n">F</span><span class="p">,</span> <span class="n">Z</span><span class="p">,</span> <span class="n">hidden</span><span class="p">)</span>
+
+        <span class="c1"># Apply (potentially optional) output gate</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">output_gate</span><span class="p">:</span>
+            <span class="n">H</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">sigmoid</span><span class="p">(</span><span class="n">O</span><span class="p">)</span> <span class="o">*</span> <span class="n">C</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">H</span> <span class="o">=</span> <span class="n">C</span>
+
+        <span class="c1"># In an optimal world we may want to backprop to x_{t-1} but ...</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">window</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">save_prev_x</span><span class="p">:</span>
+            <span class="c1"># self.prevX = Variable(X[-1:, :, :].data, requires_grad=False)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">prevX</span> <span class="o">=</span> <span class="n">X</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">:,</span> <span class="p">:,</span> <span class="p">:]</span><span class="o">.</span><span class="n">detach</span><span class="p">()</span>
+
+        <span class="k">return</span> <span class="n">H</span><span class="p">,</span> <span class="n">C</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">:,</span> <span class="p">:,</span> <span class="p">:]</span></div></div>
+
+
+<div class="viewcode-block" id="QRNN"><a class="viewcode-back" href="../../block_zoo.html#block_zoo.BiQRNN.QRNN">[docs]</a><span class="k">class</span> <span class="nc">QRNN</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Applies a multiple layer Quasi-Recurrent Neural Network (QRNN) to an input sequence.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        input_size: The number of expected features in the input x.</span>
+<span class="sd">        hidden_size: The number of features in the hidden state h. If not specified, the input size is used.</span>
+<span class="sd">        num_layers: The number of QRNN layers to produce.</span>
+<span class="sd">        dropout: Whether to use dropout between QRNN layers. Default: 0.</span>
+<span class="sd">        bidirectional: If True, becomes a bidirectional QRNN. Default: False.</span>
+<span class="sd">        save_prev_x: Whether to store previous inputs for use in future convolutional windows (i.e. for a continuing sequence such as in language modeling). If true, you must call reset to remove cached previous values of x. Default: False.</span>
+<span class="sd">        window: Defines the size of the convolutional window (how many previous tokens to look when computing the QRNN values). Supports 1 and 2. Default: 1.</span>
+<span class="sd">        zoneout: Whether to apply zoneout (i.e. failing to update elements in the hidden state) to the hidden state updates. Default: 0.</span>
+<span class="sd">        output_gate: If True, performs QRNN-fo (applying an output gate to the output). If False, performs QRNN-f. Default: True.</span>
+
+<span class="sd">    Inputs: X, hidden</span>
+<span class="sd">        - X (seq_len, batch, input_size): tensor containing the features of the input sequence.</span>
+<span class="sd">        - hidden (num_layers * num_directions, batch, hidden_size): tensor containing the initial hidden state for the QRNN.</span>
+
+<span class="sd">    Outputs: output, h_n</span>
+<span class="sd">        - output (seq_len, batch, hidden_size * num_directions): tensor containing the output of the QRNN for each timestep.</span>
+<span class="sd">        - h_n (num_layers * num_directions, batch, hidden_size): tensor containing the hidden state for t=seq_len</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">input_size</span><span class="p">,</span> <span class="n">hidden_size</span><span class="p">,</span>
+                 <span class="n">num_layers</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">bias</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">batch_first</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                 <span class="n">dropout</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">bidirectional</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="c1"># assert bidirectional == False, &#39;Bidirectional QRNN is not yet supported&#39;</span>
+        <span class="k">assert</span> <span class="n">batch_first</span> <span class="o">==</span> <span class="kc">False</span><span class="p">,</span> <span class="s1">&#39;Batch first mode is not yet supported&#39;</span>
+        <span class="k">assert</span> <span class="n">bias</span> <span class="o">==</span> <span class="kc">True</span><span class="p">,</span> <span class="s1">&#39;Removing underlying bias is not yet supported&#39;</span>
+
+        <span class="nb">super</span><span class="p">(</span><span class="n">QRNN</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+
+        <span class="c1"># self.layers = torch.nn.ModuleList(layers if layers else [QRNNLayer(input_size if l == 0 else hidden_size, hidden_size, **kwargs) for l in range(num_layers)])</span>
+        <span class="k">if</span> <span class="n">bidirectional</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">layers</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">ModuleList</span><span class="p">(</span>
+                <span class="p">[</span><span class="n">QRNNLayer</span><span class="p">(</span><span class="n">input_size</span> <span class="k">if</span> <span class="n">l</span> <span class="o">&lt;</span> <span class="mi">2</span> <span class="k">else</span> <span class="n">hidden_size</span> <span class="o">*</span> <span class="mi">2</span><span class="p">,</span> <span class="n">hidden_size</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span>
+                 <span class="nb">range</span><span class="p">(</span><span class="n">num_layers</span> <span class="o">*</span> <span class="mi">2</span><span class="p">)])</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">layers</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">ModuleList</span><span class="p">(</span>
+                <span class="p">[</span><span class="n">QRNNLayer</span><span class="p">(</span><span class="n">input_size</span> <span class="k">if</span> <span class="n">l</span> <span class="o">==</span> <span class="mi">0</span> <span class="k">else</span> <span class="n">hidden_size</span><span class="p">,</span> <span class="n">hidden_size</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span>
+                 <span class="nb">range</span><span class="p">(</span><span class="n">num_layers</span><span class="p">)])</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">input_size</span> <span class="o">=</span> <span class="n">input_size</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">hidden_size</span> <span class="o">=</span> <span class="n">hidden_size</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">num_layers</span> <span class="o">=</span> <span class="n">num_layers</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bias</span> <span class="o">=</span> <span class="n">bias</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">batch_first</span> <span class="o">=</span> <span class="n">batch_first</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dropout</span> <span class="o">=</span> <span class="n">dropout</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bidirectional</span> <span class="o">=</span> <span class="n">bidirectional</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">num_directions</span> <span class="o">=</span> <span class="mi">2</span> <span class="k">if</span> <span class="n">bidirectional</span> <span class="k">else</span> <span class="mi">1</span>
+        <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">layers</span><span class="p">)</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_layers</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_directions</span>
+
+<div class="viewcode-block" id="QRNN.tensor_reverse"><a class="viewcode-back" href="../../block_zoo.html#block_zoo.BiQRNN.QRNN.tensor_reverse">[docs]</a>    <span class="k">def</span> <span class="nf">tensor_reverse</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tensor</span><span class="p">):</span>
+        <span class="c1"># idx = [i for i in range(tensor.size(0) - 1, -1, -1)]</span>
+        <span class="c1"># idx = torch.LongTensor(idx)</span>
+        <span class="c1"># inverted_tensor = tensor.index_select(0, idx)</span>
+        <span class="k">return</span> <span class="n">tensor</span><span class="o">.</span><span class="n">flip</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="QRNN.reset"><a class="viewcode-back" href="../../block_zoo.html#block_zoo.BiQRNN.QRNN.reset">[docs]</a>    <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sa">r</span><span class="sd">&#39;&#39;&#39;If your convolutional window is greater than 1, you must reset at the beginning of each new sequence&#39;&#39;&#39;</span>
+        <span class="p">[</span><span class="n">layer</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span> <span class="k">for</span> <span class="n">layer</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">layers</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="QRNN.forward"><a class="viewcode-back" href="../../block_zoo.html#block_zoo.BiQRNN.QRNN.forward">[docs]</a>    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">input</span><span class="p">,</span> <span class="n">hidden</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="n">next_hidden</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">num_layers</span><span class="p">):</span>
+            <span class="n">all_output</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">num_directions</span><span class="p">):</span>
+                <span class="n">l</span> <span class="o">=</span> <span class="n">i</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_directions</span> <span class="o">+</span> <span class="n">j</span>
+                <span class="n">layer</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">layers</span><span class="p">[</span><span class="n">l</span><span class="p">]</span>
+                <span class="k">if</span> <span class="n">j</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                    <span class="nb">input</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tensor_reverse</span><span class="p">(</span><span class="nb">input</span><span class="p">)</span>  <span class="c1"># reverse</span>
+                <span class="n">output</span><span class="p">,</span> <span class="n">hn</span> <span class="o">=</span> <span class="n">layer</span><span class="p">(</span><span class="nb">input</span><span class="p">,</span> <span class="kc">None</span> <span class="k">if</span> <span class="n">hidden</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">hidden</span><span class="p">[</span><span class="n">l</span><span class="p">])</span>
+                <span class="n">next_hidden</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">hn</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">j</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                    <span class="n">output</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tensor_reverse</span><span class="p">(</span><span class="n">output</span><span class="p">)</span>    <span class="c1"># reverse</span>
+                <span class="n">all_output</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">output</span><span class="p">)</span>
+
+            <span class="nb">input</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">(</span><span class="n">all_output</span><span class="p">,</span> <span class="nb">input</span><span class="o">.</span><span class="n">dim</span><span class="p">()</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">dropout</span> <span class="o">!=</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_layers</span> <span class="o">-</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="nb">input</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">functional</span><span class="o">.</span><span class="n">dropout</span><span class="p">(</span><span class="nb">input</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">dropout</span><span class="p">,</span> <span class="n">training</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">training</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+        <span class="n">next_hidden</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">(</span><span class="n">next_hidden</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">num_layers</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_directions</span><span class="p">,</span> <span class="o">*</span><span class="n">next_hidden</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">size</span><span class="p">()[</span><span class="o">-</span><span class="mi">2</span><span class="p">:])</span>
+
+        <span class="c1"># for i, layer in enumerate(self.layers):</span>
+        <span class="c1">#     input, hn = layer(input, None if hidden is None else hidden[i])</span>
+        <span class="c1">#     next_hidden.append(hn)</span>
+        <span class="c1">#</span>
+        <span class="c1">#     if self.dropout != 0 and i &lt; len(self.layers) - 1:</span>
+        <span class="c1">#         input = torch.nn.functional.dropout(input, p=self.dropout, training=self.training, inplace=False)</span>
+        <span class="c1">#</span>
+        <span class="c1"># next_hidden = torch.cat(next_hidden, 0).view(self.num_layers, *next_hidden[0].size()[-2:])</span>
+
+        <span class="k">return</span> <span class="nb">input</span><span class="p">,</span> <span class="n">next_hidden</span></div></div>
+
+
+<div class="viewcode-block" id="BiQRNNConf"><a class="viewcode-back" href="../../block_zoo.html#block_zoo.BiQRNN.BiQRNNConf">[docs]</a><span class="k">class</span> <span class="nc">BiQRNNConf</span><span class="p">(</span><span class="n">BaseConf</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Configuration of BiQRNN</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        hidden_dim (int): dimension of hidden state</span>
+<span class="sd">        window: the size of the convolutional window. Supports 1 and 2. Default: 1</span>
+<span class="sd">        zoneout: Whether to apply zoneout (failing to update elements in the hidden state). Default: 0</span>
+<span class="sd">        dropout (float): dropout rate bewteen BiQRNN layers</span>
+<span class="sd">        num_layers (int): number of BiQRNN layers</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">BiQRNNConf</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+<div class="viewcode-block" id="BiQRNNConf.default"><a class="viewcode-back" href="../../block_zoo.html#block_zoo.BiQRNN.BiQRNNConf.default">[docs]</a>    <span class="nd">@DocInherit</span>
+    <span class="k">def</span> <span class="nf">default</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">hidden_dim</span> <span class="o">=</span> <span class="mi">128</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">window</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">zoneout</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dropout</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">num_layers</span> <span class="o">=</span> <span class="mi">1</span></div>
+
+<div class="viewcode-block" id="BiQRNNConf.declare"><a class="viewcode-back" href="../../block_zoo.html#block_zoo.BiQRNN.BiQRNNConf.declare">[docs]</a>    <span class="nd">@DocInherit</span>
+    <span class="k">def</span> <span class="nf">declare</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">num_of_inputs</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">input_ranks</span> <span class="o">=</span> <span class="p">[</span><span class="mi">3</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="BiQRNNConf.inference"><a class="viewcode-back" href="../../block_zoo.html#block_zoo.BiQRNN.BiQRNNConf.inference">[docs]</a>    <span class="nd">@DocInherit</span>
+    <span class="k">def</span> <span class="nf">inference</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">output_dim</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">input_dims</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">output_dim</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">hidden_dim</span>
+
+        <span class="nb">super</span><span class="p">(</span><span class="n">BiQRNNConf</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">inference</span><span class="p">()</span>      <span class="c1"># PUT THIS LINE AT THE END OF inference()</span></div>
+
+<div class="viewcode-block" id="BiQRNNConf.verify"><a class="viewcode-back" href="../../block_zoo.html#block_zoo.BiQRNN.BiQRNNConf.verify">[docs]</a>    <span class="nd">@DocInherit</span>
+    <span class="k">def</span> <span class="nf">verify</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">BiQRNNConf</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">verify</span><span class="p">()</span>
+
+        <span class="n">necessary_attrs_for_user</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;hidden_dim&#39;</span><span class="p">,</span> <span class="s1">&#39;window&#39;</span><span class="p">,</span> <span class="s1">&#39;zoneout&#39;</span><span class="p">,</span> <span class="s1">&#39;dropout&#39;</span><span class="p">,</span> <span class="s1">&#39;num_layers&#39;</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">attr</span> <span class="ow">in</span> <span class="n">necessary_attrs_for_user</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_attr_exist_assertion_for_user</span><span class="p">(</span><span class="n">attr</span><span class="p">)</span></div></div>
+
+
+<div class="viewcode-block" id="BiQRNN"><a class="viewcode-back" href="../../block_zoo.html#block_zoo.BiQRNN.BiQRNN">[docs]</a><span class="k">class</span> <span class="nc">BiQRNN</span><span class="p">(</span><span class="n">BaseLayer</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Bidrectional QRNN</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        layer_conf (BiQRNNConf): configuration of a layer</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">layer_conf</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">BiQRNN</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">layer_conf</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">qrnn</span> <span class="o">=</span> <span class="n">QRNN</span><span class="p">(</span><span class="n">layer_conf</span><span class="o">.</span><span class="n">input_dims</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">layer_conf</span><span class="o">.</span><span class="n">hidden_dim</span><span class="p">,</span> <span class="n">layer_conf</span><span class="o">.</span><span class="n">num_layers</span><span class="p">,</span>
+                         <span class="n">window</span><span class="o">=</span><span class="n">layer_conf</span><span class="o">.</span><span class="n">window</span><span class="p">,</span> <span class="n">zoneout</span><span class="o">=</span><span class="n">layer_conf</span><span class="o">.</span><span class="n">zoneout</span><span class="p">,</span> <span class="n">dropout</span><span class="o">=</span><span class="n">layer_conf</span><span class="o">.</span><span class="n">dropout</span><span class="p">,</span>
+                         <span class="n">bidirectional</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<div class="viewcode-block" id="BiQRNN.forward"><a class="viewcode-back" href="../../block_zoo.html#block_zoo.BiQRNN.BiQRNN.forward">[docs]</a>    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">string</span><span class="p">,</span> <span class="n">string_len</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; process inputs</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            string (Tensor): [batch_size, seq_len, dim]</span>
+<span class="sd">            string_len (Tensor): [batch_size]</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Tensor: [batch_size, seq_len, hidden_dim]</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">string</span> <span class="o">=</span> <span class="n">string</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="n">string_output</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">qrnn</span><span class="p">(</span><span class="n">string</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>  <span class="c1"># seqlen x batch x 2*nhid</span>
+        <span class="n">string_output</span> <span class="o">=</span> <span class="n">string_output</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">string_output</span><span class="p">,</span> <span class="n">string_len</span></div></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, Quantus STCA team&lt;quantus_stca@microsoft.com&gt;
+
+    </p>
+  </div> 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

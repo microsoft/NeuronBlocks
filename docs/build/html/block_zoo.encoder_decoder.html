@@ -1,0 +1,537 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>block_zoo.encoder_decoder package &mdash; NeuronBlocks 1.1.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+        <script type="text/javascript" src="_static/language_data.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> NeuronBlocks
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.1.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="overview.html">Basic block_zoo</a></li>
+<li class="toctree-l1"><a class="reference internal" href="overview.html#id15">Attention</a></li>
+<li class="toctree-l1"><a class="reference internal" href="overview.html#id25">embedding</a></li>
+<li class="toctree-l1"><a class="reference internal" href="overview.html#id27">Operations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="overview.html#id31">Math</a></li>
+<li class="toctree-l1"><a class="reference internal" href="overview.html#id38">Transformer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="overview.html#id43">Encoder_Decoder</a></li>
+<li class="toctree-l1"><a class="reference internal" href="overview.html#id47">Normalizations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="overview.html#id49">Loss Functions</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">NeuronBlocks</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>block_zoo.encoder_decoder package</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/block_zoo.encoder_decoder.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="block-zoo-encoder-decoder-package">
+<h1>block_zoo.encoder_decoder package<a class="headerlink" href="#block-zoo-encoder-decoder-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-block_zoo.encoder_decoder.SLUDecoder">
+<span id="block-zoo-encoder-decoder-sludecoder-module"></span><h2>block_zoo.encoder_decoder.SLUDecoder module<a class="headerlink" href="#module-block_zoo.encoder_decoder.SLUDecoder" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="block_zoo.encoder_decoder.SLUDecoder.SLUDecoder">
+<em class="property">class </em><code class="descclassname">block_zoo.encoder_decoder.SLUDecoder.</code><code class="descname">SLUDecoder</code><span class="sig-paren">(</span><em>layer_conf</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/block_zoo/encoder_decoder/SLUDecoder.html#SLUDecoder"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#block_zoo.encoder_decoder.SLUDecoder.SLUDecoder" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="block_zoo.html#block_zoo.BaseLayer.BaseLayer" title="block_zoo.BaseLayer.BaseLayer"><code class="xref py py-class docutils literal notranslate"><span class="pre">block_zoo.BaseLayer.BaseLayer</span></code></a></p>
+<p>Spoken Language Understanding Encoder</p>
+<p class="rubric">References</p>
+<p>Liu, B., &amp; Lane, I. (2016). Attention-based recurrent neural network models for joint intent detection and slot filling. Proceedings of the Annual Conference of the International Speech Communication Association, INTERSPEECH, (1), 685–689. <a class="reference external" href="https://doi.org/10.21437/Interspeech.2016-1352">https://doi.org/10.21437/Interspeech.2016-1352</a></p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>layer_conf</strong> (<a class="reference internal" href="#block_zoo.encoder_decoder.SLUEncoder.SLUEncoderConf" title="block_zoo.encoder_decoder.SLUEncoder.SLUEncoderConf"><em>SLUEncoderConf</em></a>) – configuration of a layer</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="block_zoo.encoder_decoder.SLUDecoder.SLUDecoder.Attention">
+<code class="descname">Attention</code><span class="sig-paren">(</span><em>hidden</em>, <em>encoder_outputs</em>, <em>encoder_maskings</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/block_zoo/encoder_decoder/SLUDecoder.html#SLUDecoder.Attention"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#block_zoo.encoder_decoder.SLUDecoder.SLUDecoder.Attention" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>hidden</strong> – 1,B,D</li>
+<li><strong>encoder_outputs</strong> – B,T,D</li>
+<li><strong>encoder_maskings</strong> – B,T # ByteTensor</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="block_zoo.encoder_decoder.SLUDecoder.SLUDecoder.forward">
+<code class="descname">forward</code><span class="sig-paren">(</span><em>string</em>, <em>string_len</em>, <em>context</em>, <em>encoder_outputs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/block_zoo/encoder_decoder/SLUDecoder.html#SLUDecoder.forward"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#block_zoo.encoder_decoder.SLUDecoder.SLUDecoder.forward" title="Permalink to this definition">¶</a></dt>
+<dd><p>process inputs</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>string</strong> (<em>Variable</em>) – word ids, [batch_size, seq_len]</li>
+<li><strong>string_len</strong> (<em>ndarray</em>) – [batch_size]</li>
+<li><strong>context</strong> (<em>Variable</em>) – [batch_size, 1, input_dim]</li>
+<li><strong>encoder_outputs</strong> (<em>Variable</em>) – [batch_size, max_seq_len, input_dim]</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">decode scores with shape [batch_size, seq_len, decoder_vocab_size]</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">Variable</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="block_zoo.encoder_decoder.SLUDecoder.SLUDecoderConf">
+<em class="property">class </em><code class="descclassname">block_zoo.encoder_decoder.SLUDecoder.</code><code class="descname">SLUDecoderConf</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/block_zoo/encoder_decoder/SLUDecoder.html#SLUDecoderConf"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#block_zoo.encoder_decoder.SLUDecoder.SLUDecoderConf" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="block_zoo.html#block_zoo.BaseLayer.BaseConf" title="block_zoo.BaseLayer.BaseConf"><code class="xref py py-class docutils literal notranslate"><span class="pre">block_zoo.BaseLayer.BaseConf</span></code></a></p>
+<p>Configuration of Spoken Language Understanding Encoder</p>
+<p class="rubric">References</p>
+<p>Liu, B., &amp; Lane, I. (2016). Attention-based recurrent neural network models for joint intent detection and slot filling. Proceedings of the Annual Conference of the International Speech Communication Association, INTERSPEECH, (1), 685–689. <a class="reference external" href="https://doi.org/10.21437/Interspeech.2016-1352">https://doi.org/10.21437/Interspeech.2016-1352</a></p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>hidden_dim</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)"><em>int</em></a>) – dimension of hidden state</li>
+<li><strong>dropout</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – dropout rate</li>
+<li><strong>num_layers</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)"><em>int</em></a>) – number of BiLSTM layers</li>
+<li><strong>num_decoder_output</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)"><em>int</em></a>) – </li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="block_zoo.encoder_decoder.SLUDecoder.SLUDecoderConf.declare">
+<code class="descname">declare</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/block_zoo/encoder_decoder/SLUDecoder.html#SLUDecoderConf.declare"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#block_zoo.encoder_decoder.SLUDecoder.SLUDecoderConf.declare" title="Permalink to this definition">¶</a></dt>
+<dd><p>Define things like “input_ranks” and “num_of_inputs”, which are certain with regard to your layer</p>
+<blockquote>
+<div><p>num_of_input is N(N&gt;0) means this layer accepts N inputs;</p>
+<p>num_of_input is -1 means this layer accepts any number of inputs;</p>
+<p>The rank here is not the same as matrix rank:</p>
+<blockquote>
+<div><p>For a scalar, its rank is 0;</p>
+<p>For a vector, its rank is 1;</p>
+<p>For a matrix, its rank is 2;</p>
+<p>For a cube of numbers, its rank is 3.</p>
+</div></blockquote>
+<p>…
+For instance, the rank of (batch size, sequence length, hidden_dim) is 3.</p>
+<p>if num_of_input &gt; 0:</p>
+<blockquote>
+<div>len(input_ranks) should be equal to num_of_input</div></blockquote>
+<p>elif num_of_input == -1:</p>
+<blockquote>
+<div>input_ranks should be a list with only one element and the rank of all the inputs should be equal to that element.</div></blockquote>
+<p>NOTE: when we build the model, if num_of_input is -1, we would replace it with the real number of inputs and replace input_ranks with a list of real input_ranks.</p>
+</div></blockquote>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">None</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="block_zoo.encoder_decoder.SLUDecoder.SLUDecoderConf.default">
+<code class="descname">default</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/block_zoo/encoder_decoder/SLUDecoder.html#SLUDecoderConf.default"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#block_zoo.encoder_decoder.SLUDecoder.SLUDecoderConf.default" title="Permalink to this definition">¶</a></dt>
+<dd><p>Define the default hyper parameters here. You can define these hyper parameters in your configuration file as well.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">None</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="block_zoo.encoder_decoder.SLUDecoder.SLUDecoderConf.inference">
+<code class="descname">inference</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/block_zoo/encoder_decoder/SLUDecoder.html#SLUDecoderConf.inference"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#block_zoo.encoder_decoder.SLUDecoder.SLUDecoderConf.inference" title="Permalink to this definition">¶</a></dt>
+<dd><p>Inference things like output_dim, which may relies on defined hyper parameter such as hidden dim and input_dim</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">None</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="block_zoo.encoder_decoder.SLUDecoder.SLUDecoderConf.verify">
+<code class="descname">verify</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/block_zoo/encoder_decoder/SLUDecoder.html#SLUDecoderConf.verify"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#block_zoo.encoder_decoder.SLUDecoder.SLUDecoderConf.verify" title="Permalink to this definition">¶</a></dt>
+<dd><p>Define some necessary varification for your layer when we define the model.</p>
+<p>If you define your own layer and rewrite this funciton, please add “super(YourLayerConf, self).verify()” at the beginning</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">None</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-block_zoo.encoder_decoder.SLUEncoder">
+<span id="block-zoo-encoder-decoder-sluencoder-module"></span><h2>block_zoo.encoder_decoder.SLUEncoder module<a class="headerlink" href="#module-block_zoo.encoder_decoder.SLUEncoder" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="block_zoo.encoder_decoder.SLUEncoder.SLUEncoder">
+<em class="property">class </em><code class="descclassname">block_zoo.encoder_decoder.SLUEncoder.</code><code class="descname">SLUEncoder</code><span class="sig-paren">(</span><em>layer_conf</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/block_zoo/encoder_decoder/SLUEncoder.html#SLUEncoder"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#block_zoo.encoder_decoder.SLUEncoder.SLUEncoder" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="block_zoo.html#block_zoo.BaseLayer.BaseLayer" title="block_zoo.BaseLayer.BaseLayer"><code class="xref py py-class docutils literal notranslate"><span class="pre">block_zoo.BaseLayer.BaseLayer</span></code></a></p>
+<p>Spoken Language Understanding Encoder</p>
+<p class="rubric">References</p>
+<p>Liu, B., &amp; Lane, I. (2016). Attention-based recurrent neural network models for joint intent detection and slot filling. Proceedings of the Annual Conference of the International Speech Communication Association, INTERSPEECH, (1), 685–689. <a class="reference external" href="https://doi.org/10.21437/Interspeech.2016-1352">https://doi.org/10.21437/Interspeech.2016-1352</a></p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>layer_conf</strong> (<a class="reference internal" href="#block_zoo.encoder_decoder.SLUEncoder.SLUEncoderConf" title="block_zoo.encoder_decoder.SLUEncoder.SLUEncoderConf"><em>SLUEncoderConf</em></a>) – configuration of a layer</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="block_zoo.encoder_decoder.SLUEncoder.SLUEncoder.forward">
+<code class="descname">forward</code><span class="sig-paren">(</span><em>string</em>, <em>string_len</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/block_zoo/encoder_decoder/SLUEncoder.html#SLUEncoder.forward"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#block_zoo.encoder_decoder.SLUEncoder.SLUEncoder.forward" title="Permalink to this definition">¶</a></dt>
+<dd><p>process inputs</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>string</strong> (<em>Variable</em>) – [batch_size, seq_len, dim]</li>
+<li><strong>string_len</strong> (<em>ndarray</em>) – [batch_size]</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">output of bi-lstm with shape [batch_size, seq_len, 2 * hidden_dim]
+ndarray: string_len with shape [batch_size]
+Variable: context with shape [batch_size, 1, 2 * hidden_dim]</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">Variable</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="block_zoo.encoder_decoder.SLUEncoder.SLUEncoderConf">
+<em class="property">class </em><code class="descclassname">block_zoo.encoder_decoder.SLUEncoder.</code><code class="descname">SLUEncoderConf</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/block_zoo/encoder_decoder/SLUEncoder.html#SLUEncoderConf"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#block_zoo.encoder_decoder.SLUEncoder.SLUEncoderConf" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="block_zoo.html#block_zoo.BaseLayer.BaseConf" title="block_zoo.BaseLayer.BaseConf"><code class="xref py py-class docutils literal notranslate"><span class="pre">block_zoo.BaseLayer.BaseConf</span></code></a></p>
+<p>Configuration of Spoken Language Understanding Encoder</p>
+<p class="rubric">References</p>
+<p>Liu, B., &amp; Lane, I. (2016). Attention-based recurrent neural network models for joint intent detection and slot filling. Proceedings of the Annual Conference of the International Speech Communication Association, INTERSPEECH, (1), 685–689. <a class="reference external" href="https://doi.org/10.21437/Interspeech.2016-1352">https://doi.org/10.21437/Interspeech.2016-1352</a></p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>hidden_dim</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)"><em>int</em></a>) – dimension of hidden state</li>
+<li><strong>dropout</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – dropout rate</li>
+<li><strong>num_layers</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)"><em>int</em></a>) – number of BiLSTM layers</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="block_zoo.encoder_decoder.SLUEncoder.SLUEncoderConf.declare">
+<code class="descname">declare</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/block_zoo/encoder_decoder/SLUEncoder.html#SLUEncoderConf.declare"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#block_zoo.encoder_decoder.SLUEncoder.SLUEncoderConf.declare" title="Permalink to this definition">¶</a></dt>
+<dd><p>Define things like “input_ranks” and “num_of_inputs”, which are certain with regard to your layer</p>
+<blockquote>
+<div><p>num_of_input is N(N&gt;0) means this layer accepts N inputs;</p>
+<p>num_of_input is -1 means this layer accepts any number of inputs;</p>
+<p>The rank here is not the same as matrix rank:</p>
+<blockquote>
+<div><p>For a scalar, its rank is 0;</p>
+<p>For a vector, its rank is 1;</p>
+<p>For a matrix, its rank is 2;</p>
+<p>For a cube of numbers, its rank is 3.</p>
+</div></blockquote>
+<p>…
+For instance, the rank of (batch size, sequence length, hidden_dim) is 3.</p>
+<p>if num_of_input &gt; 0:</p>
+<blockquote>
+<div>len(input_ranks) should be equal to num_of_input</div></blockquote>
+<p>elif num_of_input == -1:</p>
+<blockquote>
+<div>input_ranks should be a list with only one element and the rank of all the inputs should be equal to that element.</div></blockquote>
+<p>NOTE: when we build the model, if num_of_input is -1, we would replace it with the real number of inputs and replace input_ranks with a list of real input_ranks.</p>
+</div></blockquote>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">None</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="block_zoo.encoder_decoder.SLUEncoder.SLUEncoderConf.default">
+<code class="descname">default</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/block_zoo/encoder_decoder/SLUEncoder.html#SLUEncoderConf.default"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#block_zoo.encoder_decoder.SLUEncoder.SLUEncoderConf.default" title="Permalink to this definition">¶</a></dt>
+<dd><p>Define the default hyper parameters here. You can define these hyper parameters in your configuration file as well.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">None</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="block_zoo.encoder_decoder.SLUEncoder.SLUEncoderConf.inference">
+<code class="descname">inference</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/block_zoo/encoder_decoder/SLUEncoder.html#SLUEncoderConf.inference"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#block_zoo.encoder_decoder.SLUEncoder.SLUEncoderConf.inference" title="Permalink to this definition">¶</a></dt>
+<dd><p>Inference things like output_dim, which may relies on defined hyper parameter such as hidden dim and input_dim</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">None</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="block_zoo.encoder_decoder.SLUEncoder.SLUEncoderConf.verify">
+<code class="descname">verify</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/block_zoo/encoder_decoder/SLUEncoder.html#SLUEncoderConf.verify"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#block_zoo.encoder_decoder.SLUEncoder.SLUEncoderConf.verify" title="Permalink to this definition">¶</a></dt>
+<dd><p>Define some necessary varification for your layer when we define the model.</p>
+<p>If you define your own layer and rewrite this funciton, please add “super(YourLayerConf, self).verify()” at the beginning</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">None</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="block_zoo.encoder_decoder.SLUEncoder.SLUEncoderConf.verify_before_inference">
+<code class="descname">verify_before_inference</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/block_zoo/encoder_decoder/SLUEncoder.html#SLUEncoderConf.verify_before_inference"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#block_zoo.encoder_decoder.SLUEncoder.SLUEncoderConf.verify_before_inference" title="Permalink to this definition">¶</a></dt>
+<dd><p>Some conditions must be fulfilled, otherwise there would be errors when calling inference()</p>
+<dl class="docutils">
+<dt>The difference between verify_before_inference() and verify() is that:</dt>
+<dd>verify_before_inference() is called before inference() while verify() is called after inference().</dd>
+</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">None</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-block_zoo.encoder_decoder">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-block_zoo.encoder_decoder" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, Quantus STCA team&lt;quantus_stca@microsoft.com&gt;
+
+    </p>
+  </div> 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

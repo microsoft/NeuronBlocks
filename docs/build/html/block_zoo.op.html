@@ -1,0 +1,601 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>block_zoo.op package &mdash; NeuronBlocks 1.1.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+        <script type="text/javascript" src="_static/language_data.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> NeuronBlocks
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.1.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="overview.html">Basic block_zoo</a></li>
+<li class="toctree-l1"><a class="reference internal" href="overview.html#id15">Attention</a></li>
+<li class="toctree-l1"><a class="reference internal" href="overview.html#id25">embedding</a></li>
+<li class="toctree-l1"><a class="reference internal" href="overview.html#id27">Operations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="overview.html#id31">Math</a></li>
+<li class="toctree-l1"><a class="reference internal" href="overview.html#id38">Transformer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="overview.html#id43">Encoder_Decoder</a></li>
+<li class="toctree-l1"><a class="reference internal" href="overview.html#id47">Normalizations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="overview.html#id49">Loss Functions</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">NeuronBlocks</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>block_zoo.op package</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/block_zoo.op.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="block-zoo-op-package">
+<h1>block_zoo.op package<a class="headerlink" href="#block-zoo-op-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-block_zoo.op.Combination">
+<span id="block-zoo-op-combination-module"></span><h2>block_zoo.op.Combination module<a class="headerlink" href="#module-block_zoo.op.Combination" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="block_zoo.op.Combination.Combination">
+<em class="property">class </em><code class="descclassname">block_zoo.op.Combination.</code><code class="descname">Combination</code><span class="sig-paren">(</span><em>layer_conf</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/block_zoo/op/Combination.html#Combination"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#block_zoo.op.Combination.Combination" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.modules.module.Module</span></code></p>
+<p>Combination layer to merge the representation of two sequence</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>layer_conf</strong> (<a class="reference internal" href="#block_zoo.op.Combination.CombinationConf" title="block_zoo.op.Combination.CombinationConf"><em>CombinationConf</em></a>) – configuration of a layer</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="block_zoo.op.Combination.Combination.forward">
+<code class="descname">forward</code><span class="sig-paren">(</span><em>*args</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/block_zoo/op/Combination.html#Combination.forward"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#block_zoo.op.Combination.Combination.forward" title="Permalink to this definition">¶</a></dt>
+<dd><p>process inputs</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>args</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.7)"><em>list</em></a>) – [string, string_len, string2, string2_len, …]
+e.g. string (Variable): [batch_size, dim], string_len (ndarray): [batch_size]</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">[batch_size, output_dim], None</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">Variable</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="block_zoo.op.Combination.CombinationConf">
+<em class="property">class </em><code class="descclassname">block_zoo.op.Combination.</code><code class="descname">CombinationConf</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/block_zoo/op/Combination.html#CombinationConf"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#block_zoo.op.Combination.CombinationConf" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="block_zoo.html#block_zoo.BaseLayer.BaseConf" title="block_zoo.BaseLayer.BaseConf"><code class="xref py py-class docutils literal notranslate"><span class="pre">block_zoo.BaseLayer.BaseConf</span></code></a></p>
+<p>Configuration for combination layer</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>operations</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.7)"><em>list</em></a>) – <p>a subset of [“origin”, “difference”, “dot_multiply”].
+“origin” means to keep the original representations;</p>
+<p>”difference” means abs(sequence1 - sequence2);
+“dot_multiply” means element-wised product;</p>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="block_zoo.op.Combination.CombinationConf.declare">
+<code class="descname">declare</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/block_zoo/op/Combination.html#CombinationConf.declare"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#block_zoo.op.Combination.CombinationConf.declare" title="Permalink to this definition">¶</a></dt>
+<dd><p>Define things like “input_ranks” and “num_of_inputs”, which are certain with regard to your layer</p>
+<blockquote>
+<div><p>num_of_input is N(N&gt;0) means this layer accepts N inputs;</p>
+<p>num_of_input is -1 means this layer accepts any number of inputs;</p>
+<p>The rank here is not the same as matrix rank:</p>
+<blockquote>
+<div><p>For a scalar, its rank is 0;</p>
+<p>For a vector, its rank is 1;</p>
+<p>For a matrix, its rank is 2;</p>
+<p>For a cube of numbers, its rank is 3.</p>
+</div></blockquote>
+<p>…
+For instance, the rank of (batch size, sequence length, hidden_dim) is 3.</p>
+<p>if num_of_input &gt; 0:</p>
+<blockquote>
+<div>len(input_ranks) should be equal to num_of_input</div></blockquote>
+<p>elif num_of_input == -1:</p>
+<blockquote>
+<div>input_ranks should be a list with only one element and the rank of all the inputs should be equal to that element.</div></blockquote>
+<p>NOTE: when we build the model, if num_of_input is -1, we would replace it with the real number of inputs and replace input_ranks with a list of real input_ranks.</p>
+</div></blockquote>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">None</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="block_zoo.op.Combination.CombinationConf.default">
+<code class="descname">default</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/block_zoo/op/Combination.html#CombinationConf.default"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#block_zoo.op.Combination.CombinationConf.default" title="Permalink to this definition">¶</a></dt>
+<dd><p>Define the default hyper parameters here. You can define these hyper parameters in your configuration file as well.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">None</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="block_zoo.op.Combination.CombinationConf.inference">
+<code class="descname">inference</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/block_zoo/op/Combination.html#CombinationConf.inference"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#block_zoo.op.Combination.CombinationConf.inference" title="Permalink to this definition">¶</a></dt>
+<dd><p>Inference things like output_dim, which may relies on defined hyper parameter such as hidden dim and input_dim</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">None</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="block_zoo.op.Combination.CombinationConf.verify">
+<code class="descname">verify</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/block_zoo/op/Combination.html#CombinationConf.verify"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#block_zoo.op.Combination.CombinationConf.verify" title="Permalink to this definition">¶</a></dt>
+<dd><p>Define some necessary varification for your layer when we define the model.</p>
+<p>If you define your own layer and rewrite this funciton, please add “super(YourLayerConf, self).verify()” at the beginning</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">None</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-block_zoo.op.Concat2D">
+<span id="block-zoo-op-concat2d-module"></span><h2>block_zoo.op.Concat2D module<a class="headerlink" href="#module-block_zoo.op.Concat2D" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="block_zoo.op.Concat2D.Concat2D">
+<em class="property">class </em><code class="descclassname">block_zoo.op.Concat2D.</code><code class="descname">Concat2D</code><span class="sig-paren">(</span><em>layer_conf</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/block_zoo/op/Concat2D.html#Concat2D"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#block_zoo.op.Concat2D.Concat2D" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.modules.module.Module</span></code></p>
+<p>Concat2D layer to merge sum of sequences(2D representation)</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>layer_conf</strong> (<a class="reference internal" href="#block_zoo.op.Concat2D.Concat2DConf" title="block_zoo.op.Concat2D.Concat2DConf"><em>Concat2DConf</em></a>) – configuration of a layer</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="block_zoo.op.Concat2D.Concat2D.forward">
+<code class="descname">forward</code><span class="sig-paren">(</span><em>*args</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/block_zoo/op/Concat2D.html#Concat2D.forward"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#block_zoo.op.Concat2D.Concat2D.forward" title="Permalink to this definition">¶</a></dt>
+<dd><p>process inputs</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>*args</strong> – (Tensor): string, string_len, string2, string2_len, …
+e.g. string (Tensor): [batch_size, dim], string_len (Tensor): [batch_size]</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">[batch_size, output_dim], [batch_size]</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">Tensor</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="block_zoo.op.Concat2D.Concat2DConf">
+<em class="property">class </em><code class="descclassname">block_zoo.op.Concat2D.</code><code class="descname">Concat2DConf</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/block_zoo/op/Concat2D.html#Concat2DConf"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#block_zoo.op.Concat2D.Concat2DConf" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="block_zoo.html#block_zoo.BaseLayer.BaseConf" title="block_zoo.BaseLayer.BaseConf"><code class="xref py py-class docutils literal notranslate"><span class="pre">block_zoo.BaseLayer.BaseConf</span></code></a></p>
+<p>Configuration of Concat2D Layer</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>concat2D_axis</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)"><em>int</em></a>) – which axis to conduct concat2D, default is 1.</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="block_zoo.op.Concat2D.Concat2DConf.declare">
+<code class="descname">declare</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/block_zoo/op/Concat2D.html#Concat2DConf.declare"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#block_zoo.op.Concat2D.Concat2DConf.declare" title="Permalink to this definition">¶</a></dt>
+<dd><p>Define things like “input_ranks” and “num_of_inputs”, which are certain with regard to your layer</p>
+<blockquote>
+<div><p>num_of_input is N(N&gt;0) means this layer accepts N inputs;</p>
+<p>num_of_input is -1 means this layer accepts any number of inputs;</p>
+<p>The rank here is not the same as matrix rank:</p>
+<blockquote>
+<div><p>For a scalar, its rank is 0;</p>
+<p>For a vector, its rank is 1;</p>
+<p>For a matrix, its rank is 2;</p>
+<p>For a cube of numbers, its rank is 3.</p>
+</div></blockquote>
+<p>…
+For instance, the rank of (batch size, sequence length, hidden_dim) is 3.</p>
+<p>if num_of_input &gt; 0:</p>
+<blockquote>
+<div>len(input_ranks) should be equal to num_of_input</div></blockquote>
+<p>elif num_of_input == -1:</p>
+<blockquote>
+<div>input_ranks should be a list with only one element and the rank of all the inputs should be equal to that element.</div></blockquote>
+<p>NOTE: when we build the model, if num_of_input is -1, we would replace it with the real number of inputs and replace input_ranks with a list of real input_ranks.</p>
+</div></blockquote>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">None</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="block_zoo.op.Concat2D.Concat2DConf.default">
+<code class="descname">default</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/block_zoo/op/Concat2D.html#Concat2DConf.default"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#block_zoo.op.Concat2D.Concat2DConf.default" title="Permalink to this definition">¶</a></dt>
+<dd><p>Define the default hyper parameters here. You can define these hyper parameters in your configuration file as well.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">None</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="block_zoo.op.Concat2D.Concat2DConf.inference">
+<code class="descname">inference</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/block_zoo/op/Concat2D.html#Concat2DConf.inference"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#block_zoo.op.Concat2D.Concat2DConf.inference" title="Permalink to this definition">¶</a></dt>
+<dd><p>Inference things like output_dim, which may relies on defined hyper parameter such as hidden dim and input_dim</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">None</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="block_zoo.op.Concat2D.Concat2DConf.verify">
+<code class="descname">verify</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/block_zoo/op/Concat2D.html#Concat2DConf.verify"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#block_zoo.op.Concat2D.Concat2DConf.verify" title="Permalink to this definition">¶</a></dt>
+<dd><p>Define some necessary varification for your layer when we define the model.</p>
+<p>If you define your own layer and rewrite this funciton, please add “super(YourLayerConf, self).verify()” at the beginning</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">None</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-block_zoo.op.Concat3D">
+<span id="block-zoo-op-concat3d-module"></span><h2>block_zoo.op.Concat3D module<a class="headerlink" href="#module-block_zoo.op.Concat3D" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="block_zoo.op.Concat3D.Concat3D">
+<em class="property">class </em><code class="descclassname">block_zoo.op.Concat3D.</code><code class="descname">Concat3D</code><span class="sig-paren">(</span><em>layer_conf</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/block_zoo/op/Concat3D.html#Concat3D"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#block_zoo.op.Concat3D.Concat3D" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.modules.module.Module</span></code></p>
+<p>Concat3D layer to merge sum of sequences(3D representation)</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>layer_conf</strong> (<a class="reference internal" href="#block_zoo.op.Concat3D.Concat3DConf" title="block_zoo.op.Concat3D.Concat3DConf"><em>Concat3DConf</em></a>) – configuration of a layer</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="block_zoo.op.Concat3D.Concat3D.forward">
+<code class="descname">forward</code><span class="sig-paren">(</span><em>*args</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/block_zoo/op/Concat3D.html#Concat3D.forward"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#block_zoo.op.Concat3D.Concat3D.forward" title="Permalink to this definition">¶</a></dt>
+<dd><p>process inputs</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>*args</strong> – (Tensor): string, string_len, string2, string2_len, …
+e.g. string (Tensor): [batch_size, seq_len, dim], string_len (Tensor): [batch_size]</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">[batch_size, seq_len, output_dim], [batch_size]</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">Tensor</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="block_zoo.op.Concat3D.Concat3DConf">
+<em class="property">class </em><code class="descclassname">block_zoo.op.Concat3D.</code><code class="descname">Concat3DConf</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/block_zoo/op/Concat3D.html#Concat3DConf"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#block_zoo.op.Concat3D.Concat3DConf" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="block_zoo.html#block_zoo.BaseLayer.BaseConf" title="block_zoo.BaseLayer.BaseConf"><code class="xref py py-class docutils literal notranslate"><span class="pre">block_zoo.BaseLayer.BaseConf</span></code></a></p>
+<p>Configuration of Concat3D layer</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>concat3D_axis</strong> (<em>1</em><em> or </em><em>2</em>) – which axis to conduct Concat3D, default is 2.</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="block_zoo.op.Concat3D.Concat3DConf.declare">
+<code class="descname">declare</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/block_zoo/op/Concat3D.html#Concat3DConf.declare"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#block_zoo.op.Concat3D.Concat3DConf.declare" title="Permalink to this definition">¶</a></dt>
+<dd><p>Define things like “input_ranks” and “num_of_inputs”, which are certain with regard to your layer</p>
+<blockquote>
+<div><p>num_of_input is N(N&gt;0) means this layer accepts N inputs;</p>
+<p>num_of_input is -1 means this layer accepts any number of inputs;</p>
+<p>The rank here is not the same as matrix rank:</p>
+<blockquote>
+<div><p>For a scalar, its rank is 0;</p>
+<p>For a vector, its rank is 1;</p>
+<p>For a matrix, its rank is 2;</p>
+<p>For a cube of numbers, its rank is 3.</p>
+</div></blockquote>
+<p>…
+For instance, the rank of (batch size, sequence length, hidden_dim) is 3.</p>
+<p>if num_of_input &gt; 0:</p>
+<blockquote>
+<div>len(input_ranks) should be equal to num_of_input</div></blockquote>
+<p>elif num_of_input == -1:</p>
+<blockquote>
+<div>input_ranks should be a list with only one element and the rank of all the inputs should be equal to that element.</div></blockquote>
+<p>NOTE: when we build the model, if num_of_input is -1, we would replace it with the real number of inputs and replace input_ranks with a list of real input_ranks.</p>
+</div></blockquote>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">None</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="block_zoo.op.Concat3D.Concat3DConf.default">
+<code class="descname">default</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/block_zoo/op/Concat3D.html#Concat3DConf.default"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#block_zoo.op.Concat3D.Concat3DConf.default" title="Permalink to this definition">¶</a></dt>
+<dd><p>Define the default hyper parameters here. You can define these hyper parameters in your configuration file as well.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">None</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="block_zoo.op.Concat3D.Concat3DConf.inference">
+<code class="descname">inference</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/block_zoo/op/Concat3D.html#Concat3DConf.inference"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#block_zoo.op.Concat3D.Concat3DConf.inference" title="Permalink to this definition">¶</a></dt>
+<dd><p>Inference things like output_dim, which may relies on defined hyper parameter such as hidden dim and input_dim</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">None</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="block_zoo.op.Concat3D.Concat3DConf.verify">
+<code class="descname">verify</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/block_zoo/op/Concat3D.html#Concat3DConf.verify"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#block_zoo.op.Concat3D.Concat3DConf.verify" title="Permalink to this definition">¶</a></dt>
+<dd><p>Define some necessary varification for your layer when we define the model.</p>
+<p>If you define your own layer and rewrite this funciton, please add “super(YourLayerConf, self).verify()” at the beginning</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">None</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-block_zoo.op">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-block_zoo.op" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, Quantus STCA team&lt;quantus_stca@microsoft.com&gt;
+
+    </p>
+  </div> 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

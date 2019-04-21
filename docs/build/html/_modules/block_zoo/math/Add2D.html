@@ -1,0 +1,287 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>block_zoo.math.Add2D &mdash; NeuronBlocks 1.1.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../../_static/language_data.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> NeuronBlocks
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.1.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../overview.html">Basic block_zoo</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../overview.html#id15">Attention</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../overview.html#id25">embedding</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../overview.html#id27">Operations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../overview.html#id31">Math</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../overview.html#id38">Transformer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../overview.html#id43">Encoder_Decoder</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../overview.html#id47">Normalizations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../overview.html#id49">Loss Functions</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">NeuronBlocks</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+      <li>block_zoo.math.Add2D</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for block_zoo.math.Add2D</h1><div class="highlight"><pre>
+<span></span><span class="c1"># Copyright (c) Microsoft Corporation. All rights reserved.</span>
+<span class="c1"># Licensed under the MIT license.</span>
+
+<span class="kn">import</span> <span class="nn">torch</span>
+<span class="kn">import</span> <span class="nn">torch.nn</span> <span class="k">as</span> <span class="nn">nn</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+
+<span class="kn">from</span> <span class="nn">..BaseLayer</span> <span class="k">import</span> <span class="n">BaseConf</span>
+<span class="kn">from</span> <span class="nn">utils.DocInherit</span> <span class="k">import</span> <span class="n">DocInherit</span>
+<span class="kn">from</span> <span class="nn">utils.exceptions</span> <span class="k">import</span> <span class="n">ConfigurationError</span>
+<span class="kn">import</span> <span class="nn">copy</span>
+
+<div class="viewcode-block" id="Add2DConf"><a class="viewcode-back" href="../../../block_zoo.math.html#block_zoo.math.Add2D.Add2DConf">[docs]</a><span class="k">class</span> <span class="nc">Add2DConf</span><span class="p">(</span><span class="n">BaseConf</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Configuration of Add2D layer</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1">#init the args</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">Add2DConf</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+    <span class="c1">#set default params</span>
+    <span class="c1">#@DocInherit</span>
+    <span class="c1">#def default(self):</span>
+
+<div class="viewcode-block" id="Add2DConf.declare"><a class="viewcode-back" href="../../../block_zoo.math.html#block_zoo.math.Add2D.Add2DConf.declare">[docs]</a>    <span class="nd">@DocInherit</span>
+    <span class="k">def</span> <span class="nf">declare</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">num_of_inputs</span> <span class="o">=</span> <span class="mi">2</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">input_ranks</span> <span class="o">=</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="Add2DConf.inference"><a class="viewcode-back" href="../../../block_zoo.math.html#block_zoo.math.Add2D.Add2DConf.inference">[docs]</a>    <span class="nd">@DocInherit</span>
+    <span class="k">def</span> <span class="nf">inference</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">output_dim</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">input_dims</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">input_dims</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">output_dim</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">input_dims</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">output_dim</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">input_dims</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span>
+
+        <span class="nb">super</span><span class="p">(</span><span class="n">Add2DConf</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">inference</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="Add2DConf.verify"><a class="viewcode-back" href="../../../block_zoo.math.html#block_zoo.math.Add2D.Add2DConf.verify">[docs]</a>    <span class="nd">@DocInherit</span>
+    <span class="k">def</span> <span class="nf">verify</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">Add2DConf</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">verify</span><span class="p">()</span>
+
+        <span class="c1"># # to check if the ranks of all the inputs are equal</span>
+        <span class="c1"># rank_equal_flag = True</span>
+        <span class="c1"># for i in range(len(self.input_ranks)):</span>
+        <span class="c1">#     if self.input_ranks[i] != self.input_ranks[0]:</span>
+        <span class="c1">#         rank_equal_flag = False</span>
+        <span class="c1">#         break</span>
+        <span class="c1"># if rank_equal_flag == False:</span>
+        <span class="c1">#     raise ConfigurationError(&quot;For layer Add2D, the ranks of each inputs should be equal!&quot;)</span>
+
+        <span class="c1"># to check if the dimensions of all the inputs are equal or is 1</span>
+        <span class="n">dim_flag</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="n">input_dims</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">input_dims</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">input_dims</span><span class="p">)):</span>
+            <span class="k">if</span> <span class="n">input_dims</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">!=</span> <span class="n">input_dims</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="ow">and</span> <span class="n">input_dims</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">!=</span> <span class="mi">1</span> <span class="ow">and</span> <span class="n">input_dims</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="n">dim_flag</span> <span class="o">=</span> <span class="kc">False</span>
+                <span class="k">break</span>
+        <span class="k">if</span> <span class="n">dim_flag</span> <span class="o">==</span> <span class="kc">False</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">ConfigurationError</span><span class="p">(</span><span class="s2">&quot;For layer Add2D, the dimensions of each inputs should be equal or 1&quot;</span><span class="p">)</span></div></div>
+
+<div class="viewcode-block" id="Add2D"><a class="viewcode-back" href="../../../block_zoo.math.html#block_zoo.math.Add2D.Add2D">[docs]</a><span class="k">class</span> <span class="nc">Add2D</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Add2D layer to get sum of two sequences(2D representation)</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        layer_conf (Add2DConf): configuration of a layer</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">layer_conf</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">Add2D</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">layer_conf</span> <span class="o">=</span> <span class="n">layer_conf</span>
+
+        <span class="n">logging</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;The length Add2D layer returns is the length of first input&quot;</span><span class="p">)</span>
+
+<div class="viewcode-block" id="Add2D.forward"><a class="viewcode-back" href="../../../block_zoo.math.html#block_zoo.math.Add2D.Add2D.forward">[docs]</a>    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; process input</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            *args: (Tensor): string, string_len, string2, string2_len</span>
+<span class="sd">                e.g. string (Tensor): [batch_size, dim], string_len (Tensor): [batch_size]</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Tensor: [batch_size, output_dim], [batch_size]</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">torch</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">args</span><span class="p">[</span><span class="mi">2</span><span class="p">]),</span><span class="n">args</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span></div></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, Quantus STCA team&lt;quantus_stca@microsoft.com&gt;
+
+    </p>
+  </div> 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

@@ -1,0 +1,373 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>block_zoo.encoder_decoder.SLUDecoder &mdash; NeuronBlocks 1.1.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../../_static/language_data.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> NeuronBlocks
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.1.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../overview.html">Basic block_zoo</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../overview.html#id15">Attention</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../overview.html#id25">embedding</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../overview.html#id27">Operations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../overview.html#id31">Math</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../overview.html#id38">Transformer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../overview.html#id43">Encoder_Decoder</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../overview.html#id47">Normalizations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../overview.html#id49">Loss Functions</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">NeuronBlocks</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+      <li>block_zoo.encoder_decoder.SLUDecoder</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for block_zoo.encoder_decoder.SLUDecoder</h1><div class="highlight"><pre>
+<span></span><span class="c1"># Copyright (c) Microsoft Corporation. All rights reserved.</span>
+<span class="c1"># Licensed under the MIT license.</span>
+
+
+<span class="kn">import</span> <span class="nn">torch</span>
+<span class="kn">import</span> <span class="nn">torch.nn</span> <span class="k">as</span> <span class="nn">nn</span>
+<span class="kn">import</span> <span class="nn">torch.nn.functional</span> <span class="k">as</span> <span class="nn">F</span>
+<span class="kn">from</span> <span class="nn">torch.autograd</span> <span class="k">import</span> <span class="n">Variable</span>
+
+<span class="kn">import</span> <span class="nn">copy</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">block_zoo.BaseLayer</span> <span class="k">import</span> <span class="n">BaseLayer</span><span class="p">,</span> <span class="n">BaseConf</span>
+<span class="c1">#from layers.EncoderDecoder import EncoderDecoderConf</span>
+<span class="kn">from</span> <span class="nn">utils.DocInherit</span> <span class="k">import</span> <span class="n">DocInherit</span>
+<span class="kn">from</span> <span class="nn">utils.corpus_utils</span> <span class="k">import</span> <span class="n">get_seq_mask</span>
+
+<div class="viewcode-block" id="SLUDecoderConf"><a class="viewcode-back" href="../../../block_zoo.encoder_decoder.html#block_zoo.encoder_decoder.SLUDecoder.SLUDecoderConf">[docs]</a><span class="k">class</span> <span class="nc">SLUDecoderConf</span><span class="p">(</span><span class="n">BaseConf</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Configuration of Spoken Language Understanding Encoder</span>
+
+<span class="sd">    References:</span>
+<span class="sd">        Liu, B., &amp; Lane, I. (2016). Attention-based recurrent neural network models for joint intent detection and slot filling. Proceedings of the Annual Conference of the International Speech Communication Association, INTERSPEECH, (1), 685–689. https://doi.org/10.21437/Interspeech.2016-1352</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        hidden_dim (int): dimension of hidden state</span>
+<span class="sd">        dropout (float): dropout rate</span>
+<span class="sd">        num_layers (int): number of BiLSTM layers</span>
+<span class="sd">        num_decoder_output (int):</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">SLUDecoderConf</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+<div class="viewcode-block" id="SLUDecoderConf.default"><a class="viewcode-back" href="../../../block_zoo.encoder_decoder.html#block_zoo.encoder_decoder.SLUDecoder.SLUDecoderConf.default">[docs]</a>    <span class="nd">@DocInherit</span>
+    <span class="k">def</span> <span class="nf">default</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">hidden_dim</span> <span class="o">=</span> <span class="mi">128</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dropout</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">num_layers</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">decoder_emb_dim</span> <span class="o">=</span> <span class="mi">100</span>
+
+        <span class="c1"># number of decoder&#39;s outputs. E.g., for slot tagging, num_decoder_output means the number of tags;</span>
+        <span class="c1"># for machine translation, num_decoder_output means the number of words in the target language;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">decoder_vocab_size</span> <span class="o">=</span> <span class="mi">10000</span></div>
+
+        <span class="c1">#input_dim and input_context_dim should be inferenced from encoder</span>
+
+<div class="viewcode-block" id="SLUDecoderConf.declare"><a class="viewcode-back" href="../../../block_zoo.encoder_decoder.html#block_zoo.encoder_decoder.SLUDecoder.SLUDecoderConf.declare">[docs]</a>    <span class="nd">@DocInherit</span>
+    <span class="k">def</span> <span class="nf">declare</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">num_of_inputs</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">input_ranks</span> <span class="o">=</span> <span class="p">[</span><span class="mi">3</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="SLUDecoderConf.inference"><a class="viewcode-back" href="../../../block_zoo.encoder_decoder.html#block_zoo.encoder_decoder.SLUDecoder.SLUDecoderConf.inference">[docs]</a>    <span class="nd">@DocInherit</span>
+    <span class="k">def</span> <span class="nf">inference</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">output_dim</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">input_dims</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">output_dim</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">decoder_vocab_size</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">SLUDecoderConf</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">inference</span><span class="p">()</span>  <span class="c1"># PUT THIS LINE AT THE END OF inference()</span></div>
+
+<div class="viewcode-block" id="SLUDecoderConf.verify"><a class="viewcode-back" href="../../../block_zoo.encoder_decoder.html#block_zoo.encoder_decoder.SLUDecoder.SLUDecoderConf.verify">[docs]</a>    <span class="nd">@DocInherit</span>
+    <span class="k">def</span> <span class="nf">verify</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">SLUDecoderConf</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">verify</span><span class="p">()</span>
+
+        <span class="n">necessary_attrs_for_user</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;hidden_dim&#39;</span><span class="p">,</span> <span class="s1">&#39;dropout&#39;</span><span class="p">,</span> <span class="s1">&#39;num_layers&#39;</span><span class="p">,</span> <span class="s1">&#39;decoder_emb_dim&#39;</span><span class="p">,</span> <span class="s1">&#39;decoder_vocab_size&#39;</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">attr</span> <span class="ow">in</span> <span class="n">necessary_attrs_for_user</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_attr_exist_assertion_for_user</span><span class="p">(</span><span class="n">attr</span><span class="p">)</span>
+
+        <span class="n">necessary_attrs_for_dev</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;input_dims&#39;</span><span class="p">,</span> <span class="s1">&#39;input_context_dims&#39;</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">attr</span> <span class="ow">in</span> <span class="n">necessary_attrs_for_dev</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_attr_exist_assertion_for_dev</span><span class="p">(</span><span class="n">attr</span><span class="p">)</span></div></div>
+
+
+<div class="viewcode-block" id="SLUDecoder"><a class="viewcode-back" href="../../../block_zoo.encoder_decoder.html#block_zoo.encoder_decoder.SLUDecoder.SLUDecoder">[docs]</a><span class="k">class</span> <span class="nc">SLUDecoder</span><span class="p">(</span><span class="n">BaseLayer</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Spoken Language Understanding Encoder</span>
+
+<span class="sd">    References:</span>
+<span class="sd">        Liu, B., &amp; Lane, I. (2016). Attention-based recurrent neural network models for joint intent detection and slot filling. Proceedings of the Annual Conference of the International Speech Communication Association, INTERSPEECH, (1), 685–689. https://doi.org/10.21437/Interspeech.2016-1352</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        layer_conf (SLUEncoderConf): configuration of a layer</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">layer_conf</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">SLUDecoder</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">layer_conf</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">layer_conf</span> <span class="o">=</span> <span class="n">layer_conf</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">embedding</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Embedding</span><span class="p">(</span><span class="n">layer_conf</span><span class="o">.</span><span class="n">decoder_vocab_size</span><span class="p">,</span> <span class="n">layer_conf</span><span class="o">.</span><span class="n">decoder_emb_dim</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">embedding</span><span class="o">.</span><span class="n">weight</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">uniform_</span><span class="p">(</span><span class="o">-</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">)</span>  <span class="c1"># init</span>
+        <span class="c1">#nn.init.uniform(self.embedding.weight, -0.1, 0.1)</span>
+
+        <span class="c1">#self.dropout = nn.Dropout(self.dropout_p)</span>
+        <span class="c1">#self.lstm = nn.LSTM(layer_conf.decoder_emb_dim + layer_conf.hidden_dim * 2, layer_conf.hidden_dim, layer_conf.num_layers, batch_first=True)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lstm</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">LSTM</span><span class="p">(</span><span class="n">layer_conf</span><span class="o">.</span><span class="n">decoder_emb_dim</span> <span class="o">+</span> <span class="n">layer_conf</span><span class="o">.</span><span class="n">input_dims</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">layer_conf</span><span class="o">.</span><span class="n">input_context_dims</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span>
+            <span class="n">layer_conf</span><span class="o">.</span><span class="n">hidden_dim</span><span class="p">,</span> <span class="n">layer_conf</span><span class="o">.</span><span class="n">num_layers</span><span class="p">,</span> <span class="n">batch_first</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>     <span class="c1"># CAUTION: single direction</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">attn</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">layer_conf</span><span class="o">.</span><span class="n">input_context_dims</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">layer_conf</span><span class="o">.</span><span class="n">hidden_dim</span> <span class="o">*</span><span class="n">layer_conf</span><span class="o">.</span><span class="n">num_layers</span><span class="p">)</span> <span class="c1"># Attention</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">slot_out</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">layer_conf</span><span class="o">.</span><span class="n">input_context_dims</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">layer_conf</span><span class="o">.</span><span class="n">hidden_dim</span> <span class="o">*</span> <span class="mi">1</span> <span class="o">*</span><span class="n">layer_conf</span><span class="o">.</span><span class="n">num_layers</span><span class="p">,</span> <span class="n">layer_conf</span><span class="o">.</span><span class="n">decoder_vocab_size</span><span class="p">)</span>
+
+<div class="viewcode-block" id="SLUDecoder.Attention"><a class="viewcode-back" href="../../../block_zoo.encoder_decoder.html#block_zoo.encoder_decoder.SLUDecoder.SLUDecoder.Attention">[docs]</a>    <span class="k">def</span> <span class="nf">Attention</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">hidden</span><span class="p">,</span> <span class="n">encoder_outputs</span><span class="p">,</span> <span class="n">encoder_maskings</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            hidden : 1,B,D</span>
+<span class="sd">            encoder_outputs : B,T,D</span>
+<span class="sd">            encoder_maskings : B,T # ByteTensor</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">hidden</span> <span class="o">=</span> <span class="n">hidden</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="n">hidden</span><span class="o">.</span><span class="n">size</span><span class="p">()[</span><span class="mi">1</span><span class="p">],</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+
+        <span class="n">batch_size</span> <span class="o">=</span> <span class="n">encoder_outputs</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>  <span class="c1"># B</span>
+        <span class="n">max_len</span> <span class="o">=</span> <span class="n">encoder_outputs</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>  <span class="c1"># T</span>
+        <span class="n">energies</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">attn</span><span class="p">(</span><span class="n">encoder_outputs</span><span class="o">.</span><span class="n">contiguous</span><span class="p">()</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="n">batch_size</span> <span class="o">*</span> <span class="n">max_len</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">))</span>  <span class="c1"># B*T,D -&gt; B*T,D</span>
+        <span class="n">energies</span> <span class="o">=</span> <span class="n">energies</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="n">batch_size</span><span class="p">,</span> <span class="n">max_len</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>  <span class="c1"># B,T,D</span>
+        <span class="n">attn_energies</span> <span class="o">=</span> <span class="n">energies</span><span class="o">.</span><span class="n">bmm</span><span class="p">(</span><span class="n">hidden</span><span class="p">)</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>  <span class="c1"># B,T,D * B,D,1 --&gt; B,1,T</span>
+        <span class="n">attn_energies</span> <span class="o">=</span> <span class="n">attn_energies</span><span class="o">.</span><span class="n">squeeze</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">masked_fill</span><span class="p">(</span><span class="n">encoder_maskings</span><span class="p">,</span> <span class="o">-</span><span class="mf">1e12</span><span class="p">)</span>  <span class="c1"># PAD masking</span>
+
+        <span class="n">alpha</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">softmax</span><span class="p">(</span><span class="n">attn_energies</span><span class="p">)</span>  <span class="c1"># B,T</span>
+        <span class="n">alpha</span> <span class="o">=</span> <span class="n">alpha</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>  <span class="c1"># B,1,T</span>
+        <span class="n">context</span> <span class="o">=</span> <span class="n">alpha</span><span class="o">.</span><span class="n">bmm</span><span class="p">(</span><span class="n">encoder_outputs</span><span class="p">)</span>  <span class="c1"># B,1,T * B,T,D =&gt; B,1,D</span>
+
+        <span class="k">return</span> <span class="n">context</span>  <span class="c1"># B,1,D</span></div>
+
+<div class="viewcode-block" id="SLUDecoder.forward"><a class="viewcode-back" href="../../../block_zoo.encoder_decoder.html#block_zoo.encoder_decoder.SLUDecoder.SLUDecoder.forward">[docs]</a>    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">string</span><span class="p">,</span> <span class="n">string_len</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="n">encoder_outputs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; process inputs</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            string (Variable): word ids, [batch_size, seq_len]</span>
+<span class="sd">            string_len (ndarray): [batch_size]</span>
+<span class="sd">            context (Variable): [batch_size, 1, input_dim]</span>
+<span class="sd">            encoder_outputs (Variable): [batch_size, max_seq_len, input_dim]</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Variable : decode scores with shape [batch_size, seq_len, decoder_vocab_size]</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">batch_size</span> <span class="o">=</span> <span class="n">string</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">device_count</span><span class="p">()</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="c1"># otherwise, it will raise a Exception because the length inconsistence</span>
+            <span class="n">string_mask</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">ByteTensor</span><span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">get_seq_mask</span><span class="p">(</span><span class="n">string_len</span><span class="p">,</span> <span class="n">max_seq_len</span><span class="o">=</span><span class="n">string</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>  <span class="c1"># [batch_size, max_seq_len]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">string_mask</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">ByteTensor</span><span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">get_seq_mask</span><span class="p">(</span><span class="n">string_len</span><span class="p">))</span>  <span class="c1"># [batch_size, max_seq_len]</span>
+
+        <span class="n">decoded</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">LongTensor</span><span class="p">([[</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="n">batch_size</span><span class="p">])</span>
+        <span class="n">hidden_init</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">layer_conf</span><span class="o">.</span><span class="n">num_layers</span> <span class="o">*</span> <span class="mi">1</span><span class="p">,</span> <span class="n">batch_size</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">layer_conf</span><span class="o">.</span><span class="n">hidden_dim</span><span class="p">)</span>
+        <span class="n">context_init</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">layer_conf</span><span class="o">.</span><span class="n">num_layers</span><span class="o">*</span><span class="mi">1</span><span class="p">,</span> <span class="n">batch_size</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">layer_conf</span><span class="o">.</span><span class="n">hidden_dim</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_cuda</span><span class="p">():</span>
+            <span class="n">device</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">device</span><span class="p">(</span><span class="s2">&quot;cuda&quot;</span> <span class="k">if</span> <span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">is_available</span><span class="p">()</span> <span class="k">else</span> <span class="s2">&quot;cpu&quot;</span><span class="p">)</span>
+            <span class="n">string_mask</span> <span class="o">=</span> <span class="n">string_mask</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
+            <span class="c1"># Note id of &quot;&lt;start&gt;&quot; is 1!   decoded  is a batch of &#39;&lt;start&gt;&#39; at first</span>
+            <span class="n">decoded</span> <span class="o">=</span> <span class="n">decoded</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
+            <span class="n">hidden_init</span> <span class="o">=</span> <span class="n">hidden_init</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
+            <span class="n">context_init</span> <span class="o">=</span> <span class="n">context_init</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
+
+        <span class="n">decoded</span> <span class="o">=</span> <span class="n">decoded</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>      <span class="c1"># [batch_size, 1]</span>
+
+        <span class="n">embedded</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">embedding</span><span class="p">(</span><span class="n">decoded</span><span class="p">)</span>
+        <span class="n">hidden</span> <span class="o">=</span> <span class="p">(</span><span class="n">hidden_init</span><span class="p">,</span> <span class="n">context_init</span><span class="p">)</span>
+
+        <span class="n">decode</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">aligns</span> <span class="o">=</span> <span class="n">encoder_outputs</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>    <span class="c1">#[seq_len, bs, input_dim]</span>
+        <span class="n">length</span> <span class="o">=</span> <span class="n">encoder_outputs</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">length</span><span class="p">):</span>
+            <span class="n">aligned</span> <span class="o">=</span> <span class="n">aligns</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>  <span class="c1"># [bs, 1, input_dim]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">lstm</span><span class="o">.</span><span class="n">flatten_parameters</span><span class="p">()</span>
+            <span class="n">_</span><span class="p">,</span> <span class="n">hidden</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">lstm</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">((</span><span class="n">embedded</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="n">aligned</span><span class="p">),</span> <span class="mi">2</span><span class="p">),</span> <span class="n">hidden</span><span class="p">)</span>
+
+            <span class="n">concated</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">((</span><span class="n">hidden</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">batch_size</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">),</span> <span class="n">context</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)),</span> <span class="mi">2</span><span class="p">)</span>
+            <span class="n">score</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">slot_out</span><span class="p">(</span><span class="n">concated</span><span class="o">.</span><span class="n">squeeze</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
+            <span class="n">softmaxed</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">log_softmax</span><span class="p">(</span><span class="n">score</span><span class="p">)</span>        <span class="c1"># decoder_vocab_dim</span>
+            <span class="n">decode</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">softmaxed</span><span class="p">)</span>
+            <span class="n">_</span><span class="p">,</span> <span class="n">decoded</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">softmaxed</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+            <span class="n">embedded</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">embedding</span><span class="p">(</span><span class="n">decoded</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
+            <span class="n">context</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">Attention</span><span class="p">(</span><span class="n">hidden</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">encoder_outputs</span><span class="p">,</span> <span class="n">string_mask</span><span class="p">)</span>
+        <span class="n">slot_scores</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">(</span><span class="n">decode</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">slot_scores</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="n">batch_size</span><span class="p">,</span> <span class="n">length</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span></div></div>
+
+
+
+
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, Quantus STCA team&lt;quantus_stca@microsoft.com&gt;
+
+    </p>
+  </div> 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

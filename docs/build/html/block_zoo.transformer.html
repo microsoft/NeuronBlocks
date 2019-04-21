@@ -1,0 +1,499 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>block_zoo.transformer package &mdash; NeuronBlocks 1.1.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+        <script type="text/javascript" src="_static/language_data.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> NeuronBlocks
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.1.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="overview.html">Basic block_zoo</a></li>
+<li class="toctree-l1"><a class="reference internal" href="overview.html#id15">Attention</a></li>
+<li class="toctree-l1"><a class="reference internal" href="overview.html#id25">embedding</a></li>
+<li class="toctree-l1"><a class="reference internal" href="overview.html#id27">Operations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="overview.html#id31">Math</a></li>
+<li class="toctree-l1"><a class="reference internal" href="overview.html#id38">Transformer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="overview.html#id43">Encoder_Decoder</a></li>
+<li class="toctree-l1"><a class="reference internal" href="overview.html#id47">Normalizations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="overview.html#id49">Loss Functions</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">NeuronBlocks</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>block_zoo.transformer package</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/block_zoo.transformer.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="block-zoo-transformer-package">
+<h1>block_zoo.transformer package<a class="headerlink" href="#block-zoo-transformer-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-block_zoo.transformer.MLP">
+<span id="block-zoo-transformer-mlp-module"></span><h2>block_zoo.transformer.MLP module<a class="headerlink" href="#module-block_zoo.transformer.MLP" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="block_zoo.transformer.MLP.MLP">
+<em class="property">class </em><code class="descclassname">block_zoo.transformer.MLP.</code><code class="descname">MLP</code><span class="sig-paren">(</span><em>layer_conf</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/block_zoo/transformer/MLP.html#MLP"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#block_zoo.transformer.MLP.MLP" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.modules.module.Module</span></code></p>
+<p>MLP layer</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>layer_conf</strong> (<a class="reference internal" href="#block_zoo.transformer.MLP.MLPConf" title="block_zoo.transformer.MLP.MLPConf"><em>MLPConf</em></a>) – configuration of a layer</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="block_zoo.transformer.MLP.MLP.forward">
+<code class="descname">forward</code><span class="sig-paren">(</span><em>string</em>, <em>string_len</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/block_zoo/transformer/MLP.html#MLP.forward"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#block_zoo.transformer.MLP.MLP.forward" title="Permalink to this definition">¶</a></dt>
+<dd><p>process input</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>string_len</strong> (<em>string</em><em>,</em>) – </li>
+<li><strong>string</strong> (<em>e.g.</em>) – [batch_size, seq_len, dim], string_len (Tensor): [batch_size]</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">[batch_size, seq_len, output_dim], [batch_size]</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">Tensor</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="block_zoo.transformer.MLP.MLP.gelu">
+<code class="descname">gelu</code><span class="sig-paren">(</span><em>x</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/block_zoo/transformer/MLP.html#MLP.gelu"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#block_zoo.transformer.MLP.MLP.gelu" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="block_zoo.transformer.MLP.MLPConf">
+<em class="property">class </em><code class="descclassname">block_zoo.transformer.MLP.</code><code class="descname">MLPConf</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/block_zoo/transformer/MLP.html#MLPConf"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#block_zoo.transformer.MLP.MLPConf" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="block_zoo.html#block_zoo.BaseLayer.BaseConf" title="block_zoo.BaseLayer.BaseConf"><code class="xref py py-class docutils literal notranslate"><span class="pre">block_zoo.BaseLayer.BaseConf</span></code></a></p>
+<p>Configuration of MLP layer</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>dropout</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – the dropout of MLP layer</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="block_zoo.transformer.MLP.MLPConf.declare">
+<code class="descname">declare</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/block_zoo/transformer/MLP.html#MLPConf.declare"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#block_zoo.transformer.MLP.MLPConf.declare" title="Permalink to this definition">¶</a></dt>
+<dd><p>Define things like “input_ranks” and “num_of_inputs”, which are certain with regard to your layer</p>
+<blockquote>
+<div><p>num_of_input is N(N&gt;0) means this layer accepts N inputs;</p>
+<p>num_of_input is -1 means this layer accepts any number of inputs;</p>
+<p>The rank here is not the same as matrix rank:</p>
+<blockquote>
+<div><p>For a scalar, its rank is 0;</p>
+<p>For a vector, its rank is 1;</p>
+<p>For a matrix, its rank is 2;</p>
+<p>For a cube of numbers, its rank is 3.</p>
+</div></blockquote>
+<p>…
+For instance, the rank of (batch size, sequence length, hidden_dim) is 3.</p>
+<p>if num_of_input &gt; 0:</p>
+<blockquote>
+<div>len(input_ranks) should be equal to num_of_input</div></blockquote>
+<p>elif num_of_input == -1:</p>
+<blockquote>
+<div>input_ranks should be a list with only one element and the rank of all the inputs should be equal to that element.</div></blockquote>
+<p>NOTE: when we build the model, if num_of_input is -1, we would replace it with the real number of inputs and replace input_ranks with a list of real input_ranks.</p>
+</div></blockquote>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">None</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="block_zoo.transformer.MLP.MLPConf.default">
+<code class="descname">default</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/block_zoo/transformer/MLP.html#MLPConf.default"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#block_zoo.transformer.MLP.MLPConf.default" title="Permalink to this definition">¶</a></dt>
+<dd><p>Define the default hyper parameters here. You can define these hyper parameters in your configuration file as well.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">None</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="block_zoo.transformer.MLP.MLPConf.inference">
+<code class="descname">inference</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/block_zoo/transformer/MLP.html#MLPConf.inference"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#block_zoo.transformer.MLP.MLPConf.inference" title="Permalink to this definition">¶</a></dt>
+<dd><p>Inference things like output_dim, which may relies on defined hyper parameter such as hidden dim and input_dim</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">None</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="block_zoo.transformer.MLP.MLPConf.verify">
+<code class="descname">verify</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/block_zoo/transformer/MLP.html#MLPConf.verify"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#block_zoo.transformer.MLP.MLPConf.verify" title="Permalink to this definition">¶</a></dt>
+<dd><p>Define some necessary varification for your layer when we define the model.</p>
+<p>If you define your own layer and rewrite this funciton, please add “super(YourLayerConf, self).verify()” at the beginning</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">None</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-block_zoo.transformer.MultiHeadAttention">
+<span id="block-zoo-transformer-multiheadattention-module"></span><h2>block_zoo.transformer.MultiHeadAttention module<a class="headerlink" href="#module-block_zoo.transformer.MultiHeadAttention" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="block_zoo.transformer.MultiHeadAttention.MultiHeadAttention">
+<em class="property">class </em><code class="descclassname">block_zoo.transformer.MultiHeadAttention.</code><code class="descname">MultiHeadAttention</code><span class="sig-paren">(</span><em>layer_conf</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/block_zoo/transformer/MultiHeadAttention.html#MultiHeadAttention"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#block_zoo.transformer.MultiHeadAttention.MultiHeadAttention" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.modules.module.Module</span></code></p>
+<p>MultiHeadAttention Layer</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>layer_conf</strong> (<a class="reference internal" href="#block_zoo.transformer.MultiHeadAttention.MultiHeadAttentionConf" title="block_zoo.transformer.MultiHeadAttention.MultiHeadAttentionConf"><em>MultiHeadAttentionConf</em></a>) – configuration of a layer</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="block_zoo.transformer.MultiHeadAttention.MultiHeadAttention.forward">
+<code class="descname">forward</code><span class="sig-paren">(</span><em>string</em>, <em>string_len</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/block_zoo/transformer/MultiHeadAttention.html#MultiHeadAttention.forward"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#block_zoo.transformer.MultiHeadAttention.MultiHeadAttention.forward" title="Permalink to this definition">¶</a></dt>
+<dd><p>process input</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>string_len</strong> (<em>string</em><em>,</em>) – </li>
+<li><strong>string</strong> (<em>e.g.</em>) – [batch_size, seq_len, dim], string_len (Tensor): [batch_size]</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">[batch_size, seq_len, output_dim], [batch_size]</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">Tensor</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="block_zoo.transformer.MultiHeadAttention.MultiHeadAttention.merge_heads">
+<code class="descname">merge_heads</code><span class="sig-paren">(</span><em>x</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/block_zoo/transformer/MultiHeadAttention.html#MultiHeadAttention.merge_heads"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#block_zoo.transformer.MultiHeadAttention.MultiHeadAttention.merge_heads" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="block_zoo.transformer.MultiHeadAttention.MultiHeadAttention.split_heads">
+<code class="descname">split_heads</code><span class="sig-paren">(</span><em>x</em>, <em>k=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/block_zoo/transformer/MultiHeadAttention.html#MultiHeadAttention.split_heads"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#block_zoo.transformer.MultiHeadAttention.MultiHeadAttention.split_heads" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="block_zoo.transformer.MultiHeadAttention.MultiHeadAttentionConf">
+<em class="property">class </em><code class="descclassname">block_zoo.transformer.MultiHeadAttention.</code><code class="descname">MultiHeadAttentionConf</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/block_zoo/transformer/MultiHeadAttention.html#MultiHeadAttentionConf"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#block_zoo.transformer.MultiHeadAttention.MultiHeadAttentionConf" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="block_zoo.html#block_zoo.BaseLayer.BaseConf" title="block_zoo.BaseLayer.BaseConf"><code class="xref py py-class docutils literal notranslate"><span class="pre">block_zoo.BaseLayer.BaseConf</span></code></a></p>
+<p>Configuration of MultiHeadAttention Layer</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>n_head</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)"><em>int</em></a>) – the head number of attention</li>
+<li><strong>scale</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.7)"><em>bool</em></a>) – if need to scale</li>
+<li><strong>attn_dropout</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – the dropout of attention layer</li>
+<li><strong>resid_dropout</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – the dropout of last Linear</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="block_zoo.transformer.MultiHeadAttention.MultiHeadAttentionConf.declare">
+<code class="descname">declare</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/block_zoo/transformer/MultiHeadAttention.html#MultiHeadAttentionConf.declare"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#block_zoo.transformer.MultiHeadAttention.MultiHeadAttentionConf.declare" title="Permalink to this definition">¶</a></dt>
+<dd><p>Define things like “input_ranks” and “num_of_inputs”, which are certain with regard to your layer</p>
+<blockquote>
+<div><p>num_of_input is N(N&gt;0) means this layer accepts N inputs;</p>
+<p>num_of_input is -1 means this layer accepts any number of inputs;</p>
+<p>The rank here is not the same as matrix rank:</p>
+<blockquote>
+<div><p>For a scalar, its rank is 0;</p>
+<p>For a vector, its rank is 1;</p>
+<p>For a matrix, its rank is 2;</p>
+<p>For a cube of numbers, its rank is 3.</p>
+</div></blockquote>
+<p>…
+For instance, the rank of (batch size, sequence length, hidden_dim) is 3.</p>
+<p>if num_of_input &gt; 0:</p>
+<blockquote>
+<div>len(input_ranks) should be equal to num_of_input</div></blockquote>
+<p>elif num_of_input == -1:</p>
+<blockquote>
+<div>input_ranks should be a list with only one element and the rank of all the inputs should be equal to that element.</div></blockquote>
+<p>NOTE: when we build the model, if num_of_input is -1, we would replace it with the real number of inputs and replace input_ranks with a list of real input_ranks.</p>
+</div></blockquote>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">None</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="block_zoo.transformer.MultiHeadAttention.MultiHeadAttentionConf.default">
+<code class="descname">default</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/block_zoo/transformer/MultiHeadAttention.html#MultiHeadAttentionConf.default"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#block_zoo.transformer.MultiHeadAttention.MultiHeadAttentionConf.default" title="Permalink to this definition">¶</a></dt>
+<dd><p>Define the default hyper parameters here. You can define these hyper parameters in your configuration file as well.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">None</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="block_zoo.transformer.MultiHeadAttention.MultiHeadAttentionConf.inference">
+<code class="descname">inference</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/block_zoo/transformer/MultiHeadAttention.html#MultiHeadAttentionConf.inference"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#block_zoo.transformer.MultiHeadAttention.MultiHeadAttentionConf.inference" title="Permalink to this definition">¶</a></dt>
+<dd><p>Inference things like output_dim, which may relies on defined hyper parameter such as hidden dim and input_dim</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">None</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="block_zoo.transformer.MultiHeadAttention.MultiHeadAttentionConf.verify">
+<code class="descname">verify</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/block_zoo/transformer/MultiHeadAttention.html#MultiHeadAttentionConf.verify"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#block_zoo.transformer.MultiHeadAttention.MultiHeadAttentionConf.verify" title="Permalink to this definition">¶</a></dt>
+<dd><p>Define some necessary varification for your layer when we define the model.</p>
+<p>If you define your own layer and rewrite this funciton, please add “super(YourLayerConf, self).verify()” at the beginning</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">None</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-block_zoo.transformer">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-block_zoo.transformer" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, Quantus STCA team&lt;quantus_stca@microsoft.com&gt;
+
+    </p>
+  </div> 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

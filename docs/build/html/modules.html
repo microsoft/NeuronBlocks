@@ -1,0 +1,345 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>NeuronBlocks &mdash; NeuronBlocks 1.1.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+        <script type="text/javascript" src="_static/language_data.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> NeuronBlocks
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.1.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="overview.html">Basic block_zoo</a></li>
+<li class="toctree-l1"><a class="reference internal" href="overview.html#id15">Attention</a></li>
+<li class="toctree-l1"><a class="reference internal" href="overview.html#id25">embedding</a></li>
+<li class="toctree-l1"><a class="reference internal" href="overview.html#id27">Operations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="overview.html#id31">Math</a></li>
+<li class="toctree-l1"><a class="reference internal" href="overview.html#id38">Transformer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="overview.html#id43">Encoder_Decoder</a></li>
+<li class="toctree-l1"><a class="reference internal" href="overview.html#id47">Normalizations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="overview.html#id49">Loss Functions</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">NeuronBlocks</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>NeuronBlocks</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/modules.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="neuronblocks">
+<h1>NeuronBlocks<a class="headerlink" href="#neuronblocks" title="Permalink to this headline">¶</a></h1>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="LearningMachine.html">LearningMachine module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Model.html">Model module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ModelConf.html">ModelConf module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="block_zoo.html">block_zoo package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="block_zoo.html#subpackages">Subpackages</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="block_zoo.attentions.html">block_zoo.attentions package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="block_zoo.attentions.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="block_zoo.attentions.html#module-block_zoo.attentions.Attention">block_zoo.attentions.Attention module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="block_zoo.attentions.html#module-block_zoo.attentions.BiAttFlow">block_zoo.attentions.BiAttFlow module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="block_zoo.attentions.html#module-block_zoo.attentions.BilinearAttention">block_zoo.attentions.BilinearAttention module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="block_zoo.attentions.html#module-block_zoo.attentions.FullAttention">block_zoo.attentions.FullAttention module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="block_zoo.attentions.html#module-block_zoo.attentions.LinearAttention">block_zoo.attentions.LinearAttention module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="block_zoo.attentions.html#module-block_zoo.attentions.MatchAttention">block_zoo.attentions.MatchAttention module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="block_zoo.attentions.html#module-block_zoo.attentions.Seq2SeqAttention">block_zoo.attentions.Seq2SeqAttention module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="block_zoo.attentions.html#module-block_zoo.attentions">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="block_zoo.embedding.html">block_zoo.embedding package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="block_zoo.embedding.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="block_zoo.embedding.html#module-block_zoo.embedding.CNNCharEmbedding">block_zoo.embedding.CNNCharEmbedding module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="block_zoo.embedding.html#module-block_zoo.embedding">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="block_zoo.encoder_decoder.html">block_zoo.encoder_decoder package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="block_zoo.encoder_decoder.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="block_zoo.encoder_decoder.html#module-block_zoo.encoder_decoder.SLUDecoder">block_zoo.encoder_decoder.SLUDecoder module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="block_zoo.encoder_decoder.html#module-block_zoo.encoder_decoder.SLUEncoder">block_zoo.encoder_decoder.SLUEncoder module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="block_zoo.encoder_decoder.html#module-block_zoo.encoder_decoder">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="block_zoo.math.html">block_zoo.math package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="block_zoo.math.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="block_zoo.math.html#module-block_zoo.math.Add2D">block_zoo.math.Add2D module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="block_zoo.math.html#module-block_zoo.math.Add3D">block_zoo.math.Add3D module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="block_zoo.math.html#module-block_zoo.math.ElementWisedMultiply2D">block_zoo.math.ElementWisedMultiply2D module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="block_zoo.math.html#module-block_zoo.math.ElementWisedMultiply3D">block_zoo.math.ElementWisedMultiply3D module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="block_zoo.math.html#module-block_zoo.math.MatrixMultiply">block_zoo.math.MatrixMultiply module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="block_zoo.math.html#module-block_zoo.math.Minus2D">block_zoo.math.Minus2D module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="block_zoo.math.html#module-block_zoo.math.Minus3D">block_zoo.math.Minus3D module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="block_zoo.math.html#module-block_zoo.math">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="block_zoo.normalizations.html">block_zoo.normalizations package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="block_zoo.normalizations.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="block_zoo.normalizations.html#module-block_zoo.normalizations.LayerNorm">block_zoo.normalizations.LayerNorm module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="block_zoo.normalizations.html#module-block_zoo.normalizations">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="block_zoo.op.html">block_zoo.op package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="block_zoo.op.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="block_zoo.op.html#module-block_zoo.op.Combination">block_zoo.op.Combination module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="block_zoo.op.html#module-block_zoo.op.Concat2D">block_zoo.op.Concat2D module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="block_zoo.op.html#module-block_zoo.op.Concat3D">block_zoo.op.Concat3D module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="block_zoo.op.html#module-block_zoo.op">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="block_zoo.transformer.html">block_zoo.transformer package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="block_zoo.transformer.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="block_zoo.transformer.html#module-block_zoo.transformer.MLP">block_zoo.transformer.MLP module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="block_zoo.transformer.html#module-block_zoo.transformer.MultiHeadAttention">block_zoo.transformer.MultiHeadAttention module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="block_zoo.transformer.html#module-block_zoo.transformer">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="block_zoo.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="block_zoo.html#module-block_zoo.BaseLayer">block_zoo.BaseLayer module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="block_zoo.html#module-block_zoo.BiGRU">block_zoo.BiGRU module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="block_zoo.html#module-block_zoo.BiGRULast">block_zoo.BiGRULast module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="block_zoo.html#module-block_zoo.BiLSTM">block_zoo.BiLSTM module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="block_zoo.html#module-block_zoo.BiLSTMAtt">block_zoo.BiLSTMAtt module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="block_zoo.html#module-block_zoo.BiLSTMLast">block_zoo.BiLSTMLast module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="block_zoo.html#module-block_zoo.BiQRNN">block_zoo.BiQRNN module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="block_zoo.html#module-block_zoo.Conv">block_zoo.Conv module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="block_zoo.html#module-block_zoo.ConvPooling">block_zoo.ConvPooling module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="block_zoo.html#module-block_zoo.Dropout">block_zoo.Dropout module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="block_zoo.html#module-block_zoo.Embedding">block_zoo.Embedding module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="block_zoo.html#module-block_zoo.EncoderDecoder">block_zoo.EncoderDecoder module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="block_zoo.html#module-block_zoo.Flatten">block_zoo.Flatten module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="block_zoo.html#module-block_zoo.HighwayLinear">block_zoo.HighwayLinear module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="block_zoo.html#module-block_zoo.Linear">block_zoo.Linear module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="block_zoo.html#module-block_zoo.Pooling">block_zoo.Pooling module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="block_zoo.html#module-block_zoo.Transformer">block_zoo.Transformer module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="block_zoo.html#module-block_zoo">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="core.html">core package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="core.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="core.html#module-core.CellDict">core.CellDict module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="core.html#module-core.EnglishPOSTagger">core.EnglishPOSTagger module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="core.html#module-core.EnglishTextPreprocessor">core.EnglishTextPreprocessor module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="core.html#module-core.EnglishTokenizer">core.EnglishTokenizer module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="core.html#module-core.LRScheduler">core.LRScheduler module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="core.html#module-core.StreamingRecorder">core.StreamingRecorder module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="core.html#module-core">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="data_encoding.html">data_encoding module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="losses.html">losses package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="losses.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="losses.html#module-losses.BaseLossConf">losses.BaseLossConf module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="losses.html#module-losses.FocalLoss">losses.FocalLoss module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="losses.html#module-losses.Loss">losses.Loss module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="losses.html#module-losses">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="metrics.html">metrics package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="metrics.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="metrics.html#module-metrics.Evaluator">metrics.Evaluator module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="metrics.html#module-metrics.conlleval">metrics.conlleval module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="metrics.html#module-metrics">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="optimizers.html">optimizers package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="optimizers.html#module-optimizers">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="predict.html">predict module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="preparation.html">preparation package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="preparation.html#module-preparation">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="problem.html">problem module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="settings.html">settings module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="test.html">test module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="train.html">train module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="utils.html">utils package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="utils.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="utils.html#module-utils.BPEEncoder">utils.BPEEncoder module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="utils.html#module-utils.DocInherit">utils.DocInherit module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="utils.html#module-utils.common_utils">utils.common_utils module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="utils.html#module-utils.corpus_utils">utils.corpus_utils module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="utils.html#module-utils.exceptions">utils.exceptions module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="utils.html#module-utils.philly_utils">utils.philly_utils module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="utils.html#module-utils">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, Quantus STCA team&lt;quantus_stca@microsoft.com&gt;
+
+    </p>
+  </div> 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

@@ -1,0 +1,406 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Basic block_zoo &mdash; NeuronBlocks 1.1.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+        <script type="text/javascript" src="_static/language_data.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="Welcome to NLP DNN Toolkit’s documentation!" href="index.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> NeuronBlocks
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.1.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Basic block_zoo</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#id2">BaseLayer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id3">BiGRU</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id4">BiGRULast</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id5">BiLSTM</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id6">BiLSTMAtt</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id7">BiLSTMLast</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id8">BiQRNN</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id9">Conv</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id10">ConvPooling</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id11">Dropout</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id12">Embedding</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id13">Linear</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id14">Pooling</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="#id15">Attention</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#id17">Attention</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id18">BiAttFlow</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id19">BilinearAttention</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id20">LinearAttention</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id21">MatchAttention</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id22">FullAttention</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id23">Seq2SeqAttention</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="#id25">embedding</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#id26">CNNCharEmbedding</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="#id27">Operations</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#id28">Concat2D</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id29">Concat3D</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id30">Combination</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="#id31">Math</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#id32">Add2D</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id33">Add3D</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id34">ElementWisedMultiply2D</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id35">ElementWisedMultiply3D</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id36">Minus2D</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id37">Minus3D</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="#id38">Transformer</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#id40">Transformer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id41">MLP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id42">MultiHeadAttention</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="#id43">Encoder_Decoder</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#id44">EncoderDecoder</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id45">SLUEncoder</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id46">SLUDecoder</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="#id47">Normalizations</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#id48">LayerNorm</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="#id49">Loss Functions</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#id50">FocalLoss</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">NeuronBlocks</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>Basic block_zoo</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/overview.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="id1">
+<h1><a class="reference external" href="https://adolphk-yk.github.io/view_nb_docs/build/html/block_zoo.html">Basic block_zoo</a><a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="id2">
+<h2><a class="reference external" href="https://adolphk-yk.github.io/view_nb_docs/build/html/block_zoo.html#module-block_zoo.BaseLayer">BaseLayer</a><a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="id3">
+<h2><a class="reference external" href="https://adolphk-yk.github.io/view_nb_docs/build/html/block_zoo.html#module-block_zoo.BiGRU">BiGRU</a><a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="id4">
+<h2><a class="reference external" href="https://adolphk-yk.github.io/view_nb_docs/build/html/block_zoo.html#module-block_zoo.BiGRULast">BiGRULast</a><a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="id5">
+<h2><a class="reference external" href="https://adolphk-yk.github.io/view_nb_docs/build/html/block_zoo.html#module-block_zoo.BiLSTM">BiLSTM</a><a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="id6">
+<h2><a class="reference external" href="https://adolphk-yk.github.io/view_nb_docs/build/html/block_zoo.html#module-block_zoo.BiLSTMAtt">BiLSTMAtt</a><a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="id7">
+<h2><a class="reference external" href="https://adolphk-yk.github.io/view_nb_docs/build/html/block_zoo.html#module-block_zoo.BiLSTMLast">BiLSTMLast</a><a class="headerlink" href="#id7" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="id8">
+<h2><a class="reference external" href="https://adolphk-yk.github.io/view_nb_docs/build/html/block_zoo.html#module-block_zoo.BiQRNN">BiQRNN</a><a class="headerlink" href="#id8" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="id9">
+<h2><a class="reference external" href="https://adolphk-yk.github.io/view_nb_docs/build/html/block_zoo.html#module-block_zoo.Conv">Conv</a><a class="headerlink" href="#id9" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="id10">
+<h2><a class="reference external" href="https://adolphk-yk.github.io/view_nb_docs/build/html/block_zoo.html#module-block_zoo.ConvPooling">ConvPooling</a><a class="headerlink" href="#id10" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="id11">
+<h2><a class="reference external" href="https://adolphk-yk.github.io/view_nb_docs/build/html/block_zoo.html#module-block_zoo.Dropout">Dropout</a><a class="headerlink" href="#id11" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="id12">
+<h2><a class="reference external" href="https://adolphk-yk.github.io/view_nb_docs/build/html/block_zoo.html#module-block_zoo.Embedding">Embedding</a><a class="headerlink" href="#id12" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="id13">
+<h2><a class="reference external" href="https://adolphk-yk.github.io/view_nb_docs/build/html/block_zoo.html#module-block_zoo.Linear">Linear</a><a class="headerlink" href="#id13" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="id14">
+<h2><a class="reference external" href="https://adolphk-yk.github.io/view_nb_docs/build/html/block_zoo.html#module-block_zoo.Pooling">Pooling</a><a class="headerlink" href="#id14" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+<div class="section" id="id15">
+<h1><a class="reference external" href="https://adolphk-yk.github.io/view_nb_docs/build/html/block_zoo.attentions.html#module-block_zoo.attentions">Attention</a><a class="headerlink" href="#id15" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="id17">
+<h2><a class="reference external" href="https://adolphk-yk.github.io/view_nb_docs/build/html/block_zoo.attentions.html#module-block_zoo.attentions.Attention">Attention</a><a class="headerlink" href="#id17" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="id18">
+<h2><a class="reference external" href="https://adolphk-yk.github.io/view_nb_docs/build/html/block_zoo.attentions.html#module-block_zoo.attentions.BiAttFlow">BiAttFlow</a><a class="headerlink" href="#id18" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="id19">
+<h2><a class="reference external" href="https://adolphk-yk.github.io/view_nb_docs/build/html/block_zoo.attentions.html#module-block_zoo.attentions.BilinearAttention">BilinearAttention</a><a class="headerlink" href="#id19" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="id20">
+<h2><a class="reference external" href="https://adolphk-yk.github.io/view_nb_docs/build/html/block_zoo.attentions.html#module-block_zoo.attentions.LinearAttention">LinearAttention</a><a class="headerlink" href="#id20" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="id21">
+<h2><a class="reference external" href="https://adolphk-yk.github.io/view_nb_docs/build/html/block_zoo.attentions.html#module-block_zoo.attentions.MatchAttention">MatchAttention</a><a class="headerlink" href="#id21" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="id22">
+<h2><a class="reference external" href="https://adolphk-yk.github.io/view_nb_docs/build/html/block_zoo.attentions.html#module-block_zoo.attentions.FullAttention">FullAttention</a><a class="headerlink" href="#id22" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="id23">
+<h2><a class="reference external" href="https://adolphk-yk.github.io/view_nb_docs/build/html/block_zoo.attentions.html#module-block_zoo.attentions.Seq2SeqAttention">Seq2SeqAttention</a><a class="headerlink" href="#id23" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+<div class="section" id="id25">
+<h1><a class="reference external" href="https://adolphk-yk.github.io/view_nb_docs/build/html/block_zoo.embedding.html#module-block_zoo.embedding">embedding</a><a class="headerlink" href="#id25" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="id26">
+<h2><a class="reference external" href="https://adolphk-yk.github.io/view_nb_docs/build/html/block_zoo.embedding.html#module-block_zoo.embedding.CNNCharEmbedding">CNNCharEmbedding</a><a class="headerlink" href="#id26" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+<div class="section" id="id27">
+<h1><a class="reference external" href="https://adolphk-yk.github.io/view_nb_docs/build/html/block_zoo.op.html#module-block_zoo.op">Operations</a><a class="headerlink" href="#id27" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="id28">
+<h2><a class="reference external" href="https://adolphk-yk.github.io/view_nb_docs/build/html/block_zoo.op.html#module-block_zoo.op.Concat2D">Concat2D</a><a class="headerlink" href="#id28" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="id29">
+<h2><a class="reference external" href="https://adolphk-yk.github.io/view_nb_docs/build/html/block_zoo.op.html#module-block_zoo.op.Concat3D">Concat3D</a><a class="headerlink" href="#id29" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="id30">
+<h2><a class="reference external" href="https://adolphk-yk.github.io/view_nb_docs/build/html/block_zoo,op.html#module-block_zoo.op.Combination">Combination</a><a class="headerlink" href="#id30" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+<div class="section" id="id31">
+<h1><a class="reference external" href="https://adolphk-yk.github.io/view_nb_docs/build/html/block_zoo.math.html#module-block_zoo.math">Math</a><a class="headerlink" href="#id31" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="id32">
+<h2><a class="reference external" href="https://adolphk-yk.github.io/view_nb_docs/build/html/block_zoo.math.html#module-block_zoo.math.Add2D">Add2D</a><a class="headerlink" href="#id32" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="id33">
+<h2><a class="reference external" href="https://adolphk-yk.github.io/view_nb_docs/build/html/block_zoo.math.html#module-block_zoo.math.Add3D">Add3D</a><a class="headerlink" href="#id33" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="id34">
+<h2><a class="reference external" href="https://adolphk-yk.github.io/view_nb_docs/build/html/block_zoo.math.html#module-block_zoo.math.ElementWisedMultiply2D">ElementWisedMultiply2D</a><a class="headerlink" href="#id34" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="id35">
+<h2><a class="reference external" href="https://adolphk-yk.github.io/view_nb_docs/build/html/block_zoo.math.html#module-block_zoo.math.ElementWisedMultiply3D">ElementWisedMultiply3D</a><a class="headerlink" href="#id35" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="id36">
+<h2><a class="reference external" href="https://adolphk-yk.github.io/view_nb_docs/build/html/block_zoo.math.html#module-block_zoo.math.Minus2D">Minus2D</a><a class="headerlink" href="#id36" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="id37">
+<h2><a class="reference external" href="https://adolphk-yk.github.io/view_nb_docs/build/html/block_zoo.math.html#module-block_zoo.math.Minus3D">Minus3D</a><a class="headerlink" href="#id37" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+<div class="section" id="id38">
+<h1><a class="reference external" href="https://adolphk-yk.github.io/view_nb_docs/build/html/block_zoo.transformer.html#module-block_zoo.transformer">Transformer</a><a class="headerlink" href="#id38" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="id40">
+<h2><a class="reference external" href="https://adolphk-yk.github.io/view_nb_docs/build/html/block_zoo.html#module-block_zoo.Transformer">Transformer</a><a class="headerlink" href="#id40" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="id41">
+<h2><a class="reference external" href="https://adolphk-yk.github.io/view_nb_docs/build/html/block_zoo.transformer.html#module-block_zoo.transformer.MLP">MLP</a><a class="headerlink" href="#id41" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="id42">
+<h2><a class="reference external" href="https://adolphk-yk.github.io/view_nb_docs/build/html/block_zoo.transformer.html#module-block_zoo.transformer.MultiHeadAttention">MultiHeadAttention</a><a class="headerlink" href="#id42" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+<div class="section" id="id43">
+<h1><a class="reference external" href="https://adolphk-yk.github.io/view_nb_docs/build/html/block_zoo.encoder_decoder.html#module-block_zoo.encoder_decoder">Encoder_Decoder</a><a class="headerlink" href="#id43" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="id44">
+<h2><a class="reference external" href="https://adolphk-yk.github.io/view_nb_docs/build/html/block_zoo.html#module-block_zoo.EncoderDecoder">EncoderDecoder</a><a class="headerlink" href="#id44" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="id45">
+<h2><a class="reference external" href="https://adolphk-yk.github.io/view_nb_docs/build/html/block_zoo.encoder_decoder.html#module-block_zoo.encoder_decoder.SLUEncoder">SLUEncoder</a><a class="headerlink" href="#id45" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="id46">
+<h2><a class="reference external" href="https://adolphk-yk.github.io/view_nb_docs/build/html/block_zoo.encoder_decoder.html#module-block_zoo.encoder_decoder.SLUDecoder">SLUDecoder</a><a class="headerlink" href="#id46" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+<div class="section" id="id47">
+<h1><a class="reference external" href="https://adolphk-yk.github.io/view_nb_docs/build/html/block_zoo.normalizations.html#module-block_zoo.normalizations">Normalizations</a><a class="headerlink" href="#id47" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="id48">
+<h2><a class="reference external" href="https://adolphk-yk.github.io/view_nb_docs/build/html/block_zoo.transformer.html#module-block_zoo.transformer.LayerNorm">LayerNorm</a><a class="headerlink" href="#id48" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+<div class="section" id="id49">
+<h1><a class="reference external" href="https://adolphk-yk.github.io/view_nb_docs/build/html/losses.html">Loss Functions</a><a class="headerlink" href="#id49" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="id50">
+<h2><a class="reference external" href="https://adolphk-yk.github.io/view_nb_docs/build/html/losses.html#module-losses.FocalLoss">FocalLoss</a><a class="headerlink" href="#id50" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+      
+        <a href="index.html" class="btn btn-neutral float-left" title="Welcome to NLP DNN Toolkit’s documentation!" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, Quantus STCA team&lt;quantus_stca@microsoft.com&gt;
+
+    </p>
+  </div> 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

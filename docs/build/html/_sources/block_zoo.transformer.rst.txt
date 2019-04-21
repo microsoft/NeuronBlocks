@@ -1,0 +1,30 @@
+block\_zoo.transformer package
+==============================
+
+Submodules
+----------
+
+block\_zoo.transformer.MLP module
+---------------------------------
+
+.. automodule:: block_zoo.transformer.MLP
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+block\_zoo.transformer.MultiHeadAttention module
+------------------------------------------------
+
+.. automodule:: block_zoo.transformer.MultiHeadAttention
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: block_zoo.transformer
+    :members:
+    :undoc-members:
+    :show-inheritance:

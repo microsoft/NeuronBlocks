@@ -1,0 +1,70 @@
+block\_zoo.attentions package
+=============================
+
+Submodules
+----------
+
+block\_zoo.attentions.Attention module
+--------------------------------------
+
+.. automodule:: block_zoo.attentions.Attention
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+block\_zoo.attentions.BiAttFlow module
+--------------------------------------
+
+.. automodule:: block_zoo.attentions.BiAttFlow
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+block\_zoo.attentions.BilinearAttention module
+----------------------------------------------
+
+.. automodule:: block_zoo.attentions.BilinearAttention
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+block\_zoo.attentions.FullAttention module
+------------------------------------------
+
+.. automodule:: block_zoo.attentions.FullAttention
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+block\_zoo.attentions.LinearAttention module
+--------------------------------------------
+
+.. automodule:: block_zoo.attentions.LinearAttention
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+block\_zoo.attentions.MatchAttention module
+-------------------------------------------
+
+.. automodule:: block_zoo.attentions.MatchAttention
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+block\_zoo.attentions.Seq2SeqAttention module
+---------------------------------------------
+
+.. automodule:: block_zoo.attentions.Seq2SeqAttention
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: block_zoo.attentions
+    :members:
+    :undoc-members:
+    :show-inheritance:

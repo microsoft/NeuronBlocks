@@ -1,0 +1,322 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>block_zoo.attentions.FullAttention &mdash; NeuronBlocks 1.1.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../../_static/language_data.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> NeuronBlocks
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.1.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../overview.html">Basic block_zoo</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../overview.html#id15">Attention</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../overview.html#id25">embedding</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../overview.html#id27">Operations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../overview.html#id31">Math</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../overview.html#id38">Transformer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../overview.html#id43">Encoder_Decoder</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../overview.html#id47">Normalizations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../overview.html#id49">Loss Functions</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">NeuronBlocks</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+      <li>block_zoo.attentions.FullAttention</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for block_zoo.attentions.FullAttention</h1><div class="highlight"><pre>
+<span></span><span class="c1"># Copyright (c) Microsoft Corporation. All rights reserved.</span>
+<span class="c1"># Licensed under the MIT license.</span>
+
+<span class="kn">import</span> <span class="nn">torch</span>
+<span class="kn">import</span> <span class="nn">torch.nn</span> <span class="k">as</span> <span class="nn">nn</span>
+<span class="kn">import</span> <span class="nn">torch.nn.functional</span> <span class="k">as</span> <span class="nn">F</span>
+<span class="kn">from</span> <span class="nn">torch.nn.parameter</span> <span class="k">import</span> <span class="n">Parameter</span>
+<span class="kn">import</span> <span class="nn">copy</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">utils.DocInherit</span> <span class="k">import</span> <span class="n">DocInherit</span>
+
+<span class="kn">from</span> <span class="nn">block_zoo.BaseLayer</span> <span class="k">import</span> <span class="n">BaseLayer</span><span class="p">,</span> <span class="n">BaseConf</span>
+<span class="kn">from</span> <span class="nn">utils.exceptions</span> <span class="k">import</span> <span class="n">ConfigurationError</span>
+
+<div class="viewcode-block" id="FullAttentionConf"><a class="viewcode-back" href="../../../block_zoo.attentions.html#block_zoo.attentions.FullAttention.FullAttentionConf">[docs]</a><span class="k">class</span> <span class="nc">FullAttentionConf</span><span class="p">(</span><span class="n">BaseConf</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">FullAttentionConf</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+<div class="viewcode-block" id="FullAttentionConf.default"><a class="viewcode-back" href="../../../block_zoo.attentions.html#block_zoo.attentions.FullAttention.FullAttentionConf.default">[docs]</a>    <span class="nd">@DocInherit</span>
+    <span class="k">def</span> <span class="nf">default</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">hidden_dim</span> <span class="o">=</span> <span class="mi">128</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">activation</span> <span class="o">=</span> <span class="s1">&#39;ReLU&#39;</span></div>
+
+<div class="viewcode-block" id="FullAttentionConf.declare"><a class="viewcode-back" href="../../../block_zoo.attentions.html#block_zoo.attentions.FullAttention.FullAttentionConf.declare">[docs]</a>    <span class="nd">@DocInherit</span>
+    <span class="k">def</span> <span class="nf">declare</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">num_of_inputs</span> <span class="o">=</span> <span class="mi">4</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">input_ranks</span> <span class="o">=</span> <span class="p">[</span><span class="mi">3</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="FullAttentionConf.inference"><a class="viewcode-back" href="../../../block_zoo.attentions.html#block_zoo.attentions.FullAttention.FullAttentionConf.inference">[docs]</a>    <span class="nd">@DocInherit</span>
+    <span class="k">def</span> <span class="nf">inference</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">output_dim</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">input_dims</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>     <span class="c1"># e.g. use query to represent passage, there fore the output dim depends on query&#39;s dim</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">FullAttentionConf</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">inference</span><span class="p">()</span>  <span class="c1"># PUT THIS LINE AT THE END OF inference()</span></div>
+
+<div class="viewcode-block" id="FullAttentionConf.verify_before_inference"><a class="viewcode-back" href="../../../block_zoo.attentions.html#block_zoo.attentions.FullAttention.FullAttentionConf.verify_before_inference">[docs]</a>    <span class="nd">@DocInherit</span>
+    <span class="k">def</span> <span class="nf">verify_before_inference</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">FullAttentionConf</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">verify_before_inference</span><span class="p">()</span>
+        <span class="n">necessary_attrs_for_user</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;hidden_dim&#39;</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">attr</span> <span class="ow">in</span> <span class="n">necessary_attrs_for_user</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_attr_exist_assertion_for_user</span><span class="p">(</span><span class="n">attr</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="FullAttentionConf.verify"><a class="viewcode-back" href="../../../block_zoo.attentions.html#block_zoo.attentions.FullAttention.FullAttentionConf.verify">[docs]</a>    <span class="k">def</span> <span class="nf">verify</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">FullAttentionConf</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">verify</span><span class="p">()</span>
+
+        <span class="n">supported_activation_pytorch</span> <span class="o">=</span> <span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;Sigmoid&#39;</span><span class="p">,</span> <span class="s1">&#39;Tanh&#39;</span><span class="p">,</span> <span class="s1">&#39;ReLU&#39;</span><span class="p">,</span> <span class="s1">&#39;PReLU&#39;</span><span class="p">,</span> <span class="s1">&#39;ReLU6&#39;</span><span class="p">,</span> <span class="s1">&#39;LeakyReLU&#39;</span><span class="p">,</span> <span class="s1">&#39;LogSigmoid&#39;</span><span class="p">,</span>
+                                        <span class="s1">&#39;ELU&#39;</span><span class="p">,</span>
+                                        <span class="s1">&#39;SELU&#39;</span><span class="p">,</span> <span class="s1">&#39;Threshold&#39;</span><span class="p">,</span> <span class="s1">&#39;Hardtanh&#39;</span><span class="p">,</span> <span class="s1">&#39;Softplus&#39;</span><span class="p">,</span> <span class="s1">&#39;Softshrink&#39;</span><span class="p">,</span> <span class="s1">&#39;Softsign&#39;</span><span class="p">,</span>
+                                        <span class="s1">&#39;Tanhshrink&#39;</span><span class="p">,</span> <span class="s1">&#39;Softmin&#39;</span><span class="p">,</span>
+                                        <span class="s1">&#39;Softmax&#39;</span><span class="p">,</span> <span class="s1">&#39;Softmax2d&#39;</span><span class="p">,</span> <span class="s1">&#39;LogSoftmax&#39;</span><span class="p">]</span>
+        <span class="n">value_checks</span> <span class="o">=</span> <span class="p">[(</span><span class="s1">&#39;activation&#39;</span><span class="p">,</span> <span class="n">supported_activation_pytorch</span><span class="p">)]</span>
+        <span class="k">for</span> <span class="n">attr</span><span class="p">,</span> <span class="n">legal_values</span> <span class="ow">in</span> <span class="n">value_checks</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_attr_value_assertion</span><span class="p">(</span><span class="n">attr</span><span class="p">,</span> <span class="n">legal_values</span><span class="p">)</span></div></div>
+
+
+<div class="viewcode-block" id="FullAttention"><a class="viewcode-back" href="../../../block_zoo.attentions.html#block_zoo.attentions.FullAttention.FullAttention">[docs]</a><span class="k">class</span> <span class="nc">FullAttention</span><span class="p">(</span><span class="n">BaseLayer</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Full-aware fusion of:</span>
+<span class="sd">            Via, U., With, T., &amp; To, P. (2018). Fusion Net: Fusing Via Fully-Aware Attention with Application to Machine Comprehension, 1–17.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">layer_conf</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">FullAttention</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">layer_conf</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">layer_conf</span><span class="o">.</span><span class="n">hidden_dim</span> <span class="o">=</span> <span class="n">layer_conf</span><span class="o">.</span><span class="n">hidden_dim</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">linear</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">layer_conf</span><span class="o">.</span><span class="n">input_dims</span><span class="p">[</span><span class="mi">2</span><span class="p">][</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">layer_conf</span><span class="o">.</span><span class="n">hidden_dim</span><span class="p">,</span> <span class="n">bias</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>        <span class="c1"># this requires that input_dims[0][-1] == input_dims[1][-1]</span>
+        <span class="k">if</span> <span class="n">layer_conf</span><span class="o">.</span><span class="n">input_dims</span><span class="p">[</span><span class="mi">2</span><span class="p">][</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="n">layer_conf</span><span class="o">.</span><span class="n">input_dims</span><span class="p">[</span><span class="mi">3</span><span class="p">][</span><span class="o">-</span><span class="mi">1</span><span class="p">]:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">linear2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">linear</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">linear2</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">layer_conf</span><span class="o">.</span><span class="n">input_dims</span><span class="p">[</span><span class="mi">3</span><span class="p">][</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">layer_conf</span><span class="o">.</span><span class="n">hidden_dim</span><span class="p">,</span> <span class="n">bias</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">linear_final</span> <span class="o">=</span> <span class="n">Parameter</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">layer_conf</span><span class="o">.</span><span class="n">hidden_dim</span><span class="p">),</span> <span class="n">requires_grad</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">activation</span> <span class="o">=</span> <span class="nb">eval</span><span class="p">(</span><span class="s2">&quot;nn.&quot;</span> <span class="o">+</span> <span class="n">layer_conf</span><span class="o">.</span><span class="n">activation</span><span class="p">)()</span>
+
+<div class="viewcode-block" id="FullAttention.forward"><a class="viewcode-back" href="../../../block_zoo.attentions.html#block_zoo.attentions.FullAttention.FullAttention.forward">[docs]</a>    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">string1</span><span class="p">,</span> <span class="n">string1_len</span><span class="p">,</span> <span class="n">string2</span><span class="p">,</span> <span class="n">string2_len</span><span class="p">,</span> <span class="n">string1_HoW</span><span class="p">,</span> <span class="n">string1_How_len</span><span class="p">,</span> <span class="n">string2_HoW</span><span class="p">,</span> <span class="n">string2_HoW_len</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; To get representation of string1, we use string1 and string2 to obtain attention weights and use string2 to represent string1</span>
+
+<span class="sd">        Note: actually, the semantic information of string1 is not used, we only need string1&#39;s seq_len information</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            string1: [batch size, seq_len, input_dim1]</span>
+<span class="sd">            string1_len: [batch_size]</span>
+<span class="sd">            string2: [batch size, seq_len, input_dim2]</span>
+<span class="sd">            string2_len: [batch_size]</span>
+<span class="sd">            string1_HoW: [batch size, seq_len, att_dim1]</span>
+<span class="sd">            string1_HoW_len: [batch_size]</span>
+<span class="sd">            string2_HoW: [batch size, seq_len, att_dim2]</span>
+<span class="sd">            string2_HoW_len: [batch_size]</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            string1&#39;s representation</span>
+<span class="sd">            string1_len</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">string1_key</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">activation</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">linear</span><span class="p">(</span><span class="n">string1_HoW</span><span class="o">.</span><span class="n">contiguous</span><span class="p">()</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">string1_HoW</span><span class="o">.</span><span class="n">size</span><span class="p">()[</span><span class="mi">2</span><span class="p">])))</span>     <span class="c1">#[bs * seq_len, atten_dim1] -&gt; [bs * seq_len, hidden_dim]</span>
+        <span class="n">string2_key</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">activation</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">linear2</span><span class="p">(</span><span class="n">string2_HoW</span><span class="o">.</span><span class="n">contiguous</span><span class="p">()</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">string2_HoW</span><span class="o">.</span><span class="n">size</span><span class="p">()[</span><span class="mi">2</span><span class="p">])))</span>    <span class="c1">#[bs * seq_len, atten_dim2] -&gt; [bs * seq_len, hidden_dim]</span>
+        <span class="n">final_v</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">linear_final</span><span class="o">.</span><span class="n">expand_as</span><span class="p">(</span><span class="n">string2_key</span><span class="p">)</span>
+        <span class="n">string2_key</span> <span class="o">=</span> <span class="n">final_v</span> <span class="o">*</span> <span class="n">string2_key</span>
+
+        <span class="n">string1_rep</span> <span class="o">=</span> <span class="n">string1_key</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">string1</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">layer_conf</span><span class="o">.</span><span class="n">hidden_dim</span><span class="p">)</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">contiguous</span><span class="p">()</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">string1</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">layer_conf</span><span class="o">.</span><span class="n">hidden_dim</span><span class="p">)</span>        <span class="c1"># get [bs, seq_len, hidden_dim]</span>
+        <span class="n">string2_rep</span> <span class="o">=</span> <span class="n">string2_key</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">string2</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">layer_conf</span><span class="o">.</span><span class="n">hidden_dim</span><span class="p">)</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">contiguous</span><span class="p">()</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">string2</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">layer_conf</span><span class="o">.</span><span class="n">hidden_dim</span><span class="p">)</span>       <span class="c1"># get [bs, seq_len, hidden_dim]</span>
+
+        <span class="n">scores</span> <span class="o">=</span> <span class="n">string1_rep</span><span class="o">.</span><span class="n">bmm</span><span class="p">(</span><span class="n">string2_rep</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">string1</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="n">string2</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span> <span class="c1"># [bs, 1, seq_len1, seq_len2]</span>
+
+        <span class="n">string2_len_np</span> <span class="o">=</span> <span class="n">string2_len</span><span class="o">.</span><span class="n">cpu</span><span class="p">()</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">device_count</span><span class="p">()</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="c1"># otherwise, it will raise a Exception because the length inconsistence</span>
+            <span class="n">string2_max_len</span> <span class="o">=</span> <span class="n">string2</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">string2_max_len</span> <span class="o">=</span> <span class="n">string2_len_np</span><span class="o">.</span><span class="n">max</span><span class="p">()</span>
+        <span class="n">string2_mask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">num</span> <span class="o">+</span> <span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="n">string2_max_len</span> <span class="o">-</span> <span class="n">num</span><span class="p">)</span> <span class="k">for</span> <span class="n">num</span> <span class="ow">in</span> <span class="n">string2_len_np</span><span class="p">])</span>
+        <span class="n">string2_mask</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">from_numpy</span><span class="p">(</span><span class="n">string2_mask</span><span class="p">)</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">expand_as</span><span class="p">(</span><span class="n">scores</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_cuda</span><span class="p">():</span>
+            <span class="n">device</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">device</span><span class="p">(</span><span class="s2">&quot;cuda&quot;</span> <span class="k">if</span> <span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">is_available</span><span class="p">()</span> <span class="k">else</span> <span class="s2">&quot;cpu&quot;</span><span class="p">)</span>
+            <span class="n">string2_mask</span> <span class="o">=</span> <span class="n">string2_mask</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
+        <span class="n">scores</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">masked_fill_</span><span class="p">(</span><span class="n">string2_mask</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">byte</span><span class="p">(),</span> <span class="o">-</span><span class="nb">float</span><span class="p">(</span><span class="s1">&#39;inf&#39;</span><span class="p">))</span>
+
+        <span class="n">alpha_flat</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">softmax</span><span class="p">(</span><span class="n">scores</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">string2</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="mi">1</span><span class="p">)),</span> <span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>        <span class="c1"># [bs * seq_len1, seq_len2]</span>
+        <span class="n">alpha</span> <span class="o">=</span> <span class="n">alpha_flat</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">string1</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="n">string2</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>   <span class="c1"># [bs, seq_len1, seq_len2]</span>
+
+        <span class="c1">#size_per_level = self.layer_conf.hidden_dim // 1</span>
+        <span class="c1">#string1_atten_seq = alpha.bmm(string2.contiguous().view(-1, string2.size(1), 1, size_per_level).transpose(1, 2).contiguous().view(-1, string2.size(1), size_per_level))</span>
+        <span class="n">string1_atten_seq</span> <span class="o">=</span> <span class="n">alpha</span><span class="o">.</span><span class="n">bmm</span><span class="p">(</span><span class="n">string2</span><span class="p">)</span>
+
+        <span class="c1">#return string1_atten_seq.view(-1, 1, string1.size(1), size_per_level).transpose(1, 2).contiguous().view(-1, string1.size(1), self.layer_conf.hidden_dim), string1_len</span>
+        <span class="k">return</span> <span class="n">string1_atten_seq</span><span class="p">,</span> <span class="n">string1_len</span></div></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, Quantus STCA team&lt;quantus_stca@microsoft.com&gt;
+
+    </p>
+  </div> 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

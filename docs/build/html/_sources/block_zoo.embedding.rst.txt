@@ -1,0 +1,22 @@
+block\_zoo.embedding package
+============================
+
+Submodules
+----------
+
+block\_zoo.embedding.CNNCharEmbedding module
+--------------------------------------------
+
+.. automodule:: block_zoo.embedding.CNNCharEmbedding
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: block_zoo.embedding
+    :members:
+    :undoc-members:
+    :show-inheritance:

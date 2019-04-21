@@ -1,0 +1,3041 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>block_zoo package &mdash; NeuronBlocks 1.1.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+        <script type="text/javascript" src="_static/language_data.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> NeuronBlocks
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.1.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="overview.html">Basic block_zoo</a></li>
+<li class="toctree-l1"><a class="reference internal" href="overview.html#id15">Attention</a></li>
+<li class="toctree-l1"><a class="reference internal" href="overview.html#id25">embedding</a></li>
+<li class="toctree-l1"><a class="reference internal" href="overview.html#id27">Operations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="overview.html#id31">Math</a></li>
+<li class="toctree-l1"><a class="reference internal" href="overview.html#id38">Transformer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="overview.html#id43">Encoder_Decoder</a></li>
+<li class="toctree-l1"><a class="reference internal" href="overview.html#id47">Normalizations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="overview.html#id49">Loss Functions</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">NeuronBlocks</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>block_zoo package</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/block_zoo.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="block-zoo-package">
+<h1>block_zoo package<a class="headerlink" href="#block-zoo-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="subpackages">
+<h2>Subpackages<a class="headerlink" href="#subpackages" title="Permalink to this headline">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="block_zoo.attentions.html">block_zoo.attentions package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="block_zoo.attentions.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="block_zoo.attentions.html#module-block_zoo.attentions.Attention">block_zoo.attentions.Attention module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="block_zoo.attentions.html#module-block_zoo.attentions.BiAttFlow">block_zoo.attentions.BiAttFlow module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="block_zoo.attentions.html#module-block_zoo.attentions.BilinearAttention">block_zoo.attentions.BilinearAttention module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="block_zoo.attentions.html#module-block_zoo.attentions.FullAttention">block_zoo.attentions.FullAttention module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="block_zoo.attentions.html#module-block_zoo.attentions.LinearAttention">block_zoo.attentions.LinearAttention module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="block_zoo.attentions.html#module-block_zoo.attentions.MatchAttention">block_zoo.attentions.MatchAttention module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="block_zoo.attentions.html#module-block_zoo.attentions.Seq2SeqAttention">block_zoo.attentions.Seq2SeqAttention module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="block_zoo.attentions.html#module-block_zoo.attentions">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="block_zoo.embedding.html">block_zoo.embedding package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="block_zoo.embedding.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="block_zoo.embedding.html#module-block_zoo.embedding.CNNCharEmbedding">block_zoo.embedding.CNNCharEmbedding module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="block_zoo.embedding.html#module-block_zoo.embedding">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="block_zoo.encoder_decoder.html">block_zoo.encoder_decoder package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="block_zoo.encoder_decoder.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="block_zoo.encoder_decoder.html#module-block_zoo.encoder_decoder.SLUDecoder">block_zoo.encoder_decoder.SLUDecoder module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="block_zoo.encoder_decoder.html#module-block_zoo.encoder_decoder.SLUEncoder">block_zoo.encoder_decoder.SLUEncoder module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="block_zoo.encoder_decoder.html#module-block_zoo.encoder_decoder">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="block_zoo.math.html">block_zoo.math package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="block_zoo.math.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="block_zoo.math.html#module-block_zoo.math.Add2D">block_zoo.math.Add2D module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="block_zoo.math.html#module-block_zoo.math.Add3D">block_zoo.math.Add3D module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="block_zoo.math.html#module-block_zoo.math.ElementWisedMultiply2D">block_zoo.math.ElementWisedMultiply2D module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="block_zoo.math.html#module-block_zoo.math.ElementWisedMultiply3D">block_zoo.math.ElementWisedMultiply3D module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="block_zoo.math.html#module-block_zoo.math.MatrixMultiply">block_zoo.math.MatrixMultiply module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="block_zoo.math.html#module-block_zoo.math.Minus2D">block_zoo.math.Minus2D module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="block_zoo.math.html#module-block_zoo.math.Minus3D">block_zoo.math.Minus3D module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="block_zoo.math.html#module-block_zoo.math">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="block_zoo.normalizations.html">block_zoo.normalizations package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="block_zoo.normalizations.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="block_zoo.normalizations.html#module-block_zoo.normalizations.LayerNorm">block_zoo.normalizations.LayerNorm module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="block_zoo.normalizations.html#module-block_zoo.normalizations">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="block_zoo.op.html">block_zoo.op package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="block_zoo.op.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="block_zoo.op.html#module-block_zoo.op.Combination">block_zoo.op.Combination module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="block_zoo.op.html#module-block_zoo.op.Concat2D">block_zoo.op.Concat2D module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="block_zoo.op.html#module-block_zoo.op.Concat3D">block_zoo.op.Concat3D module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="block_zoo.op.html#module-block_zoo.op">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="block_zoo.transformer.html">block_zoo.transformer package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="block_zoo.transformer.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="block_zoo.transformer.html#module-block_zoo.transformer.MLP">block_zoo.transformer.MLP module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="block_zoo.transformer.html#module-block_zoo.transformer.MultiHeadAttention">block_zoo.transformer.MultiHeadAttention module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="block_zoo.transformer.html#module-block_zoo.transformer">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-block_zoo.BaseLayer">
+<span id="block-zoo-baselayer-module"></span><h2>block_zoo.BaseLayer module<a class="headerlink" href="#module-block_zoo.BaseLayer" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="block_zoo.BaseLayer.BaseConf">
+<em class="property">class </em><code class="descclassname">block_zoo.BaseLayer.</code><code class="descname">BaseConf</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/block_zoo/BaseLayer.html#BaseConf"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#block_zoo.BaseLayer.BaseConf" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/abc.html#abc.ABC" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">abc.ABC</span></code></a></p>
+<p>Basic configuration</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>input_dim</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)"><em>int</em></a>) – the dimension of input.</li>
+<li><strong>hidden_dim</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)"><em>int</em></a>) – the dimension of hidden state.</li>
+<li><strong>dropout</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – dropout rate.</li>
+<li><strong>(</strong><strong>others</strong><strong>)</strong><strong>..</strong> – </li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="block_zoo.BaseLayer.BaseConf.add_attr_exist_assertion_for_dev">
+<code class="descname">add_attr_exist_assertion_for_dev</code><span class="sig-paren">(</span><em>attr</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/block_zoo/BaseLayer.html#BaseConf.add_attr_exist_assertion_for_dev"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#block_zoo.BaseLayer.BaseConf.add_attr_exist_assertion_for_dev" title="Permalink to this definition">¶</a></dt>
+<dd><p>check if there are some attributes being forgot by developers</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>attr</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – the attribution name</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">None</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="block_zoo.BaseLayer.BaseConf.add_attr_exist_assertion_for_user">
+<code class="descname">add_attr_exist_assertion_for_user</code><span class="sig-paren">(</span><em>attr</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/block_zoo/BaseLayer.html#BaseConf.add_attr_exist_assertion_for_user"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#block_zoo.BaseLayer.BaseConf.add_attr_exist_assertion_for_user" title="Permalink to this definition">¶</a></dt>
+<dd><p>check if there are some attributes being forgot by users</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>attr</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – the attribution name</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">None</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="block_zoo.BaseLayer.BaseConf.add_attr_range_assertion">
+<code class="descname">add_attr_range_assertion</code><span class="sig-paren">(</span><em>attr</em>, <em>range</em>, <em>bounds_legal=(True</em>, <em>True)</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/block_zoo/BaseLayer.html#BaseConf.add_attr_range_assertion"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#block_zoo.BaseLayer.BaseConf.add_attr_range_assertion" title="Permalink to this definition">¶</a></dt>
+<dd><p>check if attribute falls into the legal range</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>attr</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – the attribution name</li>
+<li><strong>range</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.7)"><em>tuple</em></a>) – (num/float(‘-inf’)/None, num/float(‘inf’)/None), None means -inf or inf.</li>
+<li><strong>bounds_legal</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.7)"><em>tuple</em></a>) – (bool, bool), if the left/right bound is legal</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">None</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="block_zoo.BaseLayer.BaseConf.add_attr_type_assertion">
+<code class="descname">add_attr_type_assertion</code><span class="sig-paren">(</span><em>attr</em>, <em>specified_type</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/block_zoo/BaseLayer.html#BaseConf.add_attr_type_assertion"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#block_zoo.BaseLayer.BaseConf.add_attr_type_assertion" title="Permalink to this definition">¶</a></dt>
+<dd><p>check if the types of attributes are legal</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>attr</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – the attribution name</li>
+<li><strong>specified_type</strong> (<em>None/str/list</em>) – one specified_type of a list of specified_type(including None)</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">None</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="block_zoo.BaseLayer.BaseConf.add_attr_value_assertion">
+<code class="descname">add_attr_value_assertion</code><span class="sig-paren">(</span><em>attr</em>, <em>legal_values</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/block_zoo/BaseLayer.html#BaseConf.add_attr_value_assertion"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#block_zoo.BaseLayer.BaseConf.add_attr_value_assertion" title="Permalink to this definition">¶</a></dt>
+<dd><p>check if attr equals to one of the legal values</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>attr</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – the attribution name</li>
+<li><strong>legal_values</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.7)"><em>list</em></a>) – include the legal value</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">None</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="block_zoo.BaseLayer.BaseConf.declare">
+<code class="descname">declare</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/block_zoo/BaseLayer.html#BaseConf.declare"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#block_zoo.BaseLayer.BaseConf.declare" title="Permalink to this definition">¶</a></dt>
+<dd><p>Define things like “input_ranks” and “num_of_inputs”, which are certain with regard to your layer</p>
+<blockquote>
+<div><p>num_of_input is N(N&gt;0) means this layer accepts N inputs;</p>
+<p>num_of_input is -1 means this layer accepts any number of inputs;</p>
+<p>The rank here is not the same as matrix rank:</p>
+<blockquote>
+<div><p>For a scalar, its rank is 0;</p>
+<p>For a vector, its rank is 1;</p>
+<p>For a matrix, its rank is 2;</p>
+<p>For a cube of numbers, its rank is 3.</p>
+</div></blockquote>
+<p>…
+For instance, the rank of (batch size, sequence length, hidden_dim) is 3.</p>
+<p>if num_of_input &gt; 0:</p>
+<blockquote>
+<div>len(input_ranks) should be equal to num_of_input</div></blockquote>
+<p>elif num_of_input == -1:</p>
+<blockquote>
+<div>input_ranks should be a list with only one element and the rank of all the inputs should be equal to that element.</div></blockquote>
+<p>NOTE: when we build the model, if num_of_input is -1, we would replace it with the real number of inputs and replace input_ranks with a list of real input_ranks.</p>
+</div></blockquote>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">None</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="block_zoo.BaseLayer.BaseConf.default">
+<code class="descname">default</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/block_zoo/BaseLayer.html#BaseConf.default"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#block_zoo.BaseLayer.BaseConf.default" title="Permalink to this definition">¶</a></dt>
+<dd><p>Define the default hyper parameters here. You can define these hyper parameters in your configuration file as well.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">None</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="block_zoo.BaseLayer.BaseConf.inference">
+<code class="descname">inference</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/block_zoo/BaseLayer.html#BaseConf.inference"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#block_zoo.BaseLayer.BaseConf.inference" title="Permalink to this definition">¶</a></dt>
+<dd><p>Inference things like output_dim, which may relies on defined hyper parameter such as hidden dim and input_dim</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">None</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="block_zoo.BaseLayer.BaseConf.verify">
+<code class="descname">verify</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/block_zoo/BaseLayer.html#BaseConf.verify"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#block_zoo.BaseLayer.BaseConf.verify" title="Permalink to this definition">¶</a></dt>
+<dd><p>Define some necessary varification for your layer when we define the model.</p>
+<p>If you define your own layer and rewrite this funciton, please add “super(YourLayerConf, self).verify()” at the beginning</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">None</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="block_zoo.BaseLayer.BaseConf.verify_before_inference">
+<code class="descname">verify_before_inference</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/block_zoo/BaseLayer.html#BaseConf.verify_before_inference"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#block_zoo.BaseLayer.BaseConf.verify_before_inference" title="Permalink to this definition">¶</a></dt>
+<dd><p>Some conditions must be fulfilled, otherwise there would be errors when calling inference()</p>
+<dl class="docutils">
+<dt>The difference between verify_before_inference() and verify() is that:</dt>
+<dd>verify_before_inference() is called before inference() while verify() is called after inference().</dd>
+</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">None</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="block_zoo.BaseLayer.BaseLayer">
+<em class="property">class </em><code class="descclassname">block_zoo.BaseLayer.</code><code class="descname">BaseLayer</code><span class="sig-paren">(</span><em>layer_conf</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/block_zoo/BaseLayer.html#BaseLayer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#block_zoo.BaseLayer.BaseLayer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.modules.module.Module</span></code></p>
+<p>The base class of layers</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>layer_conf</strong> (<a class="reference internal" href="#block_zoo.BaseLayer.BaseConf" title="block_zoo.BaseLayer.BaseConf"><em>BaseConf</em></a>) – configuration of a layer</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="block_zoo.BaseLayer.BaseLayer.forward">
+<code class="descname">forward</code><span class="sig-paren">(</span><em>*args</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/block_zoo/BaseLayer.html#BaseLayer.forward"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#block_zoo.BaseLayer.BaseLayer.forward" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>*args</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.7)"><em>list</em></a>) – a list of args in which arg should be a pair of (representation, length)</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">None</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="block_zoo.BaseLayer.BaseLayer.is_cuda">
+<code class="descname">is_cuda</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/block_zoo/BaseLayer.html#BaseLayer.is_cuda"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#block_zoo.BaseLayer.BaseLayer.is_cuda" title="Permalink to this definition">¶</a></dt>
+<dd><p>To judge if the layer is on CUDA
+if there are parameters in this layer, judge according to the parameters;
+else: judge according to the self.layer_conf.use_gpu</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">whether to use gpu</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.7)">bool</a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-block_zoo.BiGRU">
+<span id="block-zoo-bigru-module"></span><h2>block_zoo.BiGRU module<a class="headerlink" href="#module-block_zoo.BiGRU" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="block_zoo.BiGRU.BiGRU">
+<em class="property">class </em><code class="descclassname">block_zoo.BiGRU.</code><code class="descname">BiGRU</code><span class="sig-paren">(</span><em>layer_conf</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/block_zoo/BiGRU.html#BiGRU"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#block_zoo.BiGRU.BiGRU" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#block_zoo.BaseLayer.BaseLayer" title="block_zoo.BaseLayer.BaseLayer"><code class="xref py py-class docutils literal notranslate"><span class="pre">block_zoo.BaseLayer.BaseLayer</span></code></a></p>
+<p>Bidirectional GRU</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>layer_conf</strong> (<a class="reference internal" href="#block_zoo.BiGRU.BiGRUConf" title="block_zoo.BiGRU.BiGRUConf"><em>BiGRUConf</em></a>) – configuration of a layer</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="block_zoo.BiGRU.BiGRU.forward">
+<code class="descname">forward</code><span class="sig-paren">(</span><em>string</em>, <em>string_len</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/block_zoo/BiGRU.html#BiGRU.forward"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#block_zoo.BiGRU.BiGRU.forward" title="Permalink to this definition">¶</a></dt>
+<dd><p>process inputs</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>string</strong> (<em>Tensor</em>) – [batch_size, seq_len, dim]</li>
+<li><strong>string_len</strong> (<em>Tensor</em>) – [batch_size]</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">[batch_size, seq_len, 2 * hidden_dim]</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">Tensor</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="block_zoo.BiGRU.BiGRUConf">
+<em class="property">class </em><code class="descclassname">block_zoo.BiGRU.</code><code class="descname">BiGRUConf</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/block_zoo/BiGRU.html#BiGRUConf"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#block_zoo.BiGRU.BiGRUConf" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#block_zoo.BaseLayer.BaseConf" title="block_zoo.BaseLayer.BaseConf"><code class="xref py py-class docutils literal notranslate"><span class="pre">block_zoo.BaseLayer.BaseConf</span></code></a></p>
+<p>Configuration of BiGRU</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>hidden_dim</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)"><em>int</em></a>) – dimension of hidden state</li>
+<li><strong>dropout</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – dropout rate</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="block_zoo.BiGRU.BiGRUConf.declare">
+<code class="descname">declare</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/block_zoo/BiGRU.html#BiGRUConf.declare"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#block_zoo.BiGRU.BiGRUConf.declare" title="Permalink to this definition">¶</a></dt>
+<dd><p>Define things like “input_ranks” and “num_of_inputs”, which are certain with regard to your layer</p>
+<blockquote>
+<div><p>num_of_input is N(N&gt;0) means this layer accepts N inputs;</p>
+<p>num_of_input is -1 means this layer accepts any number of inputs;</p>
+<p>The rank here is not the same as matrix rank:</p>
+<blockquote>
+<div><p>For a scalar, its rank is 0;</p>
+<p>For a vector, its rank is 1;</p>
+<p>For a matrix, its rank is 2;</p>
+<p>For a cube of numbers, its rank is 3.</p>
+</div></blockquote>
+<p>…
+For instance, the rank of (batch size, sequence length, hidden_dim) is 3.</p>
+<p>if num_of_input &gt; 0:</p>
+<blockquote>
+<div>len(input_ranks) should be equal to num_of_input</div></blockquote>
+<p>elif num_of_input == -1:</p>
+<blockquote>
+<div>input_ranks should be a list with only one element and the rank of all the inputs should be equal to that element.</div></blockquote>
+<p>NOTE: when we build the model, if num_of_input is -1, we would replace it with the real number of inputs and replace input_ranks with a list of real input_ranks.</p>
+</div></blockquote>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">None</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="block_zoo.BiGRU.BiGRUConf.default">
+<code class="descname">default</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/block_zoo/BiGRU.html#BiGRUConf.default"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#block_zoo.BiGRU.BiGRUConf.default" title="Permalink to this definition">¶</a></dt>
+<dd><p>Define the default hyper parameters here. You can define these hyper parameters in your configuration file as well.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">None</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="block_zoo.BiGRU.BiGRUConf.inference">
+<code class="descname">inference</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/block_zoo/BiGRU.html#BiGRUConf.inference"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#block_zoo.BiGRU.BiGRUConf.inference" title="Permalink to this definition">¶</a></dt>
+<dd><p>Inference things like output_dim, which may relies on defined hyper parameter such as hidden dim and input_dim</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">None</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="block_zoo.BiGRU.BiGRUConf.verify">
+<code class="descname">verify</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/block_zoo/BiGRU.html#BiGRUConf.verify"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#block_zoo.BiGRU.BiGRUConf.verify" title="Permalink to this definition">¶</a></dt>
+<dd><p>Define some necessary varification for your layer when we define the model.</p>
+<p>If you define your own layer and rewrite this funciton, please add “super(YourLayerConf, self).verify()” at the beginning</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">None</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-block_zoo.BiGRULast">
+<span id="block-zoo-bigrulast-module"></span><h2>block_zoo.BiGRULast module<a class="headerlink" href="#module-block_zoo.BiGRULast" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="block_zoo.BiGRULast.BiGRULast">
+<em class="property">class </em><code class="descclassname">block_zoo.BiGRULast.</code><code class="descname">BiGRULast</code><span class="sig-paren">(</span><em>layer_conf</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/block_zoo/BiGRULast.html#BiGRULast"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#block_zoo.BiGRULast.BiGRULast" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#block_zoo.BaseLayer.BaseLayer" title="block_zoo.BaseLayer.BaseLayer"><code class="xref py py-class docutils literal notranslate"><span class="pre">block_zoo.BaseLayer.BaseLayer</span></code></a></p>
+<p>Get the last hidden state of Bi GRU</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>layer_conf</strong> (<a class="reference internal" href="#block_zoo.BiGRULast.BiGRULastConf" title="block_zoo.BiGRULast.BiGRULastConf"><em>BiGRULastConf</em></a>) – configuration of a layer</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="block_zoo.BiGRULast.BiGRULast.forward">
+<code class="descname">forward</code><span class="sig-paren">(</span><em>string</em>, <em>string_len</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/block_zoo/BiGRULast.html#BiGRULast.forward"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#block_zoo.BiGRULast.BiGRULast.forward" title="Permalink to this definition">¶</a></dt>
+<dd><p>process inputs</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>string</strong> (<em>Tensor</em>) – [batch_size, seq_len, dim]</li>
+<li><strong>string_len</strong> (<em>Tensor</em>) – [batch_size]</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">[batch_size, 2 * hidden_dim]</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">Tensor</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="block_zoo.BiGRULast.BiGRULastConf">
+<em class="property">class </em><code class="descclassname">block_zoo.BiGRULast.</code><code class="descname">BiGRULastConf</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/block_zoo/BiGRULast.html#BiGRULastConf"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#block_zoo.BiGRULast.BiGRULastConf" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#block_zoo.BaseLayer.BaseConf" title="block_zoo.BaseLayer.BaseConf"><code class="xref py py-class docutils literal notranslate"><span class="pre">block_zoo.BaseLayer.BaseConf</span></code></a></p>
+<p>Configuration of the layer BiGRULast</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>hidden_dim</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)"><em>int</em></a>) – dimension of hidden state</li>
+<li><strong>dropout</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – dropout rate</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="block_zoo.BiGRULast.BiGRULastConf.declare">
+<code class="descname">declare</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/block_zoo/BiGRULast.html#BiGRULastConf.declare"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#block_zoo.BiGRULast.BiGRULastConf.declare" title="Permalink to this definition">¶</a></dt>
+<dd><p>Define things like “input_ranks” and “num_of_inputs”, which are certain with regard to your layer</p>
+<blockquote>
+<div><p>num_of_input is N(N&gt;0) means this layer accepts N inputs;</p>
+<p>num_of_input is -1 means this layer accepts any number of inputs;</p>
+<p>The rank here is not the same as matrix rank:</p>
+<blockquote>
+<div><p>For a scalar, its rank is 0;</p>
+<p>For a vector, its rank is 1;</p>
+<p>For a matrix, its rank is 2;</p>
+<p>For a cube of numbers, its rank is 3.</p>
+</div></blockquote>
+<p>…
+For instance, the rank of (batch size, sequence length, hidden_dim) is 3.</p>
+<p>if num_of_input &gt; 0:</p>
+<blockquote>
+<div>len(input_ranks) should be equal to num_of_input</div></blockquote>
+<p>elif num_of_input == -1:</p>
+<blockquote>
+<div>input_ranks should be a list with only one element and the rank of all the inputs should be equal to that element.</div></blockquote>
+<p>NOTE: when we build the model, if num_of_input is -1, we would replace it with the real number of inputs and replace input_ranks with a list of real input_ranks.</p>
+</div></blockquote>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">None</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="block_zoo.BiGRULast.BiGRULastConf.default">
+<code class="descname">default</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/block_zoo/BiGRULast.html#BiGRULastConf.default"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#block_zoo.BiGRULast.BiGRULastConf.default" title="Permalink to this definition">¶</a></dt>
+<dd><p>Define the default hyper parameters here. You can define these hyper parameters in your configuration file as well.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">None</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="block_zoo.BiGRULast.BiGRULastConf.inference">
+<code class="descname">inference</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/block_zoo/BiGRULast.html#BiGRULastConf.inference"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#block_zoo.BiGRULast.BiGRULastConf.inference" title="Permalink to this definition">¶</a></dt>
+<dd><p>Inference things like output_dim, which may relies on defined hyper parameter such as hidden dim and input_dim</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">None</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="block_zoo.BiGRULast.BiGRULastConf.verify">
+<code class="descname">verify</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/block_zoo/BiGRULast.html#BiGRULastConf.verify"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#block_zoo.BiGRULast.BiGRULastConf.verify" title="Permalink to this definition">¶</a></dt>
+<dd><p>Define some necessary varification for your layer when we define the model.</p>
+<p>If you define your own layer and rewrite this funciton, please add “super(YourLayerConf, self).verify()” at the beginning</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">None</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="block_zoo.BiGRULast.BiGRULastConf.verify_before_inference">
+<code class="descname">verify_before_inference</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/block_zoo/BiGRULast.html#BiGRULastConf.verify_before_inference"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#block_zoo.BiGRULast.BiGRULastConf.verify_before_inference" title="Permalink to this definition">¶</a></dt>
+<dd><p>Some conditions must be fulfilled, otherwise there would be errors when calling inference()</p>
+<dl class="docutils">
+<dt>The difference between verify_before_inference() and verify() is that:</dt>
+<dd>verify_before_inference() is called before inference() while verify() is called after inference().</dd>
+</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">None</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-block_zoo.BiLSTM">
+<span id="block-zoo-bilstm-module"></span><h2>block_zoo.BiLSTM module<a class="headerlink" href="#module-block_zoo.BiLSTM" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="block_zoo.BiLSTM.BiLSTM">
+<em class="property">class </em><code class="descclassname">block_zoo.BiLSTM.</code><code class="descname">BiLSTM</code><span class="sig-paren">(</span><em>layer_conf</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/block_zoo/BiLSTM.html#BiLSTM"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#block_zoo.BiLSTM.BiLSTM" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#block_zoo.BaseLayer.BaseLayer" title="block_zoo.BaseLayer.BaseLayer"><code class="xref py py-class docutils literal notranslate"><span class="pre">block_zoo.BaseLayer.BaseLayer</span></code></a></p>
+<p>Bidrectional LSTM</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>layer_conf</strong> (<a class="reference internal" href="#block_zoo.BiLSTM.BiLSTMConf" title="block_zoo.BiLSTM.BiLSTMConf"><em>BiLSTMConf</em></a>) – configuration of a layer</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="block_zoo.BiLSTM.BiLSTM.forward">
+<code class="descname">forward</code><span class="sig-paren">(</span><em>string</em>, <em>string_len</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/block_zoo/BiLSTM.html#BiLSTM.forward"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#block_zoo.BiLSTM.BiLSTM.forward" title="Permalink to this definition">¶</a></dt>
+<dd><p>process inputs</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>string</strong> (<em>Tensor</em>) – [batch_size, seq_len, dim]</li>
+<li><strong>string_len</strong> (<em>Tensor</em>) – [batch_size]</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">[batch_size, seq_len, 2 * hidden_dim]</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">Tensor</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="block_zoo.BiLSTM.BiLSTMConf">
+<em class="property">class </em><code class="descclassname">block_zoo.BiLSTM.</code><code class="descname">BiLSTMConf</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/block_zoo/BiLSTM.html#BiLSTMConf"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#block_zoo.BiLSTM.BiLSTMConf" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#block_zoo.BaseLayer.BaseConf" title="block_zoo.BaseLayer.BaseConf"><code class="xref py py-class docutils literal notranslate"><span class="pre">block_zoo.BaseLayer.BaseConf</span></code></a></p>
+<p>Configuration of BiLSTM</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>hidden_dim</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)"><em>int</em></a>) – dimension of hidden state</li>
+<li><strong>dropout</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – dropout rate</li>
+<li><strong>num_layers</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)"><em>int</em></a>) – number of BiLSTM layers</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="block_zoo.BiLSTM.BiLSTMConf.declare">
+<code class="descname">declare</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/block_zoo/BiLSTM.html#BiLSTMConf.declare"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#block_zoo.BiLSTM.BiLSTMConf.declare" title="Permalink to this definition">¶</a></dt>
+<dd><p>Define things like “input_ranks” and “num_of_inputs”, which are certain with regard to your layer</p>
+<blockquote>
+<div><p>num_of_input is N(N&gt;0) means this layer accepts N inputs;</p>
+<p>num_of_input is -1 means this layer accepts any number of inputs;</p>
+<p>The rank here is not the same as matrix rank:</p>
+<blockquote>
+<div><p>For a scalar, its rank is 0;</p>
+<p>For a vector, its rank is 1;</p>
+<p>For a matrix, its rank is 2;</p>
+<p>For a cube of numbers, its rank is 3.</p>
+</div></blockquote>
+<p>…
+For instance, the rank of (batch size, sequence length, hidden_dim) is 3.</p>
+<p>if num_of_input &gt; 0:</p>
+<blockquote>
+<div>len(input_ranks) should be equal to num_of_input</div></blockquote>
+<p>elif num_of_input == -1:</p>
+<blockquote>
+<div>input_ranks should be a list with only one element and the rank of all the inputs should be equal to that element.</div></blockquote>
+<p>NOTE: when we build the model, if num_of_input is -1, we would replace it with the real number of inputs and replace input_ranks with a list of real input_ranks.</p>
+</div></blockquote>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">None</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="block_zoo.BiLSTM.BiLSTMConf.default">
+<code class="descname">default</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/block_zoo/BiLSTM.html#BiLSTMConf.default"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#block_zoo.BiLSTM.BiLSTMConf.default" title="Permalink to this definition">¶</a></dt>
+<dd><p>Define the default hyper parameters here. You can define these hyper parameters in your configuration file as well.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">None</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="block_zoo.BiLSTM.BiLSTMConf.inference">
+<code class="descname">inference</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/block_zoo/BiLSTM.html#BiLSTMConf.inference"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#block_zoo.BiLSTM.BiLSTMConf.inference" title="Permalink to this definition">¶</a></dt>
+<dd><p>Inference things like output_dim, which may relies on defined hyper parameter such as hidden dim and input_dim</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">None</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="block_zoo.BiLSTM.BiLSTMConf.verify">
+<code class="descname">verify</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/block_zoo/BiLSTM.html#BiLSTMConf.verify"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#block_zoo.BiLSTM.BiLSTMConf.verify" title="Permalink to this definition">¶</a></dt>
+<dd><p>Define some necessary varification for your layer when we define the model.</p>
+<p>If you define your own layer and rewrite this funciton, please add “super(YourLayerConf, self).verify()” at the beginning</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">None</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-block_zoo.BiLSTMAtt">
+<span id="block-zoo-bilstmatt-module"></span><h2>block_zoo.BiLSTMAtt module<a class="headerlink" href="#module-block_zoo.BiLSTMAtt" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="block_zoo.BiLSTMAtt.BiLSTMAtt">
+<em class="property">class </em><code class="descclassname">block_zoo.BiLSTMAtt.</code><code class="descname">BiLSTMAtt</code><span class="sig-paren">(</span><em>layer_conf</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/block_zoo/BiLSTMAtt.html#BiLSTMAtt"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#block_zoo.BiLSTMAtt.BiLSTMAtt" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#block_zoo.BaseLayer.BaseLayer" title="block_zoo.BaseLayer.BaseLayer"><code class="xref py py-class docutils literal notranslate"><span class="pre">block_zoo.BaseLayer.BaseLayer</span></code></a></p>
+<p>BiLSTM with self attention</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>layer_conf</strong> (<a class="reference internal" href="#block_zoo.BiLSTMAtt.BiLSTMAttConf" title="block_zoo.BiLSTMAtt.BiLSTMAttConf"><em>BiLSTMAttConf</em></a>) – configuration of a layer</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="block_zoo.BiLSTMAtt.BiLSTMAtt.forward">
+<code class="descname">forward</code><span class="sig-paren">(</span><em>string</em>, <em>string_len</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/block_zoo/BiLSTMAtt.html#BiLSTMAtt.forward"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#block_zoo.BiLSTMAtt.BiLSTMAtt.forward" title="Permalink to this definition">¶</a></dt>
+<dd><p>process inputs</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>string</strong> (<em>Tensor</em>) – [batch_size, seq_len, dim]</li>
+<li><strong>string_len</strong> (<em>Tensor</em>) – [batch_size]</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">[batch_size, seq_len, 2 * hidden_dim]</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">Tensor</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="block_zoo.BiLSTMAtt.BiLSTMAttConf">
+<em class="property">class </em><code class="descclassname">block_zoo.BiLSTMAtt.</code><code class="descname">BiLSTMAttConf</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/block_zoo/BiLSTMAtt.html#BiLSTMAttConf"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#block_zoo.BiLSTMAtt.BiLSTMAttConf" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#block_zoo.BaseLayer.BaseConf" title="block_zoo.BaseLayer.BaseConf"><code class="xref py py-class docutils literal notranslate"><span class="pre">block_zoo.BaseLayer.BaseConf</span></code></a></p>
+<p>Configuration of BiLSTMAtt layer</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>hidden_dim</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)"><em>int</em></a>) – dimension of hidden state</li>
+<li><strong>dropout</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – dropout rate</li>
+<li><strong>num_layers</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)"><em>int</em></a>) – number of BiLSTM layers</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="block_zoo.BiLSTMAtt.BiLSTMAttConf.declare">
+<code class="descname">declare</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/block_zoo/BiLSTMAtt.html#BiLSTMAttConf.declare"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#block_zoo.BiLSTMAtt.BiLSTMAttConf.declare" title="Permalink to this definition">¶</a></dt>
+<dd><p>Define things like “input_ranks” and “num_of_inputs”, which are certain with regard to your layer</p>
+<blockquote>
+<div><p>num_of_input is N(N&gt;0) means this layer accepts N inputs;</p>
+<p>num_of_input is -1 means this layer accepts any number of inputs;</p>
+<p>The rank here is not the same as matrix rank:</p>
+<blockquote>
+<div><p>For a scalar, its rank is 0;</p>
+<p>For a vector, its rank is 1;</p>
+<p>For a matrix, its rank is 2;</p>
+<p>For a cube of numbers, its rank is 3.</p>
+</div></blockquote>
+<p>…
+For instance, the rank of (batch size, sequence length, hidden_dim) is 3.</p>
+<p>if num_of_input &gt; 0:</p>
+<blockquote>
+<div>len(input_ranks) should be equal to num_of_input</div></blockquote>
+<p>elif num_of_input == -1:</p>
+<blockquote>
+<div>input_ranks should be a list with only one element and the rank of all the inputs should be equal to that element.</div></blockquote>
+<p>NOTE: when we build the model, if num_of_input is -1, we would replace it with the real number of inputs and replace input_ranks with a list of real input_ranks.</p>
+</div></blockquote>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">None</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="block_zoo.BiLSTMAtt.BiLSTMAttConf.default">
+<code class="descname">default</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/block_zoo/BiLSTMAtt.html#BiLSTMAttConf.default"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#block_zoo.BiLSTMAtt.BiLSTMAttConf.default" title="Permalink to this definition">¶</a></dt>
+<dd><p>Define the default hyper parameters here. You can define these hyper parameters in your configuration file as well.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">None</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="block_zoo.BiLSTMAtt.BiLSTMAttConf.inference">
+<code class="descname">inference</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/block_zoo/BiLSTMAtt.html#BiLSTMAttConf.inference"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#block_zoo.BiLSTMAtt.BiLSTMAttConf.inference" title="Permalink to this definition">¶</a></dt>
+<dd><p>Inference things like output_dim, which may relies on defined hyper parameter such as hidden dim and input_dim</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">None</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="block_zoo.BiLSTMAtt.BiLSTMAttConf.verify">
+<code class="descname">verify</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/block_zoo/BiLSTMAtt.html#BiLSTMAttConf.verify"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#block_zoo.BiLSTMAtt.BiLSTMAttConf.verify" title="Permalink to this definition">¶</a></dt>
+<dd><p>Define some necessary varification for your layer when we define the model.</p>
+<p>If you define your own layer and rewrite this funciton, please add “super(YourLayerConf, self).verify()” at the beginning</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">None</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="block_zoo.BiLSTMAtt.BiLSTMAttConf.verify_before_inference">
+<code class="descname">verify_before_inference</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/block_zoo/BiLSTMAtt.html#BiLSTMAttConf.verify_before_inference"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#block_zoo.BiLSTMAtt.BiLSTMAttConf.verify_before_inference" title="Permalink to this definition">¶</a></dt>
+<dd><p>Some conditions must be fulfilled, otherwise there would be errors when calling inference()</p>
+<dl class="docutils">
+<dt>The difference between verify_before_inference() and verify() is that:</dt>
+<dd>verify_before_inference() is called before inference() while verify() is called after inference().</dd>
+</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">None</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-block_zoo.BiLSTMLast">
+<span id="block-zoo-bilstmlast-module"></span><h2>block_zoo.BiLSTMLast module<a class="headerlink" href="#module-block_zoo.BiLSTMLast" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="block_zoo.BiLSTMLast.BiLSTMLast">
+<em class="property">class </em><code class="descclassname">block_zoo.BiLSTMLast.</code><code class="descname">BiLSTMLast</code><span class="sig-paren">(</span><em>layer_conf</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/block_zoo/BiLSTMLast.html#BiLSTMLast"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#block_zoo.BiLSTMLast.BiLSTMLast" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#block_zoo.BaseLayer.BaseLayer" title="block_zoo.BaseLayer.BaseLayer"><code class="xref py py-class docutils literal notranslate"><span class="pre">block_zoo.BaseLayer.BaseLayer</span></code></a></p>
+<p>get last hidden states of Bidrectional LSTM</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>layer_conf</strong> (<a class="reference internal" href="#block_zoo.BiLSTM.BiLSTMConf" title="block_zoo.BiLSTM.BiLSTMConf"><em>BiLSTMConf</em></a>) – configuration of a layer</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="block_zoo.BiLSTMLast.BiLSTMLast.forward">
+<code class="descname">forward</code><span class="sig-paren">(</span><em>string</em>, <em>string_len</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/block_zoo/BiLSTMLast.html#BiLSTMLast.forward"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#block_zoo.BiLSTMLast.BiLSTMLast.forward" title="Permalink to this definition">¶</a></dt>
+<dd><p>process inputs</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>string</strong> (<em>Tensor</em>) – [batch_size, seq_len, dim]</li>
+<li><strong>string_len</strong> (<em>Tensor</em>) – [batch_size]</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">[batch_size, 2 * hidden_dim]</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">Tensor</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="block_zoo.BiLSTMLast.BiLSTMLastConf">
+<em class="property">class </em><code class="descclassname">block_zoo.BiLSTMLast.</code><code class="descname">BiLSTMLastConf</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/block_zoo/BiLSTMLast.html#BiLSTMLastConf"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#block_zoo.BiLSTMLast.BiLSTMLastConf" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#block_zoo.BaseLayer.BaseConf" title="block_zoo.BaseLayer.BaseConf"><code class="xref py py-class docutils literal notranslate"><span class="pre">block_zoo.BaseLayer.BaseConf</span></code></a></p>
+<p>Configuration of BiLSTMLast</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>hidden_dim</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)"><em>int</em></a>) – dimension of hidden state</li>
+<li><strong>dropout</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – dropout rate</li>
+<li><strong>num_layers</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)"><em>int</em></a>) – number of BiLSTM layers</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="block_zoo.BiLSTMLast.BiLSTMLastConf.declare">
+<code class="descname">declare</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/block_zoo/BiLSTMLast.html#BiLSTMLastConf.declare"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#block_zoo.BiLSTMLast.BiLSTMLastConf.declare" title="Permalink to this definition">¶</a></dt>
+<dd><p>Define things like “input_ranks” and “num_of_inputs”, which are certain with regard to your layer</p>
+<blockquote>
+<div><p>num_of_input is N(N&gt;0) means this layer accepts N inputs;</p>
+<p>num_of_input is -1 means this layer accepts any number of inputs;</p>
+<p>The rank here is not the same as matrix rank:</p>
+<blockquote>
+<div><p>For a scalar, its rank is 0;</p>
+<p>For a vector, its rank is 1;</p>
+<p>For a matrix, its rank is 2;</p>
+<p>For a cube of numbers, its rank is 3.</p>
+</div></blockquote>
+<p>…
+For instance, the rank of (batch size, sequence length, hidden_dim) is 3.</p>
+<p>if num_of_input &gt; 0:</p>
+<blockquote>
+<div>len(input_ranks) should be equal to num_of_input</div></blockquote>
+<p>elif num_of_input == -1:</p>
+<blockquote>
+<div>input_ranks should be a list with only one element and the rank of all the inputs should be equal to that element.</div></blockquote>
+<p>NOTE: when we build the model, if num_of_input is -1, we would replace it with the real number of inputs and replace input_ranks with a list of real input_ranks.</p>
+</div></blockquote>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">None</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="block_zoo.BiLSTMLast.BiLSTMLastConf.default">
+<code class="descname">default</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/block_zoo/BiLSTMLast.html#BiLSTMLastConf.default"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#block_zoo.BiLSTMLast.BiLSTMLastConf.default" title="Permalink to this definition">¶</a></dt>
+<dd><p>Define the default hyper parameters here. You can define these hyper parameters in your configuration file as well.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">None</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="block_zoo.BiLSTMLast.BiLSTMLastConf.inference">
+<code class="descname">inference</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/block_zoo/BiLSTMLast.html#BiLSTMLastConf.inference"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#block_zoo.BiLSTMLast.BiLSTMLastConf.inference" title="Permalink to this definition">¶</a></dt>
+<dd><p>Inference things like output_dim, which may relies on defined hyper parameter such as hidden dim and input_dim</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">None</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="block_zoo.BiLSTMLast.BiLSTMLastConf.verify">
+<code class="descname">verify</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/block_zoo/BiLSTMLast.html#BiLSTMLastConf.verify"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#block_zoo.BiLSTMLast.BiLSTMLastConf.verify" title="Permalink to this definition">¶</a></dt>
+<dd><p>Define some necessary varification for your layer when we define the model.</p>
+<p>If you define your own layer and rewrite this funciton, please add “super(YourLayerConf, self).verify()” at the beginning</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">None</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-block_zoo.BiQRNN">
+<span id="block-zoo-biqrnn-module"></span><h2>block_zoo.BiQRNN module<a class="headerlink" href="#module-block_zoo.BiQRNN" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="block_zoo.BiQRNN.BiQRNN">
+<em class="property">class </em><code class="descclassname">block_zoo.BiQRNN.</code><code class="descname">BiQRNN</code><span class="sig-paren">(</span><em>layer_conf</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/block_zoo/BiQRNN.html#BiQRNN"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#block_zoo.BiQRNN.BiQRNN" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#block_zoo.BaseLayer.BaseLayer" title="block_zoo.BaseLayer.BaseLayer"><code class="xref py py-class docutils literal notranslate"><span class="pre">block_zoo.BaseLayer.BaseLayer</span></code></a></p>
+<p>Bidrectional QRNN</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>layer_conf</strong> (<a class="reference internal" href="#block_zoo.BiQRNN.BiQRNNConf" title="block_zoo.BiQRNN.BiQRNNConf"><em>BiQRNNConf</em></a>) – configuration of a layer</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="block_zoo.BiQRNN.BiQRNN.forward">
+<code class="descname">forward</code><span class="sig-paren">(</span><em>string</em>, <em>string_len</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/block_zoo/BiQRNN.html#BiQRNN.forward"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#block_zoo.BiQRNN.BiQRNN.forward" title="Permalink to this definition">¶</a></dt>
+<dd><p>process inputs</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>string</strong> (<em>Tensor</em>) – [batch_size, seq_len, dim]</li>
+<li><strong>string_len</strong> (<em>Tensor</em>) – [batch_size]</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">[batch_size, seq_len, hidden_dim]</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">Tensor</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="block_zoo.BiQRNN.BiQRNNConf">
+<em class="property">class </em><code class="descclassname">block_zoo.BiQRNN.</code><code class="descname">BiQRNNConf</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/block_zoo/BiQRNN.html#BiQRNNConf"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#block_zoo.BiQRNN.BiQRNNConf" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#block_zoo.BaseLayer.BaseConf" title="block_zoo.BaseLayer.BaseConf"><code class="xref py py-class docutils literal notranslate"><span class="pre">block_zoo.BaseLayer.BaseConf</span></code></a></p>
+<p>Configuration of BiQRNN</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>hidden_dim</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)"><em>int</em></a>) – dimension of hidden state</li>
+<li><strong>window</strong> – the size of the convolutional window. Supports 1 and 2. Default: 1</li>
+<li><strong>zoneout</strong> – Whether to apply zoneout (failing to update elements in the hidden state). Default: 0</li>
+<li><strong>dropout</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – dropout rate bewteen BiQRNN layers</li>
+<li><strong>num_layers</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)"><em>int</em></a>) – number of BiQRNN layers</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="block_zoo.BiQRNN.BiQRNNConf.declare">
+<code class="descname">declare</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/block_zoo/BiQRNN.html#BiQRNNConf.declare"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#block_zoo.BiQRNN.BiQRNNConf.declare" title="Permalink to this definition">¶</a></dt>
+<dd><p>Define things like “input_ranks” and “num_of_inputs”, which are certain with regard to your layer</p>
+<blockquote>
+<div><p>num_of_input is N(N&gt;0) means this layer accepts N inputs;</p>
+<p>num_of_input is -1 means this layer accepts any number of inputs;</p>
+<p>The rank here is not the same as matrix rank:</p>
+<blockquote>
+<div><p>For a scalar, its rank is 0;</p>
+<p>For a vector, its rank is 1;</p>
+<p>For a matrix, its rank is 2;</p>
+<p>For a cube of numbers, its rank is 3.</p>
+</div></blockquote>
+<p>…
+For instance, the rank of (batch size, sequence length, hidden_dim) is 3.</p>
+<p>if num_of_input &gt; 0:</p>
+<blockquote>
+<div>len(input_ranks) should be equal to num_of_input</div></blockquote>
+<p>elif num_of_input == -1:</p>
+<blockquote>
+<div>input_ranks should be a list with only one element and the rank of all the inputs should be equal to that element.</div></blockquote>
+<p>NOTE: when we build the model, if num_of_input is -1, we would replace it with the real number of inputs and replace input_ranks with a list of real input_ranks.</p>
+</div></blockquote>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">None</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="block_zoo.BiQRNN.BiQRNNConf.default">
+<code class="descname">default</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/block_zoo/BiQRNN.html#BiQRNNConf.default"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#block_zoo.BiQRNN.BiQRNNConf.default" title="Permalink to this definition">¶</a></dt>
+<dd><p>Define the default hyper parameters here. You can define these hyper parameters in your configuration file as well.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">None</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="block_zoo.BiQRNN.BiQRNNConf.inference">
+<code class="descname">inference</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/block_zoo/BiQRNN.html#BiQRNNConf.inference"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#block_zoo.BiQRNN.BiQRNNConf.inference" title="Permalink to this definition">¶</a></dt>
+<dd><p>Inference things like output_dim, which may relies on defined hyper parameter such as hidden dim and input_dim</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">None</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="block_zoo.BiQRNN.BiQRNNConf.verify">
+<code class="descname">verify</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/block_zoo/BiQRNN.html#BiQRNNConf.verify"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#block_zoo.BiQRNN.BiQRNNConf.verify" title="Permalink to this definition">¶</a></dt>
+<dd><p>Define some necessary varification for your layer when we define the model.</p>
+<p>If you define your own layer and rewrite this funciton, please add “super(YourLayerConf, self).verify()” at the beginning</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">None</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="block_zoo.BiQRNN.ForgetMult">
+<em class="property">class </em><code class="descclassname">block_zoo.BiQRNN.</code><code class="descname">ForgetMult</code><a class="reference internal" href="_modules/block_zoo/BiQRNN.html#ForgetMult"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#block_zoo.BiQRNN.ForgetMult" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.modules.module.Module</span></code></p>
+<p>ForgetMult computes a simple recurrent equation:
+h_t = f_t * x_t + (1 - f_t) * h_{t-1}</p>
+<p>This equation is equivalent to dynamic weighted averaging.</p>
+<dl class="docutils">
+<dt>Inputs: X, hidden</dt>
+<dd><ul class="first last simple">
+<li>X (seq_len, batch, input_size): tensor containing the features of the input sequence.</li>
+<li>F (seq_len, batch, input_size): tensor containing the forget gate values, assumed in range [0, 1].</li>
+<li>hidden_init (batch, input_size): tensor containing the initial hidden state for the recurrence (h_{t-1}).</li>
+</ul>
+</dd>
+</dl>
+<dl class="method">
+<dt id="block_zoo.BiQRNN.ForgetMult.forward">
+<code class="descname">forward</code><span class="sig-paren">(</span><em>f</em>, <em>x</em>, <em>hidden_init=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/block_zoo/BiQRNN.html#ForgetMult.forward"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#block_zoo.BiQRNN.ForgetMult.forward" title="Permalink to this definition">¶</a></dt>
+<dd><p>Defines the computation performed at every call.</p>
+<p>Should be overridden by all subclasses.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Although the recipe for forward pass needs to be defined within
+this function, one should call the <code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code> instance afterwards
+instead of this since the former takes care of running the
+registered hooks while the latter silently ignores them.</p>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="block_zoo.BiQRNN.QRNN">
+<em class="property">class </em><code class="descclassname">block_zoo.BiQRNN.</code><code class="descname">QRNN</code><span class="sig-paren">(</span><em>input_size</em>, <em>hidden_size</em>, <em>num_layers=1</em>, <em>bias=True</em>, <em>batch_first=False</em>, <em>dropout=0.0</em>, <em>bidirectional=False</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/block_zoo/BiQRNN.html#QRNN"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#block_zoo.BiQRNN.QRNN" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.modules.module.Module</span></code></p>
+<p>Applies a multiple layer Quasi-Recurrent Neural Network (QRNN) to an input sequence.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>input_size</strong> – The number of expected features in the input x.</li>
+<li><strong>hidden_size</strong> – The number of features in the hidden state h. If not specified, the input size is used.</li>
+<li><strong>num_layers</strong> – The number of QRNN layers to produce.</li>
+<li><strong>dropout</strong> – Whether to use dropout between QRNN layers. Default: 0.</li>
+<li><strong>bidirectional</strong> – If True, becomes a bidirectional QRNN. Default: False.</li>
+<li><strong>save_prev_x</strong> – Whether to store previous inputs for use in future convolutional windows (i.e. for a continuing sequence such as in language modeling). If true, you must call reset to remove cached previous values of x. Default: False.</li>
+<li><strong>window</strong> – Defines the size of the convolutional window (how many previous tokens to look when computing the QRNN values). Supports 1 and 2. Default: 1.</li>
+<li><strong>zoneout</strong> – Whether to apply zoneout (i.e. failing to update elements in the hidden state) to the hidden state updates. Default: 0.</li>
+<li><strong>output_gate</strong> – If True, performs QRNN-fo (applying an output gate to the output). If False, performs QRNN-f. Default: True.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="docutils">
+<dt>Inputs: X, hidden</dt>
+<dd><ul class="first last simple">
+<li>X (seq_len, batch, input_size): tensor containing the features of the input sequence.</li>
+<li>hidden (num_layers * num_directions, batch, hidden_size): tensor containing the initial hidden state for the QRNN.</li>
+</ul>
+</dd>
+<dt>Outputs: output, h_n</dt>
+<dd><ul class="first last simple">
+<li>output (seq_len, batch, hidden_size * num_directions): tensor containing the output of the QRNN for each timestep.</li>
+<li>h_n (num_layers * num_directions, batch, hidden_size): tensor containing the hidden state for t=seq_len</li>
+</ul>
+</dd>
+</dl>
+<dl class="method">
+<dt id="block_zoo.BiQRNN.QRNN.forward">
+<code class="descname">forward</code><span class="sig-paren">(</span><em>input</em>, <em>hidden=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/block_zoo/BiQRNN.html#QRNN.forward"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#block_zoo.BiQRNN.QRNN.forward" title="Permalink to this definition">¶</a></dt>
+<dd><p>Defines the computation performed at every call.</p>
+<p>Should be overridden by all subclasses.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Although the recipe for forward pass needs to be defined within
+this function, one should call the <code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code> instance afterwards
+instead of this since the former takes care of running the
+registered hooks while the latter silently ignores them.</p>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="block_zoo.BiQRNN.QRNN.reset">
+<code class="descname">reset</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/block_zoo/BiQRNN.html#QRNN.reset"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#block_zoo.BiQRNN.QRNN.reset" title="Permalink to this definition">¶</a></dt>
+<dd><p>If your convolutional window is greater than 1, you must reset at the beginning of each new sequence</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="block_zoo.BiQRNN.QRNN.tensor_reverse">
+<code class="descname">tensor_reverse</code><span class="sig-paren">(</span><em>tensor</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/block_zoo/BiQRNN.html#QRNN.tensor_reverse"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#block_zoo.BiQRNN.QRNN.tensor_reverse" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="block_zoo.BiQRNN.QRNNLayer">
+<em class="property">class </em><code class="descclassname">block_zoo.BiQRNN.</code><code class="descname">QRNNLayer</code><span class="sig-paren">(</span><em>input_size</em>, <em>hidden_size=None</em>, <em>save_prev_x=False</em>, <em>zoneout=0</em>, <em>window=1</em>, <em>output_gate=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/block_zoo/BiQRNN.html#QRNNLayer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#block_zoo.BiQRNN.QRNNLayer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.modules.module.Module</span></code></p>
+<p>Applies a single layer Quasi-Recurrent Neural Network (QRNN) to an input sequence.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>input_size</strong> – The number of expected features in the input x.</li>
+<li><strong>hidden_size</strong> – The number of features in the hidden state h. If not specified, the input size is used.</li>
+<li><strong>save_prev_x</strong> – Whether to store previous inputs for use in future convolutional windows (i.e. for a continuing sequence such as in language modeling). If true, you must call reset to remove cached previous values of x. Default: False.</li>
+<li><strong>window</strong> – Defines the size of the convolutional window (how many previous tokens to look when computing the QRNN values). Supports 1 and 2. Default: 1.</li>
+<li><strong>zoneout</strong> – Whether to apply zoneout (i.e. failing to update elements in the hidden state) to the hidden state updates. Default: 0.</li>
+<li><strong>output_gate</strong> – If True, performs QRNN-fo (applying an output gate to the output). If False, performs QRNN-f. Default: True.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="docutils">
+<dt>Inputs: X, hidden</dt>
+<dd><ul class="first last simple">
+<li>X (seq_len, batch, input_size): tensor containing the features of the input sequence.</li>
+<li>hidden (batch, hidden_size): tensor containing the initial hidden state for the QRNN.</li>
+</ul>
+</dd>
+<dt>Outputs: output, h_n</dt>
+<dd><ul class="first last simple">
+<li>output (seq_len, batch, hidden_size): tensor containing the output of the QRNN for each timestep.</li>
+<li>h_n (1, batch, hidden_size): tensor containing the hidden state for t=seq_len</li>
+</ul>
+</dd>
+</dl>
+<dl class="method">
+<dt id="block_zoo.BiQRNN.QRNNLayer.forward">
+<code class="descname">forward</code><span class="sig-paren">(</span><em>X</em>, <em>hidden=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/block_zoo/BiQRNN.html#QRNNLayer.forward"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#block_zoo.BiQRNN.QRNNLayer.forward" title="Permalink to this definition">¶</a></dt>
+<dd><p>Defines the computation performed at every call.</p>
+<p>Should be overridden by all subclasses.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Although the recipe for forward pass needs to be defined within
+this function, one should call the <code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code> instance afterwards
+instead of this since the former takes care of running the
+registered hooks while the latter silently ignores them.</p>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="block_zoo.BiQRNN.QRNNLayer.reset">
+<code class="descname">reset</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/block_zoo/BiQRNN.html#QRNNLayer.reset"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#block_zoo.BiQRNN.QRNNLayer.reset" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-block_zoo.Conv">
+<span id="block-zoo-conv-module"></span><h2>block_zoo.Conv module<a class="headerlink" href="#module-block_zoo.Conv" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="block_zoo.Conv.Conv">
+<em class="property">class </em><code class="descclassname">block_zoo.Conv.</code><code class="descname">Conv</code><span class="sig-paren">(</span><em>layer_conf</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/block_zoo/Conv.html#Conv"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#block_zoo.Conv.Conv" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#block_zoo.BaseLayer.BaseLayer" title="block_zoo.BaseLayer.BaseLayer"><code class="xref py py-class docutils literal notranslate"><span class="pre">block_zoo.BaseLayer.BaseLayer</span></code></a></p>
+<p>Convolution along just 1 direction</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>layer_conf</strong> (<a class="reference internal" href="#block_zoo.Conv.ConvConf" title="block_zoo.Conv.ConvConf"><em>ConvConf</em></a>) – configuration of a layer</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="block_zoo.Conv.Conv.forward">
+<code class="descname">forward</code><span class="sig-paren">(</span><em>string</em>, <em>string_len=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/block_zoo/Conv.html#Conv.forward"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#block_zoo.Conv.Conv.forward" title="Permalink to this definition">¶</a></dt>
+<dd><p>process inputs</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>string</strong> (<em>Tensor</em>) – tensor with shape: [batch_size, seq_len, feature_dim]</li>
+<li><strong>string_len</strong> (<em>Tensor</em>) – [batch_size]</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">shape: [batch_size, (seq_len - conv_window_size) // stride + 1, output_channel_num]</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">Tensor</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="block_zoo.Conv.ConvConf">
+<em class="property">class </em><code class="descclassname">block_zoo.Conv.</code><code class="descname">ConvConf</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/block_zoo/Conv.html#ConvConf"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#block_zoo.Conv.ConvConf" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#block_zoo.BaseLayer.BaseConf" title="block_zoo.BaseLayer.BaseConf"><code class="xref py py-class docutils literal notranslate"><span class="pre">block_zoo.BaseLayer.BaseConf</span></code></a></p>
+<p>Configuration of Conv</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>stride</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)"><em>int</em></a>) – the stride of the convolving kernel. Can be a single number or a tuple (sH, sW). Default: 1</li>
+<li><strong>padding</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)"><em>int</em></a>) – implicit zero paddings on both sides of the input. Can be a single number or a tuple (padH, padW). Default: 0</li>
+<li><strong>window_size</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)"><em>int</em></a>) – actually, the window size is (window_size, feature_dim), because for NLP tasks, 1d convolution is more commonly used.</li>
+<li><strong>input_channel_num</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)"><em>int</em></a>) – for NLP tasks, input_channel_num would always be 1</li>
+<li><strong>output_channel_num</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)"><em>int</em></a>) – number of feature maps</li>
+<li><strong>batch_norm</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.7)"><em>bool</em></a>) – If True, apply batch normalization before activation</li>
+<li><strong>activation</strong> (<em>string</em>) – activation functions, e.g. ReLU</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="block_zoo.Conv.ConvConf.declare">
+<code class="descname">declare</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/block_zoo/Conv.html#ConvConf.declare"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#block_zoo.Conv.ConvConf.declare" title="Permalink to this definition">¶</a></dt>
+<dd><p>Define things like “input_ranks” and “num_of_inputs”, which are certain with regard to your layer</p>
+<blockquote>
+<div><p>num_of_input is N(N&gt;0) means this layer accepts N inputs;</p>
+<p>num_of_input is -1 means this layer accepts any number of inputs;</p>
+<p>The rank here is not the same as matrix rank:</p>
+<blockquote>
+<div><p>For a scalar, its rank is 0;</p>
+<p>For a vector, its rank is 1;</p>
+<p>For a matrix, its rank is 2;</p>
+<p>For a cube of numbers, its rank is 3.</p>
+</div></blockquote>
+<p>…
+For instance, the rank of (batch size, sequence length, hidden_dim) is 3.</p>
+<p>if num_of_input &gt; 0:</p>
+<blockquote>
+<div>len(input_ranks) should be equal to num_of_input</div></blockquote>
+<p>elif num_of_input == -1:</p>
+<blockquote>
+<div>input_ranks should be a list with only one element and the rank of all the inputs should be equal to that element.</div></blockquote>
+<p>NOTE: when we build the model, if num_of_input is -1, we would replace it with the real number of inputs and replace input_ranks with a list of real input_ranks.</p>
+</div></blockquote>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">None</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="block_zoo.Conv.ConvConf.default">
+<code class="descname">default</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/block_zoo/Conv.html#ConvConf.default"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#block_zoo.Conv.ConvConf.default" title="Permalink to this definition">¶</a></dt>
+<dd><p>Define the default hyper parameters here. You can define these hyper parameters in your configuration file as well.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">None</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="block_zoo.Conv.ConvConf.inference">
+<code class="descname">inference</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/block_zoo/Conv.html#ConvConf.inference"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#block_zoo.Conv.ConvConf.inference" title="Permalink to this definition">¶</a></dt>
+<dd><p>Inference things like output_dim, which may relies on defined hyper parameter such as hidden dim and input_dim</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">None</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="block_zoo.Conv.ConvConf.verify">
+<code class="descname">verify</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/block_zoo/Conv.html#ConvConf.verify"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#block_zoo.Conv.ConvConf.verify" title="Permalink to this definition">¶</a></dt>
+<dd><p>Define some necessary varification for your layer when we define the model.</p>
+<p>If you define your own layer and rewrite this funciton, please add “super(YourLayerConf, self).verify()” at the beginning</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">None</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="block_zoo.Conv.ConvConf.verify_before_inference">
+<code class="descname">verify_before_inference</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/block_zoo/Conv.html#ConvConf.verify_before_inference"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#block_zoo.Conv.ConvConf.verify_before_inference" title="Permalink to this definition">¶</a></dt>
+<dd><p>Some conditions must be fulfilled, otherwise there would be errors when calling inference()</p>
+<dl class="docutils">
+<dt>The difference between verify_before_inference() and verify() is that:</dt>
+<dd>verify_before_inference() is called before inference() while verify() is called after inference().</dd>
+</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">None</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-block_zoo.ConvPooling">
+<span id="block-zoo-convpooling-module"></span><h2>block_zoo.ConvPooling module<a class="headerlink" href="#module-block_zoo.ConvPooling" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="block_zoo.ConvPooling.ConvPooling">
+<em class="property">class </em><code class="descclassname">block_zoo.ConvPooling.</code><code class="descname">ConvPooling</code><span class="sig-paren">(</span><em>layer_conf</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/block_zoo/ConvPooling.html#ConvPooling"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#block_zoo.ConvPooling.ConvPooling" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#block_zoo.BaseLayer.BaseLayer" title="block_zoo.BaseLayer.BaseLayer"><code class="xref py py-class docutils literal notranslate"><span class="pre">block_zoo.BaseLayer.BaseLayer</span></code></a></p>
+<p>Convolution along just 1 direction</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>layer_conf</strong> (<a class="reference internal" href="#block_zoo.Conv.ConvConf" title="block_zoo.Conv.ConvConf"><em>ConvConf</em></a>) – configuration of a layer</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="block_zoo.ConvPooling.ConvPooling.forward">
+<code class="descname">forward</code><span class="sig-paren">(</span><em>string</em>, <em>string_len=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/block_zoo/ConvPooling.html#ConvPooling.forward"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#block_zoo.ConvPooling.ConvPooling.forward" title="Permalink to this definition">¶</a></dt>
+<dd><p>process inputs</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>string</strong> (<em>Tensor</em>) – tensor with shape: [batch_size, seq_len, feature_dim]</li>
+<li><strong>string_len</strong> (<em>Tensor</em>) – [batch_size]</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">shape: [batch_size, (seq_len - conv_window_size) // stride + 1, output_channel_num]</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">Tensor</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="block_zoo.ConvPooling.ConvPoolingConf">
+<em class="property">class </em><code class="descclassname">block_zoo.ConvPooling.</code><code class="descname">ConvPoolingConf</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/block_zoo/ConvPooling.html#ConvPoolingConf"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#block_zoo.ConvPooling.ConvPoolingConf" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#block_zoo.BaseLayer.BaseConf" title="block_zoo.BaseLayer.BaseConf"><code class="xref py py-class docutils literal notranslate"><span class="pre">block_zoo.BaseLayer.BaseConf</span></code></a></p>
+<p>Configuration of Conv + Pooling architecture</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>stride</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)"><em>int</em></a>) – the stride of the convolving kernel. Can be a single number or a tuple (sH, sW). Default: 1</li>
+<li><strong>padding</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)"><em>int</em></a>) – implicit zero paddings on both sides of the input. Can be a single number or a tuple (padH, padW). Default: 0</li>
+<li><strong>window_sizes</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.7)"><em>list</em></a>) – for each window_size, the actual window size is (window_size, feature_dim), because for NLP tasks, 1d convolution is more commonly used.</li>
+<li><strong>input_channel_num</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)"><em>int</em></a>) – for NLP tasks, input_channel_num would always be 1</li>
+<li><strong>output_channel_num</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)"><em>int</em></a>) – number of feature maps</li>
+<li><strong>batch_norm</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.7)"><em>bool</em></a>) – If True, apply batch normalization before activation</li>
+<li><strong>activation</strong> (<em>string</em>) – activation functions, e.g. ReLU</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="block_zoo.ConvPooling.ConvPoolingConf.declare">
+<code class="descname">declare</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/block_zoo/ConvPooling.html#ConvPoolingConf.declare"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#block_zoo.ConvPooling.ConvPoolingConf.declare" title="Permalink to this definition">¶</a></dt>
+<dd><p>Define things like “input_ranks” and “num_of_inputs”, which are certain with regard to your layer</p>
+<blockquote>
+<div><p>num_of_input is N(N&gt;0) means this layer accepts N inputs;</p>
+<p>num_of_input is -1 means this layer accepts any number of inputs;</p>
+<p>The rank here is not the same as matrix rank:</p>
+<blockquote>
+<div><p>For a scalar, its rank is 0;</p>
+<p>For a vector, its rank is 1;</p>
+<p>For a matrix, its rank is 2;</p>
+<p>For a cube of numbers, its rank is 3.</p>
+</div></blockquote>
+<p>…
+For instance, the rank of (batch size, sequence length, hidden_dim) is 3.</p>
+<p>if num_of_input &gt; 0:</p>
+<blockquote>
+<div>len(input_ranks) should be equal to num_of_input</div></blockquote>
+<p>elif num_of_input == -1:</p>
+<blockquote>
+<div>input_ranks should be a list with only one element and the rank of all the inputs should be equal to that element.</div></blockquote>
+<p>NOTE: when we build the model, if num_of_input is -1, we would replace it with the real number of inputs and replace input_ranks with a list of real input_ranks.</p>
+</div></blockquote>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">None</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="block_zoo.ConvPooling.ConvPoolingConf.default">
+<code class="descname">default</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/block_zoo/ConvPooling.html#ConvPoolingConf.default"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#block_zoo.ConvPooling.ConvPoolingConf.default" title="Permalink to this definition">¶</a></dt>
+<dd><p>Define the default hyper parameters here. You can define these hyper parameters in your configuration file as well.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">None</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="block_zoo.ConvPooling.ConvPoolingConf.inference">
+<code class="descname">inference</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/block_zoo/ConvPooling.html#ConvPoolingConf.inference"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#block_zoo.ConvPooling.ConvPoolingConf.inference" title="Permalink to this definition">¶</a></dt>
+<dd><p>Inference things like output_dim, which may relies on defined hyper parameter such as hidden dim and input_dim</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">None</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="block_zoo.ConvPooling.ConvPoolingConf.verify">
+<code class="descname">verify</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/block_zoo/ConvPooling.html#ConvPoolingConf.verify"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#block_zoo.ConvPooling.ConvPoolingConf.verify" title="Permalink to this definition">¶</a></dt>
+<dd><p>Define some necessary varification for your layer when we define the model.</p>
+<p>If you define your own layer and rewrite this funciton, please add “super(YourLayerConf, self).verify()” at the beginning</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">None</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="block_zoo.ConvPooling.ConvPoolingConf.verify_before_inference">
+<code class="descname">verify_before_inference</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/block_zoo/ConvPooling.html#ConvPoolingConf.verify_before_inference"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#block_zoo.ConvPooling.ConvPoolingConf.verify_before_inference" title="Permalink to this definition">¶</a></dt>
+<dd><p>Some conditions must be fulfilled, otherwise there would be errors when calling inference()</p>
+<dl class="docutils">
+<dt>The difference between verify_before_inference() and verify() is that:</dt>
+<dd>verify_before_inference() is called before inference() while verify() is called after inference().</dd>
+</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">None</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-block_zoo.Dropout">
+<span id="block-zoo-dropout-module"></span><h2>block_zoo.Dropout module<a class="headerlink" href="#module-block_zoo.Dropout" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="block_zoo.Dropout.Dropout">
+<em class="property">class </em><code class="descclassname">block_zoo.Dropout.</code><code class="descname">Dropout</code><span class="sig-paren">(</span><em>layer_conf</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/block_zoo/Dropout.html#Dropout"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#block_zoo.Dropout.Dropout" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#block_zoo.BaseLayer.BaseLayer" title="block_zoo.BaseLayer.BaseLayer"><code class="xref py py-class docutils literal notranslate"><span class="pre">block_zoo.BaseLayer.BaseLayer</span></code></a></p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>layer_conf</strong> (<a class="reference internal" href="#block_zoo.Dropout.DropoutConf" title="block_zoo.Dropout.DropoutConf"><em>DropoutConf</em></a>) – configuration of a layer</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="block_zoo.Dropout.Dropout.forward">
+<code class="descname">forward</code><span class="sig-paren">(</span><em>string</em>, <em>string_len=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/block_zoo/Dropout.html#Dropout.forward"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#block_zoo.Dropout.Dropout.forward" title="Permalink to this definition">¶</a></dt>
+<dd><p>process inputs</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>string</strong> (<em>Tensor</em>) – any shape.</li>
+<li><strong>string_len</strong> (<em>Tensor</em>) – [batch_size], default is None.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">has the same shape as string.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">Tensor</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="block_zoo.Dropout.DropoutConf">
+<em class="property">class </em><code class="descclassname">block_zoo.Dropout.</code><code class="descname">DropoutConf</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/block_zoo/Dropout.html#DropoutConf"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#block_zoo.Dropout.DropoutConf" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#block_zoo.BaseLayer.BaseConf" title="block_zoo.BaseLayer.BaseConf"><code class="xref py py-class docutils literal notranslate"><span class="pre">block_zoo.BaseLayer.BaseConf</span></code></a></p>
+<p>Configuration for Dropout</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>dropout</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – dropout rate, probability of an element to be zeroed</td>
+</tr>
+</tbody>
+</table>
+<p>Returns:</p>
+<dl class="method">
+<dt id="block_zoo.Dropout.DropoutConf.declare">
+<code class="descname">declare</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/block_zoo/Dropout.html#DropoutConf.declare"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#block_zoo.Dropout.DropoutConf.declare" title="Permalink to this definition">¶</a></dt>
+<dd><p>Define things like “input_ranks” and “num_of_inputs”, which are certain with regard to your layer</p>
+<blockquote>
+<div><p>num_of_input is N(N&gt;0) means this layer accepts N inputs;</p>
+<p>num_of_input is -1 means this layer accepts any number of inputs;</p>
+<p>The rank here is not the same as matrix rank:</p>
+<blockquote>
+<div><p>For a scalar, its rank is 0;</p>
+<p>For a vector, its rank is 1;</p>
+<p>For a matrix, its rank is 2;</p>
+<p>For a cube of numbers, its rank is 3.</p>
+</div></blockquote>
+<p>…
+For instance, the rank of (batch size, sequence length, hidden_dim) is 3.</p>
+<p>if num_of_input &gt; 0:</p>
+<blockquote>
+<div>len(input_ranks) should be equal to num_of_input</div></blockquote>
+<p>elif num_of_input == -1:</p>
+<blockquote>
+<div>input_ranks should be a list with only one element and the rank of all the inputs should be equal to that element.</div></blockquote>
+<p>NOTE: when we build the model, if num_of_input is -1, we would replace it with the real number of inputs and replace input_ranks with a list of real input_ranks.</p>
+</div></blockquote>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">None</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="block_zoo.Dropout.DropoutConf.default">
+<code class="descname">default</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/block_zoo/Dropout.html#DropoutConf.default"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#block_zoo.Dropout.DropoutConf.default" title="Permalink to this definition">¶</a></dt>
+<dd><p>Define the default hyper parameters here. You can define these hyper parameters in your configuration file as well.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">None</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="block_zoo.Dropout.DropoutConf.inference">
+<code class="descname">inference</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/block_zoo/Dropout.html#DropoutConf.inference"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#block_zoo.Dropout.DropoutConf.inference" title="Permalink to this definition">¶</a></dt>
+<dd><p>Inference things like output_dim, which may relies on defined hyper parameter such as hidden dim and input_dim</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">None</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="block_zoo.Dropout.DropoutConf.verify">
+<code class="descname">verify</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/block_zoo/Dropout.html#DropoutConf.verify"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#block_zoo.Dropout.DropoutConf.verify" title="Permalink to this definition">¶</a></dt>
+<dd><p>Define some necessary varification for your layer when we define the model.</p>
+<p>If you define your own layer and rewrite this funciton, please add “super(YourLayerConf, self).verify()” at the beginning</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">None</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-block_zoo.Embedding">
+<span id="block-zoo-embedding-module"></span><h2>block_zoo.Embedding module<a class="headerlink" href="#module-block_zoo.Embedding" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="block_zoo.Embedding.Embedding">
+<em class="property">class </em><code class="descclassname">block_zoo.Embedding.</code><code class="descname">Embedding</code><span class="sig-paren">(</span><em>layer_conf</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/block_zoo/Embedding.html#Embedding"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#block_zoo.Embedding.Embedding" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#block_zoo.BaseLayer.BaseLayer" title="block_zoo.BaseLayer.BaseLayer"><code class="xref py py-class docutils literal notranslate"><span class="pre">block_zoo.BaseLayer.BaseLayer</span></code></a></p>
+<p>Embedding layer</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>layer_conf</strong> (<a class="reference internal" href="#block_zoo.Embedding.EmbeddingConf" title="block_zoo.Embedding.EmbeddingConf"><em>EmbeddingConf</em></a>) – configuration of a layer</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="block_zoo.Embedding.Embedding.forward">
+<code class="descname">forward</code><span class="sig-paren">(</span><em>inputs</em>, <em>use_gpu=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/block_zoo/Embedding.html#Embedding.forward"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#block_zoo.Embedding.Embedding.forward" title="Permalink to this definition">¶</a></dt>
+<dd><p>process inputs</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>inputs</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.7)"><em>dict</em></a>) – <p>a dictionary to describe each transformer_model inputs. e.g.:</p>
+<p>char_emb’: [[char ids of word1], [char ids of word2], […], …], shape: [batch_size, seq_len, word character num]</p>
+<p>’word’: word ids (Variable), shape:[batch_size, seq_len],</p>
+<p>’postag’: postag ids (Variable), shape: [batch_size, seq_len],</p>
+<p>…</p>
+</li>
+<li><strong>use_gpu</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.7)"><em>bool</em></a>) – put embedding matrix on GPU (True) or not (False)</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">the embedding representation with shape [batch_size, seq_len, emb_dim]</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">Variable</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="block_zoo.Embedding.EmbeddingConf">
+<em class="property">class </em><code class="descclassname">block_zoo.Embedding.</code><code class="descname">EmbeddingConf</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/block_zoo/Embedding.html#EmbeddingConf"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#block_zoo.Embedding.EmbeddingConf" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#block_zoo.BaseLayer.BaseConf" title="block_zoo.BaseLayer.BaseConf"><code class="xref py py-class docutils literal notranslate"><span class="pre">block_zoo.BaseLayer.BaseConf</span></code></a></p>
+<p>Configuration for Embedding</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>conf</strong> – a dictionary. The key is embedding type, such as word embedding, char embedding, Part-of-Speech embedding and so on.</td>
+</tr>
+</tbody>
+</table>
+<p>Example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="s2">&quot;conf&quot;</span><span class="p">:</span> <span class="p">{</span>
+  <span class="s2">&quot;word&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="s2">&quot;cols&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;question_text&quot;</span><span class="p">,</span> <span class="s2">&quot;answer_text&quot;</span><span class="p">],</span>
+    <span class="s2">&quot;dim&quot;</span><span class="p">:</span> <span class="mi">300</span><span class="p">,</span>
+    <span class="s2">&quot;fix_weight&quot;</span><span class="p">:</span> <span class="n">true</span>
+  <span class="p">},</span>
+  <span class="s2">&quot;postag&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="s2">&quot;cols&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;question_postag&quot;</span><span class="p">,</span><span class="s2">&quot;answer_postag&quot;</span><span class="p">],</span>
+    <span class="s2">&quot;dim&quot;</span><span class="p">:</span> <span class="mi">20</span>
+  <span class="p">},</span>
+  <span class="s2">&quot;char&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="s2">&quot;cols&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;question_char&quot;</span><span class="p">,</span> <span class="s2">&quot;answer_char&quot;</span><span class="p">],</span>
+    <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;CNNCharEmbedding&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;dropout&quot;</span><span class="p">:</span> <span class="mf">0.2</span><span class="p">,</span>
+    <span class="s2">&quot;dim&quot;</span><span class="p">:</span> <span class="mi">30</span><span class="p">,</span>
+    <span class="s2">&quot;embedding_matrix_dim&quot;</span><span class="p">:</span> <span class="mi">8</span><span class="p">,</span>
+    <span class="s2">&quot;stride&quot;</span><span class="p">:</span><span class="mi">1</span><span class="p">,</span>
+    <span class="s2">&quot;window_size&quot;</span><span class="p">:</span> <span class="mi">5</span><span class="p">,</span>
+    <span class="s2">&quot;activation&quot;</span><span class="p">:</span> <span class="n">null</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<dl class="method">
+<dt id="block_zoo.Embedding.EmbeddingConf.declare">
+<code class="descname">declare</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/block_zoo/Embedding.html#EmbeddingConf.declare"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#block_zoo.Embedding.EmbeddingConf.declare" title="Permalink to this definition">¶</a></dt>
+<dd><p>Define things like “input_ranks” and “num_of_inputs”, which are certain with regard to your layer</p>
+<blockquote>
+<div><p>num_of_input is N(N&gt;0) means this layer accepts N inputs;</p>
+<p>num_of_input is -1 means this layer accepts any number of inputs;</p>
+<p>The rank here is not the same as matrix rank:</p>
+<blockquote>
+<div><p>For a scalar, its rank is 0;</p>
+<p>For a vector, its rank is 1;</p>
+<p>For a matrix, its rank is 2;</p>
+<p>For a cube of numbers, its rank is 3.</p>
+</div></blockquote>
+<p>…
+For instance, the rank of (batch size, sequence length, hidden_dim) is 3.</p>
+<p>if num_of_input &gt; 0:</p>
+<blockquote>
+<div>len(input_ranks) should be equal to num_of_input</div></blockquote>
+<p>elif num_of_input == -1:</p>
+<blockquote>
+<div>input_ranks should be a list with only one element and the rank of all the inputs should be equal to that element.</div></blockquote>
+<p>NOTE: when we build the model, if num_of_input is -1, we would replace it with the real number of inputs and replace input_ranks with a list of real input_ranks.</p>
+</div></blockquote>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">None</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="block_zoo.Embedding.EmbeddingConf.default">
+<code class="descname">default</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/block_zoo/Embedding.html#EmbeddingConf.default"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#block_zoo.Embedding.EmbeddingConf.default" title="Permalink to this definition">¶</a></dt>
+<dd><p>Define the default hyper parameters here. You can define these hyper parameters in your configuration file as well.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">None</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="block_zoo.Embedding.EmbeddingConf.inference">
+<code class="descname">inference</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/block_zoo/Embedding.html#EmbeddingConf.inference"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#block_zoo.Embedding.EmbeddingConf.inference" title="Permalink to this definition">¶</a></dt>
+<dd><p>Inference things like output_dim, which may relies on defined hyper parameter such as hidden dim and input_dim</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">None</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="block_zoo.Embedding.EmbeddingConf.verify">
+<code class="descname">verify</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/block_zoo/Embedding.html#EmbeddingConf.verify"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#block_zoo.Embedding.EmbeddingConf.verify" title="Permalink to this definition">¶</a></dt>
+<dd><p>Define some necessary varification for your layer when we define the model.</p>
+<p>If you define your own layer and rewrite this funciton, please add “super(YourLayerConf, self).verify()” at the beginning</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">None</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="block_zoo.Embedding.EmbeddingConf.verify_before_inference">
+<code class="descname">verify_before_inference</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/block_zoo/Embedding.html#EmbeddingConf.verify_before_inference"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#block_zoo.Embedding.EmbeddingConf.verify_before_inference" title="Permalink to this definition">¶</a></dt>
+<dd><p>Some conditions must be fulfilled, otherwise there would be errors when calling inference()</p>
+<dl class="docutils">
+<dt>The difference between verify_before_inference() and verify() is that:</dt>
+<dd>verify_before_inference() is called before inference() while verify() is called after inference().</dd>
+</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">None</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-block_zoo.EncoderDecoder">
+<span id="block-zoo-encoderdecoder-module"></span><h2>block_zoo.EncoderDecoder module<a class="headerlink" href="#module-block_zoo.EncoderDecoder" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="block_zoo.EncoderDecoder.EncoderDecoder">
+<em class="property">class </em><code class="descclassname">block_zoo.EncoderDecoder.</code><code class="descname">EncoderDecoder</code><span class="sig-paren">(</span><em>layer_conf</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/block_zoo/EncoderDecoder.html#EncoderDecoder"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#block_zoo.EncoderDecoder.EncoderDecoder" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#block_zoo.BaseLayer.BaseLayer" title="block_zoo.BaseLayer.BaseLayer"><code class="xref py py-class docutils literal notranslate"><span class="pre">block_zoo.BaseLayer.BaseLayer</span></code></a></p>
+<p>The encoder decoder framework</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>layer_conf</strong> (<a class="reference internal" href="#block_zoo.EncoderDecoder.EncoderDecoderConf" title="block_zoo.EncoderDecoder.EncoderDecoderConf"><em>EncoderDecoderConf</em></a>) – configuration of a layer</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="block_zoo.EncoderDecoder.EncoderDecoder.forward">
+<code class="descname">forward</code><span class="sig-paren">(</span><em>string</em>, <em>string_len</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/block_zoo/EncoderDecoder.html#EncoderDecoder.forward"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#block_zoo.EncoderDecoder.EncoderDecoder.forward" title="Permalink to this definition">¶</a></dt>
+<dd><p>process inputs with encoder &amp; decoder</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>string</strong> (<em>Variable</em>) – [batch_size, seq_len, dim]</li>
+<li><strong>string_len</strong> (<em>ndarray</em>) – [batch_size]</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">decode scores with shape [batch_size, seq_len, decoder_vocab_size]</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">Variable</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="block_zoo.EncoderDecoder.EncoderDecoderConf">
+<em class="property">class </em><code class="descclassname">block_zoo.EncoderDecoder.</code><code class="descname">EncoderDecoderConf</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/block_zoo/EncoderDecoder.html#EncoderDecoderConf"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#block_zoo.EncoderDecoder.EncoderDecoderConf" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#block_zoo.BaseLayer.BaseConf" title="block_zoo.BaseLayer.BaseConf"><code class="xref py py-class docutils literal notranslate"><span class="pre">block_zoo.BaseLayer.BaseConf</span></code></a></p>
+<p>Configuration of Encoder-Decoder</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>encoder</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – encoder name</li>
+<li><strong>encoder_conf</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.7)"><em>dict</em></a>) – configurations of encoder</li>
+<li><strong>decoder</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – decoder name</li>
+<li><strong>decoder_conf</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.7)"><em>dict</em></a>) – configurations of decoder</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="block_zoo.EncoderDecoder.EncoderDecoderConf.declare">
+<code class="descname">declare</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/block_zoo/EncoderDecoder.html#EncoderDecoderConf.declare"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#block_zoo.EncoderDecoder.EncoderDecoderConf.declare" title="Permalink to this definition">¶</a></dt>
+<dd><p>Define things like “input_ranks” and “num_of_inputs”, which are certain with regard to your layer</p>
+<blockquote>
+<div><p>num_of_input is N(N&gt;0) means this layer accepts N inputs;</p>
+<p>num_of_input is -1 means this layer accepts any number of inputs;</p>
+<p>The rank here is not the same as matrix rank:</p>
+<blockquote>
+<div><p>For a scalar, its rank is 0;</p>
+<p>For a vector, its rank is 1;</p>
+<p>For a matrix, its rank is 2;</p>
+<p>For a cube of numbers, its rank is 3.</p>
+</div></blockquote>
+<p>…
+For instance, the rank of (batch size, sequence length, hidden_dim) is 3.</p>
+<p>if num_of_input &gt; 0:</p>
+<blockquote>
+<div>len(input_ranks) should be equal to num_of_input</div></blockquote>
+<p>elif num_of_input == -1:</p>
+<blockquote>
+<div>input_ranks should be a list with only one element and the rank of all the inputs should be equal to that element.</div></blockquote>
+<p>NOTE: when we build the model, if num_of_input is -1, we would replace it with the real number of inputs and replace input_ranks with a list of real input_ranks.</p>
+</div></blockquote>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">None</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="block_zoo.EncoderDecoder.EncoderDecoderConf.default">
+<code class="descname">default</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/block_zoo/EncoderDecoder.html#EncoderDecoderConf.default"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#block_zoo.EncoderDecoder.EncoderDecoderConf.default" title="Permalink to this definition">¶</a></dt>
+<dd><p>Define the default hyper parameters here. You can define these hyper parameters in your configuration file as well.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">None</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="block_zoo.EncoderDecoder.EncoderDecoderConf.inference">
+<code class="descname">inference</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/block_zoo/EncoderDecoder.html#EncoderDecoderConf.inference"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#block_zoo.EncoderDecoder.EncoderDecoderConf.inference" title="Permalink to this definition">¶</a></dt>
+<dd><p>Dimension inference of encoder and decoder is conducted here, but not in the Model.</p>
+<p>Returns:</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="block_zoo.EncoderDecoder.EncoderDecoderConf.verify">
+<code class="descname">verify</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/block_zoo/EncoderDecoder.html#EncoderDecoderConf.verify"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#block_zoo.EncoderDecoder.EncoderDecoderConf.verify" title="Permalink to this definition">¶</a></dt>
+<dd><p>Define some necessary varification for your layer when we define the model.</p>
+<p>If you define your own layer and rewrite this funciton, please add “super(YourLayerConf, self).verify()” at the beginning</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">None</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="block_zoo.EncoderDecoder.EncoderDecoderConf.verify_before_inference">
+<code class="descname">verify_before_inference</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/block_zoo/EncoderDecoder.html#EncoderDecoderConf.verify_before_inference"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#block_zoo.EncoderDecoder.EncoderDecoderConf.verify_before_inference" title="Permalink to this definition">¶</a></dt>
+<dd><p>Some conditions must be fulfilled, otherwise there would be errors when calling inference()</p>
+<dl class="docutils">
+<dt>The difference between verify_before_inference() and verify() is that:</dt>
+<dd>verify_before_inference() is called before inference() while verify() is called after inference().</dd>
+</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">None</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-block_zoo.Flatten">
+<span id="block-zoo-flatten-module"></span><h2>block_zoo.Flatten module<a class="headerlink" href="#module-block_zoo.Flatten" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="block_zoo.Flatten.Flatten">
+<em class="property">class </em><code class="descclassname">block_zoo.Flatten.</code><code class="descname">Flatten</code><span class="sig-paren">(</span><em>layer_conf</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/block_zoo/Flatten.html#Flatten"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#block_zoo.Flatten.Flatten" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.modules.module.Module</span></code></p>
+<p>Flatten layer to flatten the input from [bsatch_size, seq_len, dim] to [batch_size, seq_len*dim]</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>layer_conf</strong> (<a class="reference internal" href="#block_zoo.Flatten.FlattenConf" title="block_zoo.Flatten.FlattenConf"><em>FlattenConf</em></a>) – configuration of a layer</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="block_zoo.Flatten.Flatten.forward">
+<code class="descname">forward</code><span class="sig-paren">(</span><em>string</em>, <em>string_len</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/block_zoo/Flatten.html#Flatten.forward"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#block_zoo.Flatten.Flatten.forward" title="Permalink to this definition">¶</a></dt>
+<dd><p>process input</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>*args</strong> – (Tensor): string,string_len
+e.g. string (Tensor): [batch_size, seq_len, dim], string_len (Tensor): [batch_size]</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">[batch_size, seq_len*dim], [batch_size]</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">Tensor</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="block_zoo.Flatten.FlattenConf">
+<em class="property">class </em><code class="descclassname">block_zoo.Flatten.</code><code class="descname">FlattenConf</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/block_zoo/Flatten.html#FlattenConf"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#block_zoo.Flatten.FlattenConf" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#block_zoo.BaseLayer.BaseConf" title="block_zoo.BaseLayer.BaseConf"><code class="xref py py-class docutils literal notranslate"><span class="pre">block_zoo.BaseLayer.BaseConf</span></code></a></p>
+<p>Configuration of Flatten layer</p>
+<dl class="method">
+<dt id="block_zoo.Flatten.FlattenConf.declare">
+<code class="descname">declare</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/block_zoo/Flatten.html#FlattenConf.declare"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#block_zoo.Flatten.FlattenConf.declare" title="Permalink to this definition">¶</a></dt>
+<dd><p>Define things like “input_ranks” and “num_of_inputs”, which are certain with regard to your layer</p>
+<blockquote>
+<div><p>num_of_input is N(N&gt;0) means this layer accepts N inputs;</p>
+<p>num_of_input is -1 means this layer accepts any number of inputs;</p>
+<p>The rank here is not the same as matrix rank:</p>
+<blockquote>
+<div><p>For a scalar, its rank is 0;</p>
+<p>For a vector, its rank is 1;</p>
+<p>For a matrix, its rank is 2;</p>
+<p>For a cube of numbers, its rank is 3.</p>
+</div></blockquote>
+<p>…
+For instance, the rank of (batch size, sequence length, hidden_dim) is 3.</p>
+<p>if num_of_input &gt; 0:</p>
+<blockquote>
+<div>len(input_ranks) should be equal to num_of_input</div></blockquote>
+<p>elif num_of_input == -1:</p>
+<blockquote>
+<div>input_ranks should be a list with only one element and the rank of all the inputs should be equal to that element.</div></blockquote>
+<p>NOTE: when we build the model, if num_of_input is -1, we would replace it with the real number of inputs and replace input_ranks with a list of real input_ranks.</p>
+</div></blockquote>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">None</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="block_zoo.Flatten.FlattenConf.inference">
+<code class="descname">inference</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/block_zoo/Flatten.html#FlattenConf.inference"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#block_zoo.Flatten.FlattenConf.inference" title="Permalink to this definition">¶</a></dt>
+<dd><p>Inference things like output_dim, which may relies on defined hyper parameter such as hidden dim and input_dim</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">None</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="block_zoo.Flatten.FlattenConf.verify">
+<code class="descname">verify</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/block_zoo/Flatten.html#FlattenConf.verify"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#block_zoo.Flatten.FlattenConf.verify" title="Permalink to this definition">¶</a></dt>
+<dd><p>Define some necessary varification for your layer when we define the model.</p>
+<p>If you define your own layer and rewrite this funciton, please add “super(YourLayerConf, self).verify()” at the beginning</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">None</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-block_zoo.HighwayLinear">
+<span id="block-zoo-highwaylinear-module"></span><h2>block_zoo.HighwayLinear module<a class="headerlink" href="#module-block_zoo.HighwayLinear" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="block_zoo.HighwayLinear.HighwayLinear">
+<em class="property">class </em><code class="descclassname">block_zoo.HighwayLinear.</code><code class="descname">HighwayLinear</code><span class="sig-paren">(</span><em>layer_conf</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/block_zoo/HighwayLinear.html#HighwayLinear"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#block_zoo.HighwayLinear.HighwayLinear" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#block_zoo.BaseLayer.BaseLayer" title="block_zoo.BaseLayer.BaseLayer"><code class="xref py py-class docutils literal notranslate"><span class="pre">block_zoo.BaseLayer.BaseLayer</span></code></a></p>
+<p>A <a class="reference external" href="https://arxiv.org/abs/1505.00387">Highway layer</a> does a gated combination of a linear
+transformation and a non-linear transformation of its input.  <span class="math notranslate nohighlight">\(y = g * x + (1 - g) *
+f(A(x))\)</span>, where <span class="math notranslate nohighlight">\(A\)</span> is a linear transformation, <span class="math notranslate nohighlight">\(f\)</span> is an element-wise
+non-linearity, and <span class="math notranslate nohighlight">\(g\)</span> is an element-wise gate, computed as <span class="math notranslate nohighlight">\(sigmoid(B(x))\)</span>.
+This module will apply a fixed number of highway layers to its input, returning the final
+result.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>layer_conf</strong> (<a class="reference internal" href="#block_zoo.HighwayLinear.HighwayLinearConf" title="block_zoo.HighwayLinear.HighwayLinearConf"><em>HighwayLinearConf</em></a>) – configuration of a layer</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="block_zoo.HighwayLinear.HighwayLinear.forward">
+<code class="descname">forward</code><span class="sig-paren">(</span><em>string</em>, <em>string_len</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/block_zoo/HighwayLinear.html#HighwayLinear.forward"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#block_zoo.HighwayLinear.HighwayLinear.forward" title="Permalink to this definition">¶</a></dt>
+<dd><p>process inputs</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>string</strong> (<em>Tensor</em>) – [batch_size, seq_len, dim]</li>
+<li><strong>string_len</strong> (<em>Tensor</em>) – [batch_size]</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">[batch_size, seq_len, 2 * hidden_dim]</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">Tensor</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="block_zoo.HighwayLinear.HighwayLinearConf">
+<em class="property">class </em><code class="descclassname">block_zoo.HighwayLinear.</code><code class="descname">HighwayLinearConf</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/block_zoo/HighwayLinear.html#HighwayLinearConf"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#block_zoo.HighwayLinear.HighwayLinearConf" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#block_zoo.BaseLayer.BaseConf" title="block_zoo.BaseLayer.BaseConf"><code class="xref py py-class docutils literal notranslate"><span class="pre">block_zoo.BaseLayer.BaseConf</span></code></a></p>
+<p>Configuration of BiLSTM</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>hidden_dim</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)"><em>int</em></a>) – dimension of hidden state</li>
+<li><strong>dropout</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – dropout rate</li>
+<li><strong>num_layers</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)"><em>int</em></a>) – number of BiLSTM layers</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="block_zoo.HighwayLinear.HighwayLinearConf.declare">
+<code class="descname">declare</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/block_zoo/HighwayLinear.html#HighwayLinearConf.declare"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#block_zoo.HighwayLinear.HighwayLinearConf.declare" title="Permalink to this definition">¶</a></dt>
+<dd><p>Define things like “input_ranks” and “num_of_inputs”, which are certain with regard to your layer</p>
+<blockquote>
+<div><p>num_of_input is N(N&gt;0) means this layer accepts N inputs;</p>
+<p>num_of_input is -1 means this layer accepts any number of inputs;</p>
+<p>The rank here is not the same as matrix rank:</p>
+<blockquote>
+<div><p>For a scalar, its rank is 0;</p>
+<p>For a vector, its rank is 1;</p>
+<p>For a matrix, its rank is 2;</p>
+<p>For a cube of numbers, its rank is 3.</p>
+</div></blockquote>
+<p>…
+For instance, the rank of (batch size, sequence length, hidden_dim) is 3.</p>
+<p>if num_of_input &gt; 0:</p>
+<blockquote>
+<div>len(input_ranks) should be equal to num_of_input</div></blockquote>
+<p>elif num_of_input == -1:</p>
+<blockquote>
+<div>input_ranks should be a list with only one element and the rank of all the inputs should be equal to that element.</div></blockquote>
+<p>NOTE: when we build the model, if num_of_input is -1, we would replace it with the real number of inputs and replace input_ranks with a list of real input_ranks.</p>
+</div></blockquote>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">None</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="block_zoo.HighwayLinear.HighwayLinearConf.default">
+<code class="descname">default</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/block_zoo/HighwayLinear.html#HighwayLinearConf.default"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#block_zoo.HighwayLinear.HighwayLinearConf.default" title="Permalink to this definition">¶</a></dt>
+<dd><p>Define the default hyper parameters here. You can define these hyper parameters in your configuration file as well.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">None</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="block_zoo.HighwayLinear.HighwayLinearConf.inference">
+<code class="descname">inference</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/block_zoo/HighwayLinear.html#HighwayLinearConf.inference"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#block_zoo.HighwayLinear.HighwayLinearConf.inference" title="Permalink to this definition">¶</a></dt>
+<dd><p>Inference things like output_dim, which may relies on defined hyper parameter such as hidden dim and input_dim</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">None</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="block_zoo.HighwayLinear.HighwayLinearConf.verify">
+<code class="descname">verify</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/block_zoo/HighwayLinear.html#HighwayLinearConf.verify"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#block_zoo.HighwayLinear.HighwayLinearConf.verify" title="Permalink to this definition">¶</a></dt>
+<dd><p>Define some necessary varification for your layer when we define the model.</p>
+<p>If you define your own layer and rewrite this funciton, please add “super(YourLayerConf, self).verify()” at the beginning</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">None</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-block_zoo.Linear">
+<span id="block-zoo-linear-module"></span><h2>block_zoo.Linear module<a class="headerlink" href="#module-block_zoo.Linear" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="block_zoo.Linear.Linear">
+<em class="property">class </em><code class="descclassname">block_zoo.Linear.</code><code class="descname">Linear</code><span class="sig-paren">(</span><em>layer_conf</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/block_zoo/Linear.html#Linear"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#block_zoo.Linear.Linear" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#block_zoo.BaseLayer.BaseLayer" title="block_zoo.BaseLayer.BaseLayer"><code class="xref py py-class docutils literal notranslate"><span class="pre">block_zoo.BaseLayer.BaseLayer</span></code></a></p>
+<p>Linear layer</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>layer_conf</strong> (<a class="reference internal" href="#block_zoo.Linear.LinearConf" title="block_zoo.Linear.LinearConf"><em>LinearConf</em></a>) – configuration of a layer</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="block_zoo.Linear.Linear.forward">
+<code class="descname">forward</code><span class="sig-paren">(</span><em>string</em>, <em>string_len=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/block_zoo/Linear.html#Linear.forward"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#block_zoo.Linear.Linear.forward" title="Permalink to this definition">¶</a></dt>
+<dd><p>process inputs</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>string</strong> (<em>Tensor</em>) – any shape.</li>
+<li><strong>string_len</strong> (<em>Tensor</em>) – [batch_size], default is None.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">has the same shape as string.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">Tensor</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="block_zoo.Linear.LinearConf">
+<em class="property">class </em><code class="descclassname">block_zoo.Linear.</code><code class="descname">LinearConf</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/block_zoo/Linear.html#LinearConf"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#block_zoo.Linear.LinearConf" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#block_zoo.BaseLayer.BaseConf" title="block_zoo.BaseLayer.BaseConf"><code class="xref py py-class docutils literal notranslate"><span class="pre">block_zoo.BaseLayer.BaseConf</span></code></a></p>
+<p>Configuration for Linear layer</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>hidden_dim</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)"><em>int</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.7)"><em>list</em></a>) – if is int, it means there is one linear layer and the hidden_dim is the dimension of that layer.
+if is list of int, it means there is multiple linear layer and hidden_dim are the dimensions of these layers.</li>
+<li><strong>activation</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – Name of activation function. All the non-linear activations in <a class="reference external" href="http://pytorch.org/docs/0.3.1/nn.html#non-linear-activations">http://pytorch.org/docs/0.3.1/nn.html#non-linear-activations</a> are supported, such as ‘Tanh’, ‘ReLU’, ‘PReLU’, ‘ReLU6’ and ‘LeakyReLU’. Default is None.</li>
+<li><strong>last_hidden_activation</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.7)"><em>bool</em></a>) – [Optional], whether to add nonlinearity to the last linear layer’s output. Default is True.</li>
+<li><strong>last_hidden_softmax</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.7)"><em>bool</em></a>) – [Optional], whether to add softmax to the last linear layer’s output. Default is False.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="block_zoo.Linear.LinearConf.declare">
+<code class="descname">declare</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/block_zoo/Linear.html#LinearConf.declare"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#block_zoo.Linear.LinearConf.declare" title="Permalink to this definition">¶</a></dt>
+<dd><p>Define things like “input_ranks” and “num_of_inputs”, which are certain with regard to your layer</p>
+<blockquote>
+<div><p>num_of_input is N(N&gt;0) means this layer accepts N inputs;</p>
+<p>num_of_input is -1 means this layer accepts any number of inputs;</p>
+<p>The rank here is not the same as matrix rank:</p>
+<blockquote>
+<div><p>For a scalar, its rank is 0;</p>
+<p>For a vector, its rank is 1;</p>
+<p>For a matrix, its rank is 2;</p>
+<p>For a cube of numbers, its rank is 3.</p>
+</div></blockquote>
+<p>…
+For instance, the rank of (batch size, sequence length, hidden_dim) is 3.</p>
+<p>if num_of_input &gt; 0:</p>
+<blockquote>
+<div>len(input_ranks) should be equal to num_of_input</div></blockquote>
+<p>elif num_of_input == -1:</p>
+<blockquote>
+<div>input_ranks should be a list with only one element and the rank of all the inputs should be equal to that element.</div></blockquote>
+<p>NOTE: when we build the model, if num_of_input is -1, we would replace it with the real number of inputs and replace input_ranks with a list of real input_ranks.</p>
+</div></blockquote>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">None</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="block_zoo.Linear.LinearConf.default">
+<code class="descname">default</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/block_zoo/Linear.html#LinearConf.default"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#block_zoo.Linear.LinearConf.default" title="Permalink to this definition">¶</a></dt>
+<dd><p>Define the default hyper parameters here. You can define these hyper parameters in your configuration file as well.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">None</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="block_zoo.Linear.LinearConf.inference">
+<code class="descname">inference</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/block_zoo/Linear.html#LinearConf.inference"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#block_zoo.Linear.LinearConf.inference" title="Permalink to this definition">¶</a></dt>
+<dd><p>Inference things like output_dim, which may relies on defined hyper parameter such as hidden dim and input_dim</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">None</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="block_zoo.Linear.LinearConf.verify">
+<code class="descname">verify</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/block_zoo/Linear.html#LinearConf.verify"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#block_zoo.Linear.LinearConf.verify" title="Permalink to this definition">¶</a></dt>
+<dd><p>Define some necessary varification for your layer when we define the model.</p>
+<p>If you define your own layer and rewrite this funciton, please add “super(YourLayerConf, self).verify()” at the beginning</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">None</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="block_zoo.Linear.LinearConf.verify_before_inference">
+<code class="descname">verify_before_inference</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/block_zoo/Linear.html#LinearConf.verify_before_inference"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#block_zoo.Linear.LinearConf.verify_before_inference" title="Permalink to this definition">¶</a></dt>
+<dd><p>Some conditions must be fulfilled, otherwise there would be errors when calling inference()</p>
+<dl class="docutils">
+<dt>The difference between verify_before_inference() and verify() is that:</dt>
+<dd>verify_before_inference() is called before inference() while verify() is called after inference().</dd>
+</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">None</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-block_zoo.Pooling">
+<span id="block-zoo-pooling-module"></span><h2>block_zoo.Pooling module<a class="headerlink" href="#module-block_zoo.Pooling" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="block_zoo.Pooling.Pooling">
+<em class="property">class </em><code class="descclassname">block_zoo.Pooling.</code><code class="descname">Pooling</code><span class="sig-paren">(</span><em>layer_conf</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/block_zoo/Pooling.html#Pooling"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#block_zoo.Pooling.Pooling" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#block_zoo.BaseLayer.BaseLayer" title="block_zoo.BaseLayer.BaseLayer"><code class="xref py py-class docutils literal notranslate"><span class="pre">block_zoo.BaseLayer.BaseLayer</span></code></a></p>
+<p>Pooling layer</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>layer_conf</strong> (<a class="reference internal" href="#block_zoo.Pooling.PoolingConf" title="block_zoo.Pooling.PoolingConf"><em>PoolingConf</em></a>) – configuration of a layer</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="block_zoo.Pooling.Pooling.forward">
+<code class="descname">forward</code><span class="sig-paren">(</span><em>string</em>, <em>string_len=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/block_zoo/Pooling.html#Pooling.forward"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#block_zoo.Pooling.Pooling.forward" title="Permalink to this definition">¶</a></dt>
+<dd><p>process inputs</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>string</strong> (<em>Tensor</em>) – any shape.</li>
+<li><strong>string_len</strong> (<em>Tensor</em>) – [batch_size], default is None.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Pooling result of string</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">Tensor</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="block_zoo.Pooling.PoolingConf">
+<em class="property">class </em><code class="descclassname">block_zoo.Pooling.</code><code class="descname">PoolingConf</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/block_zoo/Pooling.html#PoolingConf"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#block_zoo.Pooling.PoolingConf" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#block_zoo.BaseLayer.BaseConf" title="block_zoo.BaseLayer.BaseConf"><code class="xref py py-class docutils literal notranslate"><span class="pre">block_zoo.BaseLayer.BaseConf</span></code></a></p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>pool_type</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – ‘max’ or ‘mean’, default is ‘max’.</li>
+<li><strong>pool_axis</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)"><em>int</em></a>) – which axis to conduct pooling, default is 1.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="block_zoo.Pooling.PoolingConf.declare">
+<code class="descname">declare</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/block_zoo/Pooling.html#PoolingConf.declare"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#block_zoo.Pooling.PoolingConf.declare" title="Permalink to this definition">¶</a></dt>
+<dd><p>Define things like “input_ranks” and “num_of_inputs”, which are certain with regard to your layer</p>
+<blockquote>
+<div><p>num_of_input is N(N&gt;0) means this layer accepts N inputs;</p>
+<p>num_of_input is -1 means this layer accepts any number of inputs;</p>
+<p>The rank here is not the same as matrix rank:</p>
+<blockquote>
+<div><p>For a scalar, its rank is 0;</p>
+<p>For a vector, its rank is 1;</p>
+<p>For a matrix, its rank is 2;</p>
+<p>For a cube of numbers, its rank is 3.</p>
+</div></blockquote>
+<p>…
+For instance, the rank of (batch size, sequence length, hidden_dim) is 3.</p>
+<p>if num_of_input &gt; 0:</p>
+<blockquote>
+<div>len(input_ranks) should be equal to num_of_input</div></blockquote>
+<p>elif num_of_input == -1:</p>
+<blockquote>
+<div>input_ranks should be a list with only one element and the rank of all the inputs should be equal to that element.</div></blockquote>
+<p>NOTE: when we build the model, if num_of_input is -1, we would replace it with the real number of inputs and replace input_ranks with a list of real input_ranks.</p>
+</div></blockquote>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">None</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="block_zoo.Pooling.PoolingConf.default">
+<code class="descname">default</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/block_zoo/Pooling.html#PoolingConf.default"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#block_zoo.Pooling.PoolingConf.default" title="Permalink to this definition">¶</a></dt>
+<dd><p>Define the default hyper parameters here. You can define these hyper parameters in your configuration file as well.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">None</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="block_zoo.Pooling.PoolingConf.inference">
+<code class="descname">inference</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/block_zoo/Pooling.html#PoolingConf.inference"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#block_zoo.Pooling.PoolingConf.inference" title="Permalink to this definition">¶</a></dt>
+<dd><p>Inference things like output_dim, which may relies on defined hyper parameter such as hidden dim and input_dim</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">None</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="block_zoo.Pooling.PoolingConf.verify">
+<code class="descname">verify</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/block_zoo/Pooling.html#PoolingConf.verify"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#block_zoo.Pooling.PoolingConf.verify" title="Permalink to this definition">¶</a></dt>
+<dd><p>Define some necessary varification for your layer when we define the model.</p>
+<p>If you define your own layer and rewrite this funciton, please add “super(YourLayerConf, self).verify()” at the beginning</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">None</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-block_zoo.Transformer">
+<span id="block-zoo-transformer-module"></span><h2>block_zoo.Transformer module<a class="headerlink" href="#module-block_zoo.Transformer" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="block_zoo.Transformer.Transformer">
+<em class="property">class </em><code class="descclassname">block_zoo.Transformer.</code><code class="descname">Transformer</code><span class="sig-paren">(</span><em>layer_conf</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/block_zoo/Transformer.html#Transformer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#block_zoo.Transformer.Transformer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.modules.module.Module</span></code></p>
+<p>Transformer layer</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>layer_conf</strong> (<a class="reference internal" href="#block_zoo.Transformer.TransformerConf" title="block_zoo.Transformer.TransformerConf"><em>TransformerConf</em></a>) – configuration of a layer</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="block_zoo.Transformer.Transformer.forward">
+<code class="descname">forward</code><span class="sig-paren">(</span><em>string</em>, <em>string_len</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/block_zoo/Transformer.html#Transformer.forward"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#block_zoo.Transformer.Transformer.forward" title="Permalink to this definition">¶</a></dt>
+<dd><p>process input</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>string</strong> (<em>Tensor</em>) – [batch_size, seq_len, dim]</li>
+<li><strong>string_len</strong> (<em>Tensor</em>) – [batch_size]</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">[batch_size, seq_len, output_dim], [batch_size]</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">Tensor</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="block_zoo.Transformer.TransformerConf">
+<em class="property">class </em><code class="descclassname">block_zoo.Transformer.</code><code class="descname">TransformerConf</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/block_zoo/Transformer.html#TransformerConf"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#block_zoo.Transformer.TransformerConf" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#block_zoo.BaseLayer.BaseConf" title="block_zoo.BaseLayer.BaseConf"><code class="xref py py-class docutils literal notranslate"><span class="pre">block_zoo.BaseLayer.BaseConf</span></code></a></p>
+<p>Configuration of Transformer</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>attention</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – attention name</li>
+<li><strong>attention_conf</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.7)"><em>dict</em></a>) – configurations of attention</li>
+<li><strong>layernorm1</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – layernorm1 name</li>
+<li><strong>layernorm1_conf</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.7)"><em>dict</em></a>) – configurations of layernorm1</li>
+<li><strong>mlp</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – mlp name</li>
+<li><strong>mlp_conf</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.7)"><em>dict</em></a>) – configuration of mlp</li>
+<li><strong>layernorm2</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – layernorm2 name</li>
+<li><strong>layernorm2_conf</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.7)"><em>dict</em></a>) – configurations of layernorm2</li>
+<li><strong>n_layer</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)"><em>int</em></a>) – </li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="block_zoo.Transformer.TransformerConf.declare">
+<code class="descname">declare</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/block_zoo/Transformer.html#TransformerConf.declare"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#block_zoo.Transformer.TransformerConf.declare" title="Permalink to this definition">¶</a></dt>
+<dd><p>Define things like “input_ranks” and “num_of_inputs”, which are certain with regard to your layer</p>
+<blockquote>
+<div><p>num_of_input is N(N&gt;0) means this layer accepts N inputs;</p>
+<p>num_of_input is -1 means this layer accepts any number of inputs;</p>
+<p>The rank here is not the same as matrix rank:</p>
+<blockquote>
+<div><p>For a scalar, its rank is 0;</p>
+<p>For a vector, its rank is 1;</p>
+<p>For a matrix, its rank is 2;</p>
+<p>For a cube of numbers, its rank is 3.</p>
+</div></blockquote>
+<p>…
+For instance, the rank of (batch size, sequence length, hidden_dim) is 3.</p>
+<p>if num_of_input &gt; 0:</p>
+<blockquote>
+<div>len(input_ranks) should be equal to num_of_input</div></blockquote>
+<p>elif num_of_input == -1:</p>
+<blockquote>
+<div>input_ranks should be a list with only one element and the rank of all the inputs should be equal to that element.</div></blockquote>
+<p>NOTE: when we build the model, if num_of_input is -1, we would replace it with the real number of inputs and replace input_ranks with a list of real input_ranks.</p>
+</div></blockquote>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">None</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="block_zoo.Transformer.TransformerConf.default">
+<code class="descname">default</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/block_zoo/Transformer.html#TransformerConf.default"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#block_zoo.Transformer.TransformerConf.default" title="Permalink to this definition">¶</a></dt>
+<dd><p>Define the default hyper parameters here. You can define these hyper parameters in your configuration file as well.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">None</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="block_zoo.Transformer.TransformerConf.inference">
+<code class="descname">inference</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/block_zoo/Transformer.html#TransformerConf.inference"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#block_zoo.Transformer.TransformerConf.inference" title="Permalink to this definition">¶</a></dt>
+<dd><p>Inference things like output_dim, which may relies on defined hyper parameter such as hidden dim and input_dim</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">None</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="block_zoo.Transformer.TransformerConf.verify">
+<code class="descname">verify</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/block_zoo/Transformer.html#TransformerConf.verify"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#block_zoo.Transformer.TransformerConf.verify" title="Permalink to this definition">¶</a></dt>
+<dd><p>Define some necessary varification for your layer when we define the model.</p>
+<p>If you define your own layer and rewrite this funciton, please add “super(YourLayerConf, self).verify()” at the beginning</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">None</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-block_zoo">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-block_zoo" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, Quantus STCA team&lt;quantus_stca@microsoft.com&gt;
+
+    </p>
+  </div> 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

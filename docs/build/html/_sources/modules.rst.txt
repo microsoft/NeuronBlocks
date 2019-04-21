@@ -1,0 +1,22 @@
+NeuronBlocks
+============
+
+.. toctree::
+   :maxdepth: 4
+
+   LearningMachine
+   Model
+   ModelConf
+   block_zoo
+   core
+   data_encoding
+   losses
+   metrics
+   optimizers
+   predict
+   preparation
+   problem
+   settings
+   test
+   train
+   utils

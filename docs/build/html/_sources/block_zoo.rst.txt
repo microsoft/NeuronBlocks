@@ -1,0 +1,163 @@
+block\_zoo package
+==================
+
+Subpackages
+-----------
+
+.. toctree::
+
+    block_zoo.attentions
+    block_zoo.embedding
+    block_zoo.encoder_decoder
+    block_zoo.math
+    block_zoo.normalizations
+    block_zoo.op
+    block_zoo.transformer
+
+Submodules
+----------
+
+block\_zoo.BaseLayer module
+---------------------------
+
+.. automodule:: block_zoo.BaseLayer
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+block\_zoo.BiGRU module
+-----------------------
+
+.. automodule:: block_zoo.BiGRU
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+block\_zoo.BiGRULast module
+---------------------------
+
+.. automodule:: block_zoo.BiGRULast
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+block\_zoo.BiLSTM module
+------------------------
+
+.. automodule:: block_zoo.BiLSTM
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+block\_zoo.BiLSTMAtt module
+---------------------------
+
+.. automodule:: block_zoo.BiLSTMAtt
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+block\_zoo.BiLSTMLast module
+----------------------------
+
+.. automodule:: block_zoo.BiLSTMLast
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+block\_zoo.BiQRNN module
+------------------------
+
+.. automodule:: block_zoo.BiQRNN
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+block\_zoo.Conv module
+----------------------
+
+.. automodule:: block_zoo.Conv
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+block\_zoo.ConvPooling module
+-----------------------------
+
+.. automodule:: block_zoo.ConvPooling
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+block\_zoo.Dropout module
+-------------------------
+
+.. automodule:: block_zoo.Dropout
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+block\_zoo.Embedding module
+---------------------------
+
+.. automodule:: block_zoo.Embedding
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+block\_zoo.EncoderDecoder module
+--------------------------------
+
+.. automodule:: block_zoo.EncoderDecoder
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+block\_zoo.Flatten module
+-------------------------
+
+.. automodule:: block_zoo.Flatten
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+block\_zoo.HighwayLinear module
+-------------------------------
+
+.. automodule:: block_zoo.HighwayLinear
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+block\_zoo.Linear module
+------------------------
+
+.. automodule:: block_zoo.Linear
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+block\_zoo.Pooling module
+-------------------------
+
+.. automodule:: block_zoo.Pooling
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+block\_zoo.Transformer module
+-----------------------------
+
+.. automodule:: block_zoo.Transformer
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: block_zoo
+    :members:
+    :undoc-members:
+    :show-inheritance:

@@ -1,0 +1,341 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>block_zoo.Transformer &mdash; NeuronBlocks 1.1.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../_static/language_data.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> NeuronBlocks
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.1.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../overview.html">Basic block_zoo</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../overview.html#id15">Attention</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../overview.html#id25">embedding</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../overview.html#id27">Operations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../overview.html#id31">Math</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../overview.html#id38">Transformer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../overview.html#id43">Encoder_Decoder</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../overview.html#id47">Normalizations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../overview.html#id49">Loss Functions</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">NeuronBlocks</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+        
+      <li>block_zoo.Transformer</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for block_zoo.Transformer</h1><div class="highlight"><pre>
+<span></span><span class="c1"># Copyright (c) Microsoft Corporation. All rights reserved.</span>
+<span class="c1"># Licensed under the MIT license.</span>
+
+<span class="kn">import</span> <span class="nn">torch</span>
+<span class="kn">import</span> <span class="nn">torch.nn</span> <span class="k">as</span> <span class="nn">nn</span>
+
+<span class="kn">from</span> <span class="nn">block_zoo.BaseLayer</span> <span class="k">import</span> <span class="n">BaseLayer</span><span class="p">,</span> <span class="n">BaseConf</span>
+<span class="kn">from</span> <span class="nn">block_zoo.transformer.MLP</span> <span class="k">import</span> <span class="n">MLP</span><span class="p">,</span> <span class="n">MLPConf</span>
+<span class="kn">from</span> <span class="nn">block_zoo.transformer.MultiHeadAttention</span> <span class="k">import</span> <span class="n">MultiHeadAttention</span><span class="p">,</span> <span class="n">MultiHeadAttentionConf</span>
+<span class="kn">from</span> <span class="nn">block_zoo.normalizations.LayerNorm</span> <span class="k">import</span> <span class="n">LayerNorm</span><span class="p">,</span> <span class="n">LayerNormConf</span>
+<span class="kn">from</span> <span class="nn">utils.DocInherit</span> <span class="k">import</span> <span class="n">DocInherit</span>
+<span class="kn">import</span> <span class="nn">copy</span>
+
+<div class="viewcode-block" id="TransformerConf"><a class="viewcode-back" href="../../block_zoo.html#block_zoo.Transformer.TransformerConf">[docs]</a><span class="k">class</span> <span class="nc">TransformerConf</span><span class="p">(</span><span class="n">BaseConf</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Configuration of Transformer</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        attention (str): attention name</span>
+<span class="sd">        attention_conf (dict): configurations of attention</span>
+<span class="sd">        layernorm1 (str): layernorm1 name</span>
+<span class="sd">        layernorm1_conf (dict): configurations of layernorm1</span>
+<span class="sd">        mlp (str): mlp name</span>
+<span class="sd">        mlp_conf (dict): configuration of mlp</span>
+<span class="sd">        layernorm2 (str): layernorm2 name</span>
+<span class="sd">        layernorm2_conf (dict): configurations of layernorm2</span>
+<span class="sd">        n_layer (int) layer num of transformer</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">attention_conf_cls</span> <span class="o">=</span> <span class="nb">eval</span><span class="p">(</span><span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;attention&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&quot;Conf&quot;</span><span class="p">)(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;attention_conf&#39;</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">layernorm1_conf_cls</span> <span class="o">=</span> <span class="nb">eval</span><span class="p">(</span><span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;layernorm_1&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&quot;Conf&quot;</span><span class="p">)(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;layernorm1_conf&#39;</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mlp_conf_cls</span> <span class="o">=</span> <span class="nb">eval</span><span class="p">(</span><span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;mlp&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&quot;Conf&quot;</span><span class="p">)(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;mlp_conf&#39;</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">layernorm2_conf_cls</span> <span class="o">=</span> <span class="nb">eval</span><span class="p">(</span><span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;layernorm_2&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&quot;Conf&quot;</span><span class="p">)(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;layernorm2_conf&#39;</span><span class="p">])</span>
+
+        <span class="nb">super</span><span class="p">(</span><span class="n">TransformerConf</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+<div class="viewcode-block" id="TransformerConf.default"><a class="viewcode-back" href="../../block_zoo.html#block_zoo.Transformer.TransformerConf.default">[docs]</a>    <span class="nd">@DocInherit</span>
+    <span class="k">def</span> <span class="nf">default</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">attention_name</span> <span class="o">=</span> <span class="s2">&quot;MultiHeadAttention&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">layernorm1_name</span> <span class="o">=</span> <span class="s2">&quot;LayerNorm&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mlp_name</span> <span class="o">=</span> <span class="s2">&quot;MLP&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">layernorm2_name</span> <span class="o">=</span> <span class="s2">&quot;LayerNorm&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">attention_conf</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">layernorm1_conf</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mlp_conf</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">layernorm2_conf</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">n_layer</span> <span class="o">=</span> <span class="mi">12</span></div>
+
+<div class="viewcode-block" id="TransformerConf.declare"><a class="viewcode-back" href="../../block_zoo.html#block_zoo.Transformer.TransformerConf.declare">[docs]</a>    <span class="nd">@DocInherit</span>
+    <span class="k">def</span> <span class="nf">declare</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">num_of_inputs</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">input_ranks</span> <span class="o">=</span> <span class="p">[</span><span class="mi">3</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="TransformerConf.inference"><a class="viewcode-back" href="../../block_zoo.html#block_zoo.Transformer.TransformerConf.inference">[docs]</a>    <span class="nd">@DocInherit</span>
+    <span class="k">def</span> <span class="nf">inference</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">attention_conf_cls</span><span class="o">.</span><span class="n">use_gpu</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">use_gpu</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">layernorm1_conf_cls</span><span class="o">.</span><span class="n">use_gpu</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">use_gpu</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mlp_conf_cls</span><span class="o">.</span><span class="n">use_gpu</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">use_gpu</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">layernorm2_conf_cls</span><span class="o">.</span><span class="n">use_gpu</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">use_gpu</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">attention_conf_cls</span><span class="o">.</span><span class="n">input_dims</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">input_dims</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">attention_conf_cls</span><span class="o">.</span><span class="n">inference</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">layernorm1_conf_cls</span><span class="o">.</span><span class="n">input_dims</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">attention_conf_cls</span><span class="o">.</span><span class="n">output_dim</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">layernorm1_conf_cls</span><span class="o">.</span><span class="n">inference</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">mlp_conf_cls</span><span class="o">.</span><span class="n">input_dims</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">layernorm1_conf_cls</span><span class="o">.</span><span class="n">output_dim</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mlp_conf_cls</span><span class="o">.</span><span class="n">inference</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">layernorm2_conf_cls</span><span class="o">.</span><span class="n">input_dims</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">mlp_conf_cls</span><span class="o">.</span><span class="n">output_dim</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">layernorm2_conf_cls</span><span class="o">.</span><span class="n">inference</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">output_dim</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">layernorm2_conf_cls</span><span class="o">.</span><span class="n">output_dim</span>
+
+        <span class="nb">super</span><span class="p">(</span><span class="n">TransformerConf</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">inference</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="TransformerConf.verify"><a class="viewcode-back" href="../../block_zoo.html#block_zoo.Transformer.TransformerConf.verify">[docs]</a>    <span class="nd">@DocInherit</span>
+    <span class="k">def</span> <span class="nf">verify</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">TransformerConf</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">verify</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">attention_conf_cls</span><span class="o">.</span><span class="n">verify</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">layernorm1_conf_cls</span><span class="o">.</span><span class="n">verify</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">layernorm2_conf_cls</span><span class="o">.</span><span class="n">verify</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mlp_conf_cls</span><span class="o">.</span><span class="n">verify</span><span class="p">()</span></div></div>
+
+<div class="viewcode-block" id="Transformer"><a class="viewcode-back" href="../../block_zoo.html#block_zoo.Transformer.Transformer">[docs]</a><span class="k">class</span> <span class="nc">Transformer</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Transformer layer</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        layer_conf (TransformerConf): configuration of a layer</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">layer_conf</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">Transformer</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">layer_conf</span> <span class="o">=</span> <span class="n">layer_conf</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">transformer_layer</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">ModuleList</span><span class="p">([</span><span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">ModuleList</span><span class="p">([</span><span class="nb">eval</span><span class="p">(</span><span class="n">layer_conf</span><span class="o">.</span><span class="n">attention_name</span><span class="p">)(</span><span class="n">layer_conf</span><span class="o">.</span><span class="n">attention_conf_cls</span><span class="p">),</span>
+                                    <span class="nb">eval</span><span class="p">(</span><span class="n">layer_conf</span><span class="o">.</span><span class="n">layernorm1_name</span><span class="p">)(</span><span class="n">layer_conf</span><span class="o">.</span><span class="n">layernorm1_conf_cls</span><span class="p">),</span>
+                                    <span class="nb">eval</span><span class="p">(</span><span class="n">layer_conf</span><span class="o">.</span><span class="n">mlp_name</span><span class="p">)(</span><span class="n">layer_conf</span><span class="o">.</span><span class="n">mlp_conf_cls</span><span class="p">),</span>
+                                    <span class="nb">eval</span><span class="p">(</span><span class="n">layer_conf</span><span class="o">.</span><span class="n">layernorm2_name</span><span class="p">)(</span><span class="n">layer_conf</span><span class="o">.</span><span class="n">layernorm2_conf_cls</span><span class="p">)]))</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">layer_conf</span><span class="o">.</span><span class="n">n_layer</span><span class="p">)])</span>
+        <span class="c1"># self.attention_layers = nn.ModuleList()</span>
+        <span class="c1"># self.layernorm1_layers = nn.ModuleList()</span>
+        <span class="c1"># self.mlp_layers = nn.ModuleList()</span>
+        <span class="c1"># self.layernorm2_layers = nn.ModuleList()</span>
+        <span class="c1">#</span>
+        <span class="c1"># for i in range(self.layer_conf.n_layer):</span>
+        <span class="c1">#     self.attention_layers.append(eval(layer_conf.attention_name)(layer_conf.attention_conf_cls))</span>
+        <span class="c1">#     self.layernorm1_layers.append(eval(layer_conf.layernorm1_name)(layer_conf.layernorm1_conf_cls))</span>
+        <span class="c1">#     self.mlp_layers.append(eval(layer_conf.mlp_name)(layer_conf.mlp_conf_cls))</span>
+        <span class="c1">#     self.layernorm2_layers.append(eval(layer_conf.layernorm2_name)(layer_conf.layernorm2_conf_cls))</span>
+
+        <span class="c1"># self.attention = eval(layer_conf.attention_name)(layer_conf.attention_conf_cls)</span>
+        <span class="c1"># self.layernorm1 = eval(layer_conf.layernorm1_name)(layer_conf.layernorm1_conf_cls)</span>
+        <span class="c1"># self.mlp = eval(layer_conf.mlp_name)(layer_conf.mlp_conf_cls)</span>
+        <span class="c1"># self.layernorm2 = eval(layer_conf.layernorm2_name)(layer_conf.layernorm2_conf_cls)</span>
+
+<div class="viewcode-block" id="Transformer.forward"><a class="viewcode-back" href="../../block_zoo.html#block_zoo.Transformer.Transformer.forward">[docs]</a>    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">string</span><span class="p">,</span> <span class="n">string_len</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; process input</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            string (Tensor): [batch_size, seq_len, dim]</span>
+<span class="sd">            string_len (Tensor): [batch_size]</span>
+<span class="sd">        Returns:</span>
+<span class="sd">            Tensor : [batch_size, seq_len, output_dim], [batch_size]</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">h</span> <span class="o">=</span> <span class="n">string</span>
+        <span class="n">l</span> <span class="o">=</span> <span class="n">string_len</span>
+        <span class="c1"># for i in range(self.layer_conf.n_layer):</span>
+        <span class="c1">#     a, a_len = self.attention_layers[i](h,l)</span>
+        <span class="c1">#     n, n_len = self.layernorm1_layers[i](a+h, a_len)</span>
+        <span class="c1">#     m, m_len = self.mlp_layers[i](n, n_len)</span>
+        <span class="c1">#     h, l = self.layernorm2_layers[i](m+n, m_len)</span>
+        <span class="k">for</span> <span class="n">block</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">transformer_layer</span><span class="p">:</span>
+            <span class="n">a</span><span class="p">,</span> <span class="n">a_len</span> <span class="o">=</span> <span class="n">block</span><span class="p">[</span><span class="mi">0</span><span class="p">](</span><span class="n">h</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
+            <span class="n">n</span><span class="p">,</span> <span class="n">n_len</span> <span class="o">=</span> <span class="n">block</span><span class="p">[</span><span class="mi">1</span><span class="p">](</span><span class="n">a</span><span class="o">+</span><span class="n">h</span><span class="p">,</span> <span class="n">a_len</span><span class="p">)</span>
+            <span class="n">m</span><span class="p">,</span> <span class="n">m_len</span> <span class="o">=</span> <span class="n">block</span><span class="p">[</span><span class="mi">2</span><span class="p">](</span><span class="n">n</span><span class="p">,</span> <span class="n">n_len</span><span class="p">)</span>
+            <span class="n">h</span><span class="p">,</span> <span class="n">l</span> <span class="o">=</span> <span class="n">block</span><span class="p">[</span><span class="mi">3</span><span class="p">](</span><span class="n">m</span> <span class="o">+</span> <span class="n">n</span><span class="p">,</span> <span class="n">m_len</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">h</span><span class="p">,</span> <span class="n">l</span></div></div>
+
+
+
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, Quantus STCA team&lt;quantus_stca@microsoft.com&gt;
+
+    </p>
+  </div> 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

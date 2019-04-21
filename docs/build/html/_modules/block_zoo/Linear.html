@@ -1,0 +1,344 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>block_zoo.Linear &mdash; NeuronBlocks 1.1.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../_static/language_data.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> NeuronBlocks
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.1.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../overview.html">Basic block_zoo</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../overview.html#id15">Attention</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../overview.html#id25">embedding</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../overview.html#id27">Operations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../overview.html#id31">Math</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../overview.html#id38">Transformer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../overview.html#id43">Encoder_Decoder</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../overview.html#id47">Normalizations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../overview.html#id49">Loss Functions</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">NeuronBlocks</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+        
+      <li>block_zoo.Linear</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for block_zoo.Linear</h1><div class="highlight"><pre>
+<span></span><span class="c1"># Copyright (c) Microsoft Corporation. All rights reserved.</span>
+<span class="c1"># Licensed under the MIT license.</span>
+
+<span class="kn">import</span> <span class="nn">torch</span>
+<span class="kn">import</span> <span class="nn">torch.nn</span> <span class="k">as</span> <span class="nn">nn</span>
+<span class="kn">import</span> <span class="nn">torch.nn.functional</span> <span class="k">as</span> <span class="nn">F</span>
+<span class="kn">from</span> <span class="nn">collections</span> <span class="k">import</span> <span class="n">OrderedDict</span>
+
+<span class="kn">from</span> <span class="nn">block_zoo.BaseLayer</span> <span class="k">import</span> <span class="n">BaseLayer</span><span class="p">,</span> <span class="n">BaseConf</span>
+<span class="kn">from</span> <span class="nn">utils.DocInherit</span> <span class="k">import</span> <span class="n">DocInherit</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">import</span> <span class="nn">copy</span>
+
+
+<div class="viewcode-block" id="LinearConf"><a class="viewcode-back" href="../../block_zoo.html#block_zoo.Linear.LinearConf">[docs]</a><span class="k">class</span> <span class="nc">LinearConf</span><span class="p">(</span><span class="n">BaseConf</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Configuration for Linear layer</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        hidden_dim (int or list): if is int, it means there is one linear layer and the hidden_dim is the dimension of that layer.</span>
+<span class="sd">                if is list of int, it means there is multiple linear layer and hidden_dim are the dimensions of these layers.</span>
+<span class="sd">        activation (str): Name of activation function. All the non-linear activations in http://pytorch.org/docs/0.3.1/nn.html#non-linear-activations are supported, such as &#39;Tanh&#39;, &#39;ReLU&#39;, &#39;PReLU&#39;, &#39;ReLU6&#39; and &#39;LeakyReLU&#39;. Default is None.</span>
+<span class="sd">        last_hidden_activation (bool): [Optional], whether to add nonlinearity to the last linear layer&#39;s output. Default is True.</span>
+<span class="sd">        last_hidden_softmax (bool): [Optional], whether to add softmax to the last linear layer&#39;s output. Default is False.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__int__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">LinearConf</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+<div class="viewcode-block" id="LinearConf.default"><a class="viewcode-back" href="../../block_zoo.html#block_zoo.Linear.LinearConf.default">[docs]</a>    <span class="nd">@DocInherit</span>
+    <span class="k">def</span> <span class="nf">default</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">hidden_dim</span> <span class="o">=</span> <span class="mi">128</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">batch_norm</span> <span class="o">=</span> <span class="kc">True</span>     <span class="c1"># currently, batch_norm for rank 3 inputs is disabled</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">activation</span> <span class="o">=</span> <span class="s1">&#39;PReLU&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">last_hidden_activation</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">last_hidden_softmax</span> <span class="o">=</span> <span class="kc">False</span></div>
+
+<div class="viewcode-block" id="LinearConf.declare"><a class="viewcode-back" href="../../block_zoo.html#block_zoo.Linear.LinearConf.declare">[docs]</a>    <span class="nd">@DocInherit</span>
+    <span class="k">def</span> <span class="nf">declare</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">num_of_inputs</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">input_ranks</span> <span class="o">=</span> <span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="LinearConf.inference"><a class="viewcode-back" href="../../block_zoo.html#block_zoo.Linear.LinearConf.inference">[docs]</a>    <span class="nd">@DocInherit</span>
+    <span class="k">def</span> <span class="nf">inference</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">hidden_dim</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">output_dim</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">input_dims</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">output_dim</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">hidden_dim</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">hidden_dim</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">output_dim</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">input_dims</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">output_dim</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">hidden_dim</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+
+        <span class="nb">super</span><span class="p">(</span><span class="n">LinearConf</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">inference</span><span class="p">()</span>  <span class="c1"># PUT THIS LINE AT THE END OF inference()</span></div>
+
+<div class="viewcode-block" id="LinearConf.verify_before_inference"><a class="viewcode-back" href="../../block_zoo.html#block_zoo.Linear.LinearConf.verify_before_inference">[docs]</a>    <span class="nd">@DocInherit</span>
+    <span class="k">def</span> <span class="nf">verify_before_inference</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">LinearConf</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">verify_before_inference</span><span class="p">()</span>
+        <span class="n">necessary_attrs_for_user</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;hidden_dim&#39;</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">attr</span> <span class="ow">in</span> <span class="n">necessary_attrs_for_user</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_attr_exist_assertion_for_user</span><span class="p">(</span><span class="n">attr</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="LinearConf.verify"><a class="viewcode-back" href="../../block_zoo.html#block_zoo.Linear.LinearConf.verify">[docs]</a>    <span class="nd">@DocInherit</span>
+    <span class="k">def</span> <span class="nf">verify</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">LinearConf</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">verify</span><span class="p">()</span>
+        <span class="n">necessary_attrs_for_user</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;activation&#39;</span><span class="p">,</span> <span class="s1">&#39;last_hidden_activation&#39;</span><span class="p">,</span> <span class="s1">&#39;last_hidden_softmax&#39;</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">attr</span> <span class="ow">in</span> <span class="n">necessary_attrs_for_user</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_attr_exist_assertion_for_user</span><span class="p">(</span><span class="n">attr</span><span class="p">)</span>
+
+        <span class="n">type_checks</span> <span class="o">=</span> <span class="p">[(</span><span class="s1">&#39;activation&#39;</span><span class="p">,</span> <span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="nb">str</span><span class="p">]),</span>
+                       <span class="p">(</span><span class="s1">&#39;last_hidden_activation&#39;</span><span class="p">,</span> <span class="nb">bool</span><span class="p">),</span>
+                       <span class="p">(</span><span class="s1">&#39;last_hidden_softmax&#39;</span><span class="p">,</span> <span class="nb">bool</span><span class="p">)]</span>
+        <span class="k">for</span> <span class="n">attr</span><span class="p">,</span> <span class="n">attr_type</span> <span class="ow">in</span> <span class="n">type_checks</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_attr_type_assertion</span><span class="p">(</span><span class="n">attr</span><span class="p">,</span> <span class="n">attr_type</span><span class="p">)</span>
+
+        <span class="c1"># supported activation of PyTorch now:</span>
+        <span class="n">supported_activation_pytorch</span> <span class="o">=</span> <span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;Sigmoid&#39;</span><span class="p">,</span> <span class="s1">&#39;Tanh&#39;</span><span class="p">,</span> <span class="s1">&#39;ReLU&#39;</span><span class="p">,</span> <span class="s1">&#39;PReLU&#39;</span><span class="p">,</span> <span class="s1">&#39;ReLU6&#39;</span><span class="p">,</span> <span class="s1">&#39;LeakyReLU&#39;</span><span class="p">,</span> <span class="s1">&#39;LogSigmoid&#39;</span><span class="p">,</span> <span class="s1">&#39;ELU&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;SELU&#39;</span><span class="p">,</span> <span class="s1">&#39;Threshold&#39;</span><span class="p">,</span> <span class="s1">&#39;Hardtanh&#39;</span><span class="p">,</span> <span class="s1">&#39;Softplus&#39;</span><span class="p">,</span> <span class="s1">&#39;Softshrink&#39;</span><span class="p">,</span> <span class="s1">&#39;Softsign&#39;</span><span class="p">,</span> <span class="s1">&#39;Tanhshrink&#39;</span><span class="p">,</span> <span class="s1">&#39;Softmin&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;Softmax&#39;</span><span class="p">,</span> <span class="s1">&#39;Softmax2d&#39;</span><span class="p">,</span> <span class="s1">&#39;LogSoftmax&#39;</span><span class="p">]</span>
+        <span class="n">value_checks</span> <span class="o">=</span> <span class="p">[(</span><span class="s1">&#39;activation&#39;</span><span class="p">,</span> <span class="n">supported_activation_pytorch</span><span class="p">)]</span>
+        <span class="k">for</span> <span class="n">attr</span><span class="p">,</span> <span class="n">legal_values</span> <span class="ow">in</span> <span class="n">value_checks</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_attr_value_assertion</span><span class="p">(</span><span class="n">attr</span><span class="p">,</span> <span class="n">legal_values</span><span class="p">)</span></div></div>
+
+
+<div class="viewcode-block" id="Linear"><a class="viewcode-back" href="../../block_zoo.html#block_zoo.Linear.Linear">[docs]</a><span class="k">class</span> <span class="nc">Linear</span><span class="p">(</span><span class="n">BaseLayer</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Linear layer</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        layer_conf (LinearConf): configuration of a layer</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">layer_conf</span><span class="p">):</span>
+
+        <span class="nb">super</span><span class="p">(</span><span class="n">Linear</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">layer_conf</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">layer_conf</span><span class="o">.</span><span class="n">input_ranks</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="mi">3</span> <span class="ow">and</span> <span class="n">layer_conf</span><span class="o">.</span><span class="n">batch_norm</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="n">layer_conf</span><span class="o">.</span><span class="n">batch_norm</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="n">logging</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s1">&#39;Batch normalization for dense layers of which the rank is 3 is not available now. Batch norm is set to False now.&#39;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">layer_conf</span><span class="o">.</span><span class="n">hidden_dim</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
+            <span class="n">layer_conf</span><span class="o">.</span><span class="n">hidden_dim</span> <span class="o">=</span> <span class="p">[</span><span class="n">layer_conf</span><span class="o">.</span><span class="n">hidden_dim</span><span class="p">]</span>
+
+        <span class="n">layers</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">()</span>
+        <span class="n">former_dim</span> <span class="o">=</span> <span class="n">layer_conf</span><span class="o">.</span><span class="n">input_dims</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">layer_conf</span><span class="o">.</span><span class="n">hidden_dim</span><span class="p">)):</span>
+            <span class="c1">#cur_layer_name = &#39;linear_%d&#39; % len(layers)</span>
+            <span class="n">layers</span><span class="p">[</span><span class="s1">&#39;linear_</span><span class="si">%d</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="nb">len</span><span class="p">(</span><span class="n">layers</span><span class="p">)]</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">former_dim</span><span class="p">,</span> <span class="n">layer_conf</span><span class="o">.</span><span class="n">hidden_dim</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+            <span class="k">if</span> <span class="n">layer_conf</span><span class="o">.</span><span class="n">activation</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> \
+                    <span class="p">(</span><span class="n">layer_conf</span><span class="o">.</span><span class="n">last_hidden_activation</span> <span class="ow">is</span> <span class="kc">True</span> <span class="ow">or</span> <span class="p">(</span><span class="n">i</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">layer_conf</span><span class="o">.</span><span class="n">hidden_dim</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)):</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">layer_conf</span><span class="o">.</span><span class="n">batch_norm</span><span class="p">:</span>
+                        <span class="n">layers</span><span class="p">[</span><span class="s1">&#39;batch_norm_</span><span class="si">%d</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="nb">len</span><span class="p">(</span><span class="n">layers</span><span class="p">)]</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">BatchNorm1d</span><span class="p">(</span><span class="n">layer_conf</span><span class="o">.</span><span class="n">hidden_dim</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+                    <span class="n">layers</span><span class="p">[</span><span class="s1">&#39;linear_activate_</span><span class="si">%d</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="nb">len</span><span class="p">(</span><span class="n">layers</span><span class="p">)]</span> <span class="o">=</span> <span class="nb">eval</span><span class="p">(</span><span class="s2">&quot;nn.&quot;</span> <span class="o">+</span> <span class="n">layer_conf</span><span class="o">.</span><span class="n">activation</span><span class="p">)()</span>
+                <span class="k">except</span> <span class="ne">NameError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%s</span><span class="s2">; Activation layer </span><span class="se">\&quot;</span><span class="s2">nn.</span><span class="si">%s</span><span class="se">\&quot;</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">),</span> <span class="n">layer_conf</span><span class="o">.</span><span class="n">activation</span><span class="p">))</span>
+
+            <span class="k">if</span> <span class="n">layer_conf</span><span class="o">.</span><span class="n">last_hidden_softmax</span> <span class="ow">is</span> <span class="kc">True</span> <span class="ow">and</span> <span class="n">i</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">layer_conf</span><span class="o">.</span><span class="n">hidden_dim</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="n">layers</span><span class="p">[</span><span class="s1">&#39;linear_softmax_</span><span class="si">%d</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="nb">len</span><span class="p">(</span><span class="n">layers</span><span class="p">)]</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Softmax</span><span class="p">(</span><span class="n">layer_conf</span><span class="o">.</span><span class="n">output_rank</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+
+            <span class="n">former_dim</span> <span class="o">=</span> <span class="n">layer_conf</span><span class="o">.</span><span class="n">hidden_dim</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">linear</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Sequential</span><span class="p">(</span><span class="n">layers</span><span class="p">)</span>
+
+<div class="viewcode-block" id="Linear.forward"><a class="viewcode-back" href="../../block_zoo.html#block_zoo.Linear.Linear.forward">[docs]</a>    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">string</span><span class="p">,</span> <span class="n">string_len</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; process inputs</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            string (Tensor): any shape.</span>
+<span class="sd">            string_len (Tensor): [batch_size], default is None.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Tensor: has the same shape as string.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">layer_conf</span><span class="o">.</span><span class="n">input_ranks</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="mi">3</span> <span class="ow">and</span> <span class="n">string_len</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="c1"># need padding mask</span>
+            <span class="n">string_len_val</span> <span class="o">=</span> <span class="n">string_len</span><span class="o">.</span><span class="n">cpu</span><span class="p">()</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span>
+            <span class="n">masks</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">string_len</span><span class="p">)):</span>
+                <span class="n">masks</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                    <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">([</span><span class="n">torch</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">string_len_val</span><span class="p">[</span><span class="n">i</span><span class="p">]),</span> <span class="n">torch</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">string</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">string_len_val</span><span class="p">[</span><span class="n">i</span><span class="p">])]))</span>
+            <span class="n">masks</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">stack</span><span class="p">(</span><span class="n">masks</span><span class="p">)</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="n">string</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">string</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">expand_as</span><span class="p">(</span><span class="n">string</span><span class="p">)</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_cuda</span><span class="p">():</span>
+                <span class="n">device</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">device</span><span class="p">(</span><span class="s2">&quot;cuda&quot;</span> <span class="k">if</span> <span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">is_available</span><span class="p">()</span> <span class="k">else</span> <span class="s2">&quot;cpu&quot;</span><span class="p">)</span>
+                <span class="n">masks</span> <span class="o">=</span> <span class="n">masks</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
+            <span class="n">string</span> <span class="o">=</span> <span class="n">string</span> <span class="o">*</span> <span class="n">masks</span>
+        <span class="n">string_out</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">linear</span><span class="p">(</span><span class="n">string</span><span class="o">.</span><span class="n">float</span><span class="p">())</span>
+        <span class="k">return</span> <span class="n">string_out</span><span class="p">,</span> <span class="n">string_len</span></div></div>
+
+
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, Quantus STCA team&lt;quantus_stca@microsoft.com&gt;
+
+    </p>
+  </div> 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

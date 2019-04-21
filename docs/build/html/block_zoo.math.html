@@ -1,0 +1,1020 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>block_zoo.math package &mdash; NeuronBlocks 1.1.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+        <script type="text/javascript" src="_static/language_data.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> NeuronBlocks
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.1.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="overview.html">Basic block_zoo</a></li>
+<li class="toctree-l1"><a class="reference internal" href="overview.html#id15">Attention</a></li>
+<li class="toctree-l1"><a class="reference internal" href="overview.html#id25">embedding</a></li>
+<li class="toctree-l1"><a class="reference internal" href="overview.html#id27">Operations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="overview.html#id31">Math</a></li>
+<li class="toctree-l1"><a class="reference internal" href="overview.html#id38">Transformer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="overview.html#id43">Encoder_Decoder</a></li>
+<li class="toctree-l1"><a class="reference internal" href="overview.html#id47">Normalizations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="overview.html#id49">Loss Functions</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">NeuronBlocks</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>block_zoo.math package</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/block_zoo.math.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="block-zoo-math-package">
+<h1>block_zoo.math package<a class="headerlink" href="#block-zoo-math-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-block_zoo.math.Add2D">
+<span id="block-zoo-math-add2d-module"></span><h2>block_zoo.math.Add2D module<a class="headerlink" href="#module-block_zoo.math.Add2D" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="block_zoo.math.Add2D.Add2D">
+<em class="property">class </em><code class="descclassname">block_zoo.math.Add2D.</code><code class="descname">Add2D</code><span class="sig-paren">(</span><em>layer_conf</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/block_zoo/math/Add2D.html#Add2D"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#block_zoo.math.Add2D.Add2D" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.modules.module.Module</span></code></p>
+<p>Add2D layer to get sum of two sequences(2D representation)</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>layer_conf</strong> (<a class="reference internal" href="#block_zoo.math.Add2D.Add2DConf" title="block_zoo.math.Add2D.Add2DConf"><em>Add2DConf</em></a>) – configuration of a layer</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="block_zoo.math.Add2D.Add2D.forward">
+<code class="descname">forward</code><span class="sig-paren">(</span><em>*args</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/block_zoo/math/Add2D.html#Add2D.forward"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#block_zoo.math.Add2D.Add2D.forward" title="Permalink to this definition">¶</a></dt>
+<dd><p>process input</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>*args</strong> – (Tensor): string, string_len, string2, string2_len
+e.g. string (Tensor): [batch_size, dim], string_len (Tensor): [batch_size]</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">[batch_size, output_dim], [batch_size]</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">Tensor</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="block_zoo.math.Add2D.Add2DConf">
+<em class="property">class </em><code class="descclassname">block_zoo.math.Add2D.</code><code class="descname">Add2DConf</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/block_zoo/math/Add2D.html#Add2DConf"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#block_zoo.math.Add2D.Add2DConf" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="block_zoo.html#block_zoo.BaseLayer.BaseConf" title="block_zoo.BaseLayer.BaseConf"><code class="xref py py-class docutils literal notranslate"><span class="pre">block_zoo.BaseLayer.BaseConf</span></code></a></p>
+<p>Configuration of Add2D layer</p>
+<dl class="method">
+<dt id="block_zoo.math.Add2D.Add2DConf.declare">
+<code class="descname">declare</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/block_zoo/math/Add2D.html#Add2DConf.declare"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#block_zoo.math.Add2D.Add2DConf.declare" title="Permalink to this definition">¶</a></dt>
+<dd><p>Define things like “input_ranks” and “num_of_inputs”, which are certain with regard to your layer</p>
+<blockquote>
+<div><p>num_of_input is N(N&gt;0) means this layer accepts N inputs;</p>
+<p>num_of_input is -1 means this layer accepts any number of inputs;</p>
+<p>The rank here is not the same as matrix rank:</p>
+<blockquote>
+<div><p>For a scalar, its rank is 0;</p>
+<p>For a vector, its rank is 1;</p>
+<p>For a matrix, its rank is 2;</p>
+<p>For a cube of numbers, its rank is 3.</p>
+</div></blockquote>
+<p>…
+For instance, the rank of (batch size, sequence length, hidden_dim) is 3.</p>
+<p>if num_of_input &gt; 0:</p>
+<blockquote>
+<div>len(input_ranks) should be equal to num_of_input</div></blockquote>
+<p>elif num_of_input == -1:</p>
+<blockquote>
+<div>input_ranks should be a list with only one element and the rank of all the inputs should be equal to that element.</div></blockquote>
+<p>NOTE: when we build the model, if num_of_input is -1, we would replace it with the real number of inputs and replace input_ranks with a list of real input_ranks.</p>
+</div></blockquote>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">None</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="block_zoo.math.Add2D.Add2DConf.inference">
+<code class="descname">inference</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/block_zoo/math/Add2D.html#Add2DConf.inference"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#block_zoo.math.Add2D.Add2DConf.inference" title="Permalink to this definition">¶</a></dt>
+<dd><p>Inference things like output_dim, which may relies on defined hyper parameter such as hidden dim and input_dim</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">None</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="block_zoo.math.Add2D.Add2DConf.verify">
+<code class="descname">verify</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/block_zoo/math/Add2D.html#Add2DConf.verify"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#block_zoo.math.Add2D.Add2DConf.verify" title="Permalink to this definition">¶</a></dt>
+<dd><p>Define some necessary varification for your layer when we define the model.</p>
+<p>If you define your own layer and rewrite this funciton, please add “super(YourLayerConf, self).verify()” at the beginning</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">None</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-block_zoo.math.Add3D">
+<span id="block-zoo-math-add3d-module"></span><h2>block_zoo.math.Add3D module<a class="headerlink" href="#module-block_zoo.math.Add3D" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="block_zoo.math.Add3D.Add3D">
+<em class="property">class </em><code class="descclassname">block_zoo.math.Add3D.</code><code class="descname">Add3D</code><span class="sig-paren">(</span><em>layer_conf</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/block_zoo/math/Add3D.html#Add3D"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#block_zoo.math.Add3D.Add3D" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.modules.module.Module</span></code></p>
+<p>Add3D layer to get sum of two sequences(3D representation)</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>layer_conf</strong> (<a class="reference internal" href="#block_zoo.math.Add3D.Add3DConf" title="block_zoo.math.Add3D.Add3DConf"><em>Add3DConf</em></a>) – configuration of a layer</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="block_zoo.math.Add3D.Add3D.forward">
+<code class="descname">forward</code><span class="sig-paren">(</span><em>*args</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/block_zoo/math/Add3D.html#Add3D.forward"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#block_zoo.math.Add3D.Add3D.forward" title="Permalink to this definition">¶</a></dt>
+<dd><p>process input</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>*args</strong> – (Tensor): string, string_len, string2, string2_len
+e.g. string (Tensor): [batch_size, seq_len, dim], string_len (Tensor): [batch_size]</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">[batch_size, seq_len, output_dim], [batch_size]</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">Tensor</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="block_zoo.math.Add3D.Add3DConf">
+<em class="property">class </em><code class="descclassname">block_zoo.math.Add3D.</code><code class="descname">Add3DConf</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/block_zoo/math/Add3D.html#Add3DConf"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#block_zoo.math.Add3D.Add3DConf" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="block_zoo.html#block_zoo.BaseLayer.BaseConf" title="block_zoo.BaseLayer.BaseConf"><code class="xref py py-class docutils literal notranslate"><span class="pre">block_zoo.BaseLayer.BaseConf</span></code></a></p>
+<p>Configuration of Add3D layer</p>
+<dl class="method">
+<dt id="block_zoo.math.Add3D.Add3DConf.declare">
+<code class="descname">declare</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/block_zoo/math/Add3D.html#Add3DConf.declare"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#block_zoo.math.Add3D.Add3DConf.declare" title="Permalink to this definition">¶</a></dt>
+<dd><p>Define things like “input_ranks” and “num_of_inputs”, which are certain with regard to your layer</p>
+<blockquote>
+<div><p>num_of_input is N(N&gt;0) means this layer accepts N inputs;</p>
+<p>num_of_input is -1 means this layer accepts any number of inputs;</p>
+<p>The rank here is not the same as matrix rank:</p>
+<blockquote>
+<div><p>For a scalar, its rank is 0;</p>
+<p>For a vector, its rank is 1;</p>
+<p>For a matrix, its rank is 2;</p>
+<p>For a cube of numbers, its rank is 3.</p>
+</div></blockquote>
+<p>…
+For instance, the rank of (batch size, sequence length, hidden_dim) is 3.</p>
+<p>if num_of_input &gt; 0:</p>
+<blockquote>
+<div>len(input_ranks) should be equal to num_of_input</div></blockquote>
+<p>elif num_of_input == -1:</p>
+<blockquote>
+<div>input_ranks should be a list with only one element and the rank of all the inputs should be equal to that element.</div></blockquote>
+<p>NOTE: when we build the model, if num_of_input is -1, we would replace it with the real number of inputs and replace input_ranks with a list of real input_ranks.</p>
+</div></blockquote>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">None</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="block_zoo.math.Add3D.Add3DConf.inference">
+<code class="descname">inference</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/block_zoo/math/Add3D.html#Add3DConf.inference"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#block_zoo.math.Add3D.Add3DConf.inference" title="Permalink to this definition">¶</a></dt>
+<dd><p>Inference things like output_dim, which may relies on defined hyper parameter such as hidden dim and input_dim</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">None</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="block_zoo.math.Add3D.Add3DConf.verify">
+<code class="descname">verify</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/block_zoo/math/Add3D.html#Add3DConf.verify"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#block_zoo.math.Add3D.Add3DConf.verify" title="Permalink to this definition">¶</a></dt>
+<dd><p>Define some necessary varification for your layer when we define the model.</p>
+<p>If you define your own layer and rewrite this funciton, please add “super(YourLayerConf, self).verify()” at the beginning</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">None</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-block_zoo.math.ElementWisedMultiply2D">
+<span id="block-zoo-math-elementwisedmultiply2d-module"></span><h2>block_zoo.math.ElementWisedMultiply2D module<a class="headerlink" href="#module-block_zoo.math.ElementWisedMultiply2D" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="block_zoo.math.ElementWisedMultiply2D.ElementWisedMultiply2D">
+<em class="property">class </em><code class="descclassname">block_zoo.math.ElementWisedMultiply2D.</code><code class="descname">ElementWisedMultiply2D</code><span class="sig-paren">(</span><em>layer_conf</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/block_zoo/math/ElementWisedMultiply2D.html#ElementWisedMultiply2D"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#block_zoo.math.ElementWisedMultiply2D.ElementWisedMultiply2D" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.modules.module.Module</span></code></p>
+<p>ElementWisedMultiply2D layer to do Element-Wised Multiply of two sequences(2D representation)</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>layer_conf</strong> (<a class="reference internal" href="#block_zoo.math.ElementWisedMultiply2D.ElementWisedMultiply2DConf" title="block_zoo.math.ElementWisedMultiply2D.ElementWisedMultiply2DConf"><em>ElementWisedMultiply2DConf</em></a>) – configuration of a layer</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="block_zoo.math.ElementWisedMultiply2D.ElementWisedMultiply2D.forward">
+<code class="descname">forward</code><span class="sig-paren">(</span><em>*args</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/block_zoo/math/ElementWisedMultiply2D.html#ElementWisedMultiply2D.forward"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#block_zoo.math.ElementWisedMultiply2D.ElementWisedMultiply2D.forward" title="Permalink to this definition">¶</a></dt>
+<dd><p>process input</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>*args</strong> – (Tensor): string, string_len, string2, string2_len
+e.g. string (Tensor): [batch_size, dim], string_len (Tensor): [batch_size]</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">[batch_size, output_dim], [batch_size]</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">Tensor</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="block_zoo.math.ElementWisedMultiply2D.ElementWisedMultiply2DConf">
+<em class="property">class </em><code class="descclassname">block_zoo.math.ElementWisedMultiply2D.</code><code class="descname">ElementWisedMultiply2DConf</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/block_zoo/math/ElementWisedMultiply2D.html#ElementWisedMultiply2DConf"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#block_zoo.math.ElementWisedMultiply2D.ElementWisedMultiply2DConf" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="block_zoo.html#block_zoo.BaseLayer.BaseConf" title="block_zoo.BaseLayer.BaseConf"><code class="xref py py-class docutils literal notranslate"><span class="pre">block_zoo.BaseLayer.BaseConf</span></code></a></p>
+<p>Configuration of ElementWisedMultiply2D layer</p>
+<dl class="method">
+<dt id="block_zoo.math.ElementWisedMultiply2D.ElementWisedMultiply2DConf.declare">
+<code class="descname">declare</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/block_zoo/math/ElementWisedMultiply2D.html#ElementWisedMultiply2DConf.declare"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#block_zoo.math.ElementWisedMultiply2D.ElementWisedMultiply2DConf.declare" title="Permalink to this definition">¶</a></dt>
+<dd><p>Define things like “input_ranks” and “num_of_inputs”, which are certain with regard to your layer</p>
+<blockquote>
+<div><p>num_of_input is N(N&gt;0) means this layer accepts N inputs;</p>
+<p>num_of_input is -1 means this layer accepts any number of inputs;</p>
+<p>The rank here is not the same as matrix rank:</p>
+<blockquote>
+<div><p>For a scalar, its rank is 0;</p>
+<p>For a vector, its rank is 1;</p>
+<p>For a matrix, its rank is 2;</p>
+<p>For a cube of numbers, its rank is 3.</p>
+</div></blockquote>
+<p>…
+For instance, the rank of (batch size, sequence length, hidden_dim) is 3.</p>
+<p>if num_of_input &gt; 0:</p>
+<blockquote>
+<div>len(input_ranks) should be equal to num_of_input</div></blockquote>
+<p>elif num_of_input == -1:</p>
+<blockquote>
+<div>input_ranks should be a list with only one element and the rank of all the inputs should be equal to that element.</div></blockquote>
+<p>NOTE: when we build the model, if num_of_input is -1, we would replace it with the real number of inputs and replace input_ranks with a list of real input_ranks.</p>
+</div></blockquote>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">None</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="block_zoo.math.ElementWisedMultiply2D.ElementWisedMultiply2DConf.inference">
+<code class="descname">inference</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/block_zoo/math/ElementWisedMultiply2D.html#ElementWisedMultiply2DConf.inference"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#block_zoo.math.ElementWisedMultiply2D.ElementWisedMultiply2DConf.inference" title="Permalink to this definition">¶</a></dt>
+<dd><p>Inference things like output_dim, which may relies on defined hyper parameter such as hidden dim and input_dim</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">None</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="block_zoo.math.ElementWisedMultiply2D.ElementWisedMultiply2DConf.verify">
+<code class="descname">verify</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/block_zoo/math/ElementWisedMultiply2D.html#ElementWisedMultiply2DConf.verify"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#block_zoo.math.ElementWisedMultiply2D.ElementWisedMultiply2DConf.verify" title="Permalink to this definition">¶</a></dt>
+<dd><p>Define some necessary varification for your layer when we define the model.</p>
+<p>If you define your own layer and rewrite this funciton, please add “super(YourLayerConf, self).verify()” at the beginning</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">None</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-block_zoo.math.ElementWisedMultiply3D">
+<span id="block-zoo-math-elementwisedmultiply3d-module"></span><h2>block_zoo.math.ElementWisedMultiply3D module<a class="headerlink" href="#module-block_zoo.math.ElementWisedMultiply3D" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="block_zoo.math.ElementWisedMultiply3D.ElementWisedMultiply3D">
+<em class="property">class </em><code class="descclassname">block_zoo.math.ElementWisedMultiply3D.</code><code class="descname">ElementWisedMultiply3D</code><span class="sig-paren">(</span><em>layer_conf</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/block_zoo/math/ElementWisedMultiply3D.html#ElementWisedMultiply3D"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#block_zoo.math.ElementWisedMultiply3D.ElementWisedMultiply3D" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.modules.module.Module</span></code></p>
+<p>ElementWisedMultiply3D layer to do Element-Wised Multiply of two sequences(3D representation)</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>layer_conf</strong> (<a class="reference internal" href="#block_zoo.math.ElementWisedMultiply3D.ElementWisedMultiply3DConf" title="block_zoo.math.ElementWisedMultiply3D.ElementWisedMultiply3DConf"><em>ElementWisedMultiply3DConf</em></a>) – configuration of a layer</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="block_zoo.math.ElementWisedMultiply3D.ElementWisedMultiply3D.forward">
+<code class="descname">forward</code><span class="sig-paren">(</span><em>*args</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/block_zoo/math/ElementWisedMultiply3D.html#ElementWisedMultiply3D.forward"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#block_zoo.math.ElementWisedMultiply3D.ElementWisedMultiply3D.forward" title="Permalink to this definition">¶</a></dt>
+<dd><p>process input</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>*args</strong> – (Tensor): string, string_len, string2, string2_len
+e.g. string (Tensor): [batch_size, seq_len, dim], string_len (Tensor): [batch_size]</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">[batch_size, seq_len, output_dim], [batch_size]</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">Tensor</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="block_zoo.math.ElementWisedMultiply3D.ElementWisedMultiply3DConf">
+<em class="property">class </em><code class="descclassname">block_zoo.math.ElementWisedMultiply3D.</code><code class="descname">ElementWisedMultiply3DConf</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/block_zoo/math/ElementWisedMultiply3D.html#ElementWisedMultiply3DConf"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#block_zoo.math.ElementWisedMultiply3D.ElementWisedMultiply3DConf" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="block_zoo.html#block_zoo.BaseLayer.BaseConf" title="block_zoo.BaseLayer.BaseConf"><code class="xref py py-class docutils literal notranslate"><span class="pre">block_zoo.BaseLayer.BaseConf</span></code></a></p>
+<p>Configuration of ElementWisedMultiply3D layer</p>
+<dl class="method">
+<dt id="block_zoo.math.ElementWisedMultiply3D.ElementWisedMultiply3DConf.declare">
+<code class="descname">declare</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/block_zoo/math/ElementWisedMultiply3D.html#ElementWisedMultiply3DConf.declare"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#block_zoo.math.ElementWisedMultiply3D.ElementWisedMultiply3DConf.declare" title="Permalink to this definition">¶</a></dt>
+<dd><p>Define things like “input_ranks” and “num_of_inputs”, which are certain with regard to your layer</p>
+<blockquote>
+<div><p>num_of_input is N(N&gt;0) means this layer accepts N inputs;</p>
+<p>num_of_input is -1 means this layer accepts any number of inputs;</p>
+<p>The rank here is not the same as matrix rank:</p>
+<blockquote>
+<div><p>For a scalar, its rank is 0;</p>
+<p>For a vector, its rank is 1;</p>
+<p>For a matrix, its rank is 2;</p>
+<p>For a cube of numbers, its rank is 3.</p>
+</div></blockquote>
+<p>…
+For instance, the rank of (batch size, sequence length, hidden_dim) is 3.</p>
+<p>if num_of_input &gt; 0:</p>
+<blockquote>
+<div>len(input_ranks) should be equal to num_of_input</div></blockquote>
+<p>elif num_of_input == -1:</p>
+<blockquote>
+<div>input_ranks should be a list with only one element and the rank of all the inputs should be equal to that element.</div></blockquote>
+<p>NOTE: when we build the model, if num_of_input is -1, we would replace it with the real number of inputs and replace input_ranks with a list of real input_ranks.</p>
+</div></blockquote>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">None</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="block_zoo.math.ElementWisedMultiply3D.ElementWisedMultiply3DConf.inference">
+<code class="descname">inference</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/block_zoo/math/ElementWisedMultiply3D.html#ElementWisedMultiply3DConf.inference"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#block_zoo.math.ElementWisedMultiply3D.ElementWisedMultiply3DConf.inference" title="Permalink to this definition">¶</a></dt>
+<dd><p>Inference things like output_dim, which may relies on defined hyper parameter such as hidden dim and input_dim</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">None</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="block_zoo.math.ElementWisedMultiply3D.ElementWisedMultiply3DConf.verify">
+<code class="descname">verify</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/block_zoo/math/ElementWisedMultiply3D.html#ElementWisedMultiply3DConf.verify"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#block_zoo.math.ElementWisedMultiply3D.ElementWisedMultiply3DConf.verify" title="Permalink to this definition">¶</a></dt>
+<dd><p>Define some necessary varification for your layer when we define the model.</p>
+<p>If you define your own layer and rewrite this funciton, please add “super(YourLayerConf, self).verify()” at the beginning</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">None</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-block_zoo.math.MatrixMultiply">
+<span id="block-zoo-math-matrixmultiply-module"></span><h2>block_zoo.math.MatrixMultiply module<a class="headerlink" href="#module-block_zoo.math.MatrixMultiply" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="block_zoo.math.MatrixMultiply.MatrixMultiply">
+<em class="property">class </em><code class="descclassname">block_zoo.math.MatrixMultiply.</code><code class="descname">MatrixMultiply</code><span class="sig-paren">(</span><em>layer_conf</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/block_zoo/math/MatrixMultiply.html#MatrixMultiply"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#block_zoo.math.MatrixMultiply.MatrixMultiply" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.modules.module.Module</span></code></p>
+<p>MatrixMultiply layer to multiply two matrix</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>layer_conf</strong> (<a class="reference internal" href="#block_zoo.math.MatrixMultiply.MatrixMultiplyConf" title="block_zoo.math.MatrixMultiply.MatrixMultiplyConf"><em>MatrixMultiplyConf</em></a>) – configuration of a layer</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="block_zoo.math.MatrixMultiply.MatrixMultiply.forward">
+<code class="descname">forward</code><span class="sig-paren">(</span><em>*args</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/block_zoo/math/MatrixMultiply.html#MatrixMultiply.forward"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#block_zoo.math.MatrixMultiply.MatrixMultiply.forward" title="Permalink to this definition">¶</a></dt>
+<dd><p>process input</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>*args</strong> – (Tensor): string, string_len, string2, string2_len
+e.g. string (Tensor): [batch_size, seq_len, dim], string_len (Tensor): [batch_size]</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">[batch_size, seq_len, output_dim], [batch_size]</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">Tensor</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="block_zoo.math.MatrixMultiply.MatrixMultiplyConf">
+<em class="property">class </em><code class="descclassname">block_zoo.math.MatrixMultiply.</code><code class="descname">MatrixMultiplyConf</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/block_zoo/math/MatrixMultiply.html#MatrixMultiplyConf"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#block_zoo.math.MatrixMultiply.MatrixMultiplyConf" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="block_zoo.html#block_zoo.BaseLayer.BaseConf" title="block_zoo.BaseLayer.BaseConf"><code class="xref py py-class docutils literal notranslate"><span class="pre">block_zoo.BaseLayer.BaseConf</span></code></a></p>
+<p>Configuration of MatrixMultiply layer</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>operation</strong> (<em>String</em>) – a element of [‘common’, ‘seq_based’, ‘dim_based’], default is ‘dim_based’
+‘common’ means (batch_size, seq_len, dim)*(batch_size, seq_len, dim)
+‘seq_based’ means (batch_size, dim, seq_len)*(batch_size, seq_len, dim)
+‘dim_based’ means (batch_size, seq_len, dim)*(batch_size, dim, seq_len)</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="block_zoo.math.MatrixMultiply.MatrixMultiplyConf.declare">
+<code class="descname">declare</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/block_zoo/math/MatrixMultiply.html#MatrixMultiplyConf.declare"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#block_zoo.math.MatrixMultiply.MatrixMultiplyConf.declare" title="Permalink to this definition">¶</a></dt>
+<dd><p>Define things like “input_ranks” and “num_of_inputs”, which are certain with regard to your layer</p>
+<blockquote>
+<div><p>num_of_input is N(N&gt;0) means this layer accepts N inputs;</p>
+<p>num_of_input is -1 means this layer accepts any number of inputs;</p>
+<p>The rank here is not the same as matrix rank:</p>
+<blockquote>
+<div><p>For a scalar, its rank is 0;</p>
+<p>For a vector, its rank is 1;</p>
+<p>For a matrix, its rank is 2;</p>
+<p>For a cube of numbers, its rank is 3.</p>
+</div></blockquote>
+<p>…
+For instance, the rank of (batch size, sequence length, hidden_dim) is 3.</p>
+<p>if num_of_input &gt; 0:</p>
+<blockquote>
+<div>len(input_ranks) should be equal to num_of_input</div></blockquote>
+<p>elif num_of_input == -1:</p>
+<blockquote>
+<div>input_ranks should be a list with only one element and the rank of all the inputs should be equal to that element.</div></blockquote>
+<p>NOTE: when we build the model, if num_of_input is -1, we would replace it with the real number of inputs and replace input_ranks with a list of real input_ranks.</p>
+</div></blockquote>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">None</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="block_zoo.math.MatrixMultiply.MatrixMultiplyConf.default">
+<code class="descname">default</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/block_zoo/math/MatrixMultiply.html#MatrixMultiplyConf.default"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#block_zoo.math.MatrixMultiply.MatrixMultiplyConf.default" title="Permalink to this definition">¶</a></dt>
+<dd><p>Define the default hyper parameters here. You can define these hyper parameters in your configuration file as well.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">None</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="block_zoo.math.MatrixMultiply.MatrixMultiplyConf.inference">
+<code class="descname">inference</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/block_zoo/math/MatrixMultiply.html#MatrixMultiplyConf.inference"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#block_zoo.math.MatrixMultiply.MatrixMultiplyConf.inference" title="Permalink to this definition">¶</a></dt>
+<dd><p>Inference things like output_dim, which may relies on defined hyper parameter such as hidden dim and input_dim</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">None</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="block_zoo.math.MatrixMultiply.MatrixMultiplyConf.varify">
+<code class="descname">varify</code><a class="headerlink" href="#block_zoo.math.MatrixMultiply.MatrixMultiplyConf.varify" title="Permalink to this definition">¶</a></dt>
+<dd><p>Docstring inheriting method descriptor
+The class itself is also used as a decorator doc_inherit decorator</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-block_zoo.math.Minus2D">
+<span id="block-zoo-math-minus2d-module"></span><h2>block_zoo.math.Minus2D module<a class="headerlink" href="#module-block_zoo.math.Minus2D" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="block_zoo.math.Minus2D.Minus2D">
+<em class="property">class </em><code class="descclassname">block_zoo.math.Minus2D.</code><code class="descname">Minus2D</code><span class="sig-paren">(</span><em>layer_conf</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/block_zoo/math/Minus2D.html#Minus2D"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#block_zoo.math.Minus2D.Minus2D" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.modules.module.Module</span></code></p>
+<p>Minus2D layer to get subtraction of two sequences(2D representation)</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>layer_conf</strong> (<a class="reference internal" href="#block_zoo.math.Minus2D.Minus2DConf" title="block_zoo.math.Minus2D.Minus2DConf"><em>Minus2DConf</em></a>) – configuration of a layer</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="block_zoo.math.Minus2D.Minus2D.forward">
+<code class="descname">forward</code><span class="sig-paren">(</span><em>*args</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/block_zoo/math/Minus2D.html#Minus2D.forward"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#block_zoo.math.Minus2D.Minus2D.forward" title="Permalink to this definition">¶</a></dt>
+<dd><p>process inputs</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>*args</strong> – (Tensor): string, string_len, string2, string2_len
+e.g. string (Tensor): [batch_size, dim], string_len (Tensor): [batch_size]</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">[batch_size, output_dim], [batch_size]</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">Tensor</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="block_zoo.math.Minus2D.Minus2DConf">
+<em class="property">class </em><code class="descclassname">block_zoo.math.Minus2D.</code><code class="descname">Minus2DConf</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/block_zoo/math/Minus2D.html#Minus2DConf"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#block_zoo.math.Minus2D.Minus2DConf" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="block_zoo.html#block_zoo.BaseLayer.BaseConf" title="block_zoo.BaseLayer.BaseConf"><code class="xref py py-class docutils literal notranslate"><span class="pre">block_zoo.BaseLayer.BaseConf</span></code></a></p>
+<p>Configuration of Minus2D layer</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>abs_flag</strong> – if the result of the Minus2D is abs, default is False</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="block_zoo.math.Minus2D.Minus2DConf.declare">
+<code class="descname">declare</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/block_zoo/math/Minus2D.html#Minus2DConf.declare"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#block_zoo.math.Minus2D.Minus2DConf.declare" title="Permalink to this definition">¶</a></dt>
+<dd><p>Define things like “input_ranks” and “num_of_inputs”, which are certain with regard to your layer</p>
+<blockquote>
+<div><p>num_of_input is N(N&gt;0) means this layer accepts N inputs;</p>
+<p>num_of_input is -1 means this layer accepts any number of inputs;</p>
+<p>The rank here is not the same as matrix rank:</p>
+<blockquote>
+<div><p>For a scalar, its rank is 0;</p>
+<p>For a vector, its rank is 1;</p>
+<p>For a matrix, its rank is 2;</p>
+<p>For a cube of numbers, its rank is 3.</p>
+</div></blockquote>
+<p>…
+For instance, the rank of (batch size, sequence length, hidden_dim) is 3.</p>
+<p>if num_of_input &gt; 0:</p>
+<blockquote>
+<div>len(input_ranks) should be equal to num_of_input</div></blockquote>
+<p>elif num_of_input == -1:</p>
+<blockquote>
+<div>input_ranks should be a list with only one element and the rank of all the inputs should be equal to that element.</div></blockquote>
+<p>NOTE: when we build the model, if num_of_input is -1, we would replace it with the real number of inputs and replace input_ranks with a list of real input_ranks.</p>
+</div></blockquote>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">None</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="block_zoo.math.Minus2D.Minus2DConf.default">
+<code class="descname">default</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/block_zoo/math/Minus2D.html#Minus2DConf.default"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#block_zoo.math.Minus2D.Minus2DConf.default" title="Permalink to this definition">¶</a></dt>
+<dd><p>Define the default hyper parameters here. You can define these hyper parameters in your configuration file as well.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">None</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="block_zoo.math.Minus2D.Minus2DConf.inference">
+<code class="descname">inference</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/block_zoo/math/Minus2D.html#Minus2DConf.inference"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#block_zoo.math.Minus2D.Minus2DConf.inference" title="Permalink to this definition">¶</a></dt>
+<dd><p>Inference things like output_dim, which may relies on defined hyper parameter such as hidden dim and input_dim</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">None</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="block_zoo.math.Minus2D.Minus2DConf.verify">
+<code class="descname">verify</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/block_zoo/math/Minus2D.html#Minus2DConf.verify"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#block_zoo.math.Minus2D.Minus2DConf.verify" title="Permalink to this definition">¶</a></dt>
+<dd><p>Define some necessary varification for your layer when we define the model.</p>
+<p>If you define your own layer and rewrite this funciton, please add “super(YourLayerConf, self).verify()” at the beginning</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">None</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-block_zoo.math.Minus3D">
+<span id="block-zoo-math-minus3d-module"></span><h2>block_zoo.math.Minus3D module<a class="headerlink" href="#module-block_zoo.math.Minus3D" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="block_zoo.math.Minus3D.Minus3D">
+<em class="property">class </em><code class="descclassname">block_zoo.math.Minus3D.</code><code class="descname">Minus3D</code><span class="sig-paren">(</span><em>layer_conf</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/block_zoo/math/Minus3D.html#Minus3D"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#block_zoo.math.Minus3D.Minus3D" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.modules.module.Module</span></code></p>
+<p>Minus3D layer to get subtraction of two sequences(3D representation)</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>layer_conf</strong> (<a class="reference internal" href="#block_zoo.math.Minus3D.Minus3DConf" title="block_zoo.math.Minus3D.Minus3DConf"><em>Minus3DConf</em></a>) – configuration of a layer</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="block_zoo.math.Minus3D.Minus3D.forward">
+<code class="descname">forward</code><span class="sig-paren">(</span><em>*args</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/block_zoo/math/Minus3D.html#Minus3D.forward"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#block_zoo.math.Minus3D.Minus3D.forward" title="Permalink to this definition">¶</a></dt>
+<dd><p>process input</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>*args</strong> – (Tensor): string, string_len, string2, string2_len
+e.g. string (Tensor): [batch_size, seq_len, dim], string_len (Tensor): [batch_size]</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">[batch_size, seq_len, output_dim], [batch_size]</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">Tensor</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="block_zoo.math.Minus3D.Minus3DConf">
+<em class="property">class </em><code class="descclassname">block_zoo.math.Minus3D.</code><code class="descname">Minus3DConf</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/block_zoo/math/Minus3D.html#Minus3DConf"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#block_zoo.math.Minus3D.Minus3DConf" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="block_zoo.html#block_zoo.BaseLayer.BaseConf" title="block_zoo.BaseLayer.BaseConf"><code class="xref py py-class docutils literal notranslate"><span class="pre">block_zoo.BaseLayer.BaseConf</span></code></a></p>
+<p>Configuration of Minus3D layer</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>abs_flag</strong> – if the result of the Minus3D is abs, default is False</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="block_zoo.math.Minus3D.Minus3DConf.declare">
+<code class="descname">declare</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/block_zoo/math/Minus3D.html#Minus3DConf.declare"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#block_zoo.math.Minus3D.Minus3DConf.declare" title="Permalink to this definition">¶</a></dt>
+<dd><p>Define things like “input_ranks” and “num_of_inputs”, which are certain with regard to your layer</p>
+<blockquote>
+<div><p>num_of_input is N(N&gt;0) means this layer accepts N inputs;</p>
+<p>num_of_input is -1 means this layer accepts any number of inputs;</p>
+<p>The rank here is not the same as matrix rank:</p>
+<blockquote>
+<div><p>For a scalar, its rank is 0;</p>
+<p>For a vector, its rank is 1;</p>
+<p>For a matrix, its rank is 2;</p>
+<p>For a cube of numbers, its rank is 3.</p>
+</div></blockquote>
+<p>…
+For instance, the rank of (batch size, sequence length, hidden_dim) is 3.</p>
+<p>if num_of_input &gt; 0:</p>
+<blockquote>
+<div>len(input_ranks) should be equal to num_of_input</div></blockquote>
+<p>elif num_of_input == -1:</p>
+<blockquote>
+<div>input_ranks should be a list with only one element and the rank of all the inputs should be equal to that element.</div></blockquote>
+<p>NOTE: when we build the model, if num_of_input is -1, we would replace it with the real number of inputs and replace input_ranks with a list of real input_ranks.</p>
+</div></blockquote>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">None</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="block_zoo.math.Minus3D.Minus3DConf.default">
+<code class="descname">default</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/block_zoo/math/Minus3D.html#Minus3DConf.default"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#block_zoo.math.Minus3D.Minus3DConf.default" title="Permalink to this definition">¶</a></dt>
+<dd><p>Define the default hyper parameters here. You can define these hyper parameters in your configuration file as well.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">None</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="block_zoo.math.Minus3D.Minus3DConf.inference">
+<code class="descname">inference</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/block_zoo/math/Minus3D.html#Minus3DConf.inference"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#block_zoo.math.Minus3D.Minus3DConf.inference" title="Permalink to this definition">¶</a></dt>
+<dd><p>Inference things like output_dim, which may relies on defined hyper parameter such as hidden dim and input_dim</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">None</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="block_zoo.math.Minus3D.Minus3DConf.verify">
+<code class="descname">verify</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/block_zoo/math/Minus3D.html#Minus3DConf.verify"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#block_zoo.math.Minus3D.Minus3DConf.verify" title="Permalink to this definition">¶</a></dt>
+<dd><p>Define some necessary varification for your layer when we define the model.</p>
+<p>If you define your own layer and rewrite this funciton, please add “super(YourLayerConf, self).verify()” at the beginning</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">None</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-block_zoo.math">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-block_zoo.math" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, Quantus STCA team&lt;quantus_stca@microsoft.com&gt;
+
+    </p>
+  </div> 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

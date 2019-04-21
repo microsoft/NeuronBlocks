@@ -1,0 +1,22 @@
+block\_zoo.normalizations package
+=================================
+
+Submodules
+----------
+
+block\_zoo.normalizations.LayerNorm module
+------------------------------------------
+
+.. automodule:: block_zoo.normalizations.LayerNorm
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: block_zoo.normalizations
+    :members:
+    :undoc-members:
+    :show-inheritance:
