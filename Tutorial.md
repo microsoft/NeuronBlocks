@@ -186,7 +186,7 @@ The architecture of the configuration file is:
 
 ## <span id="visualize">Visualize Your Model</span>
 
-A model visualizer is provided for visualization and configuration correctness checking, please refer to [MV_README.md](MV_README.md).
+A model visualizer is provided for visualization and configuration correctness checking, please refer to [MV_README.md](./model_visualizer/README.md).
 
 ## <span id="model-zoo">Model Zoo for NLP Tasks</span>
 
