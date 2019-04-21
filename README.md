@@ -52,7 +52,7 @@ The advantages of leveraging NeuronBlocks for NLP neural network model training 
 
 
 # Get Started
-Please refer to [Tutorial.md](Tutorial.md).
+Please refer to [Tutorial.md](Tutorial.md) and [Code documentation](https://microsoft.github.io/NeuronBlocks/).
 
 
 # Contribute
