@@ -118,7 +118,7 @@ The architecture of the configuration file is:
           ]
         }
         ```
-    - ***target***. [necessary for training and test, some part necessary for prediction] This node defines the target column in the train/valid/test data. The type of target is array because our tookit will support multi-target tasks.
+    - ***target***. [necessary for training and test] This node defines the target column in the train/valid/test data. The type of target is array because our tookit will support multi-target tasks.
 - **outputs**. This node defines the settings of path to save models and logs, as well as cache.
     - ***save_base_dir***. The directory to save models and logs.
     - ***model_name***. The model would be saved as save_base_dir/model_name.
@@ -200,9 +200,7 @@ Text classification is a core problem to many applications like spam filtering, 
 
 - ***Dataset***
 
-    The [20 Newsgroups data set](http://qwone.com/~jason/20Newsgroups/) is a collection of approximately 20,000 newsgroup documents, partitioned (nearly) evenly across 20 different newsgroups. Here is a list of the 20 newsgroups, partitioned (more or less) according to subject matter:
-
-    ![](https://i.imgur.com/rHLITSi.png)
+    The [20 Newsgroups data set](http://qwone.com/~jason/20Newsgroups/) is a collection of approximately 20,000 newsgroup documents, partitioned (nearly) evenly across 20 different newsgroups.
 
 - ***Usage***
 

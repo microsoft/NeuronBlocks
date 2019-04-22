@@ -3,4 +3,3 @@
 *.pyc
 *.cache/
 dataset/GloVe/
-dataset/*
