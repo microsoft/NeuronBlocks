@@ -11,7 +11,7 @@
 
 
 # Overview
-NeuronBlocks is a **NLP deep learning modeling toolkit** that helps engineers to build end-to-end pipelines for neural network model training for NLP tasks. The main goal of this toolkit is to minimize developing cost for NLP deep neural network model building, including both training and inferencing stages. For more details, please check our paper.
+NeuronBlocks is a **NLP deep learning modeling toolkit** that helps engineers to build end-to-end pipelines for neural network model training for NLP tasks. The main goal of this toolkit is to minimize developing cost for NLP deep neural network model building, including both training and inferencing stages. For more details, please check our paper: **NeuronBlocks -- Building Your NLP DNN Models Like Playing Lego** at https://arxiv.org/abs/1904.09535.
 
 NeuronBlocks consists of two major components: ***Block Zoo*** and ***Model Zoo***. 
 - In ***Block Zoo***, we provide commonly used neural network components as building blocks for model architecture design.  
@@ -61,7 +61,7 @@ NeuronBlocks operates in an open model. It is designed and developed by **STCA N
 For more details, please refer to [Contributing.md](Contributing.md).
 
 # Reference
-Paper (update soon).
+**NeuronBlocks -- Building Your NLP DNN Models Like Playing Lego**, at https://arxiv.org/abs/1904.09535.
 
 # Related Project
 [OpenPAI](https://github.com/Microsoft/pai) is an open source platform that provides complete AI model training and resource management capabilities, it is easy to extend and supports on-premise, cloud and hybrid environments in various scale.
