@@ -11,7 +11,7 @@
     * [Task 3: Question Natural Language Inference](#task-3)
     * [Task 4: Regression](#task-4)
     * [Task 5: Sentiment Analysis](#task-5)
-    * [Task 6: Question Pairs](#task-6)
+    * [Task 6: Question Paraphrase](#task-6)
 * [Advanced Usage](#advanced-usage)
     * [Extra Feature Support](#extra-feature)
     * [Learning Rate Decay](#lr-decay)
@@ -347,7 +347,7 @@ Sentiment analysis is aimed to predict the sentiment (positive, negative, etc) o
     
     *Tips: the model file and train log file can be found in JOSN config file's outputs/save_base_dir after you finish training.*
 
-### <span id="task-6">Task 6: Question Pairs</span>
+### <span id="task-6">Task 6: Question Paraphrase</span>
 
 This task is to determine whether a pair of questions are semantically equivalent. 
 
