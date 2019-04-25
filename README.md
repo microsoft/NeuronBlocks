@@ -1,4 +1,4 @@
-# ***NeuronBlocks*** - NLP DNN Model Toolkit
+# ***NeuronBlocks*** - Building Your NLP DNN Models Like Playing Lego
 * [Overview](#Overview)
 * [Who should consider using NeuronBlocks](#Who-should-consider-using-NeuronBlocks)
 * [Get Started](#Get-Started)
@@ -11,7 +11,7 @@
 
 
 # Overview
-NeuronBlocks is a **NLP deep learning modeling toolkit** that helps engineers to build end-to-end pipelines for neural network model training for NLP tasks. The main goal of this toolkit is to minimize developing cost for NLP deep neural network model building, including both training and inferencing stages. For more details, please check our paper: **NeuronBlocks -- Building Your NLP DNN Models Like Playing Lego** at https://arxiv.org/abs/1904.09535.
+NeuronBlocks is a **NLP deep learning modeling toolkit** that helps engineers to build end-to-end pipelines for neural network model training for NLP tasks. The main goal of this toolkit is to minimize developing cost for NLP deep neural network model building, including both training and inference stages. For more details, please check our paper: **NeuronBlocks -- Building Your NLP DNN Models Like Playing Lego** at https://arxiv.org/abs/1904.09535.
 
 NeuronBlocks consists of two major components: ***Block Zoo*** and ***Model Zoo***. 
 - In ***Block Zoo***, we provide commonly used neural network components as building blocks for model architecture design.  
