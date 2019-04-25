@@ -56,9 +56,14 @@ Please refer to [Tutorial.md](Tutorial.md) and [Code documentation](https://micr
 
 
 # Contribute
-NeuronBlocks operates in an open model. It is designed and developed by **STCA NLP Group, Microsoft**. Contributions from academia and industry are also highly welcome.
+NeuronBlocks operates in an open model. It is designed and developed by **STCA NLP Group, Microsoft**. Contributions from academia and industry are also highly welcome. For more details, please refer to [Contributing.md](Contributing.md).
 
-For more details, please refer to [Contributing.md](Contributing.md).
+## Ongoing Work and Call for Contributions
+Anyone who are familiar with are highly encouraged to contribute code.
+* Knowledge Distillation for Model Compression. Knowledge distillation for heavy models such as BERT, OpenAI Transformer. Teacher-Student based knowledge distillation is one common method for model compression. 
+* Multi-Lingual Support
+* NER Model Support 
+* Multi-Task Training Support 
 
 # Reference
 **NeuronBlocks -- Building Your NLP DNN Models Like Playing Lego**, at https://arxiv.org/abs/1904.09535.
