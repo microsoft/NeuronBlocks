@@ -8,6 +8,7 @@
     "data_paths": {
       "train_data_path": "./dataset/QQP/train.tsv",
       "valid_data_path": "./dataset/QQP/dev.tsv",
+      "test_data_path": "./dataset/QQP/dev.tsv",
       "pre_trained_emb": "./dataset/GloVe/glove.840B.300d.txt"
     },
     "file_with_col_header": true,

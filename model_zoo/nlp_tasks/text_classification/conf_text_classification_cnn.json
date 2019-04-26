@@ -7,7 +7,8 @@
     "dataset_type": "classification",
     "data_paths": {
       "train_data_path": "./dataset/20_newsgroups/train.tsv",
-      "valid_data_path": "./dataset/20_newsgroups/test.tsv"
+      "valid_data_path": "./dataset/20_newsgroups/test.tsv",
+      "test_data_path": "./dataset/20_newsgroups/test.tsv"
     },
     "file_with_col_header": false,
     "add_start_end_for_seq": true,

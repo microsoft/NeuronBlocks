@@ -8,6 +8,7 @@
     "data_paths": {
       "train_data_path": "./dataset/SST-2/train.tsv",
       "valid_data_path": "./dataset/SST-2/dev.tsv",
+      "test_data_path": "./dataset/SST-2/dev.tsv",
       "predict_data_path": "./dataset/SST-2/dev.tsv",
       "pre_trained_emb": "./dataset/GloVe/glove.840B.300d.txt"
     },
