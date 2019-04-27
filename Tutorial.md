@@ -20,7 +20,7 @@
 
 ## <span id="installation">Installation</span>
 
-*Note: NeuronBlocks is based on Python 3.6*
+***Note: NeuronBlocks is based on Python 3.6***
 
 1. Clone this project. 
     ```bash
