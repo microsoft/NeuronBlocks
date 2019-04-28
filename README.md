@@ -52,19 +52,72 @@ The advantages of leveraging NeuronBlocks for NLP neural network model training 
 
 
 # Get Started
-Please refer to [Tutorial.md](Tutorial.md) and [Code documentation](https://microsoft.github.io/NeuronBlocks/).
+## <span id="installation">Installation</span>
+
+*Note: NeuronBlocks is based on Python 3.6*
+
+1. Clone this project. 
+    ```bash
+    git clone https://github.com/Microsoft/NeuronBlocks
+    ```
+
+2. Install Python packages in requirements.txt by the following command.
+    ```bash
+    pip install -r requirements.txt
+    ```
+
+3. Install PyTorch (*NeuronBlocks supports PyTorch version 0.4.1 currently*).
+    
+    For **Linux**, run the following command:
+    ```bash
+    pip install torch==0.4.1
+    ```
+    
+    For **Windows**, we suggest you to install PyTorch via *Conda* by following the instruction of [PyTorch](https://pytorch.org/get-started/previous-versions/).
+
+    
+
+## <span id="quick-start">Quick Start</span>
+
+Get started by trying the given examples.
+
+*Tips: in the following instruction, PROJECTROOT denotes the root directory of this project.*
+
+```bash
+# get GloVe pre-trained word vectors
+cd PROJECT_ROOT/dataset
+bash get_glove.sh
+
+# train
+cd PROJECT_ROOT
+python train.py --conf_path=model_zoo/demo/conf.json
+
+# test
+python test.py --conf_path=model_zoo/demo/conf.json
+
+# predict
+python predict.py --conf_path=model_zoo/demo/conf.json
+```
+
+For more details, please refer to [Tutorial.md](Tutorial.md) and [Code documentation](https://microsoft.github.io/NeuronBlocks/).
 
 
 # Contribute
-NeuronBlocks operates in an open model. It is designed and developed by **STCA NLP Group, Microsoft**. Contributions from academia and industry are also highly welcome.
+NeuronBlocks operates in an open model. It is designed and developed by **STCA NLP Group, Microsoft**. Contributions from academia and industry are also highly welcome. For more details, please refer to [Contributing.md](Contributing.md).
 
-For more details, please refer to [Contributing.md](Contributing.md).
+## Ongoing Work and Call for Contributions
+Anyone who are familiar with are highly encouraged to contribute code.
+* Knowledge Distillation for Model Compression. Knowledge distillation for heavy models such as BERT, OpenAI Transformer. Teacher-Student based knowledge distillation is one common method for model compression. 
+* Multi-Lingual Support
+* NER Model Support 
+* Multi-Task Training Support 
 
 # Reference
 **NeuronBlocks -- Building Your NLP DNN Models Like Playing Lego**, at https://arxiv.org/abs/1904.09535.
 
 # Related Project
-[OpenPAI](https://github.com/Microsoft/pai) is an open source platform that provides complete AI model training and resource management capabilities, it is easy to extend and supports on-premise, cloud and hybrid environments in various scale.
+* [OpenPAI](https://github.com/Microsoft/pai) is an open source platform that provides complete AI model training and resource management capabilities, it is easy to extend and supports on-premise, cloud and hybrid environments in various scale.
+* [Samples for AI](https://github.com/Microsoft/samples-for-ai):  a deep learning samples and projects collection. It contains a lot of classic deep learning algorithms and applications with different frameworks, which is a good entry for the beginners to get started with deep learning.
 
 # License
 
