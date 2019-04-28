@@ -415,13 +415,13 @@ This task is to train a query regression model to learn from a heavy teacher mod
     2. Test student model
     ```bash
     cd PROJECT_ROOT
-    python test.py --conf_path=models/kdqbc_bilstmattn_cnn/train/conf_kdqbc_bilstmattn_cnn.json --previous_model_path models/kdqbc_bilstmattn_cnn/train/model.nb --predict_output_path models/kdqbc_bilstmattn_cnn/test/test.tsv --test_data_path dataset/knowledge_distillation/query_binary_classifier/test.tsv
+    python test.py --conf_path=model_zoo/nlp_tasks/knowledge_distillation/conf_kdqbc_bilstmattn_cnn.json
     ```
     
     3. Calculate AUC metric
     ```bash
     cd PROJECT_ROOT
-    python tools/AUC.py --input_file models/kdqbc_bilstmattn_cnn/test/test.tsv --predict_index 2 --label_index 1 
+    python tools/calculate_AUC.py --input_file models/kdqbc_bilstmattn_cnn/train/predict.tsv --predict_index 2 --label_index 1 
     ```
     
      *Tips: you can try different models by running different JSON config files.*
