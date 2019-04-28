@@ -52,7 +52,54 @@ The advantages of leveraging NeuronBlocks for NLP neural network model training 
 
 
 # Get Started
-Please refer to [Tutorial.md](Tutorial.md) and [Code documentation](https://microsoft.github.io/NeuronBlocks/).
+## <span id="installation">Installation</span>
+
+*Note: NeuronBlocks is based on Python 3.6*
+
+1. Clone this project. 
+    ```bash
+    git clone https://github.com/Microsoft/NeuronBlocks
+    ```
+
+2. Install Python packages in requirements.txt by the following command.
+    ```bash
+    pip install -r requirements.txt
+    ```
+
+3. Install PyTorch (*NeuronBlocks supports PyTorch version 0.4.1 currently*).
+    
+    For **Linux**, run the following command:
+    ```bash
+    pip install torch==0.4.1
+    ```
+    
+    For **Windows**, we suggest you to install PyTorch via *Conda* by following the instruction of [PyTorch](https://pytorch.org/get-started/previous-versions/).
+
+    
+
+## <span id="quick-start">Quick Start</span>
+
+Get started by trying the given examples.
+
+*Tips: in the following instruction, PROJECTROOT denotes the root directory of this project.*
+
+```bash
+# get GloVe pre-trained word vectors
+cd PROJECT_ROOT/dataset
+bash get_glove.sh
+
+# train
+cd PROJECT_ROOT
+python train.py --conf_path=model_zoo/demo/conf.json
+
+# test
+python test.py --conf_path=model_zoo/demo/conf.json
+
+# predict
+python predict.py --conf_path=model_zoo/demo/conf.json
+```
+
+For more details, please refer to [Tutorial.md](Tutorial.md) and [Code documentation](https://microsoft.github.io/NeuronBlocks/).
 
 
 # Contribute
