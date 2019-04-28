@@ -1,5 +1,6 @@
 .idea/
 *~
 *.pyc
-*.cache/
+*.cache*
 dataset/GloVe/
+models/
