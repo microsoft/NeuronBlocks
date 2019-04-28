@@ -31,7 +31,7 @@ def calculate_AUC(prediction, label):
 def main(params):
     prediction, label = read_tsv(params)
     auc = calculate_AUC(prediction, label)
-    print("auc is ", auc)
+    print("AUC is ", auc)
     return auc
 
 if __name__ == "__main__":
