@@ -8,6 +8,7 @@
     "data_paths": {
       "train_data_path": "./dataset/knowledge_distillation/query_binary_classifier/train.tsv",
       "valid_data_path": "./dataset/knowledge_distillation/query_binary_classifier/valid.tsv",
+      "test_data_path": "./dataset/knowledge_distillation/query_binary_classifier/test.tsv",
       "pre_trained_emb": "./dataset/GloVe/glove.840B.300d.txt"
     },
     "pretrained_emb_type": "glove",
@@ -48,7 +49,7 @@
     "lr_decay": 0.95,
     "minimum_lr": 0.0001,
     "epoch_start_lr_decay": 3,
-    "use_gpu": false,
+    "use_gpu": true,
     "batch_size": 256,
     "batch_num_to_show_results": 10,
     "max_epoch": 30,
