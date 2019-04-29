@@ -134,7 +134,15 @@ The architecture of the configuration file is:
     - ***optimizer***. 
         - *name*. We support all the optimizers defined in [torch.optim](http://pytorch.org/docs/0.4.1/optim.html?#module-torch.optim).
         - *params*. The optimizer parameters are exactly the same as the parameters of the initialization function of optimizers in [torch.optim](http://pytorch.org/docs/0.4.1/optim.html?#module-torch.optim).
-    - ***use_gpu***. [default: true] Whether to use GPU if there is at least one GPU available. In addition,  all GPUs are used by default if there are multiple GPUs, and you can also specify which GPU to use via setting the *CUDA_VISIBLE_DEVICES* variable.
+    - ***use_gpu***. [default: true] Whether to use GPU if there is at least one GPU available. In addition,  all GPUs are used by default if there are multiple GPUs, and you can also specify which GPU to use via setting the *CUDA_VISIBLE_DEVICES* variable as below.
+        ```bash
+        # Run on GPU0
+        CUDA_VISIBLE_DEVICES=0 python train.py
+        # Run on GPU0 and GPU1
+        CUDA_VISIBLE_DEVICES=0,1 python train.py
+        # Run on CPU
+        CUDA_VISIBLE_DEVICES= python train.py
+        ```
     - ***batch_size***. Define the batch size here. If there are multiple GPUs, *batch_size* is the batch size of each GPU.
     - ***batch_num_to_show_results***. [necessary for training] During the training process, show the results every batch_num_to_show_results batches.
     - ***max_epoch***. [necessary for training] The maximum number of epochs to train.
@@ -209,15 +217,20 @@ Text classification is a core problem to many applications like spam filtering, 
 
 - ***Usage***
 
-    1. run data downloading and preprocessing script.
+    1. Run data downloading and preprocessing script.
     ```bash
     cd PROJECT_ROOT/dataset
     python get_20_newsgroups.py
     ```
-    2. train text classification model.
+    2. Train text classification model.
     ```bash
     cd PROJECT_ROOT
     python train.py --conf_path=model_zoo/nlp_tasks/text_classification/conf_text_classification_cnn.json 
+    ```
+    3. Test your model.
+    ```bash
+    cd PROJECT_ROOT
+    python test.py --conf_path=model_zoo/nlp_tasks/text_classification/conf_text_classification_cnn.json 
     ```
      *Tips: you can try different models by running different JSON config files.*
 
@@ -241,16 +254,21 @@ Question answer matching is a crucial subtask of the question answering problem,
 
 - ***Usage***
 
-    1. run data downloading script.
+    1. Run data downloading script.
     ```bash
     cd PROJECT_ROOT/dataset
     python get_WikiQACorpus.py
     ```
     
-    2. train question answer matching model.
+    2. Train question answer matching model.
     ```bash
     cd PROJECT_ROOT
     python train.py --conf_path=model_zoo/nlp_tasks/question_answer_matching/conf_question_answer_matching_bilstm.json
+    ```
+    3. Test your model.
+    ```bash
+    cd PROJECT_ROOT
+    python test.py --conf_path=model_zoo/nlp_tasks/question_answer_matching/conf_question_answer_matching_bilstm.json
     ```
     
      *Tips: you can try different models by running different JSON config files.*
@@ -278,15 +296,20 @@ Natural language inference (NLI) is a task that incorporates much of what is nec
 
 - ***Usage***
 
-    1. run data downloading script.
+    1. Run data downloading script.
     ```bash
     cd PROJECT_ROOT/dataset
     python get_QNLI.py
     ```
-    2. train the model.
+    2. Train natural language inference model.
     ```bash
     cd PROJECT_ROOT
     python train.py --conf_path=model_zoo/nlp_tasks/question_nli/conf_qnli_bilstm.json
+    ```
+    3. Test your model.
+    ```bash
+    cd PROJECT_ROOT
+    python test.py --conf_path=model_zoo/nlp_tasks/question_nli/conf_qnli_bilstm.json
     ```
      *Tips: you can try different models by running different JSON config files.*
 
@@ -312,11 +335,18 @@ Regression is the problem of predicting a continuous number for given input, wid
 
 - ***Usage***
 
-    Train regression model.
+    1. Train regression model.
     ```bash
     cd PROJECT_ROOT
     python train.py --conf_path=model_zoo/nlp_tasks/regression/conf_regression_bilstm_attn.json
     ```
+    
+    2. Test your model.
+    ```bash
+    cd PROJECT_ROOT
+    python test.py --conf_path=model_zoo/nlp_tasks/regression/conf_regression_bilstm_attn.json
+    ```
+    
      *Tips: you can try different models by running different JSON config files.*
 
 ### <span id="task-5">Task 5: Sentiment Analysis</span>
@@ -329,15 +359,20 @@ Sentiment analysis is aimed to predict the sentiment (positive, negative, etc) o
 
 - ***Usage***
 
-    1. run data downloading script.
+    1. Run data downloading script.
     ```bash
     cd PROJECT_ROOT/dataset
     python get_SST-2.py
     ```
-    2. train the model.
+    2. Train sentiment analysis model.
     ```bash
     cd PROJECT_ROOT
     python train.py --conf_path=model_zoo/nlp_tasks/sentiment_analysis/conf_sentiment_analysis_bilstm.json
+    ```
+    3. Test your model.
+    ```bash
+    cd PROJECT_ROOT
+    python test.py --conf_path=model_zoo/nlp_tasks/sentiment_analysis/conf_sentiment_analysis_bilstm.json
     ```
      *Tips: you can try different models by running different JSON config files.*
      
@@ -362,15 +397,20 @@ This task is to determine whether a pair of questions are semantically equivalen
 
 - ***Usage***
 
-    1. run data downloading script.
+    1. Run data downloading script.
     ```bash
     cd PROJECT_ROOT/dataset
     python get_QQP.py
     ```
-    2. train the model.
+    2. Train question paraphrase model.
     ```bash
     cd PROJECT_ROOT
     python train.py --conf_path=model_zoo/nlp_tasks/question_pairs/conf_question_pairs_bilstm.json
+    ```
+    3. Test your model.
+    ```bash
+    cd PROJECT_ROOT
+    python test.py --conf_path=model_zoo/nlp_tasks/question_pairs/conf_question_pairs_bilstm.json
     ```
      *Tips: you can try different models by running different JSON config files.*
 
@@ -415,7 +455,7 @@ This task is to train a query regression model to learn from a heavy teacher mod
     2. Test student model
     ```bash
     cd PROJECT_ROOT
-    python test.py --conf_path=model_zoo/nlp_tasks/knowledge_distillation/conf_kdqbc_bilstmattn_cnn.json
+    python test.py --conf_path=model_zoo/nlp_tasks/knowledge_distillation/conf_kdqbc_bilstmattn_cnn.json 
     ```
     
     3. Calculate AUC metric
@@ -429,7 +469,6 @@ This task is to train a query regression model to learn from a heavy teacher mod
 - ***Result***
 
     The AUC of student model is very close to that of teacher model and its inference speed is 3.5X~4X times faster. 
-    
     |Model|AUC|
     |-----|---|
     |Teacher|0.9112|
@@ -439,7 +478,7 @@ This task is to train a query regression model to learn from a heavy teacher mod
 
 #### <span id="task-7.2">7.2: Compression for Text Matching Model (ongoing)</span>
 #### <span id="task-7.3">7.3: Compression for Slot Filling Model (ongoing)</span>
-#### <span id="task-7.4">7.4: Compression for MRC (ongoing)</span>
+#### <span id="task-7.3">7.4: Compression for MRC (ongoing)</span>
 
 
 ## <span id="advanced-usage">Advanced Usage</span>
