@@ -313,6 +313,7 @@ class ModelConf(object):
         else:
             self.batch_size_total = self.batch_size_each_gpu
 
+        self.cpu_thread_num = self.get_item(['training_params', 'cpu_thread_num'], default=-1)  #by default, use all threads cpu support
 
         # text preprocessing
         self.__text_preprocessing = self.get_item(['training_params', 'text_preprocessing'], default=list())
