@@ -6,7 +6,6 @@ import torch.nn as nn
 from block_zoo import *
 import copy
 import logging
-import ujson as json
 from utils.exceptions import ConfigurationError, LayerUndefinedError, LayerConfigUndefinedError
 from queue import Queue
 from utils.common_utils import transform_tensors2params, transfer_to_gpu
