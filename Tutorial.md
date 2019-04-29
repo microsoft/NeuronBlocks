@@ -455,7 +455,7 @@ This task is to train a query regression model to learn from a heavy teacher mod
     2. Test student model
     ```bash
     cd PROJECT_ROOT
-    python test.py --conf_path=model_zoo/nlp_tasks/knowledge_distillation/conf_kdqbc_bilstmattn_cnn.json 
+    python test.py --conf_path=model_zoo/nlp_tasks/knowledge_distillation/conf_kdqbc_bilstmattn_cnn.json
     ```
     
     3. Calculate AUC metric
@@ -469,6 +469,7 @@ This task is to train a query regression model to learn from a heavy teacher mod
 - ***Result***
 
     The AUC of student model is very close to that of teacher model and its inference speed is 3.5X~4X times faster. 
+    
     |Model|AUC|
     |-----|---|
     |Teacher|0.9112|
@@ -478,7 +479,7 @@ This task is to train a query regression model to learn from a heavy teacher mod
 
 #### <span id="task-7.2">7.2: Compression for Text Matching Model (ongoing)</span>
 #### <span id="task-7.3">7.3: Compression for Slot Filling Model (ongoing)</span>
-#### <span id="task-7.3">7.4: Compression for MRC (ongoing)</span>
+#### <span id="task-7.4">7.4: Compression for MRC (ongoing)</span>
 
 
 ## <span id="advanced-usage">Advanced Usage</span>
