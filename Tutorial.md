@@ -135,6 +135,7 @@ The architecture of the configuration file is:
         - *name*. We support all the optimizers defined in [torch.optim](http://pytorch.org/docs/0.4.1/optim.html?#module-torch.optim).
         - *params*. The optimizer parameters are exactly the same as the parameters of the initialization function of optimizers in [torch.optim](http://pytorch.org/docs/0.4.1/optim.html?#module-torch.optim).
     - ***use_gpu***. [default: true] Whether to use GPU if there is at least one GPU available. In addition,  all GPUs are used by default if there are multiple GPUs, and you can also specify which GPU to use via setting the *CUDA_VISIBLE_DEVICES* variable.
+    - ***cpu_num_workers***. [default: -1] Define the number of processes to preprocess the dataset. The number of processes is equal to that of logical cores CPU supports if value is negtive or 0, otherwise it is equal to *cpu_num_workers*.
     - ***batch_size***. Define the batch size here. If there are multiple GPUs, *batch_size* is the batch size of each GPU.
     - ***batch_num_to_show_results***. [necessary for training] During the training process, show the results every batch_num_to_show_results batches.
     - ***max_epoch***. [necessary for training] The maximum number of epochs to train.
