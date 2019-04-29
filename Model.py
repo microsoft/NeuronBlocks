@@ -388,6 +388,18 @@ class Model(nn.Module):
     def is_cuda(self):
         return next(self.parameters()).data.is_cuda
 
+    def update_use_gpu(self, new_use_gpu):
+        self.use_gpu = new_use_gpu
+        for layer_id in self.layers.keys():
+            if isinstance(self.layers[layer_id], Embedding):
+                for input_cluster in self.layers[layer_id].embeddings:
+                    if isinstance(self.layers[layer_id].embeddings[input_cluster], CNNCharEmbedding):
+                        self.layers[layer_id].embeddings[input_cluster].layer_conf.use_gpu = new_use_gpu
+            elif isinstance(self.layers[layer_id], EncoderDecoder):
+                self.layers[layer_id].encoder.layer_conf.use_gpu = new_use_gpu
+                self.layers[layer_id].decoder.layer_conf.use_gpu = new_use_gpu
+            else:
+                self.layers[layer_id].layer_conf.use_gpu = new_use_gpu
 
 
 

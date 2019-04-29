@@ -667,12 +667,13 @@ class LearningMachine(object):
             self.model = torch.load(model_path)
             if isinstance(self.model, nn.DataParallel):
                 self.model = self.model.module
+            self.model.update_use_gpu(self.use_gpu)
             self.model = nn.DataParallel(self.model)
         else:
             self.model = torch.load(model_path, map_location='cpu')
             if isinstance(self.model, nn.DataParallel):
                 self.model = self.model.module
-            self.model.use_gpu = False
+            self.model.update_use_gpu(self.use_gpu)
 
         logging.info("Model %s loaded!" % model_path)
         logging.info("Total trainable parameters: %d" % (get_trainable_param_num(self.model)))
