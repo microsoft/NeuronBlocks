@@ -23,9 +23,6 @@ from utils.exceptions import PreprocessError
 import torch
 import torch.nn as nn
 
-# for debugging
-USE_MULTIPROCESS = True
-
 class Problem():
     def __init__(self, problem_type, input_types, answer_column_name=None, lowercase=False,
             source_with_start=True, source_with_end=True, source_with_unk=True,
@@ -162,9 +159,11 @@ class Problem():
                         pass
         return docs, target_docs, cnt_legal, cnt_illegal
 
-    def build_training_multi_processor(self, training_data_list, file_columns, input_types, answer_column_name, bpe_encoder=None):
+    def build_training_multi_processor(self, training_data_list, cpu_num_workers, file_columns, input_types, answer_column_name, bpe_encoder=None):
         res = []
         process_num = cpu_count()
+        if cpu_num_workers > 0:
+            process_num = cpu_num_workers
         # logging.info("multiprocess enabled, process num: %d" % (process_num))
         process_p = multiprocessing.Pool(process_num)
         for i in range(process_num):
@@ -207,7 +206,7 @@ class Problem():
 
     def build(self, training_data_path, file_columns, input_types, file_with_col_header, answer_column_name, word2vec_path=None, word_emb_dim=None,
               format=None, file_type=None, involve_all_words=None, file_format="tsv", show_progress=True,
-              use_multi_processing=USE_MULTIPROCESS, max_vocabulary=800000, word_frequency=3):
+              cpu_num_workers=-1, max_vocabulary=800000, word_frequency=3):
         """
 
         Args:
@@ -259,16 +258,7 @@ class Problem():
         self.file_column_num = len(file_columns)
         with open(training_data_path, "r", encoding='utf-8') as f:
             progress = self.get_data_list_from_file(f, file_with_col_header)
-            if use_multi_processing:
-                docs, target_docs, cnt_legal, cnt_illegal = self.build_training_multi_processor(progress, file_columns, input_types, answer_column_name, bpe_encoder=bpe_encoder)
-
-            else:
-                if show_progress:
-                    progress = tqdm(progress)
-                # else:
-                #     progress = f
-                docs, target_docs, cnt_legal, cnt_illegal = self.build_training_data_list(progress, file_columns,
-                        input_types, answer_column_name, bpe_encoder=bpe_encoder)
+            docs, target_docs, cnt_legal, cnt_illegal = self.build_training_multi_processor(progress, cpu_num_workers, file_columns, input_types, answer_column_name, bpe_encoder=bpe_encoder)
 
         logging.info("Corpus imported: %d legal lines, %d illegal lines." % (cnt_legal, cnt_illegal))
 
@@ -327,13 +317,15 @@ class Problem():
             word_emb_matrix = None
         return word_emb_matrix
     
-    def encode_data_multi_processor(self, data_list, file_columns, input_types, object_inputs,
+    def encode_data_multi_processor(self, data_list, cpu_num_workers, file_columns, input_types, object_inputs,
                 answer_column_name, min_sentence_len, extra_feature, max_lengths=None, fixed_lengths=None, file_format="tsv", bpe_encoder=None):
         def judge_dict(obj):
             return True if isinstance(obj, dict) else False
         res = []
 
         process_num = cpu_count()
+        if cpu_num_workers > 0:
+            process_num = cpu_num_workers
         #logging.info("multiprocess enabled, process num: %d" % (process_num))
         process_p = multiprocessing.Pool(process_num)
         for i in range(process_num):
@@ -614,7 +606,7 @@ class Problem():
 
     def encode(self, data_path, file_columns, input_types, file_with_col_header, object_inputs, answer_column_name,
                min_sentence_len, extra_feature, max_lengths=None, fixed_lengths=None, file_format="tsv", show_progress=True,
-               use_multi_processing=USE_MULTIPROCESS):
+               cpu_num_workers = -1):
         """
 
         Args:
@@ -700,19 +692,9 @@ class Problem():
 
         with open(data_path, 'r', encoding='utf-8') as fin:
             progress = self.get_data_list_from_file(fin, file_with_col_header)
-            if use_multi_processing:
-                data, lengths, target, cnt_legal, cnt_illegal = self.encode_data_multi_processor(progress,
+            data, lengths, target, cnt_legal, cnt_illegal = self.encode_data_multi_processor(progress, cpu_num_workers,
                     file_columns, input_types, object_inputs, answer_column_name, min_sentence_len, extra_feature, max_lengths,
                     fixed_lengths, file_format, bpe_encoder=bpe_encoder)
-            else:
-                if show_progress:
-                    progress = tqdm(progress)
-                # else:
-                #     progress = fin
-                data, lengths, target, cnt_legal, cnt_illegal = self.encode_data_list\
-                    (progress, file_columns, input_types, object_inputs,
-                     answer_column_name, min_sentence_len, extra_feature, max_lengths, fixed_lengths, file_format, bpe_encoder=bpe_encoder)
-
         logging.info("%s: %d legal samples, %d illegal samples" % (data_path, cnt_legal, cnt_illegal))
         return data, lengths, target
 

@@ -143,13 +143,13 @@ def main(params):
                                            conf.answer_column_name, word2vec_path=conf.pretrained_emb_path,
                                            word_emb_dim=conf.pretrained_emb_dim, format=conf.pretrained_emb_type,
                                            file_type=conf.pretrained_emb_binary_or_text, involve_all_words=conf.involve_all_words_in_pretrained_emb,
-                                           show_progress=True if params.mode == 'normal' else False, max_vocabulary=conf.max_vocabulary,
-                                           word_frequency=conf.min_word_frequency)
+                                           show_progress=True if params.mode == 'normal' else False, cpu_num_workers = conf.cpu_num_workers,
+                                           max_vocabulary=conf.max_vocabulary, word_frequency=conf.min_word_frequency)
             else:
                 emb_matrix = problem.build(conf.train_data_path, conf.file_columns, conf.input_types, conf.file_with_col_header,
                                            conf.answer_column_name, word2vec_path=None, word_emb_dim=None, format=None,
                                            file_type=None, involve_all_words=conf.involve_all_words_in_pretrained_emb,
-                                           show_progress=True if params.mode == 'normal' else False,
+                                           show_progress=True if params.mode == 'normal' else False,  cpu_num_workers = conf.cpu_num_workers,
                                            max_vocabulary=conf.max_vocabulary, word_frequency=conf.min_word_frequency)
 
             if conf.mode == 'philly' and conf.emb_pkl_path.startswith('/hdfs/'):
