@@ -35,6 +35,7 @@ Users can either pick existing models (config files) in *Model Zoo* to start mod
 - Textual Entailment
 - Slot tagging
 - Machine Reading Comprehension
+- Knowledge Distillation for Model Compression
 - *More on-going*
 
 # Who should consider using NeuronBlocks
