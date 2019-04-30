@@ -409,7 +409,7 @@ Knowledge Distillation is a common method to compress model in order to improve 
 - [Model Compression with Multi-Task Knowledge Distillation for Web-scale Question Answering System](https://arxiv.org/abs/1904.09636)
 
 #### <span id="task-6.1">6.1: Compression for Query Binary Classifier</span>
-This task is to train a query regression model to learn from a heavy teacher model such as BERT based query classifier model. The training process is to minimized the score difference between the student model output and teacher model output. 
+This task is to train a query regression model to learn from a heavy teacher model such as BERT based query classifier model. The training process is to minimize the score difference between the student model output and teacher model output. 
 - ***Dataset***
 *PROJECT_ROOT/dataset/knowledge_distillation/query_binary_classifier*:
     * *train.tsv* and *valid.tsv*: two columns, namely **Query** and **Score**. 
@@ -453,7 +453,7 @@ This task is to train a query regression model to learn from a heavy teacher mod
     *Tips: the model file and train log file can be found in JSON config file's outputs/save_base_dir.*
 
 #### <span id="task-6.2">6.2: Compression for Text Matching Model</span>
-This task is to train a query-passage regression model to learn from a heavy teacher model such as BERT based query-passage match classifier model. The training process is to minimized the score difference between the student model output and teacher model output.
+This task is to train a query-passage regression model to learn from a heavy teacher model such as BERT based query-passage matching classifier model. The training process is to minimize the score difference between the student model output and teacher model output.
 - ***Dataset***
 *PROJECT_ROOT/dataset/knowledge_distillation/text_matching_data*:
     * *train.tsv* and *valid.tsv*: three columns, namely **Query**, **Passage** and **Score**.
@@ -486,7 +486,7 @@ This task is to train a query-passage regression model to learn from a heavy tea
      *Tips: you can try different models by running different JSON config files.*
 - ***Result***
 
-    The AUC of student model is closed to that of teacher model and its inference speed is multi-x times faster. 
+    The AUC of student model is close to that of teacher model and its inference speed is multi-x times faster. 
     
     |Model|AUC|
     |-----|---|
