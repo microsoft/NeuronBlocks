@@ -99,7 +99,6 @@ python test.py --conf_path=model_zoo/demo/conf.json
 # predict
 python predict.py --conf_path=model_zoo/demo/conf.json
 ```
-
 For more details, please refer to [Tutorial.md](Tutorial.md) and [Code documentation](https://microsoft.github.io/NeuronBlocks/).
 
 
