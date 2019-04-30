@@ -1,4 +1,7 @@
 # ***NeuronBlocks*** - Building Your NLP DNN Models Like Playing Lego
+
+[简体中文](README_zh_CN.md)
+
 * [Overview](#Overview)
 * [Who should consider using NeuronBlocks](#Who-should-consider-using-NeuronBlocks)
 * [Get Started](#Get-Started)

@@ -1,5 +1,7 @@
 # ***NeuronBlocks*** - 像搭积木一样构建自然语言理解深度学习模型
 
+[English](README.md)
+
 * [概览](#概览)
 * [适用人群](#适用人群)
 * [快速入门](#快速入门)
@@ -16,7 +18,7 @@ NeuronBlocks是基于PyTorch的NLP深度学习建模工具包，可以帮助工�
 该工具包的主要目标是将NLP中深度神经网络模型构建的开发成本降到最低，包括训练阶段和推断阶段。
 更多细节，请查看论文[NeuronBlocks -- Building Your NLP DNN Models Like Playing Lego](https://arxiv.org/abs/1904.09535).
 
-NeuronBlocks包括Block Zoo和Model Zoo两个重要组件，其整体框架如下图所示。
+NeuronBlocks包括 ***Block Zoo*** 和 ***Model Zoo*** 两个重要组件，其整体框架如下图所示。
 - 在 ***Block Zoo*** 中, 我们提供了常用的神经网络组件作为模型架构设计的构建模块。
 - 在 ***Model Zoo*** 中, 我们提供了 **JSON配置文件** 形式的一系列经典NLP深度学习模型。
  
@@ -24,7 +26,7 @@ NeuronBlocks包括Block Zoo和Model Zoo两个重要组件，其整体框架如�
 
 ### 使用方法
 
-用户可以选择Model Zoo中的示例模型（JSON配置文件）开启模型训练，或者利用Block Zoo中的神经网络模块构建新的模型，就像玩乐高积木一样。
+用户可以选择 *Model Zoo* 中的示例模型（JSON配置文件）开启模型训练，或者利用 *Block Zoo* 中的神经网络模块构建新的模型，就像玩乐高积木一样。
 
 <img src="https://i.imgur.com/q0p6Wvz.png" width="300">
 
@@ -38,7 +40,7 @@ NeuronBlocks包括Block Zoo和Model Zoo两个重要组件，其整体框架如�
 - 更多……
 
 # 适用人群
-在用神经网络模型解决NLP任务时面临以下挑战的工程师和研究者们：
+使用用神经网络模型解决NLP任务时面临以下挑战的工程师和研究者们：
 + 很多框架可以选择，且框架学习成本高；
 + 繁重的编程工作，大量细节使其难以调试；
 + 快速迭代的模型架构，使工程师们很难完全理解其背后的数学原理；
@@ -51,7 +53,7 @@ NeuronBlocks包括Block Zoo和Model Zoo两个重要组件，其整体框架如�
 - ***代码重用***：可以在各任务与模型间共享神经网络模块，减少重复的编程工作；；
 - ***平台灵活性***：NeuronBlocks可以在Linux和Windows机器上运行，支持CPU和GPU，也支持像Philly和PAI这样的GPU管理平台；；
 - ***模型可视化***：NeuronBlocks提供了一个模型可视化工具，用于观察模型结构及检查JSON配置的正确性；；
-- ***可扩展性***：NeuronBlocks鼓励用户贡献新的神经网络模块或着新的模型。
+- ***可扩展性***：NeuronBlocks鼓励用户贡献新的神经网络模块或者新的模型。
 
 # 快速入门
 ## 安装
