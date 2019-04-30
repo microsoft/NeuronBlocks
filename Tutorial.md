@@ -447,7 +447,7 @@ This task is to train a query regression model to learn from a heavy teacher mod
     
     |Model|AUC|
     |-----|---|
-    |Teacher|0.9112|
+    |Teacher (BERT base)|0.9112|
     |Student-BiLSTMAttn+TextCNN (NeuronBlocks)|0.8941|
     
     *Tips: the model file and train log file can be found in JSON config file's outputs/save_base_dir.*
@@ -490,7 +490,7 @@ This task is to train a query-passage regression model to learn from a heavy tea
     
     |Model|AUC|
     |-----|---|
-    |Teacher|0.9284|
+    |Teacher (BERT large)|0.9284|
     |Student-BiLSTM+matchAttn (NeuronBlocks)|0.8817|
     
     *NOTE: the result is achieved with 1200w data, we can only give sample data for demo, you can replace the data with your own data.*
