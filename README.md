@@ -1,4 +1,8 @@
 # ***NeuronBlocks*** - Building Your NLP DNN Models Like Playing Lego
+
+[中文版本](README_zh_CN.md)
+
+# Table of Contents
 * [Overview](#Overview)
 * [Who should consider using NeuronBlocks](#Who-should-consider-using-NeuronBlocks)
 * [Get Started](#Get-Started)
@@ -74,6 +78,7 @@ The advantages of leveraging NeuronBlocks for NLP neural network model training 
     ```
     
     For **Windows**, we suggest you to install PyTorch via *Conda* by following the instruction of [PyTorch](https://pytorch.org/get-started/previous-versions/).
+
 
     
 
