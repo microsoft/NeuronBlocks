@@ -452,9 +452,9 @@ This task is to train a query regression model to learn from a heavy teacher mod
     
     *Tips: the model file and train log file can be found in JSON config file's outputs/save_base_dir.*
 
-#### <span id="task-6.2">6.2: Compression for Text Matching Model (ongoing)</span>
+#### <span id="task-6.2">6.2: Compression for Text Matching Model</span>
 This task is to train a query-passage regression model to learn from a heavy teacher model such as BERT based query-passage match classifier model. The training process is to minimized the score difference between the student model output and teacher model output.
--***Dataset***
+- ***Dataset***
 *PROJECT_ROOT/dataset/knowledge_distillation/text_matching_data*:
     * *train.tsv* and *valid.tsv*: three columns, namely **Query**, **Passage** and **Score**.
     **Score** is the output score of a heavy teacher model (BERT base finetune model), which is the soft label to be learned by student model as knowledge. 
