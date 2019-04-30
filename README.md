@@ -2,7 +2,7 @@
 
 [中文版本](README_zh_CN.md)
 
-## Table of Contents
+# Table of Contents
 * [Overview](#Overview)
 * [Who should consider using NeuronBlocks](#Who-should-consider-using-NeuronBlocks)
 * [Get Started](#Get-Started)
