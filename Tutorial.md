@@ -486,7 +486,7 @@ This task is to train a query-passage regression model to learn from a heavy tea
      *Tips: you can try different models by running different JSON config files.*
 - ***Result***
 
-    The AUC of student model is very close to that of teacher model and its inference speed is 3.5X~4X times faster. 
+    The AUC of student model is closed to that of teacher model and its inference speed is multi-x times faster. 
     
     |Model|AUC|
     |-----|---|
