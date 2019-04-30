@@ -54,7 +54,7 @@ The advantages of leveraging NeuronBlocks for NLP neural network model training 
 # Get Started
 ## <span id="installation">Installation</span>
 
-*Note: NeuronBlocks is based on Python 3.6*
+*Note: NeuronBlocks is based on **Python 3.6***
 
 1. Clone this project. 
     ```bash
@@ -66,7 +66,7 @@ The advantages of leveraging NeuronBlocks for NLP neural network model training 
     pip install -r requirements.txt
     ```
 
-3. Install PyTorch (*NeuronBlocks supports PyTorch version 0.4.1 currently*).
+3. Install PyTorch (*NeuronBlocks supports **PyTorch 0.4.1** currently*).
     
     For **Linux**, run the following command:
     ```bash
@@ -79,15 +79,11 @@ The advantages of leveraging NeuronBlocks for NLP neural network model training 
 
 ## <span id="quick-start">Quick Start</span>
 
-Get started by trying the given examples.
+Get started by trying the given examples. For **Windows**, we suggest you to use PowerShell instead of CMD.
 
 *Tips: in the following instruction, PROJECTROOT denotes the root directory of this project.*
 
 ```bash
-# get GloVe pre-trained word vectors
-cd PROJECT_ROOT/dataset
-bash get_glove.sh
-
 # train
 cd PROJECT_ROOT
 python train.py --conf_path=model_zoo/demo/conf.json
@@ -98,7 +94,6 @@ python test.py --conf_path=model_zoo/demo/conf.json
 # predict
 python predict.py --conf_path=model_zoo/demo/conf.json
 ```
-
 For more details, please refer to [Tutorial.md](Tutorial.md) and [Code documentation](https://microsoft.github.io/NeuronBlocks/).
 
 
