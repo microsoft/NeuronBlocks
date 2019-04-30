@@ -1,6 +1,8 @@
 # ***NeuronBlocks*** - 像搭积木一样构建自然语言理解深度学习模型
 
-[English](README.md)
+[English version](README.md)
+
+# 目录
 
 * [概览](#概览)
 * [适用人群](#适用人群)
@@ -58,7 +60,7 @@ NeuronBlocks包括 ***Block Zoo*** 和 ***Model Zoo*** 两个重要组件，其�
 # 快速入门
 ## 安装
 
-*注: NeuronBlocks支持Python 3.6*
+*注: NeuronBlocks支持 **Python 3.6***
 
 1. Clone本项目： 
     ```bash
@@ -70,21 +72,20 @@ NeuronBlocks包括 ***Block Zoo*** 和 ***Model Zoo*** 两个重要组件，其�
     pip install -r requirements.txt
     ```
 
-3. 安装PyTorch (*NeuronBlocks支持PyTorch 0.4.1*).
+3. 安装PyTorch ( *NeuronBlocks支持 **PyTorch 0.4.1** * ).
     
-    对于 **Linux**，运行以下命令：
+    对于 **Linux** ，运行以下命令：
     ```bash
     pip install torch==0.4.1
     ```
-    对于**Windows**，建议按照[PyTorch官方安装教程](https://pytorch.org/get-started/previous-versions/)通过Conda安装PyTorch。
+    对于 **Windows** ，建议按照[PyTorch官方安装教程](https://pytorch.org/get-started/previous-versions/)通过Conda安装PyTorch。
     
 
 ## 快速开始
 
-通过以下示例快速入门NeuronBlocks
-Get started by trying the given examples.
+通过以下示例快速入门NeuronBlocks。对于Windows，建议使用PowerShell工具运行命令。
 
-*提示: 在下文中, PROJECTROOT表示本项目的根目录.*
+*提示: 在下文中, PROJECTROOT表示本项目的根目录。*
 
 ```bash
 # 训练
@@ -98,10 +99,10 @@ python test.py --conf_path=model_zoo/demo/conf.json
 python predict.py --conf_path=model_zoo/demo/conf.json
 ```
 
-更多细节, 请查看[Tutorial.md](Tutorial.md)和[Code documentation](https://microsoft.github.io/NeuronBlocks/).
+更多细节, 请查看[Tutorial.md](Tutorial.md)和[Code documentation](https://microsoft.github.io/NeuronBlocks/)。
 
 # 参与贡献
-NeuronBlocks以开放的模式运行。它由**Microsoft STCA NLP Group**设计和开发，也非常欢迎来自学术界和工业界的人士参与贡献。更多详细信息，请查看[Contributing.md](Contributing.md)。
+NeuronBlocks以开放的模式运行。它由 **Microsoft STCA NLP Group** 设计和开发，也非常欢迎来自学术界和工业界的人士参与贡献。更多详细信息，请查看[Contributing.md](Contributing.md)。
 
 ## 正在进行的工作
 * 模型压缩，对诸如BERT, OpenAI Transformer之类的重型模型进行知识蒸馏。基于Teacher-Student的知识蒸馏是模型压缩的一个常用方法。
