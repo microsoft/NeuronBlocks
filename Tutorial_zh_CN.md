@@ -26,7 +26,7 @@
 
 *Note: NeuronBlocks is based on **Python 3.6***
 
-1. clone 这个项目. 
+1. Clone 这个项目. 
     ```bash
     git clone https://github.com/Microsoft/NeuronBlocks
     ```
@@ -66,9 +66,9 @@ python predict.py --conf_path=model_zoo/demo/conf.json
 ```
 
 
-## <span id="design-model">How to Design Your NLP Model</span>
+## <span id="design-model">如何设计NLP模型</span>
 
-### <span id="define-conf">Define the Model Configuration File</span>
+### <span id="define-conf">定义模型配置文件</span>
 
 To train a neural network, you only need to define your model architecture and some other settings in a JSON configuration file.
 
@@ -194,11 +194,11 @@ The architecture of the configuration file is:
 
 
 
-## <span id="visualize">Visualize Your Model</span>
+## <span id="visualize">模型可视化</span>
 
 A model visualizer is provided for visualization and configuration correctness checking, please refer to [Model Visualizer README](./model_visualizer/README.md).
 
-## <span id="model-zoo">Model Zoo for NLP Tasks</span>
+## <span id="model-zoo">NLP 任务 Model Zoo</span>
 
 In Model Zoo, we provide a suite of NLP models for common NLP tasks, in the form of JSON configuration files. You can pick one of existing models (JSON config files) in Model Zoo to start model training quickly, or build your own models by modifying the JSON config file to suit your specific task.
 
@@ -208,15 +208,15 @@ cd PROJECT_ROOT/dataset
 ./get_glove.sh
 ```
 
-### <span id="task-1">Task 1: Text Classification</span>
+### <span id="task-1">任务 1: 文本分类</span>
 
 Text classification is a core problem to many applications like spam filtering, email routing, book classification, etc. This task aims to train a classifier using labeled dataset containing text documents and their labels.
 
-- ***Dataset***
+- ***数据集***
 
     The [20 Newsgroups data set](http://qwone.com/~jason/20Newsgroups/) is a collection of approximately 20,000 newsgroup documents, partitioned (nearly) evenly across 20 different newsgroups.
 
-- ***Usage***
+- ***用法***
 
     1. Run data downloading and preprocessing script.
     ```bash
@@ -235,7 +235,7 @@ Text classification is a core problem to many applications like spam filtering, 
     ```
      *Tips: you can try different models by running different JSON config files.*
 
-- ***Result***
+- ***结果***
     
      Model    | Accuracy 
      -------- | -------- 
@@ -245,15 +245,15 @@ Text classification is a core problem to many applications like spam filtering, 
     *Tips: the model file and train log file can be found in JOSN config file's outputs/save_base_dir after you finish training.*
 
 
-### <span id="task-2">Task 2: Question Answer Matching</span>
+### <span id="task-2">任务 2: 问答对匹配</span>
 
 Question answer matching is a crucial subtask of the question answering problem, with the aim of determining whether question-answer pairs are matched or not.
 
-- ***Dataset***
+- ***数据集***
 
     [Microsoft Research WikiQA Corpus](https://www.microsoft.com/en-us/download/details.aspx?id=52419) is a publicly available set of question and sentence pairs, collected and annotated for research on open-domain question answer matching. WikiQA includes 3,047 questions and 29,258 sentences, where 1,473 sentences were labeled as answer sentences to their corresponding questions. More details of this corpus can be found in the paper [WikiQA: A Challenge Dataset for Open-Domain Question Answering](https://www.microsoft.com/en-us/research/publication/wikiqa-a-challenge-dataset-for-open-domain-question-answering/).
 
-- ***Usage***
+- ***用法***
 
     1. Run data downloading script.
     ```bash
@@ -274,7 +274,7 @@ Question answer matching is a crucial subtask of the question answering problem,
     
      *Tips: you can try different models by running different JSON config files.*
      
-- ***Result***
+- ***结果***
     
      Model    | AUC 
      -------- | -------- 
@@ -286,16 +286,16 @@ Question answer matching is a crucial subtask of the question answering problem,
     
     *Tips: the model file and train log file can be found in JOSN config file's outputs/save_base_dir after you finish training.*
 
-### <span id="task-3">Task 3: Question Natural Language Inference</span>
+### <span id="task-3">任务 3: 自然语言问题推理</span>
 
 Natural language inference (NLI) is a task that incorporates much of what is necessary to understand language, such as the ability to leverage world knowledge or perform lexico-syntactic reasoning. Given two sentences, a premise and a hypothesis, an NLI system must determine whether the hypothesis is implied by the premise.
 
-- ***Dataset***
+- ***数据集***
 
     [The Stanford Question Answering Dataset](https://rajpurkar.github.io/SQuAD-explorer/) is a question-answering dataset consisting of question-paragraph pairs, where one of the sentences in the paragraph (drawn from Wikipedia) contains the answer to the corresponding question (written by an annotator). 
     [QNLI](https://gluebenchmark.com/tasks) converts this task into sentence pair classification by forming a pair between each question and each sentence in the corresponding context, and filtering out pairs with low lexical overlap between the question and the context sentence. The task is to determine whether the context sentence contains the answer to the question. 
 
-- ***Usage***
+- ***用法***
 
     1. Run data downloading script.
     ```bash
@@ -314,7 +314,7 @@ Natural language inference (NLI) is a task that incorporates much of what is nec
     ```
      *Tips: you can try different models by running different JSON config files.*
 
-- ***Result***
+- ***结果***
 
 
      Model    | Accuracy  
@@ -326,15 +326,15 @@ Natural language inference (NLI) is a task that incorporates much of what is nec
     
     *Tips: the model file and train log file can be found in JOSN config file's outputs/save_base_dir after you finish training.*
 
-### <span id="task-4">Task 4: Sentiment Analysis</span>
+### <span id="task-4">任务 4: 情感分析</span>
 
 Sentiment analysis is aimed to predict the sentiment (positive, negative, etc) of a given sentence/document, which is widely applied to many fields.
 
-- ***Dataset***
+- ***数据集***
 
     [The Stanford Sentiment Treebank](https://nlp.stanford.edu/sentiment/) consists of sentences from movie reviews and human annotations of their sentiment. We use the two-way (positive/negative) class split, and use only sentence-level labels.
 
-- ***Usage***
+- ***用法***
 
     1. Run data downloading script.
     ```bash
@@ -353,7 +353,7 @@ Sentiment analysis is aimed to predict the sentiment (positive, negative, etc) o
     ```
      *Tips: you can try different models by running different JSON config files.*
      
-- ***Result***
+- ***结果***
     
      Model    | Accuracy 
      -------- | -------- 
@@ -364,15 +364,15 @@ Sentiment analysis is aimed to predict the sentiment (positive, negative, etc) o
     
     *Tips: the model file and train log file can be found in JOSN config file's outputs/save_base_dir after you finish training.*
 
-### <span id="task-5">Task 5: Question Paraphrase</span>
+### <span id="task-5">任务 5: 相似问题判别</span>
 
 This task is to determine whether a pair of questions are semantically equivalent. 
 
-- ***Dataset***
+- ***数据集***
 
     [The Quora Question Pairs](https://data.quora.com/First-Quora-Dataset-Release-Question-Pairs) dataset is a collection of question pairs from the community question-answering website Quora.
 
-- ***Usage***
+- ***用法***
 
     1. Run data downloading script.
     ```bash
@@ -391,7 +391,7 @@ This task is to determine whether a pair of questions are semantically equivalen
     ```
      *Tips: you can try different models by running different JSON config files.*
 
-- ***Result***
+- ***结果***
 
     The class distribution in QQP is unbalanced (63% negative), so we report both accuracy and F1 score.
     
@@ -404,15 +404,15 @@ This task is to determine whether a pair of questions are semantically equivalen
     
     *Tips: the model file and train log file can be found in JSON config file's outputs/save_base_dir.*
 
-### <span id="task-6">Task 6: Knowledge Distillation for Model Compression</span>
+### <span id="task-6">任务 6: 基于知识蒸馏的模型压缩</span>
 
 Knowledge Distillation is a common method to compress model in order to improve inference speed. Here are some reference papers:
 - [Distilling the Knowledge in a Neural Network](https://arxiv.org/abs/1503.02531)
 - [Model Compression with Multi-Task Knowledge Distillation for Web-scale Question Answering System](https://arxiv.org/abs/1904.09636)
 
-#### <span id="task-6.1">6.1: Compression for Query Binary Classifier</span>
+#### <span id="task-6.1">6.1: 文本二分类的模型压缩</span>
 This task is to train a query regression model to learn from a heavy teacher model such as BERT based query classifier model. The training process is to minimize the score difference between the student model output and teacher model output. 
-- ***Dataset***
+- ***数据集***
 *PROJECT_ROOT/dataset/knowledge_distillation/query_binary_classifier*:
     * *train.tsv* and *valid.tsv*: two columns, namely **Query** and **Score**. 
     **Score** is the output score of a heavy teacher model (BERT base finetune model), which is the soft label to be learned by student model as knowledge. 
@@ -421,7 +421,7 @@ This task is to train a query regression model to learn from a heavy teacher mod
 
         In the meanwhile, you can also replace with your own dataset for compression task trainning.
 
-- ***Usage***
+- ***用法***
 
     1. Train student model
     ```bash
@@ -443,7 +443,7 @@ This task is to train a query regression model to learn from a heavy teacher mod
     
      *Tips: you can try different models by running different JSON config files.*
 
-- ***Result***
+- ***结果***
 
     The AUC of student model is very close to that of teacher model and its inference speed is 3.5X~4X times faster. 
     
@@ -454,9 +454,9 @@ This task is to train a query regression model to learn from a heavy teacher mod
     
     *Tips: the model file and train log file can be found in JSON config file's outputs/save_base_dir.*
 
-#### <span id="task-6.2">6.2: Compression for Text Matching Model</span>
+#### <span id="task-6.2">6.2: 文本匹配的模型压缩</span>
 This task is to train a query-passage regression model to learn from a heavy teacher model such as BERT based query-passage matching classifier model. The training process is to minimize the score difference between the student model output and teacher model output.
-- ***Dataset***
+- ***数据集***
 *PROJECT_ROOT/dataset/knowledge_distillation/text_matching_data*:
     * *train.tsv* and *valid.tsv*: three columns, namely **Query**, **Passage** and **Score**.
     **Score** is the output score of a heavy teacher model (BERT base finetune model), which is the soft label to be learned by student model as knowledge. 
@@ -465,7 +465,7 @@ This task is to train a query-passage regression model to learn from a heavy tea
 
         In the meanwhile, you can also replace with your own dataset for compression task trainning.
 
-- ***Usage***
+- ***用法***
 
     1. Train student model
     ```bash
@@ -486,7 +486,7 @@ This task is to train a query-passage regression model to learn from a heavy tea
     ```
     
      *Tips: you can try different models by running different JSON config files.*
-- ***Result***
+- ***结果***
 
     The AUC of student model is close to that of teacher model and its inference speed is multi-x times faster. 
     
@@ -496,18 +496,17 @@ This task is to train a query-passage regression model to learn from a heavy tea
     |Student-BiLSTM+matchAttn (NeuronBlocks)|0.8817|
     
     *NOTE: the result is achieved with 1200w data, we can only give sample data for demo, you can replace the data with your own data.*
-#### <span id="task-6.3">6.3: Compression for Slot Filling Model (ongoing)</span>
-#### <span id="task-6.4">6.4: Compression for MRC (ongoing)</span>
+#### <span id="task-6.3">6.3: 槽填充的模型压缩 (ongoing)</span>
+#### <span id="task-6.4">6.4: 机器阅读理解模型的模型压缩 (ongoing)</span>
 
-
-## <span id="advanced-usage">Advanced Usage</span>
+## <span id="advanced-usage">高阶用法</span>
 
 After building a model, the next goal is to train a model with good performance. It depends on a highly expressive model and tricks of the model training. NeuronBlocks provides some tricks of model training.
 
 Take *[PROJECTROOT/model_zoo/advanced/conf.json](./model_zoo/advanced/conf.json)* as an example (we make it more suitable for the usage explanation so that the model architecture might not be practical) to introduce the advanced usage, the configuration is used for question answer matching task. 
 The sample data lies in *[PROJECTROOT/dataset/advanced_demo](./dataset/advanced_demo)*.
 
-### <span id="extra-feature">Extra Feature Support</span>
+### <span id="extra-feature">额外的 Feature</span>
 
 Providing more features (postag, NER, char-level feature, etc) to the model than just a single original text may bring more improvements in performance. NeuronBlocks supports multi-feature input and embedding.
 
@@ -557,7 +556,7 @@ To achieve it, you need:
             }
         }
   ```
-### <span id="lr-decay">Learning Rate Decay</span>
+### <span id="lr-decay">学习率衰减</span>
 
 The learning rate is one of the most important hyperparameters to tune during training. Choosing suitable learning rate is challenging. A too small value may result in a long training process that could get stuck, while a too large value may result in learning a sub-optimal set of weights too fast or an unstable training process.
 
@@ -582,7 +581,7 @@ An example of learning rate decay:
 "epoch_start_lr_decay": 1
 ```
 
-### <span id="fix-embedding">Fix Embedding Weight & Limit Vocabulary Size</span>
+### <span id="fix-embedding">固定 Embedding & 词表大小设置</span>
 
 When corpus is very large, the vocabulary size will become large correspondingly. Moreover the training process will be slow if the vocabulary embedding vectors keep updating during training. 
 
