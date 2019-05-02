@@ -6,48 +6,48 @@
     * [定义模型配置文件](#define-conf)
     * [模型可视化](#visualize)
 * [NLP 任务 Model Zoo](#model-zoo)
-    * [Task 1: Text Classification](#task-1)
-    * [Task 2: Question Answer Matching](#task-2)
-    * [Task 3: Question Natural Language Inference](#task-3)
-    * [Task 4: Sentiment Analysis](#task-4)
-    * [Task 5: Question Paraphrase](#task-5)
-    * [Task 6: Knowledge Distillation for Model Compression](#task-6)
-        1. [Compression for Query Binary Classifier](#task-6.1)
-        2. [Compression for Text Matching Model](#task-6.2)
-        3. [Compression for Slot Filling Model](#task-6.3)
-        4. [Compression for MRC Model](#task-6.4)
+    * [任务 1: 文本分类](#task-1)
+    * [任务 2: 问答对匹配](#task-2)
+    * [任务 3: 自然语言问题推理](#task-3)
+    * [任务 4: 情感分析](#task-4)
+    * [任务 5: 相似问题判断](#task-5)
+    * [任务 6: 基于知识蒸馏的模型压缩算法](#task-6)
+        1. [文本二分类的模型压缩](#task-6.1)
+        2. [文本匹配的模型压缩](#task-6.2)
+        3. [槽填充的模型压缩](#task-6.3)
+        4. [机器阅读理解模型的模型压缩](#task-6.4)
 * [高阶用法](#advanced-usage)
-    * [Extra Feature Support](#extra-feature)
-    * [Learning Rate Decay](#lr-decay)
-    * [Fix Embedding Weight & Limit Vocabulary Size](#fix-embedding)
-* [FAQ](#faq)
+    * [额外的feature](#extra-feature)
+    * [学习率衰减](#lr-decay)
+    * [固定embedding 和 词表大小设置](#fix-embedding)
+* [常见问题与答案](#faq)
 
-## <span id="installation">Installation</span>
+## <span id="installation">安装</span>
 
 *Note: NeuronBlocks is based on **Python 3.6***
 
-1. Clone this project. 
+1. clone 这个项目. 
     ```bash
     git clone https://github.com/Microsoft/NeuronBlocks
     ```
 
-2. Install Python packages in requirements.txt by the following command.
+2. 安装在 requirements.txt 里面制定的 python 安装包.
     ```bash
     pip install -r requirements.txt
     ```
 
-3. Install PyTorch (*NeuronBlocks supports **PyTorch 0.4.1** currently*).
+3. 安装 PyTorch (*NeuronBlocks 目前支持 **PyTorch 0.4.1***).
     
-    For **Linux**, run the following command:
+    **Linux** 用户, 请用下面命令安装:
     ```bash
     pip install torch==0.4.1
     ```
     
-    For **Windows**, we suggest you to install PyTorch via *Conda* by following the instruction of [PyTorch](https://pytorch.org/get-started/previous-versions/).
+    **Windows** 用户, 我们推荐通过 *Conda* 安装， by following the instruction of [PyTorch](https://pytorch.org/get-started/previous-versions/).
 
     
 
-## <span id="quick-start">Quick Start</span>
+## <span id="quick-start">快速开始</span>
 
 Get started by trying the given examples. For **Windows**, we suggest you to use PowerShell instead of CMD.
 
