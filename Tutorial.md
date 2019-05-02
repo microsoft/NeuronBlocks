@@ -1,5 +1,7 @@
 # ***NeuronBlocks*** Tutorial
 
+[简体中文](Tutorial_zh_CN.md)
+
 * [Installation](#installation)
 * [Quick Start](#quick-start)
 * [How to Design Your NLP Model](#design-model)
