@@ -100,7 +100,7 @@ python test.py --conf_path=model_zoo/demo/conf.json
 python predict.py --conf_path=model_zoo/demo/conf.json
 ```
 
-更多细节, 请查看[Tutorial.md](Tutorial.md)和[Code documentation](https://microsoft.github.io/NeuronBlocks/)。
+更多细节, 请查看[Tutorial_zh_CN.md](Tutorial_zh_CN.md) 和 [Code documentation](https://microsoft.github.io/NeuronBlocks/)。
 
 # 参与贡献
 NeuronBlocks以开放的模式运行。它由 **微软 STCA NLP Group** 设计和开发，也非常欢迎来自学术界和工业界的人士参与贡献。更多详细信息，请查看[Contributing.md](Contributing.md)。
