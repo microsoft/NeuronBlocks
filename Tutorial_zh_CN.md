@@ -26,9 +26,9 @@
 
 ## <span id="installation">安装</span>
 
-*Note: NeuronBlocks is based on **Python 3.6***
+*注意: NeuronBlocks 目前基于 **Python 3.6***
 
-1. Clone 这个项目. 
+1. Clone 本项目. 
     ```bash
     git clone https://github.com/Microsoft/NeuronBlocks
     ```
@@ -45,41 +45,37 @@
     pip install torch==0.4.1
     ```
     
-    **Windows** 用户, 我们推荐通过 *Conda* 安装， by following the instruction of [PyTorch](https://pytorch.org/get-started/previous-versions/).
+    对于 **Windows** 用户，建议按照 [PyTorch官方安装教程](https://pytorch.org/get-started/previous-versions/) 通过Conda安装PyTorch。
 
     
 
 ## <span id="quick-start">快速开始</span>
 
-Get started by trying the given examples. For **Windows**, we suggest you to use PowerShell instead of CMD.
+通过以下示例快速入门NeuronBlocks。对于Windows，建议使用PowerShell工具运行命令。
 
-*Tips: in the following instruction, PROJECTROOT denotes the root directory of this project.*
+*提示: 在下文中, PROJECTROOT表示本项目的根目录。*
 
 ```bash
-# train
+# 训练
 cd PROJECT_ROOT
 python train.py --conf_path=model_zoo/demo/conf.json
 
-# test
+# 测试
 python test.py --conf_path=model_zoo/demo/conf.json
 
-# predict
+# 预测
 python predict.py --conf_path=model_zoo/demo/conf.json
 ```
-
 
 ## <span id="design-model">如何设计NLP模型</span>
 
 ### <span id="define-conf">定义模型配置文件</span>
 
-To train a neural network, you only need to define your model architecture and some other settings in a JSON configuration file.
+通过 NeuronBlocks 训练一个深度神经网络，您只需要在一个JSON 配置文件里面定义网络结构和一些额外的参数设置即可。 您可以在 *[PROJECTROOT/model_zoo/](./model_zoo)* 下面建立您的模型目录，用于保存模型配置文件。模型相关的数据建议保存在 *[PROJECTROOT/dataset/](./dataset)*.
 
-You can make your private folder (e.g.*YOURFOLDER*) in *[PROJECTROOT/model_zoo/](./model_zoo)*, then put your model configuration file in *PROJECTROOT/model_zoo/YOURFOLDER/*. In addition, place your data in *[PROJECTROOT/dataset/](./dataset)*.
+以 *[PROJECTROOT/model_zoo/demo/conf.json](./model_zoo/demo/conf.json)* 为例 (便于说明工具包的用法，这个展示用例的网络结构并不是一个实际的结构)。 这个配置文件定义的任务是问答对匹配问题， 也就是判断一个答案是否可以回答对应的问题。 相关的样例数据保存在 *[PROJECTROOT/dataset/demo/](./dataset/demo/)*.
 
-Take *[PROJECTROOT/model_zoo/demo/conf.json](./model_zoo/demo/conf.json)* as an example (we make it more suitable for usage explanation so that the model architecture might not be practical), this configuration is used for question answer matching task, which aims to figure out whether the passage can be used as an answer of corresponding quesiton or not. 
-The sample data lies in *[PROJECTROOT/dataset/demo/](./dataset/demo/)*.
-
-The architecture of the configuration file is:
+配置文件的架构如下:
 - **inputs**. This part defines the input configuration.
     - ***use_cache***. If *use_cache* is true, the toolkit would make cache at the first time so that we can accelerate the training process at the next time.
     - ***dataset_type***. Declare the task type here. Currently, we support classification, regression and so on.
@@ -198,13 +194,14 @@ The architecture of the configuration file is:
 
 ## <span id="visualize">模型可视化</span>
 
-A model visualizer is provided for visualization and configuration correctness checking, please refer to [Model Visualizer README](./model_visualizer/README.md).
+本项目提供了一个模型可视化工具，用于模型的可视化和模型配置文件的语法正确性检查。请参考 [Model Visualizer README](./model_visualizer/README.md).
 
 ## <span id="model-zoo">NLP 任务 Model Zoo</span>
 
-In Model Zoo, we provide a suite of NLP models for common NLP tasks, in the form of JSON configuration files. You can pick one of existing models (JSON config files) in Model Zoo to start model training quickly, or build your own models by modifying the JSON config file to suit your specific task.
+在 Model Zoo 当中，我们提供了一系列针对常用自然语言理解任务的经典NLP模型。
+这里的模型以JSON 配置文件存在. 您可以快速从已有的模型中选择一个模型开始模型训练，也可以进行简单的配置文件修改来构建新的网络结构。
 
-*Note: Before trying models in NLP tasks, please download [GloVe](https://nlp.stanford.edu/projects/glove/) firstly via following commands.*
+***注释: 在开始模型训练前，请先下载 [GloVe](https://nlp.stanford.edu/projects/glove/) 词向量***. 
 ```bash
 cd PROJECT_ROOT/dataset
 ./get_glove.sh
@@ -613,4 +610,4 @@ To solve the above problems, NeuronBlocks supports *fixing embedding weight* (em
     
     ***training_params/vocabulary/max_vocabulary***. [int, optional for training, default: 800,000] The max size of corpus vocabulary. If corpus vocabulary size is larger than *max_vocabulary*, it will be cut according to word frequency.
 
-## <span id="faq">Frequently Asked Questions</span>
+## <span id="faq">常见问题与答案</span>
