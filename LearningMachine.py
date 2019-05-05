@@ -668,6 +668,7 @@ class LearningMachine(object):
             if isinstance(self.model, nn.DataParallel):
                 self.model = self.model.module
             self.model.update_use_gpu(self.use_gpu)
+            self.model.cuda()
             self.model = nn.DataParallel(self.model)
         else:
             self.model = torch.load(model_path, map_location='cpu')
