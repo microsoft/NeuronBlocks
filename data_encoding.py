@@ -38,7 +38,8 @@ def main(params, data_path, save_path):
 
     data, length, target = problem.encode(data_path, conf.file_columns, conf.input_types, conf.file_with_col_header,
                                           conf.object_inputs, conf.answer_column_name, conf.min_sentence_len,
-                                          extra_feature=conf.extra_feature,max_lengths=conf.max_lengths, file_format='tsv')
+                                          extra_feature=conf.extra_feature,max_lengths=conf.max_lengths, file_format='tsv',
+                                          cpu_num_workers=conf.cpu_num_workers)
     if not os.path.isdir(os.path.dirname(save_path)):
         os.makedirs(os.path.dirname(save_path))
     dump_to_pkl({'data': data, 'length': length, 'target': target}, save_path)

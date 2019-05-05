@@ -61,6 +61,7 @@
     "minimum_lr": 0.0001,
     "epoch_start_lr_decay": 1,
     "use_gpu": false,
+    "cpu_num_workers": -1,
     "batch_size": 30,
     "batch_num_to_show_results": 10,
     "max_epoch": 3,

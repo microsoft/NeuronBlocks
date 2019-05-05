@@ -99,6 +99,8 @@ class CNNCharEmbedding(BaseLayer):
         string_reshaped = string.view(string.size()[0], -1)     #[batch_size, seq_len * char num in words]
         char_embs_lookup = self.char_embeddings(string_reshaped).float()    # [batch_size, seq_len * char num in words, embedding_dim]
         if self.is_cuda():
+            if self.filters.device == torch.device('cpu'):
+                self.filters = self.filters.cuda()
             char_embs_lookup = char_embs_lookup.cuda(device=self.filters.device)
         char_embs_lookup = char_embs_lookup.view(-1, string.size()[2], self.layer_conf.embedding_matrix_dim)    #[batch_size * seq_len, char num in words, embedding_dim]
 
