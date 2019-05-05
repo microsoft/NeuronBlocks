@@ -5,7 +5,7 @@
 # Table of Contents
 * [Overview](#Overview)
 * [Who should consider using NeuronBlocks](#Who-should-consider-using-NeuronBlocks)
-* [Get Started](#Get-Started)
+* [Get Started in 60 Seconds](#Get-Started-in-60-Seconds)
 * [Contribute](#Contribute)
 * [Reference](#Reference)
 * [Related Project](#Related-Project)
@@ -57,7 +57,7 @@ The advantages of leveraging NeuronBlocks for NLP neural network model training 
 - ***Extensibility***: NeuronBlocks is extensible, allowing users to contribute new blocks or contributing novel models (JSON files).
 
 
-# Get Started
+# Get Started in 60 Seconds
 ## <span id="installation">Installation</span>
 
 *Note: NeuronBlocks is based on **Python 3.6***
