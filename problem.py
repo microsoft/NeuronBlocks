@@ -8,6 +8,7 @@ from tqdm import tqdm
 from utils.corpus_utils import load_embedding
 import nltk
 nltk.download('punkt')
+nltk.download('stopwords')
 from utils.BPEEncoder import BPEEncoder
 import codecs
 from multiprocessing import cpu_count
