@@ -58,6 +58,7 @@ class ModelConf(object):
                 raise ConfigurationError("%s is not a legal JSON file, please check your JSON format!" % conf_path)
 
         self.tool_version = self.get_item(['tool_version'])
+        self.language = self.get_item(['language'], default='english').lower()
         self.problem_type = self.get_item(['inputs', 'dataset_type']).lower()
         if ProblemTypes[self.problem_type] == ProblemTypes.sequence_tagging:
             self.tagging_scheme = self.get_item(['inputs', 'tagging_scheme'], default=None, use_default=True)
@@ -320,6 +321,12 @@ class ModelConf(object):
         self.DBC2SBC = True if 'DBC2SBC' in self.__text_preprocessing else False
         self.unicode_fix = True if 'unicode_fix' in self.__text_preprocessing else False
         self.remove_stopwords = True if 'remove_stopwords' in self.__text_preprocessing else False
+
+        # tokenzier
+        if self.language == 'chinese':
+            self.tokenizer = self.get_item(['training_params', 'tokenizer'], default='jieba')
+        else:
+            self.tokenizer = self.get_item(['training_params', 'tokenizer'], default='nltk')
 
         if self.extra_feature:
             if self.DBC2SBC:

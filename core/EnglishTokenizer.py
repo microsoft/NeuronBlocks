@@ -3,15 +3,15 @@
 
 import nltk
 import re
-from nltk.corpus import stopwords
 from nltk.tokenize.util import align_tokens
+from .Stopwords import Stopwords
 
 class EnglishTokenizer(object):
     def __init__(self, tokenizer='nltk', remove_stopwords=False):
         self.__tokenizer = tokenizer
         self.__remove_stopwords = remove_stopwords
         if self.__remove_stopwords:
-            self.__stop_words = stopwords.words('english')
+            self.__stop_words = Stopwords.english_stopwords
         else:
             self.__stop_words = None
 

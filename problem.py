@@ -20,6 +20,7 @@ import multiprocessing
 import math
 
 from core.EnglishTokenizer import EnglishTokenizer
+from core.ChineseTokenizer import ChineseTokenizer
 from core.EnglishTextPreprocessor import EnglishTextPreprocessor
 from utils.exceptions import PreprocessError
 import torch
@@ -30,7 +31,7 @@ class Problem():
             source_with_start=True, source_with_end=True, source_with_unk=True,
             source_with_pad=True, target_with_start=False, target_with_end=False,
             target_with_unk=True, target_with_pad=True, same_length=True, with_bos_eos=True,
-            tagging_scheme=None, remove_stopwords=False, DBC2SBC=True, unicode_fix=True):
+            tagging_scheme=None, tokenizer="nltk", remove_stopwords=False, DBC2SBC=True, unicode_fix=True):
         """
 
         Args:
@@ -78,7 +79,10 @@ class Problem():
 
         self.file_column_num = None
 
-        self.tokenizer = EnglishTokenizer(tokenizer='nltk', remove_stopwords=remove_stopwords)
+        if tokenizer in ['nltk']:
+            self.tokenizer = EnglishTokenizer(tokenizer=tokenizer, remove_stopwords=remove_stopwords)
+        elif tokenizer in ['jieba']:
+            self.tokenizer = ChineseTokenizer(tokenizer=tokenizer, remove_stopwords=remove_stopwords)
         self.text_preprocessor = EnglishTextPreprocessor(DBC2SBC=DBC2SBC, unicode_fix=unicode_fix)
 
     def input_word_num(self):

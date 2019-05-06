@@ -1,0 +1,121 @@
+{
+  "license": "Copyright (c) Microsoft Corporation. All rights reserved. Licensed under the MIT license.",
+  "tool_version": "1.1.0",
+  "model_description": "This config is used for chinese sentiment analysis task.",
+  "language": "Chinese",
+  "inputs": {
+    "use_cache": true,
+    "dataset_type": "classification",
+    "data_paths": {
+      "train_data_path": "./dataset/chinese_sentiment_analysis/train.tsv",
+      "valid_data_path": "./dataset/chinese_sentiment_analysis/dev.tsv",
+      "test_data_path": "./dataset/chinese_sentiment_analysis/test.tsv",
+      "predict_data_path": "./dataset/chinese_sentiment_analysis/test.tsv",
+      "pre_trained_emb": "./dataset/chinese_word_vectors/sgns.merge.word"
+    },
+    "file_with_col_header": false,
+    "add_start_end_for_seq": true,
+    "file_header": {
+      "sentence_col": 0,
+      "label": 1
+    },
+    "model_inputs": {
+      "sentence": ["sentence_col"]
+    },
+    "target": ["label"]
+  },
+  "outputs":{
+    "save_base_dir": "./models/chinese_sentiment_analysis_bilstm/",
+    "model_name": "model.nb",
+    "train_log_name": "train.log",
+    "test_log_name": "test.log",
+    "predict_log_name": "predict.log",
+    "predict_fields": ["prediction", "confidence"],
+    "predict_output_name": "predict.tsv",
+    "cache_dir": ".cache.chinese_sentiment_analysis/"
+  },
+  "training_params": {
+    "optimizer": {
+      "name": "Adam",
+      "params": {
+      }
+    },
+    "vocabulary": {
+      "min_word_frequency": 1
+    },
+    "lr_decay": 0.95,
+    "minimum_lr": 0.0001,
+    "epoch_start_lr_decay": 1,
+    "use_gpu": true,
+    "cpu_num_workers": -1,
+    "batch_size": 128,
+    "batch_num_to_show_results": 300,
+    "max_epoch": 30,
+    "valid_times_per_epoch": 2,
+    "tokenizer": "jieba"
+  },
+  "architecture":[
+    {
+        "layer": "Embedding",
+        "conf": {
+          "word": {
+            "cols": ["sentence_col"],
+            "dim": 300,
+            "fix_weight": true
+          }
+        }
+    },
+    {
+      "layer_id": "sentence_dropout",
+      "layer": "Dropout",
+      "conf": {
+          "dropout": 0.2
+      },
+      "inputs": ["sentence"]
+    },
+    {
+        "layer_id": "sentence_bilstm",
+        "layer": "BiLSTM",
+        "conf": {
+          "hidden_dim": 256,
+          "dropout": 0.2,
+          "num_layers": 2
+        },
+        "inputs": ["sentence_dropout"]
+    },
+    {
+        "layer_id": "sentence_pooling",
+        "layer": "Pooling",
+        "conf": {
+          "pool_axis": 1,
+          "pool_type": "max"
+        },
+        "inputs": ["sentence_bilstm"]
+    },
+    {
+        "output_layer_flag": true,
+        "layer_id": "output",
+        "layer": "Linear",
+        "conf": {
+          "hidden_dim": [128, 2],
+          "activation": "PReLU",
+          "batch_norm": true,
+          "last_hidden_activation": false,
+          "last_hidden_softmax": false
+        },
+        "inputs": ["sentence_pooling"]
+    }
+  ],
+  "loss": {
+    "losses": [
+      {
+        "type": "CrossEntropyLoss",
+        "conf": {
+          "size_average": true
+        },
+        "inputs": ["output","label"]
+      }
+    ]
+  },
+  "metrics": ["accuracy"]
+}
