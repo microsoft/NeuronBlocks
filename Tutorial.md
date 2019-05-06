@@ -1,5 +1,7 @@
 # ***NeuronBlocks*** Tutorial
 
+[简体中文](Tutorial_zh_CN.md)
+
 * [Installation](#installation)
 * [Quick Start](#quick-start)
 * [How to Design Your NLP Model](#design-model)
@@ -9,14 +11,13 @@
     * [Task 1: Text Classification](#task-1)
     * [Task 2: Question Answer Matching](#task-2)
     * [Task 3: Question Natural Language Inference](#task-3)
-    * [Task 4: Regression](#task-4)
-    * [Task 5: Sentiment Analysis](#task-5)
-    * [Task 6: Question Paraphrase](#task-6)
-    * [Task 7: Knowledge Distillation for Model Compression](#task-7)
-        1. [Compression for Query Binary Classifier](#task-7.1)
-        2. [Compression for Text Matching Model](#task-7.2)
-        3. [Compression for Slot Filling Model](#task-7.3)
-        4. [Compression for MRC Model](#task-7.4)
+    * [Task 4: Sentiment Analysis](#task-4)
+    * [Task 5: Question Paraphrase](#task-5)
+    * [Task 6: Knowledge Distillation for Model Compression](#task-6)
+        1. [Compression for Query Binary Classifier](#task-6.1)
+        2. [Compression for Text Matching Model](#task-6.2)
+        3. [Compression for Slot Filling Model](#task-6.3)
+        4. [Compression for MRC Model](#task-6.4)
 * [Advanced Usage](#advanced-usage)
     * [Extra Feature Support](#extra-feature)
     * [Learning Rate Decay](#lr-decay)
@@ -25,7 +26,7 @@
 
 ## <span id="installation">Installation</span>
 
-*Note: NeuronBlocks is based on Python 3.6*
+*Note: NeuronBlocks is based on **Python 3.6***
 
 1. Clone this project. 
     ```bash
@@ -37,7 +38,7 @@
     pip install -r requirements.txt
     ```
 
-3. Install PyTorch (*NeuronBlocks supports PyTorch version 0.4.1 currently*).
+3. Install PyTorch (*NeuronBlocks supports **PyTorch 0.4.1** currently*).
     
     For **Linux**, run the following command:
     ```bash
@@ -50,15 +51,11 @@
 
 ## <span id="quick-start">Quick Start</span>
 
-Get started by trying the given examples.
+Get started by trying the given examples. For **Windows**, we suggest you to use PowerShell instead of CMD.
 
 *Tips: in the following instruction, PROJECTROOT denotes the root directory of this project.*
 
 ```bash
-# get GloVe pre-trained word vectors
-cd PROJECT_ROOT/dataset
-bash get_glove.sh
-
 # train
 cd PROJECT_ROOT
 python train.py --conf_path=model_zoo/demo/conf.json
@@ -207,6 +204,11 @@ A model visualizer is provided for visualization and configuration correctness c
 
 In Model Zoo, we provide a suite of NLP models for common NLP tasks, in the form of JSON configuration files. You can pick one of existing models (JSON config files) in Model Zoo to start model training quickly, or build your own models by modifying the JSON config file to suit your specific task.
 
+*Note: Before trying models in NLP tasks, please download [GloVe](https://nlp.stanford.edu/projects/glove/) firstly via following commands.*
+```bash
+cd PROJECT_ROOT/dataset
+./get_glove.sh
+```
 
 ### <span id="task-1">Task 1: Text Classification</span>
 
@@ -326,31 +328,7 @@ Natural language inference (NLI) is a task that incorporates much of what is nec
     
     *Tips: the model file and train log file can be found in JOSN config file's outputs/save_base_dir after you finish training.*
 
-### <span id="task-4">Task 4: Regression</span>
-
-Regression is the problem of predicting a continuous number for given input, widely used in NLP tasks.
-
-- ***Dataset***
-
-    We provide a sample dataset in *PROJECT_ROOT/dataset/regression*, which you can replace with your own regression dataset for regression task training.
-
-- ***Usage***
-
-    1. Train regression model.
-    ```bash
-    cd PROJECT_ROOT
-    python train.py --conf_path=model_zoo/nlp_tasks/regression/conf_regression_bilstm_attn.json
-    ```
-    
-    2. Test your model.
-    ```bash
-    cd PROJECT_ROOT
-    python test.py --conf_path=model_zoo/nlp_tasks/regression/conf_regression_bilstm_attn.json
-    ```
-    
-     *Tips: you can try different models by running different JSON config files.*
-
-### <span id="task-5">Task 5: Sentiment Analysis</span>
+### <span id="task-4">Task 4: Sentiment Analysis</span>
 
 Sentiment analysis is aimed to predict the sentiment (positive, negative, etc) of a given sentence/document, which is widely applied to many fields.
 
@@ -388,7 +366,7 @@ Sentiment analysis is aimed to predict the sentiment (positive, negative, etc) o
     
     *Tips: the model file and train log file can be found in JOSN config file's outputs/save_base_dir after you finish training.*
 
-### <span id="task-6">Task 6: Question Paraphrase</span>
+### <span id="task-5">Task 5: Question Paraphrase</span>
 
 This task is to determine whether a pair of questions are semantically equivalent. 
 
@@ -428,20 +406,20 @@ This task is to determine whether a pair of questions are semantically equivalen
     
     *Tips: the model file and train log file can be found in JSON config file's outputs/save_base_dir.*
 
-### <span id="task-7">Task 7: Knowledge Distillation for Model Compression</span>
+### <span id="task-6">Task 6: Knowledge Distillation for Model Compression</span>
 
 Knowledge Distillation is a common method to compress model in order to improve inference speed. Here are some reference papers:
 - [Distilling the Knowledge in a Neural Network](https://arxiv.org/abs/1503.02531)
 - [Model Compression with Multi-Task Knowledge Distillation for Web-scale Question Answering System](https://arxiv.org/abs/1904.09636)
 
-#### <span id="task-7.1">7.1: Compression for Query Binary Classifier</span>
-This task is to train a query regression model to learn from a heavy teacher model such as BERT based query classifier model. The training process is to minimized the score difference between the student model output and teacher model output. 
+#### <span id="task-6.1">6.1: Compression for Query Binary Classifier</span>
+This task is to train a query regression model to learn from a heavy teacher model such as BERT based query classifier model. The training process is to minimize the score difference between the student model output and teacher model output. 
 - ***Dataset***
 *PROJECT_ROOT/dataset/knowledge_distillation/query_binary_classifier*:
     * *train.tsv* and *valid.tsv*: two columns, namely **Query** and **Score**. 
     **Score** is the output score of a heavy teacher model (BERT base finetune model), which is the soft label to be learned by student model as knowledge. 
     * *test.tsv*: two columns, namely **Query** and **Label**. 
-    **Label** is a binary value which 0 means negtive and 1 means positive.     
+    **Label** is a binary value which 0 means negative and 1 means positive.     
 
         In the meanwhile, you can also replace with your own dataset for compression task trainning.
 
@@ -450,13 +428,13 @@ This task is to train a query regression model to learn from a heavy teacher mod
     1. Train student model
     ```bash
     cd PROJECT_ROOT
-    python train.py --conf_path=model_zoo/nlp_tasks/knowledge_distillation/conf_kdqbc_bilstmattn_cnn.json
+    python train.py --conf_path=model_zoo/nlp_tasks/knowledge_distillation/query_binary_classifier_compression/conf_kdqbc_bilstmattn_cnn.json
     ```
     
     2. Test student model
     ```bash
     cd PROJECT_ROOT
-    python test.py --conf_path=model_zoo/nlp_tasks/knowledge_distillation/conf_kdqbc_bilstmattn_cnn.json
+    python test.py --conf_path=model_zoo/nlp_tasks/knowledge_distillation/query_binary_classifier_compression/conf_kdqbc_bilstmattn_cnn.json
     ```
     
     3. Calculate AUC metric
@@ -473,14 +451,55 @@ This task is to train a query regression model to learn from a heavy teacher mod
     
     |Model|AUC|
     |-----|---|
-    |Teacher|0.9112|
+    |Teacher (BERT base)|0.9112|
     |Student-BiLSTMAttn+TextCNN (NeuronBlocks)|0.8941|
     
     *Tips: the model file and train log file can be found in JSON config file's outputs/save_base_dir.*
 
-#### <span id="task-7.2">7.2: Compression for Text Matching Model (ongoing)</span>
-#### <span id="task-7.3">7.3: Compression for Slot Filling Model (ongoing)</span>
-#### <span id="task-7.4">7.4: Compression for MRC (ongoing)</span>
+#### <span id="task-6.2">6.2: Compression for Text Matching Model</span>
+This task is to train a query-passage regression model to learn from a heavy teacher model such as BERT based query-passage matching classifier model. The training process is to minimize the score difference between the student model output and teacher model output.
+- ***Dataset***
+*PROJECT_ROOT/dataset/knowledge_distillation/text_matching_data*:
+    * *train.tsv* and *valid.tsv*: three columns, namely **Query**, **Passage** and **Score**.
+    **Score** is the output score of a heavy teacher model (BERT base finetune model), which is the soft label to be learned by student model as knowledge. 
+    * *test.tsv*: three columns, namely **Query**, **Passage** and **Label**. 
+    **Label** is a binary value which 0 means negative and 1 means positive.     
+
+        In the meanwhile, you can also replace with your own dataset for compression task trainning.
+
+- ***Usage***
+
+    1. Train student model
+    ```bash
+    cd PROJECT_ROOT
+    python train.py --conf_path=model_zoo/nlp_tasks/knowledge_distillation/text_matching_model_compression/conf_kdtm_match_linearAttn.json
+    ```
+    
+    2. Test student model
+    ```bash
+    cd PROJECT_ROOT
+    python test.py --conf_path=model_zoo/nlp_tasks/knowledge_distillation/text_matching_model_compression/conf_kdtm_match_linearAttn.json
+    ```
+    
+    3. Calculate AUC metric
+    ```bash
+    cd PROJECT_ROOT
+    python tools/calculate_AUC.py --input_file=models/kdtm_match_linearAttn/predict.tsv --predict_index=3 --label_index=2 
+    ```
+    
+     *Tips: you can try different models by running different JSON config files.*
+- ***Result***
+
+    The AUC of student model is close to that of teacher model and its inference speed is multi-x times faster. 
+    
+    |Model|AUC|
+    |-----|---|
+    |Teacher (BERT large)|0.9284|
+    |Student-BiLSTM+matchAttn (NeuronBlocks)|0.8817|
+    
+    *NOTE: the result is achieved with 1200w data, we can only give sample data for demo, you can replace the data with your own data.*
+#### <span id="task-6.3">6.3: Compression for Slot Filling Model (ongoing)</span>
+#### <span id="task-6.4">6.4: Compression for MRC (ongoing)</span>
 
 
 ## <span id="advanced-usage">Advanced Usage</span>

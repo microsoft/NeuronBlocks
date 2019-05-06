@@ -2,7 +2,7 @@
 # Licensed under the MIT license.
 
 import codecs
-import ujson as json
+import json
 import os
 import tempfile
 import random
