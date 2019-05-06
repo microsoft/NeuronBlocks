@@ -10,8 +10,7 @@
       "train_data_path": "./dataset/chinese_sentiment_analysis/train.tsv",
       "valid_data_path": "./dataset/chinese_sentiment_analysis/dev.tsv",
       "test_data_path": "./dataset/chinese_sentiment_analysis/test.tsv",
-      "predict_data_path": "./dataset/chinese_sentiment_analysis/test.tsv",
-      "pre_trained_emb": "./dataset/chinese_word_vectors/sgns.merge.word"
+      "predict_data_path": "./dataset/chinese_sentiment_analysis/test.tsv"
     },
     "file_with_col_header": false,
     "add_start_end_for_seq": true,
