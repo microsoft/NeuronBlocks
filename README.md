@@ -5,7 +5,7 @@
 # Table of Contents
 * [Overview](#Overview)
 * [Who should consider using NeuronBlocks](#Who-should-consider-using-NeuronBlocks)
-* [Get Started](#Get-Started)
+* [Get Started in 60 Seconds](#Get-Started-in-60-Seconds)
 * [Contribute](#Contribute)
 * [Reference](#Reference)
 * [Related Project](#Related-Project)
@@ -23,20 +23,21 @@ NeuronBlocks consists of two major components: ***Block Zoo*** and ***Model Zoo*
  
 <img src="https://i.imgur.com/LMD0PFQ.png" width="300">
 
-### Toolkit Usage
-Users can either pick existing models (config files) in *Model Zoo* to start model training or create new models by leveraging neural network blocks in *Block Zoo* just like playing with Lego. 
-
-<img src="https://i.imgur.com/q0p6Wvz.png" width="300">
-
-
 ### NLP Tasks Supported
 - Sentence Classification 
+- Sentiment Analysis 
 - Question Answering Matching
 - Textual Entailment
 - Slot tagging
 - Machine Reading Comprehension
 - Knowledge Distillation for Model Compression
 - *More on-going*
+
+### Toolkit Usage
+Users can either pick existing models (config files) in *Model Zoo* to start model training or create new models by leveraging neural network blocks in *Block Zoo* just like playing with Lego. 
+
+<img src="https://i.imgur.com/q0p6Wvz.png" width="300">
+
 
 # Who should consider using NeuronBlocks
 Engineers or researchers who face the following challenges when using neural network models to address NLP problems: 
@@ -62,7 +63,7 @@ The advantages of leveraging NeuronBlocks for NLP neural network model training 
 - ***Extensibility***: NeuronBlocks is extensible, allowing users to contribute new blocks or contributing novel models (JSON files).
 
 
-# Get Started
+# Get Started in 60 Seconds
 ## <span id="installation">Installation</span>
 
 *Note: NeuronBlocks is based on **Python 3.6***
@@ -116,6 +117,7 @@ NeuronBlocks operates in an open model. It is designed and developed by **STCA N
 Anyone who are familiar with are highly encouraged to contribute code.
 * Knowledge Distillation for Model Compression. Knowledge distillation for heavy models such as BERT, OpenAI Transformer. Teacher-Student based knowledge distillation is one common method for model compression. 
 * Multi-Lingual Support
+* Chinese Language Support 
 * NER Model Support 
 * Multi-Task Training Support 
 

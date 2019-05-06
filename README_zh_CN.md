@@ -26,6 +26,17 @@ NeuronBlocks包括 ***Block Zoo*** 和 ***Model Zoo*** 两个重要组件，其�
  
 <img src="https://i.imgur.com/LMD0PFQ.png" width="300">
 
+
+### 支持的NLP任务
+- 句子分类
+- 情感分析
+- 问答匹配
+- 文本蕴含
+- 序列标注
+- 阅读理解
+- 基于知识蒸馏的模型压缩
+- 更多……
+
 ### 使用方法
 
 用户可以选择 *Model Zoo* 中的示例模型（JSON配置文件）开启模型训练，或者利用 *Block Zoo* 中的神经网络模块构建新的模型，就像玩乐高积木一样。
@@ -33,14 +44,6 @@ NeuronBlocks包括 ***Block Zoo*** 和 ***Model Zoo*** 两个重要组件，其�
 <img src="https://i.imgur.com/q0p6Wvz.png" width="300">
 
 
-### 支持的NLP任务
-- 句子分类
-- 问答匹配
-- 文本蕴含
-- 序列标注
-- 阅读理解
-- 基于知识蒸馏的模型压缩
-- 更多……
 
 # 适用人群
 使用用神经网络模型解决NLP任务时面临以下挑战的工程师和研究者们：
@@ -114,6 +117,7 @@ NeuronBlocks以开放的模式运行。它由 **微软 STCA NLP Group** 设计�
 ## 正在进行的工作
 * 模型压缩，对诸如BERT, OpenAI Transformer之类的复杂模型进行知识蒸馏。基于Teacher-Student的知识蒸馏是模型压缩的一个常用方法。
 * 多语言支持
+* 中文模型支持
 * 命名实体识别模型支持
 * 多任务训练支持
 

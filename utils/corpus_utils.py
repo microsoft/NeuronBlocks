@@ -7,7 +7,6 @@ import os
 import string
 import sys
 import numpy as np
-from six.moves import range
 import logging
 import math
 from gensim.models.keyedvectors import KeyedVectors
