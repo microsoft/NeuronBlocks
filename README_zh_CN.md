@@ -132,3 +132,7 @@ Licensed under the [MIT](LICENSE) License.
 
 # 联系我们
 如有任何问题，请联系：NeuronBlocks@microsoft.com
+
+如果您有微信，也可以添加工具包的官方账号:
+
+<img src="https://i.imgur.com/lI2oQWo.jpg" width="200">
