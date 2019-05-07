@@ -447,7 +447,7 @@ class Problem():
                 # logging.warning("Current line is inconsistent with configuration/inputs/file_header. Ingore now. %s" % line)
                 cnt_illegal += 1
                 if cnt_illegal / cnt_all > 0.33:
-                    raise PreprocessError('The illegal data is two much. Please check the number of data columns or text token version.')
+                    raise PreprocessError('The illegal data is too much. Please check the number of data columns or text token version.')
                 continue
             # cnt_legal += 1
             length_appended_set = set()  # to store branches whose length have been appended to lengths[branch]
@@ -512,7 +512,7 @@ class Problem():
                             #     "The length of inputs are not consistent. Ingore now. %s" % line)
                             cnt_illegal += 1
                             if cnt_illegal / cnt_all > 0.33:
-                                raise PreprocessError("The illegal data is two much. Please check the number of data columns or text token version.")
+                                raise PreprocessError("The illegal data is too much. Please check the number of data columns or text token version.")
                             lengths[branch]['sentence_length'].pop()
                             true_len = len(lengths[branch]['sentence_length'])
                             # need delete the last example
