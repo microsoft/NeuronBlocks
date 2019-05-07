@@ -95,8 +95,7 @@
           "hidden_dim": [128, 2],
           "activation": "PReLU",
           "batch_norm": true,
-          "last_hidden_activation": false,
-          "last_hidden_softmax": true
+          "last_hidden_activation": false
         },
         "inputs": ["hierarchical_cnn"]
     }

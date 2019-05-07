@@ -171,8 +171,7 @@
         "conf": {
           "hidden_dim": [1],
           "activation": "Sigmoid",
-          "last_hidden_activation": true,
-          "last_hidden_softmax": false
+          "last_hidden_activation": true
         },
         "inputs": ["FC"]
     }
