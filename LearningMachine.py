@@ -223,8 +223,7 @@ class LearningMachine(object):
                     logits_flat[self.conf.output_layer_id[0]] = logits
                 elif ProblemTypes[self.problem.problem_type] == ProblemTypes.regression:
                     temp_logits_flat = logits.squeeze(1)
-                    temp_logits_softmax_flat = logits_softmax.squeeze(1)
-                    prediction_scores = temp_logits_softmax_flat.detach().cpu().numpy()
+                    prediction_scores = temp_logits_flat.detach().cpu().numpy()
                     streaming_recoder.record_one_row([prediction_scores, target_batches[i][self.conf.answer_column_name[0]].numpy()])
                     logits_flat[self.conf.output_layer_id[0]] = temp_logits_flat
                 elif ProblemTypes[self.problem.problem_type] == ProblemTypes.mrc:
@@ -498,9 +497,7 @@ class LearningMachine(object):
                 elif ProblemTypes[self.problem.problem_type] == ProblemTypes.regression:
                     logits = list(logits.values())[0]
                     temp_logits_flat = logits.squeeze(1)
-                    logits_softmax = list(logits_softmax.values())[0]
-                    temp_logits_softmax_flat = logits_softmax.squeeze(1)
-                    prediction_scores = temp_logits_softmax_flat.detach().cpu().numpy()
+                    prediction_scores = temp_logits_flat.detach().cpu().numpy()
                     streaming_recoder.record_one_row([prediction_scores, target_batches[i][self.conf.answer_column_name[0]].numpy()])
                     logits_flat[self.conf.output_layer_id[0]] = temp_logits_flat
                     if to_predict:
