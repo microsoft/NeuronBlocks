@@ -4,8 +4,8 @@
 
 # Table of Contents
 * [Overview](#Overview)
-* [Who should consider using NeuronBlocks](#Who-should-consider-using-NeuronBlocks)
 * [Get Started in 60 Seconds](#Get-Started-in-60-Seconds)
+* [Who should consider using NeuronBlocks](#Who-should-consider-using-NeuronBlocks)
 * [Contribute](#Contribute)
 * [Reference](#Reference)
 * [Related Project](#Related-Project)
@@ -37,24 +37,6 @@ NeuronBlocks consists of two major components: ***Block Zoo*** and ***Model Zoo*
 Users can either pick existing models (config files) in *Model Zoo* to start model training or create new models by leveraging neural network blocks in *Block Zoo* just like playing with Lego. 
 
 <img src="https://i.imgur.com/q0p6Wvz.png" width="300">
-
-
-# Who should consider using NeuronBlocks
-Engineers or researchers who face the following challenges when using neural network models to address NLP problems: 
-+ Many frameworks to choose and high framework studying cost. 
-+ Heavy coding cost. A lot of details make it hard to debug.
-+ Fast Model Architecture Evolution. It is difficult for engineers to understand the mathematical principles behind them.
-+ Model Code optimization requires deep expertise.
-+ Model Platform Compatibility Requirement.  It requires extra coding work for the model to run on different platforms, such as Linux/Windows, GPU/CPU. 
-
-
-The advantages of leveraging NeuronBlocks for NLP neural network model training includes:
-- ***Model Building***: for model building and parameter tuning, users only need to write simple JSON config files, which greatly minimize the effort of implementing new ideas.
-- ***Model Sharing*** It is super easy to share models just through JSON files, instead of nasty codes. For different models or tasks, our users only need to maintain one single centralized source code base.
-- ***Code Reusability***: Common blocks can be easily shared across various models or tasks, reducing duplicate coding work.  
-- ***Platform Flexibility***: NeuronBlocks can run both on Linux and Windows machines, using both CPU and GPU. It also supports training on GPU platforms like Philly and PAI.
-- ***Model Visualization***: A model visualizer is provided for visualization and configure correctness checking, which helps users to visualize the model architecture easily during debugging. 
-- ***Extensibility***: NeuronBlocks is extensible, allowing users to contribute new blocks or contributing novel models (JSON files).
 
 
 # Get Started in 60 Seconds
@@ -103,6 +85,22 @@ python predict.py --conf_path=model_zoo/demo/conf.json
 ```
 For more details, please refer to [Tutorial.md](Tutorial.md) and [Code documentation](https://microsoft.github.io/NeuronBlocks/).
 
+# Who should consider using NeuronBlocks
+Engineers or researchers who face the following challenges when using neural network models to address NLP problems: 
++ Many frameworks to choose and high framework studying cost. 
++ Heavy coding cost. A lot of details make it hard to debug.
++ Fast Model Architecture Evolution. It is difficult for engineers to understand the mathematical principles behind them.
++ Model Code optimization requires deep expertise.
++ Model Platform Compatibility Requirement.  It requires extra coding work for the model to run on different platforms, such as Linux/Windows, GPU/CPU. 
+
+
+The advantages of leveraging NeuronBlocks for NLP neural network model training includes:
+- ***Model Building***: for model building and parameter tuning, users only need to write simple JSON config files, which greatly minimize the effort of implementing new ideas.
+- ***Model Sharing*** It is super easy to share models just through JSON files, instead of nasty codes. For different models or tasks, our users only need to maintain one single centralized source code base.
+- ***Code Reusability***: Common blocks can be easily shared across various models or tasks, reducing duplicate coding work.  
+- ***Platform Flexibility***: NeuronBlocks can run both on Linux and Windows machines, using both CPU and GPU. It also supports training on GPU platforms like Philly and PAI.
+- ***Model Visualization***: A model visualizer is provided for visualization and configure correctness checking, which helps users to visualize the model architecture easily during debugging. 
+- ***Extensibility***: NeuronBlocks is extensible, allowing users to contribute new blocks or contributing novel models (JSON files).
 
 # Contribute
 NeuronBlocks operates in an open model. It is designed and developed by **STCA NLP Group, Microsoft**. Contributions from academia and industry are also highly welcome. For more details, please refer to [Contributing.md](Contributing.md).
