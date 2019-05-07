@@ -136,7 +136,6 @@ def transform_params2tensors(inputs, lengths):
         if isinstance(lengths[length], dict):
             for length_type in lengths[length]:
                 length_desc[length + '__' + length_type] = cnt
-                cnt += 1
                 param_list.append(lengths[length][length_type])
         else:
             length_desc[length] = cnt
