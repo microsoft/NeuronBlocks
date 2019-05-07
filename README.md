@@ -68,7 +68,7 @@ Users can either pick existing models (config files) in *Model Zoo* to start mod
 
 ## <span id="quick-start">Quick Start</span>
 
-Get started by trying the given examples. For **Windows**, we suggest you to use PowerShell instead of CMD.
+Get started by trying the given examples. Both **Linux/Windows, GPU/CPU** are supported. For windows, we suggest you to use PowerShell instead of CMD.
 
 *Tips: in the following instruction, PROJECTROOT denotes the root directory of this project.*
 
