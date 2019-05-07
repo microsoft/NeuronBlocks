@@ -444,7 +444,7 @@ This task is to train a query regression model to learn from a heavy teacher mod
 
 - ***结果***
 
-    The AUC of student model is very close to that of teacher model and its inference speed is 3.5X~4X times faster. 
+    The AUC of student model is very close to that of teacher model and its inference speed is **32X~38X** times faster. 
     
     |Model|AUC|
     |-----|---|
