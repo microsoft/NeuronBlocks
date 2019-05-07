@@ -673,6 +673,7 @@ class LearningMachine(object):
                                 logits_softmax[tmp_output_layer_id] = logits[tmp_output_layer_id]
 
                     if ProblemTypes[self.problem.problem_type] == ProblemTypes.sequence_tagging:
+                        logits = list(logits.values())[0]
                         logits_softmax = list(logits_softmax.values())[0]
                         # Transform output shapes for metric evaluation
                         prediction_indices = logits_softmax.data.max(2)[1].cpu().numpy()  # [batch_size, seq_len]
@@ -680,6 +681,7 @@ class LearningMachine(object):
                         for prediction_sample in prediction_batch:
                             streaming_recoder.record('prediction', " ".join(prediction_sample))
                     elif ProblemTypes[self.problem.problem_type] == ProblemTypes.classification:
+                        logits = list(logits.values())[0]
                         logits_softmax = list(logits_softmax.values())[0]
                         prediction_indices = logits_softmax.data.max(1)[1].cpu().numpy()
 
@@ -705,6 +707,8 @@ class LearningMachine(object):
                         prediction_scores = logits_flat.detach().cpu().numpy()
                         streaming_recoder.record_one_row([prediction_scores])
                     elif ProblemTypes[self.problem.problem_type] == ProblemTypes.mrc:
+                        for key, value in logits.items():
+                            logits[key] = value.squeeze()
                         for key, value in logits_softmax.items():
                             logits_softmax[key] = value.squeeze()
                         passage_identify = None
