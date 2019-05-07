@@ -99,6 +99,13 @@ The advantages of leveraging NeuronBlocks for NLP neural network model training 
 - ***Model Sharing*** It is super easy to share models just through JSON files, instead of nasty codes. For different models or tasks, our users only need to maintain one single centralized source code base.
 - ***Code Reusability***: Common blocks can be easily shared across various models or tasks, reducing duplicate coding work.  
 - ***Platform Flexibility***: NeuronBlocks can run both on Linux and Windows machines, using both CPU and GPU. It also supports training on GPU platforms like Philly and PAI.
+
+    <table align="center">
+        <tr><td align="center"></td><td align="center">CPU inference</td><td align="center">Single-GPU inference</td><td align="center">Multi-GPU inference</td></tr>
+        <tr><td align="center">CPU train</td><td align="center">&#10003;</td><td align="center">&#10003;</td><td align="center">&#10003;</td></tr>
+        <tr><td align="center">Single-GPU train</td><td align="center">&#10003;</td><td align="center">&#10003;</td><td align="center">&#10003;</td></tr>
+        <tr><td align="center">Multi-GPU train</td><td align="center">&#10003;</td><td align="center">&#10003;</td><td align="center">&#10003;</td></tr>
+    </table>
 - ***Model Visualization***: A model visualizer is provided for visualization and configure correctness checking, which helps users to visualize the model architecture easily during debugging. 
 - ***Extensibility***: NeuronBlocks is extensible, allowing users to contribute new blocks or contributing novel models (JSON files).
 
