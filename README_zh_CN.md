@@ -100,6 +100,12 @@ python predict.py --conf_path=model_zoo/demo/conf.json
 - ***模型分享***：可以通过分享JSON配置文件来分享模型，使模型共享变得非常容易。对于不同的任务或模型，用户只需维护一个通用的源码库；
 - ***代码重用***：可以在各任务与模型间共享神经网络模块，减少重复的编程工作；
 - ***平台灵活性***：NeuronBlocks可以在Linux和Windows机器上运行，支持CPU和GPU，也支持像Philly和PAI这样的GPU管理平台；
+    <table align="center">
+        <tr><td align="center"></td><td align="center">CPU 预测</td><td align="center">Single-GPU 预测</td><td align="center">Multi-GPU 预测</td></tr>
+        <tr><td align="center">CPU 训练</td><td align="center">&#10003;</td><td align="center">&#10003;</td><td align="center">&#10003;</td></tr>
+        <tr><td align="center">Single-GPU 训练</td><td align="center">&#10003;</td><td align="center">&#10003;</td><td align="center">&#10003;</td></tr>
+        <tr><td align="center">Multi-GPU 训练</td><td align="center">&#10003;</td><td align="center">&#10003;</td><td align="center">&#10003;</td></tr>
+    </table>
 - ***模型可视化***：NeuronBlocks提供了一个模型可视化工具，用于观察模型结构及检查JSON配置的正确性
 - ***可扩展性***：NeuronBlocks鼓励用户贡献新的神经网络模块或者新的模型。
 
