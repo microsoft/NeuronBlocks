@@ -23,6 +23,7 @@ from utils.corpus_utils import get_batches
 from core.StreamingRecorder import StreamingRecorder
 from core.LRScheduler import LRScheduler
 from settings import ProblemTypes
+from block_zoo import Linear
 
 
 class LearningMachine(object):
@@ -158,18 +159,20 @@ class LearningMachine(object):
                 logits_softmax = {}
                 if isinstance(self.model, nn.DataParallel):
                     for tmp_output_layer_id in self.model.module.output_layer_id:
-                        if self.model.module.layers[tmp_output_layer_id].layer_conf.last_hidden_softmax:
-                            logits_softmax[tmp_output_layer_id] = logits[tmp_output_layer_id]
-                        else:
+                        if isinstance(self.model.module.layers[tmp_output_layer_id], Linear) and \
+                                (not self.model.module.layers[tmp_output_layer_id].layer_conf.last_hidden_softmax):
                             logits_softmax[tmp_output_layer_id] = nn.functional.softmax(
                                 logits[tmp_output_layer_id], dim=-1)
+                        else:
+                            logits_softmax[tmp_output_layer_id] = logits[tmp_output_layer_id]
                 else:
                     for tmp_output_layer_id in self.model.output_layer_id:
-                        if self.model.layers[tmp_output_layer_id].layer_conf.last_hidden_softmax:
-                            logits_softmax[tmp_output_layer_id] = logits[tmp_output_layer_id]
-                        else:
+                        if isinstance(self.model.layers[tmp_output_layer_id], Linear) and \
+                                (not self.model.layers[tmp_output_layer_id].layer_conf.last_hidden_softmax):
                             logits_softmax[tmp_output_layer_id] = nn.functional.softmax(
                                 logits[tmp_output_layer_id], dim=-1)
+                        else:
+                            logits_softmax[tmp_output_layer_id] = logits[tmp_output_layer_id]
 
                 # check the output
                 if ProblemTypes[self.problem.problem_type] == ProblemTypes.classification:
@@ -427,18 +430,20 @@ class LearningMachine(object):
                 logits_softmax = {}
                 if isinstance(self.model, nn.DataParallel):
                     for tmp_output_layer_id in self.model.module.output_layer_id:
-                        if self.model.module.layers[tmp_output_layer_id].layer_conf.last_hidden_softmax:
-                            logits_softmax[tmp_output_layer_id] = logits[tmp_output_layer_id]
-                        else:
+                        if isinstance(self.model.module.layers[tmp_output_layer_id], Linear) and \
+                                (not self.model.module.layers[tmp_output_layer_id].layer_conf.last_hidden_softmax):
                             logits_softmax[tmp_output_layer_id] = nn.functional.softmax(
                                 logits[tmp_output_layer_id], dim=-1)
+                        else:
+                            logits_softmax[tmp_output_layer_id] = logits[tmp_output_layer_id]
                 else:
                     for tmp_output_layer_id in self.model.output_layer_id:
-                        if self.model.layers[tmp_output_layer_id].layer_conf.last_hidden_softmax:
-                            logits_softmax[tmp_output_layer_id] = logits[tmp_output_layer_id]
-                        else:
+                        if isinstance(self.model.layers[tmp_output_layer_id], Linear) and \
+                                (not self.model.layers[tmp_output_layer_id].layer_conf.last_hidden_softmax):
                             logits_softmax[tmp_output_layer_id] = nn.functional.softmax(
                                 logits[tmp_output_layer_id], dim=-1)
+                        else:
+                            logits_softmax[tmp_output_layer_id] = logits[tmp_output_layer_id]
 
                 if ProblemTypes[self.problem.problem_type] == ProblemTypes.classification:
                     logits = list(logits.values())[0]
@@ -496,6 +501,8 @@ class LearningMachine(object):
 
                 elif ProblemTypes[self.problem.problem_type] == ProblemTypes.regression:
                     logits = list(logits.values())[0]
+                    # logits_softmax is unuseful for regression task!
+                    logits_softmax = list(logits_softmax.values())[0]
                     temp_logits_flat = logits.squeeze(1)
                     prediction_scores = temp_logits_flat.detach().cpu().numpy()
                     streaming_recoder.record_one_row([prediction_scores, target_batches[i][self.conf.answer_column_name[0]].numpy()])
@@ -528,9 +535,9 @@ class LearningMachine(object):
                         predict_stream_recoder.record_one_row([prediction])
 
                 if to_predict:
-                    logits_softmax_len = len(list(logits_softmax.values())[0]) \
-                        if ProblemTypes[self.problem.problem_type] == ProblemTypes.mrc else len(logits_softmax)
-                    for sample_idx in range(logits_softmax_len):
+                    logits_len = len(list(logits.values())[0]) \
+                        if ProblemTypes[self.problem.problem_type] == ProblemTypes.mrc else len(logits)
+                    for sample_idx in range(logits_len):
                         while True:
                             sample = fin.readline().rstrip()
                             line_split = list(filter(lambda x: len(x) > 0, sample.rstrip().split('\t')))
@@ -650,18 +657,20 @@ class LearningMachine(object):
                     logits_softmax = {}
                     if isinstance(self.model, nn.DataParallel):
                         for tmp_output_layer_id in self.model.module.output_layer_id:
-                            if self.model.module.layers[tmp_output_layer_id].layer_conf.last_hidden_softmax:
-                                logits_softmax[tmp_output_layer_id] = logits[tmp_output_layer_id]
-                            else:
+                            if isinstance(self.model.module.layers[tmp_output_layer_id], Linear) and \
+                                    (not self.model.module.layers[tmp_output_layer_id].layer_conf.last_hidden_softmax):
                                 logits_softmax[tmp_output_layer_id] = nn.functional.softmax(
                                     logits[tmp_output_layer_id], dim=-1)
+                            else:
+                                logits_softmax[tmp_output_layer_id] = logits[tmp_output_layer_id]
                     else:
                         for tmp_output_layer_id in self.model.output_layer_id:
-                            if self.model.layers[tmp_output_layer_id].layer_conf.last_hidden_softmax:
-                                logits_softmax[tmp_output_layer_id] = logits[tmp_output_layer_id]
-                            else:
+                            if isinstance(self.model.layers[tmp_output_layer_id], Linear) and \
+                                    (not self.model.layers[tmp_output_layer_id].layer_conf.last_hidden_softmax):
                                 logits_softmax[tmp_output_layer_id] = nn.functional.softmax(
                                     logits[tmp_output_layer_id], dim=-1)
+                            else:
+                                logits_softmax[tmp_output_layer_id] = logits[tmp_output_layer_id]
 
                     if ProblemTypes[self.problem.problem_type] == ProblemTypes.sequence_tagging:
                         logits_softmax = list(logits_softmax.values())[0]
@@ -689,9 +698,11 @@ class LearningMachine(object):
                                         torch.tensor([label_specified_idx], dtype=torch.long)).squeeze(1)
                                 streaming_recoder.record(field, confidence_specified.data.numpy())
                     elif ProblemTypes[self.problem.problem_type] == ProblemTypes.regression:
+                        logits = list(logits.values())[0]
+                        # logits_softmax is unuseful for regression task!
                         logits_softmax = list(logits_softmax.values())[0]
-                        logits_softmax_flat = logits_softmax.squeeze(1)
-                        prediction_scores = logits_softmax_flat.detach().cpu().numpy()
+                        logits_flat = logits.squeeze(1)
+                        prediction_scores = logits_flat.detach().cpu().numpy()
                         streaming_recoder.record_one_row([prediction_scores])
                     elif ProblemTypes[self.problem.problem_type] == ProblemTypes.mrc:
                         for key, value in logits_softmax.items():
@@ -707,9 +718,9 @@ class LearningMachine(object):
                                                          batch_data=data_batches[i][passage_identify])
                         streaming_recoder.record_one_row([prediction])
 
-                    logits_softmax_len = len(list(logits_softmax.values())[0]) \
-                        if ProblemTypes[self.problem.problem_type] == ProblemTypes.mrc else len(logits_softmax)
-                    for sample_idx in range(logits_softmax_len):
+                    logits_len = len(list(logits.values())[0]) \
+                        if ProblemTypes[self.problem.problem_type] == ProblemTypes.mrc else len(logits)
+                    for sample_idx in range(logits_len):
                         sample = fin.readline().rstrip()
                         fout.write("%s\t%s\n" % (sample,
                             "\t".join([str(streaming_recoder.get(field)[sample_idx]) for field in predict_fields])))
