@@ -19,15 +19,15 @@ def main(params, data_path, save_path):
         problem = Problem(conf.problem_type, conf.input_types, conf.answer_column_name,
             source_with_start=True, source_with_end=True, source_with_unk=True, source_with_pad=True,
             target_with_start=True, target_with_end=True, target_with_unk=True, target_with_pad=True, same_length=True,
-            with_bos_eos=conf.add_start_end_for_seq, tagging_scheme=conf.tagging_scheme,
+            with_bos_eos=conf.add_start_end_for_seq, tagging_scheme=conf.tagging_scheme, tokenizer=conf.tokenizer,
             remove_stopwords=conf.remove_stopwords, DBC2SBC=conf.DBC2SBC, unicode_fix=conf.unicode_fix)
     elif ProblemTypes[conf.problem_type] == ProblemTypes.classification \
             or ProblemTypes[conf.problem_type] == ProblemTypes.regression:
         problem = Problem(conf.problem_type, conf.input_types, conf.answer_column_name,
             source_with_start=True, source_with_end=True, source_with_unk=True, source_with_pad=True,
             target_with_start=False, target_with_end=False, target_with_unk=False, target_with_pad=False, same_length=True,
-            with_bos_eos=conf.add_start_end_for_seq, remove_stopwords=conf.remove_stopwords, DBC2SBC=conf.DBC2SBC,
-            unicode_fix=conf.unicode_fix)
+            with_bos_eos=conf.add_start_end_for_seq, tokenizer=conf.tokenizer, remove_stopwords=conf.remove_stopwords,
+                          DBC2SBC=conf.DBC2SBC, unicode_fix=conf.unicode_fix)
 
     if os.path.isfile(conf.problem_path):
         problem.load_problem(conf.problem_path)

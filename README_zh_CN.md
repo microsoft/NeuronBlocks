@@ -1,5 +1,9 @@
 # ***NeuronBlocks*** - 像搭积木一样构建自然语言理解深度学习模型
 
+[![python](https://img.shields.io/badge/python-3.6%20%7C%203.7-blue.svg)](https://www.python.org)
+[![pytorch](https://img.shields.io/badge/pytorch-0.4%20%7C%201.x-orange.svg)](https://pytorch.org)
+[![license](https://img.shields.io/badge/license-MIT-green.svg)](https://opensource.org/licenses/MIT)
+
 [English version](README.md)
 
 # 目录
