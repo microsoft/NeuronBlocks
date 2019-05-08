@@ -11,14 +11,13 @@ nltk.download('punkt', quiet=True)
 nltk.download('stopwords', quiet=True)
 from utils.BPEEncoder import BPEEncoder
 import codecs
-from multiprocessing import cpu_count
 import os
 import pickle as pkl
 from utils.common_utils import load_from_pkl, dump_to_pkl
 
 from settings import ProblemTypes
-import multiprocessing
 import math
+from utils.ProcessorsScheduler import ProcessorsScheduler
 
 from core.EnglishTokenizer import EnglishTokenizer
 from core.ChineseTokenizer import ChineseTokenizer
@@ -167,32 +166,15 @@ class Problem():
         return docs, target_docs, cnt_legal, cnt_illegal
 
     def build_training_multi_processor(self, training_data_list, cpu_num_workers, file_columns, input_types, answer_column_name, bpe_encoder=None):
-        res = []
-        process_num = cpu_count()
-        if cpu_num_workers > 0:
-            process_num = cpu_num_workers
-        # logging.info("multiprocess enabled, process num: %d" % (process_num))
-        process_p = multiprocessing.Pool(process_num)
-        for i in range(process_num):
-            size = math.ceil(len(training_data_list)/ process_num)
-            start = size * i
-            end = (i + 1) * size if (i + 1) * size < len(training_data_list) else len(training_data_list)
-            temp_data_list = training_data_list[start:end]
-            res.append((i, process_p.apply_async(self.build_training_data_list,
-                            args=(temp_data_list, file_columns, input_types, answer_column_name, bpe_encoder)
-                                                 )
-                        )
-                       )
-
-        process_p.close()
-        process_p.join()
+        scheduler = ProcessorsScheduler(cpu_num_workers)
+        func_args = (training_data_list, file_columns, input_types, answer_column_name, bpe_encoder)
+        res = scheduler.run_data_parallel(self.build_training_data_list, func_args)
 
         docs = dict()           # docs of each type of input
         target_docs = []
         cnt_legal = 0
         cnt_illegal = 0
-        sort_res = sorted(res, key=lambda x:x[0])
-        for (index, j) in sort_res:
+        for (index, j) in res:
             #logging.info("collect proccesor %d result" % index)
             tmp_docs, tmp_target_docs, tmp_cnt_legal, tmp_cnt_illegal = j.get()
             if len(docs) == 0:
@@ -328,37 +310,19 @@ class Problem():
                 answer_column_name, min_sentence_len, extra_feature, max_lengths=None, fixed_lengths=None, file_format="tsv", bpe_encoder=None):
         def judge_dict(obj):
             return True if isinstance(obj, dict) else False
-        res = []
 
-        process_num = cpu_count()
-        if cpu_num_workers > 0:
-            process_num = cpu_num_workers
-        #logging.info("multiprocess enabled, process num: %d" % (process_num))
-        process_p = multiprocessing.Pool(process_num)
-        for i in range(process_num):
-            size = math.ceil(len(data_list)/ process_num)
-            start = size * i
-            end = (i + 1) * size if (i + 1) * size < len(data_list) else len(data_list)
-            temp_data_list = data_list[start:end]
-            res.append((i, process_p.apply_async(self.encode_data_list,
-                                                 args=((temp_data_list, file_columns, input_types, object_inputs,
+        scheduler = ProcessorsScheduler(cpu_num_workers)
+        func_args = (data_list, file_columns, input_types, object_inputs,
                     answer_column_name, min_sentence_len, extra_feature, max_lengths, fixed_lengths, file_format, bpe_encoder)
-                                                 )
-                                                 )
-                        )
-                       )
-
-        process_p.close()
-        process_p.join()
-
+        res = scheduler.run_data_parallel(self.encode_data_list, func_args)
+        
         data = dict()
         lengths = dict()
         target = dict()
         cnt_legal = 0
         cnt_illegal = 0
 
-        sort_res = sorted(res, key=lambda x:x[0])
-        for (index, j) in sort_res:
+        for (index, j) in res:
             # logging.info("collect proccesor %d result"%index)
             tmp_data, tmp_lengths, tmp_target, tmp_cnt_legal, tmp_cnt_illegal = j.get()
 
