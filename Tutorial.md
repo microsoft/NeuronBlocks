@@ -20,7 +20,6 @@
         3. [Compression for Slot Filling Model](#task-6.3)
         4. [Compression for MRC Model](#task-6.4)
     * [Task 7: Chinese Sentiment Analysis](#task-7)
-    
 * [Advanced Usage](#advanced-usage)
     * [Extra Feature Support](#extra-feature)
     * [Learning Rate Decay](#lr-decay)
