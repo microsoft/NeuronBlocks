@@ -202,9 +202,9 @@ The architecture of the configuration file is:
 
 ### <span id="chinese-support">Chinese Support</span>
 
-When the data is Chinese, the "language" in JSON config should be set to Chinese. By default, Chinese uses the jieba tokenizer. For an example, see [Task 7: Chinese Sentiment Analysis](#task-7)
+When using Chinese data, *language* in JSON config should be set to 'Chinese'. By default, Chinese uses the jieba tokenizer. For an example, see [Task 7: Chinese Sentiment Analysis](#task-7).
 
-In addition, we also support pre-trained Chinese word vectors. Firstly download word vectors from [Chinese Word Vectors](https://github.com/Embedding/Chinese-Word-Vectors#pre-trained-chinese-word-vectors) and *bunzip* , then remove it to pre-trained Chinese word vector path (e.g. *dataset/chinese_word_vectors/*). Finally remember define *inputs/data_paths/pre_trained_emb* in JSON config.
+In addition, we also support pre-trained Chinese word vectors. Firstly download word vectors from [Chinese Word Vectors](https://github.com/Embedding/Chinese-Word-Vectors#pre-trained-chinese-word-vectors) and *bunzip* , then place it in a directory  (e.g. *dataset/chinese_word_vectors/*). Finally remember to define *inputs/data_paths/pre_trained_emb* in JSON config.
 
 
 ### <span id="visualize">Visualize Your Model</span>
@@ -514,7 +514,7 @@ This task is to train a query-passage regression model to learn from a heavy tea
 
 ### <span id="task-7">Task 7: Chinese Sentiment Analysis</span>
 
-Sentiment analysis is aimed to predict the sentiment (positive, negative, etc) of a given sentence/document, which is widely applied to many fields.
+Here is an example using Chinese data, for sentiment analysis task.
 
 - ***Dataset***
 
