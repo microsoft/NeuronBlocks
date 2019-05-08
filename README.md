@@ -1,5 +1,9 @@
 # ***NeuronBlocks*** - Building Your NLP DNN Models Like Playing Lego
 
+[![python](https://img.shields.io/badge/python-3.6%20%7C%203.7-blue.svg)](https://www.python.org)
+[![pytorch](https://img.shields.io/badge/pytorch-0.4%20%7C%201.x-orange.svg)](https://pytorch.org)
+[![license](https://img.shields.io/badge/license-MIT-green.svg)](https://opensource.org/licenses/MIT)
+
 [简体中文](README_zh_CN.md)
 
 # Table of Contents
@@ -42,7 +46,7 @@ Users can either pick existing models (config files) in *Model Zoo* to start mod
 # Get Started in 60 Seconds
 ## <span id="installation">Installation</span>
 
-*Note: NeuronBlocks is based on **Python 3.6***
+*Note: NeuronBlocks requires **Python 3.6*** and above.
 
 1. Clone this project. 
     ```bash
@@ -53,22 +57,16 @@ Users can either pick existing models (config files) in *Model Zoo* to start mod
     ```bash
     pip install -r requirements.txt
     ```
-
-3. Install PyTorch (*NeuronBlocks supports **PyTorch 0.4.1** currently*).
+    *NeuronBlocks requires **PyTorch 0.4.1** currently* and automatically gets installed by the above on **Linux**.
     
-    For **Linux**, run the following command:
-    ```bash
-    pip install torch==0.4.1
-    ```
-    
-    For **Windows**, we suggest you to install PyTorch via *Conda* by following the instruction of [PyTorch](https://pytorch.org/get-started/previous-versions/).
+    For **Windows**, we suggest you to install PyTorch via *Conda* by following the instructions of PyTorch [here](https://pytorch.org/get-started/locally/).
 
 
     
 
 ## <span id="quick-start">Quick Start</span>
 
-Get started by trying the given examples. Both **Linux/Windows, GPU/CPU** are supported. For windows, we suggest you to use PowerShell instead of CMD.
+Get started by trying the given examples. Both **Linux/Windows, GPU/CPU** are supported. For **Windows**, we suggest you to use PowerShell instead of CMD.
 
 *Tips: in the following instruction, PROJECTROOT denotes the root directory of this project.*
 

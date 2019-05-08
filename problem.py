@@ -21,6 +21,7 @@ import math
 from utils.ProcessorsScheduler import ProcessorsScheduler
 
 from core.EnglishTokenizer import EnglishTokenizer
+from core.ChineseTokenizer import ChineseTokenizer
 from core.EnglishTextPreprocessor import EnglishTextPreprocessor
 from utils.exceptions import PreprocessError
 import torch
@@ -31,7 +32,7 @@ class Problem():
             source_with_start=True, source_with_end=True, source_with_unk=True,
             source_with_pad=True, target_with_start=False, target_with_end=False,
             target_with_unk=True, target_with_pad=True, same_length=True, with_bos_eos=True,
-            tagging_scheme=None, remove_stopwords=False, DBC2SBC=True, unicode_fix=True):
+            tagging_scheme=None, tokenizer="nltk", remove_stopwords=False, DBC2SBC=True, unicode_fix=True):
         """
 
         Args:
@@ -79,7 +80,10 @@ class Problem():
 
         self.file_column_num = None
 
-        self.tokenizer = EnglishTokenizer(tokenizer='nltk', remove_stopwords=remove_stopwords)
+        if tokenizer in ['nltk']:
+            self.tokenizer = EnglishTokenizer(tokenizer=tokenizer, remove_stopwords=remove_stopwords)
+        elif tokenizer in ['jieba']:
+            self.tokenizer = ChineseTokenizer(tokenizer=tokenizer, remove_stopwords=remove_stopwords)
         self.text_preprocessor = EnglishTextPreprocessor(DBC2SBC=DBC2SBC, unicode_fix=unicode_fix)
 
     def input_word_num(self):
@@ -323,7 +327,6 @@ class Problem():
                 answer_column_name, min_sentence_len, extra_feature, max_lengths=None, fixed_lengths=None, file_format="tsv", bpe_encoder=None):
         def judge_dict(obj):
             return True if isinstance(obj, dict) else False
-        
         cnt_legal, cnt_illegal = 0, 0
         output_data = dict()
         lengths = dict()
@@ -428,7 +431,7 @@ class Problem():
                 # logging.warning("Current line is inconsistent with configuration/inputs/file_header. Ingore now. %s" % line)
                 cnt_illegal += 1
                 if cnt_illegal / cnt_all > 0.33:
-                    raise PreprocessError('The illegal data is two much. Please check the number of data columns or text token version.')
+                    raise PreprocessError('The illegal data is too much. Please check the number of data columns or text token version.')
                 continue
             # cnt_legal += 1
             length_appended_set = set()  # to store branches whose length have been appended to lengths[branch]
@@ -493,7 +496,7 @@ class Problem():
                             #     "The length of inputs are not consistent. Ingore now. %s" % line)
                             cnt_illegal += 1
                             if cnt_illegal / cnt_all > 0.33:
-                                raise PreprocessError("The illegal data is two much. Please check the number of data columns or text token version.")
+                                raise PreprocessError("The illegal data is too much. Please check the number of data columns or text token version.")
                             lengths[branch]['sentence_length'].pop()
                             true_len = len(lengths[branch]['sentence_length'])
                             # need delete the last example
