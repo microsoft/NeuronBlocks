@@ -2,6 +2,8 @@
 # Licensed under the MIT license.
 
 import jieba
+import logging
+jieba.setLogLevel(logging.INFO)
 from nltk.tokenize.util import align_tokens
 from .Stopwords import Stopwords
 

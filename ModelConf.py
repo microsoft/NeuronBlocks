@@ -13,7 +13,7 @@ import logging
 
 from losses.BaseLossConf import BaseLossConf
 #import traceback
-from settings import ProblemTypes, TaggingSchemes, SupportedMetrics, PredictionTypes, DefaultPredictionFields
+from settings import LanguageTypes, ProblemTypes, TaggingSchemes, SupportedMetrics, PredictionTypes, DefaultPredictionFields
 from utils.common_utils import log_set, prepare_dir
 from utils.exceptions import ConfigurationError
 import numpy as np
@@ -445,6 +445,10 @@ class ModelConf(object):
         elif self.phase == 'predict':
             assert self.predict_data_path is not None, "Please define predict_data_path"
             assert os.path.isfile(self.predict_data_path), "Training data %s does not exist!" % self.predict_data_path
+
+        # check language types
+        SUPPORTED_LANGUAGES = set(LanguageTypes._member_names_)
+        assert self.language in SUPPORTED_LANGUAGES, "Language type %s is not supported now. Supported types: %s" % (self.language, ",".join(SUPPORTED_LANGUAGES))
 
         # check problem types
         SUPPORTED_PROBLEMS = set(ProblemTypes._member_names_)
