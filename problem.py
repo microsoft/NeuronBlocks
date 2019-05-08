@@ -1,7 +1,6 @@
 # Copyright (c) Microsoft Corporation. All rights reserved.
 # Licensed under the MIT license.
-import warnings 
-warnings.filterwarnings(action='ignore', category=UserWarning, module='gensim')
+
 import logging
 import numpy as np
 from core.CellDict import CellDict
