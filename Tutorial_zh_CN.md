@@ -38,16 +38,10 @@
     pip install -r requirements.txt
     ```
 
-3. 安装 PyTorch (*NeuronBlocks 目前支持 **PyTorch 0.4.1***).
-    
-    **Linux** 用户, 请用下面命令安装:
-    ```bash
-    pip install torch==0.4.1
-    ```
-    
-    对于 **Windows** 用户，建议按照 [PyTorch官方安装教程](https://pytorch.org/get-started/previous-versions/) 通过Conda安装PyTorch。
+NeuronBlocks 目前支持 **PyTorch 0.4.1**. 
+- **Linux** 用户, 第二步中 pytorch 将被自动安装
+- **Windows** 用户，建议按照 [PyTorch官方安装教程](https://pytorch.org/get-started/previous-versions/) 通过Conda安装PyTorch。
 
-    
 
 ## <span id="quick-start">快速开始</span>
 

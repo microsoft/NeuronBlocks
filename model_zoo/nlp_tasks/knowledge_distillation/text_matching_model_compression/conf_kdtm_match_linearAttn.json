@@ -156,8 +156,7 @@
           "hidden_dim": [512],
           "activation": "PReLU",
           "batch_norm": true,
-          "last_hidden_activation": true,
-          "last_hidden_softmax": false
+          "last_hidden_activation": true
         },
         "inputs": ["comb"]
     },
