@@ -4,3 +4,4 @@ tqdm==4.31.1
 numpy==1.16.3
 scikit-learn==0.20.3
 ftfy==5.5.1
+torch==0.4.1
