@@ -1,10 +1,12 @@
 # ***NeuronBlocks*** - Building Your NLP DNN Models Like Playing Lego
 
+![language](https://img.shields.io/badge/language-en%7C中文-brightgreen.svg)
 [![python](https://img.shields.io/badge/python-3.6%20%7C%203.7-blue.svg)](https://www.python.org)
 [![pytorch](https://img.shields.io/badge/pytorch-0.4%20%7C%201.x-orange.svg)](https://pytorch.org)
 [![license](https://img.shields.io/badge/license-MIT-green.svg)](https://opensource.org/licenses/MIT)
 
 [简体中文](README_zh_CN.md)
+
 
 # Table of Contents
 * [Overview](#Overview)
@@ -114,7 +116,6 @@ NeuronBlocks operates in an open model. It is designed and developed by **STCA N
 Anyone who are familiar with are highly encouraged to contribute code.
 * Knowledge Distillation for Model Compression. Knowledge distillation for heavy models such as BERT, OpenAI Transformer. Teacher-Student based knowledge distillation is one common method for model compression. 
 * Multi-Lingual Support
-* Chinese Language Support 
 * NER Model Support 
 * Multi-Task Training Support 
 
