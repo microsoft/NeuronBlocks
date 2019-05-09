@@ -111,8 +111,7 @@
         "conf": {
           "hidden_dim": [128,2],
           "activation": "PReLU",
-          "last_hidden_activation": false,
-          "last_hidden_softmax": false
+          "last_hidden_activation": false
         },
         "inputs": ["comb_qp"]
     }

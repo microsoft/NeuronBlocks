@@ -9,13 +9,9 @@
       "train_data_path": "./dataset/demo/train.tsv",
       "valid_data_path": "./dataset/demo/valid.tsv",
       "test_data_path": "./dataset/demo/test.tsv",
-      "predict_data_path": "./dataset/demo/predict.tsv",
-      "pre_trained_emb": "./dataset/GloVe/glove.840B.300d.txt"
+      "predict_data_path": "./dataset/demo/predict.tsv"
     },
     "file_with_col_header": false,
-    "pretrained_emb_type": "glove",
-    "pretrained_emb_binary_or_text": "text",
-    "involve_all_words_in_pretrained_emb": false,
     "add_start_end_for_seq": true,
     "file_header": {
       "question_text": 0,
@@ -119,8 +115,7 @@
         "hidden_dim": [128, 2],
         "activation": "PReLU",
         "batch_norm": true,
-        "last_hidden_activation": false,
-        "last_hidden_softmax": false
+        "last_hidden_activation": false
       },
       "inputs": ["comb"]
     }

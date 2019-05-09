@@ -3,21 +3,19 @@
 
 from __future__ import absolute_import
 
-import os
 import string
 import sys
 import numpy as np
-from six.moves import range
 import logging
 import math
+import warnings
+warnings.filterwarnings(action='ignore', category=UserWarning, module='gensim')     # remove gensim warning
 from gensim.models.keyedvectors import KeyedVectors
 from gensim.models.fasttext import FastText
 import codecs
-import random
 import copy
 from settings import ProblemTypes
 import torch
-import re
 
 
 if sys.version_info < (3,):

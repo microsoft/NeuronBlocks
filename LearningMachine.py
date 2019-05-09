@@ -23,6 +23,7 @@ from utils.corpus_utils import get_batches
 from core.StreamingRecorder import StreamingRecorder
 from core.LRScheduler import LRScheduler
 from settings import ProblemTypes
+from block_zoo import Linear
 
 
 class LearningMachine(object):
@@ -86,7 +87,7 @@ class LearningMachine(object):
             train_data, train_length, train_target = self.problem.encode(self.conf.train_data_path, self.conf.file_columns,
                 self.conf.input_types, self.conf.file_with_col_header, self.conf.object_inputs, self.conf.answer_column_name, max_lengths=self.conf.max_lengths,
                 min_sentence_len = self.conf.min_sentence_len, extra_feature=self.conf.extra_feature,fixed_lengths=self.conf.fixed_lengths, file_format='tsv',
-                show_progress=True if self.conf.mode == 'normal' else False)
+                show_progress=True if self.conf.mode == 'normal' else False, cpu_num_workers=self.conf.cpu_num_workers)
         else:
             train_pkl_data = load_from_pkl(self.conf.train_data_path)
             train_data, train_length, train_target = train_pkl_data['data'], train_pkl_data['length'], train_pkl_data['target']
@@ -95,7 +96,7 @@ class LearningMachine(object):
             valid_data, valid_length, valid_target = self.problem.encode(self.conf.valid_data_path, self.conf.file_columns,
                 self.conf.input_types, self.conf.file_with_col_header, self.conf.object_inputs, self.conf.answer_column_name, max_lengths=self.conf.max_lengths,
                 min_sentence_len = self.conf.min_sentence_len, extra_feature = self.conf.extra_feature,fixed_lengths=self.conf.fixed_lengths, file_format='tsv',
-                show_progress=True if self.conf.mode == 'normal' else False)
+                show_progress=True if self.conf.mode == 'normal' else False, cpu_num_workers=self.conf.cpu_num_workers)
         else:
             valid_pkl_data = load_from_pkl(self.conf.valid_data_path)
             valid_data, valid_length, valid_target = valid_pkl_data['data'], valid_pkl_data['length'], valid_pkl_data['target']
@@ -105,7 +106,7 @@ class LearningMachine(object):
                 test_data, test_length, test_target = self.problem.encode(self.conf.test_data_path, self.conf.file_columns, self.conf.input_types,
                     self.conf.file_with_col_header, self.conf.object_inputs, self.conf.answer_column_name, max_lengths=self.conf.max_lengths,
                     min_sentence_len = self.conf.min_sentence_len, extra_feature = self.conf.extra_feature,fixed_lengths=self.conf.fixed_lengths,
-                    file_format='tsv', show_progress=True if self.conf.mode == 'normal' else False)
+                    file_format='tsv', show_progress=True if self.conf.mode == 'normal' else False, cpu_num_workers=self.conf.cpu_num_workers)
             else:
                 test_pkl_data = load_from_pkl(self.conf.test_data_path)
                 test_data, test_length, test_target = test_pkl_data['data'], test_pkl_data['length'], test_pkl_data['target']
@@ -153,10 +154,29 @@ class LearningMachine(object):
             for i in progress:
                 # the result shape: for classification: [batch_size, # of classes]; for sequence tagging: [batch_size, seq_len, # of tags]
                 param_list, inputs_desc, length_desc = transform_params2tensors(data_batches[i], length_batches[i])
-                logits_softmax = self.model(inputs_desc, length_desc, *param_list)
+                logits = self.model(inputs_desc, length_desc, *param_list)
+
+                logits_softmax = {}
+                if isinstance(self.model, nn.DataParallel):
+                    for tmp_output_layer_id in self.model.module.output_layer_id:
+                        if isinstance(self.model.module.layers[tmp_output_layer_id], Linear) and \
+                                (not self.model.module.layers[tmp_output_layer_id].layer_conf.last_hidden_softmax):
+                            logits_softmax[tmp_output_layer_id] = nn.functional.softmax(
+                                logits[tmp_output_layer_id], dim=-1)
+                        else:
+                            logits_softmax[tmp_output_layer_id] = logits[tmp_output_layer_id]
+                else:
+                    for tmp_output_layer_id in self.model.output_layer_id:
+                        if isinstance(self.model.layers[tmp_output_layer_id], Linear) and \
+                                (not self.model.layers[tmp_output_layer_id].layer_conf.last_hidden_softmax):
+                            logits_softmax[tmp_output_layer_id] = nn.functional.softmax(
+                                logits[tmp_output_layer_id], dim=-1)
+                        else:
+                            logits_softmax[tmp_output_layer_id] = logits[tmp_output_layer_id]
 
                 # check the output
                 if ProblemTypes[self.problem.problem_type] == ProblemTypes.classification:
+                    logits = list(logits.values())[0]
                     logits_softmax = list(logits_softmax.values())[0]
                     assert len(logits_softmax.shape) == 2, 'The dimension of your output is %s, but we need [batch_size*GPUs, class num]' % (str(list(logits_softmax.shape)))
                     assert logits_softmax.shape[1] == self.problem.output_target_num(), 'The dimension of your output layer %d is inconsistent with your type number %d!' % (logits_softmax.shape[1], self.problem.output_target_num())
@@ -167,11 +187,13 @@ class LearningMachine(object):
                     else:
                         prediction_scores_all = None
                 elif ProblemTypes[self.problem.problem_type] == ProblemTypes.sequence_tagging:
+                    logits = list(logits.values())[0]
                     logits_softmax = list(logits_softmax.values())[0]
                     assert len(logits_softmax.shape) == 3, 'The dimension of your output is %s, but we need [batch_size*GPUs, sequence length, representation dim]' % (str(list(logits_softmax.shape)), )
                     prediction_scores = None
                     prediction_scores_all = None
                 elif ProblemTypes[self.problem.problem_type] == ProblemTypes.regression:
+                    logits = list(logits.values())[0]
                     logits_softmax = list(logits_softmax.values())[0]
                     assert len(logits_softmax.shape) == 2 and logits_softmax.shape[1] == 1, 'The dimension of your output is %s, but we need [batch_size*GPUs, 1]' % (str(list(logits_softmax.shape)))
                     prediction_scores = None
@@ -182,7 +204,7 @@ class LearningMachine(object):
                     prediction_scores = None
                     prediction_scores_all = None
 
-                logits_softmax_flat = dict()
+                logits_flat = dict()
                 if ProblemTypes[self.problem.problem_type] == ProblemTypes.sequence_tagging:
                     # Transform output shapes for metric evaluation
                     # for seq_tag_f1 metric
@@ -192,7 +214,7 @@ class LearningMachine(object):
                                                                                              length_batches[i]['target'][self.conf.answer_column_name[0]].numpy())], keep_dim=False)
 
                     # pytorch's CrossEntropyLoss only support this
-                    logits_softmax_flat[self.conf.output_layer_id[0]] = logits_softmax.view(-1, logits_softmax.size(2))    # [batch_size * seq_len, # of tags]
+                    logits_flat[self.conf.output_layer_id[0]] = logits.view(-1, logits.size(2))    # [batch_size * seq_len, # of tags]
                     #target_batches[i] = target_batches[i].view(-1)                      # [batch_size * seq_len]
                     # [batch_size * seq_len]
                     target_batches[i][self.conf.answer_column_name[0]] = target_batches[i][self.conf.answer_column_name[0]].reshape(-1)
@@ -201,13 +223,15 @@ class LearningMachine(object):
                     prediction_indices = logits_softmax.detach().max(1)[1].cpu().numpy()
                     # Should not decode!
                     streaming_recoder.record_one_row([prediction_indices, prediction_scores, prediction_scores_all, target_batches[i][self.conf.answer_column_name[0]].numpy()])
-                    logits_softmax_flat[self.conf.output_layer_id[0]] = logits_softmax
+                    logits_flat[self.conf.output_layer_id[0]] = logits
                 elif ProblemTypes[self.problem.problem_type] == ProblemTypes.regression:
-                    temp_logits_softmax_flat = logits_softmax.squeeze(1)
-                    prediction_scores = temp_logits_softmax_flat.detach().cpu().numpy()
+                    temp_logits_flat = logits.squeeze(1)
+                    prediction_scores = temp_logits_flat.detach().cpu().numpy()
                     streaming_recoder.record_one_row([prediction_scores, target_batches[i][self.conf.answer_column_name[0]].numpy()])
-                    logits_softmax_flat[self.conf.output_layer_id[0]] = temp_logits_softmax_flat
+                    logits_flat[self.conf.output_layer_id[0]] = temp_logits_flat
                 elif ProblemTypes[self.problem.problem_type] == ProblemTypes.mrc:
+                    for key, value in logits.items():
+                        logits[key] = value.squeeze()
                     for key, value in logits_softmax.items():
                         logits_softmax[key] = value.squeeze()
                     passage_identify = None
@@ -219,7 +243,7 @@ class LearningMachine(object):
                         raise Exception('MRC task need passage information.')
                     prediction = self.problem.decode(logits_softmax, lengths=length_batches[i][passage_identify],
                                                      batch_data=data_batches[i][passage_identify])
-                    logits_softmax_flat = logits_softmax
+                    logits_flat = logits
                     mrc_answer_target = None
                     for single_target in target_batches[i]:
                         if isinstance(target_batches[i][single_target][0], str):
@@ -230,7 +254,7 @@ class LearningMachine(object):
                     for single_target in self.conf.answer_column_name:
                         if isinstance(target_batches[i][single_target], torch.Tensor):
                             target_batches[i][single_target] = transfer_to_gpu(target_batches[i][single_target])
-                loss = loss_fn(logits_softmax_flat, target_batches[i])
+                loss = loss_fn(logits_flat, target_batches[i])
 
                 all_costs.append(loss.item())
                 optimizer.zero_grad()
@@ -238,7 +262,7 @@ class LearningMachine(object):
                 torch.nn.utils.clip_grad_norm_(self.model.parameters(), self.conf.clip_grad_norm_max_norm)
                 optimizer.step()
 
-                del loss, logits_softmax, logits_softmax_flat
+                del loss, logits, logits_softmax, logits_flat
                 del prediction_scores
                 if ProblemTypes[self.problem.problem_type] == ProblemTypes.sequence_tagging \
                         or ProblemTypes[self.problem.problem_type] == ProblemTypes.classification:
@@ -299,7 +323,7 @@ class LearningMachine(object):
             test_data, test_length, test_target = self.problem.encode(test_data_path, self.conf.file_columns, self.conf.input_types,
                 self.conf.file_with_col_header, self.conf.object_inputs, self.conf.answer_column_name, max_lengths=self.conf.max_lengths,
                 min_sentence_len = self.conf.min_sentence_len, extra_feature = self.conf.extra_feature,fixed_lengths=self.conf.fixed_lengths, file_format='tsv',
-                show_progress=True if self.conf.mode == 'normal' else False)
+                show_progress=True if self.conf.mode == 'normal' else False, cpu_num_workers=self.conf.cpu_num_workers)
         else:
             test_pkl_data = load_from_pkl(test_data_path)
             test_data, test_length, test_target = test_pkl_data['data'], test_pkl_data['length'], test_pkl_data['target']
@@ -401,9 +425,28 @@ class LearningMachine(object):
                 # batch_size_actual = target_batches[i].size(0)
 
                 param_list, inputs_desc, length_desc = transform_params2tensors(data_batches[i], length_batches[i])
-                logits_softmax = self.model(inputs_desc, length_desc, *param_list)
+                logits = self.model(inputs_desc, length_desc, *param_list)
+
+                logits_softmax = {}
+                if isinstance(self.model, nn.DataParallel):
+                    for tmp_output_layer_id in self.model.module.output_layer_id:
+                        if isinstance(self.model.module.layers[tmp_output_layer_id], Linear) and \
+                                (not self.model.module.layers[tmp_output_layer_id].layer_conf.last_hidden_softmax):
+                            logits_softmax[tmp_output_layer_id] = nn.functional.softmax(
+                                logits[tmp_output_layer_id], dim=-1)
+                        else:
+                            logits_softmax[tmp_output_layer_id] = logits[tmp_output_layer_id]
+                else:
+                    for tmp_output_layer_id in self.model.output_layer_id:
+                        if isinstance(self.model.layers[tmp_output_layer_id], Linear) and \
+                                (not self.model.layers[tmp_output_layer_id].layer_conf.last_hidden_softmax):
+                            logits_softmax[tmp_output_layer_id] = nn.functional.softmax(
+                                logits[tmp_output_layer_id], dim=-1)
+                        else:
+                            logits_softmax[tmp_output_layer_id] = logits[tmp_output_layer_id]
 
                 if ProblemTypes[self.problem.problem_type] == ProblemTypes.classification:
+                    logits = list(logits.values())[0]
                     logits_softmax = list(logits_softmax.values())[0]
                     # for auc metric
                     prediction_pos_scores = logits_softmax[:, self.conf.pos_label].cpu().data.numpy()
@@ -415,8 +458,9 @@ class LearningMachine(object):
                     prediction_pos_scores = None
                     prediction_scores_all = None
 
-                logits_softmax_flat = {}
+                logits_flat = {}
                 if ProblemTypes[self.problem.problem_type] == ProblemTypes.sequence_tagging:
+                    logits = list(logits.values())[0]
                     logits_softmax = list(logits_softmax.values())[0]
                     # Transform output shapes for metric evaluation
                     # for seq_tag_f1 metric
@@ -426,7 +470,7 @@ class LearningMachine(object):
                          self.problem.decode(target_batches[i], length_batches[i]['target'][self.conf.answer_column_name[0]].numpy())], keep_dim=False)
 
                     # pytorch's CrossEntropyLoss only support this
-                    logits_softmax_flat[self.conf.output_layer_id[0]] = logits_softmax.view(-1, logits_softmax.size(2))  # [batch_size * seq_len, # of tags]
+                    logits_flat[self.conf.output_layer_id[0]] = logits.view(-1, logits.size(2))  # [batch_size * seq_len, # of tags]
                     #target_batches[i] = target_batches[i].view(-1)  # [batch_size * seq_len]
                     target_batches[i][self.conf.answer_column_name[0]] = target_batches[i][self.conf.answer_column_name[0]].reshape(-1)  # [batch_size * seq_len]
 
@@ -439,7 +483,7 @@ class LearningMachine(object):
                     prediction_indices = logits_softmax.data.max(1)[1].cpu().numpy()
                     # Should not decode!
                     streaming_recoder.record_one_row([prediction_indices, prediction_pos_scores, prediction_scores_all, target_batches[i][self.conf.answer_column_name[0]].numpy()])
-                    logits_softmax_flat[self.conf.output_layer_id[0]] = logits_softmax
+                    logits_flat[self.conf.output_layer_id[0]] = logits
 
                     if to_predict:
                         for field in self.conf.predict_fields:
@@ -456,15 +500,19 @@ class LearningMachine(object):
                                 predict_stream_recoder.record(field, confidence_specified.data.numpy())
 
                 elif ProblemTypes[self.problem.problem_type] == ProblemTypes.regression:
+                    logits = list(logits.values())[0]
+                    # logits_softmax is unuseful for regression task!
                     logits_softmax = list(logits_softmax.values())[0]
-                    temp_logits_softmax_flat = logits_softmax.squeeze(1)
-                    prediction_scores = temp_logits_softmax_flat.detach().cpu().numpy()
+                    temp_logits_flat = logits.squeeze(1)
+                    prediction_scores = temp_logits_flat.detach().cpu().numpy()
                     streaming_recoder.record_one_row([prediction_scores, target_batches[i][self.conf.answer_column_name[0]].numpy()])
-                    logits_softmax_flat[self.conf.output_layer_id[0]] = temp_logits_softmax_flat
+                    logits_flat[self.conf.output_layer_id[0]] = temp_logits_flat
                     if to_predict:
                         predict_stream_recoder.record_one_row([prediction_scores])
 
                 elif ProblemTypes[self.problem.problem_type] == ProblemTypes.mrc:
+                    for key, value in logits.items():
+                        logits[key] = value.squeeze()
                     for key, value in logits_softmax.items():
                         logits_softmax[key] = value.squeeze()
                     passage_identify = None
@@ -476,7 +524,7 @@ class LearningMachine(object):
                         raise Exception('MRC task need passage information.')
                     prediction = self.problem.decode(logits_softmax, lengths=length_batches[i][passage_identify],
                                                      batch_data=data_batches[i][passage_identify])
-                    logits_softmax_flat = logits_softmax
+                    logits_flat = logits
                     mrc_answer_target = None
                     for single_target in target_batches[i]:
                         if isinstance(target_batches[i][single_target][0], str):
@@ -487,9 +535,9 @@ class LearningMachine(object):
                         predict_stream_recoder.record_one_row([prediction])
 
                 if to_predict:
-                    logits_softmax_len = len(list(logits_softmax.values())[0]) \
-                        if ProblemTypes[self.problem.problem_type] == ProblemTypes.mrc else len(logits_softmax)
-                    for sample_idx in range(logits_softmax_len):
+                    logits_len = len(list(logits.values())[0]) \
+                        if ProblemTypes[self.problem.problem_type] == ProblemTypes.mrc else len(logits)
+                    for sample_idx in range(logits_len):
                         while True:
                             sample = fin.readline().rstrip()
                             line_split = list(filter(lambda x: len(x) > 0, sample.rstrip().split('\t')))
@@ -504,10 +552,10 @@ class LearningMachine(object):
                     for single_target in self.conf.answer_column_name:
                         if isinstance(target_batches[i][single_target], torch.Tensor):
                             target_batches[i][single_target] = transfer_to_gpu(target_batches[i][single_target])
-                loss = loss_fn(logits_softmax_flat, target_batches[i])
+                loss = loss_fn(logits_flat, target_batches[i])
                 loss_recoder.record('loss', loss.item())
 
-                del loss, logits_softmax, logits_softmax_flat
+                del loss, logits, logits_softmax, logits_flat
                 del prediction_pos_scores
                 if ProblemTypes[self.problem.problem_type] == ProblemTypes.sequence_tagging or ProblemTypes[self.problem.problem_type] == ProblemTypes.classification:
                     del prediction_indices
@@ -579,7 +627,8 @@ class LearningMachine(object):
         predict_data, predict_length, _ = self.problem.encode(predict_data_path, file_columns, self.conf.input_types,
             self.conf.file_with_col_header,self.conf.object_inputs, None, min_sentence_len=self.conf.min_sentence_len,
             extra_feature=self.conf.extra_feature,max_lengths=self.conf.max_lengths, fixed_lengths=self.conf.fixed_lengths,
-            file_format='tsv', show_progress=True if self.conf.mode == 'normal' else False)
+            file_format='tsv', show_progress=True if self.conf.mode == 'normal' else False, 
+            cpu_num_workers=self.conf.cpu_num_workers)
 
         logging.info("Starting predict ...")
         self.model.eval()
@@ -603,9 +652,28 @@ class LearningMachine(object):
                 for i in progress:
                     # batch_size_actual = target_batches[i].size(0)
                     param_list, inputs_desc, length_desc = transform_params2tensors(data_batches[i], length_batches[i])
-                    logits_softmax = self.model(inputs_desc, length_desc, *param_list)
+                    logits = self.model(inputs_desc, length_desc, *param_list)
+
+                    logits_softmax = {}
+                    if isinstance(self.model, nn.DataParallel):
+                        for tmp_output_layer_id in self.model.module.output_layer_id:
+                            if isinstance(self.model.module.layers[tmp_output_layer_id], Linear) and \
+                                    (not self.model.module.layers[tmp_output_layer_id].layer_conf.last_hidden_softmax):
+                                logits_softmax[tmp_output_layer_id] = nn.functional.softmax(
+                                    logits[tmp_output_layer_id], dim=-1)
+                            else:
+                                logits_softmax[tmp_output_layer_id] = logits[tmp_output_layer_id]
+                    else:
+                        for tmp_output_layer_id in self.model.output_layer_id:
+                            if isinstance(self.model.layers[tmp_output_layer_id], Linear) and \
+                                    (not self.model.layers[tmp_output_layer_id].layer_conf.last_hidden_softmax):
+                                logits_softmax[tmp_output_layer_id] = nn.functional.softmax(
+                                    logits[tmp_output_layer_id], dim=-1)
+                            else:
+                                logits_softmax[tmp_output_layer_id] = logits[tmp_output_layer_id]
 
                     if ProblemTypes[self.problem.problem_type] == ProblemTypes.sequence_tagging:
+                        logits = list(logits.values())[0]
                         logits_softmax = list(logits_softmax.values())[0]
                         # Transform output shapes for metric evaluation
                         prediction_indices = logits_softmax.data.max(2)[1].cpu().numpy()  # [batch_size, seq_len]
@@ -613,6 +681,7 @@ class LearningMachine(object):
                         for prediction_sample in prediction_batch:
                             streaming_recoder.record('prediction', " ".join(prediction_sample))
                     elif ProblemTypes[self.problem.problem_type] == ProblemTypes.classification:
+                        logits = list(logits.values())[0]
                         logits_softmax = list(logits_softmax.values())[0]
                         prediction_indices = logits_softmax.data.max(1)[1].cpu().numpy()
 
@@ -631,11 +700,15 @@ class LearningMachine(object):
                                         torch.tensor([label_specified_idx], dtype=torch.long)).squeeze(1)
                                 streaming_recoder.record(field, confidence_specified.data.numpy())
                     elif ProblemTypes[self.problem.problem_type] == ProblemTypes.regression:
+                        logits = list(logits.values())[0]
+                        # logits_softmax is unuseful for regression task!
                         logits_softmax = list(logits_softmax.values())[0]
-                        logits_softmax_flat = logits_softmax.squeeze(1)
-                        prediction_scores = logits_softmax_flat.detach().cpu().numpy()
+                        logits_flat = logits.squeeze(1)
+                        prediction_scores = logits_flat.detach().cpu().numpy()
                         streaming_recoder.record_one_row([prediction_scores])
                     elif ProblemTypes[self.problem.problem_type] == ProblemTypes.mrc:
+                        for key, value in logits.items():
+                            logits[key] = value.squeeze()
                         for key, value in logits_softmax.items():
                             logits_softmax[key] = value.squeeze()
                         passage_identify = None
@@ -649,15 +722,15 @@ class LearningMachine(object):
                                                          batch_data=data_batches[i][passage_identify])
                         streaming_recoder.record_one_row([prediction])
 
-                    logits_softmax_len = len(list(logits_softmax.values())[0]) \
-                        if ProblemTypes[self.problem.problem_type] == ProblemTypes.mrc else len(logits_softmax)
-                    for sample_idx in range(logits_softmax_len):
+                    logits_len = len(list(logits.values())[0]) \
+                        if ProblemTypes[self.problem.problem_type] == ProblemTypes.mrc else len(logits)
+                    for sample_idx in range(logits_len):
                         sample = fin.readline().rstrip()
                         fout.write("%s\t%s\n" % (sample,
                             "\t".join([str(streaming_recoder.get(field)[sample_idx]) for field in predict_fields])))
                     streaming_recoder.clear_records()
 
-                    del logits_softmax
+                    del logits, logits_softmax
 
         fin.close()
 
@@ -666,12 +739,14 @@ class LearningMachine(object):
             self.model = torch.load(model_path)
             if isinstance(self.model, nn.DataParallel):
                 self.model = self.model.module
+            self.model.update_use_gpu(self.use_gpu)
+            self.model.cuda()
             self.model = nn.DataParallel(self.model)
         else:
             self.model = torch.load(model_path, map_location='cpu')
             if isinstance(self.model, nn.DataParallel):
                 self.model = self.model.module
-            self.model.use_gpu = False
+            self.model.update_use_gpu(self.use_gpu)
 
         logging.info("Model %s loaded!" % model_path)
         logging.info("Total trainable parameters: %d" % (get_trainable_param_num(self.model)))

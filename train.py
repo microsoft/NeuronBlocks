@@ -55,21 +55,21 @@ def main(params):
         problem = Problem(conf.problem_type, conf.input_types, conf.answer_column_name,
             source_with_start=True, source_with_end=True, source_with_unk=True, source_with_pad=True,
             target_with_start=True, target_with_end=True, target_with_unk=True, target_with_pad=True, same_length=True,
-            with_bos_eos=conf.add_start_end_for_seq, tagging_scheme=conf.tagging_scheme,
+            with_bos_eos=conf.add_start_end_for_seq, tagging_scheme=conf.tagging_scheme, tokenizer=conf.tokenizer,
             remove_stopwords=conf.remove_stopwords, DBC2SBC=conf.DBC2SBC, unicode_fix=conf.unicode_fix)
     elif ProblemTypes[conf.problem_type] == ProblemTypes.classification \
             or ProblemTypes[conf.problem_type] == ProblemTypes.regression:
         problem = Problem(conf.problem_type, conf.input_types, conf.answer_column_name,
             source_with_start=True, source_with_end=True, source_with_unk=True, source_with_pad=True,
             target_with_start=False, target_with_end=False, target_with_unk=False, target_with_pad=False,
-            same_length=False, with_bos_eos=conf.add_start_end_for_seq, remove_stopwords=conf.remove_stopwords,
-            DBC2SBC=conf.DBC2SBC, unicode_fix=conf.unicode_fix)
+            same_length=False, with_bos_eos=conf.add_start_end_for_seq, tokenizer=conf.tokenizer,
+                          remove_stopwords=conf.remove_stopwords, DBC2SBC=conf.DBC2SBC, unicode_fix=conf.unicode_fix)
     elif ProblemTypes[conf.problem_type] == ProblemTypes.mrc:
         problem = Problem(conf.problem_type, conf.input_types, conf.answer_column_name,
                           source_with_start=True, source_with_end=True, source_with_unk=True, source_with_pad=True,
                           target_with_start=False, target_with_end=False, target_with_unk=False, target_with_pad=False,
-                          same_length=False, with_bos_eos=False, remove_stopwords=conf.remove_stopwords,
-                          DBC2SBC=conf.DBC2SBC, unicode_fix=conf.unicode_fix)
+                          same_length=False, with_bos_eos=False, tokenizer=conf.tokenizer,
+                          remove_stopwords=conf.remove_stopwords, DBC2SBC=conf.DBC2SBC, unicode_fix=conf.unicode_fix)
 
     cache_load_flag = False
     if not conf.pretrained_model_path:
@@ -143,13 +143,13 @@ def main(params):
                                            conf.answer_column_name, word2vec_path=conf.pretrained_emb_path,
                                            word_emb_dim=conf.pretrained_emb_dim, format=conf.pretrained_emb_type,
                                            file_type=conf.pretrained_emb_binary_or_text, involve_all_words=conf.involve_all_words_in_pretrained_emb,
-                                           show_progress=True if params.mode == 'normal' else False, max_vocabulary=conf.max_vocabulary,
-                                           word_frequency=conf.min_word_frequency)
+                                           show_progress=True if params.mode == 'normal' else False, cpu_num_workers = conf.cpu_num_workers,
+                                           max_vocabulary=conf.max_vocabulary, word_frequency=conf.min_word_frequency)
             else:
                 emb_matrix = problem.build(conf.train_data_path, conf.file_columns, conf.input_types, conf.file_with_col_header,
                                            conf.answer_column_name, word2vec_path=None, word_emb_dim=None, format=None,
                                            file_type=None, involve_all_words=conf.involve_all_words_in_pretrained_emb,
-                                           show_progress=True if params.mode == 'normal' else False,
+                                           show_progress=True if params.mode == 'normal' else False,  cpu_num_workers = conf.cpu_num_workers,
                                            max_vocabulary=conf.max_vocabulary, word_frequency=conf.min_word_frequency)
 
             if conf.mode == 'philly' and conf.emb_pkl_path.startswith('/hdfs/'):

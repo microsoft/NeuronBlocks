@@ -1,7 +1,15 @@
 # ***NeuronBlocks*** - Building Your NLP DNN Models Like Playing Lego
+
+[![python](https://img.shields.io/badge/python-3.6%20%7C%203.7-blue.svg)](https://www.python.org)
+[![pytorch](https://img.shields.io/badge/pytorch-0.4%20%7C%201.x-orange.svg)](https://pytorch.org)
+[![license](https://img.shields.io/badge/license-MIT-green.svg)](https://opensource.org/licenses/MIT)
+
+[简体中文](README_zh_CN.md)
+
+# Table of Contents
 * [Overview](#Overview)
+* [Get Started in 60 Seconds](#Get-Started-in-60-Seconds)
 * [Who should consider using NeuronBlocks](#Who-should-consider-using-NeuronBlocks)
-* [Get Started](#Get-Started)
 * [Contribute](#Contribute)
 * [Reference](#Reference)
 * [Related Project](#Related-Project)
@@ -11,7 +19,7 @@
 
 
 # Overview
-NeuronBlocks is a **NLP deep learning modeling toolkit** that helps engineers to build end-to-end pipelines for neural network model training for NLP tasks. The main goal of this toolkit is to minimize developing cost for NLP deep neural network model building, including both training and inference stages. For more details, please check our paper: **NeuronBlocks -- Building Your NLP DNN Models Like Playing Lego** at https://arxiv.org/abs/1904.09535.
+NeuronBlocks is a **NLP deep learning modeling toolkit** that helps engineers/researchers to build end-to-end pipelines for neural network model training for NLP tasks. The main goal of this toolkit is to minimize developing cost for NLP deep neural network model building, including both training and inference stages.
 
 NeuronBlocks consists of two major components: ***Block Zoo*** and ***Model Zoo***. 
 - In ***Block Zoo***, we provide commonly used neural network components as building blocks for model architecture design.  
@@ -19,19 +27,61 @@ NeuronBlocks consists of two major components: ***Block Zoo*** and ***Model Zoo*
  
 <img src="https://i.imgur.com/LMD0PFQ.png" width="300">
 
+### NLP Tasks Supported
+- Sentence Classification 
+- Sentiment Analysis 
+- Question Answering Matching
+- Textual Entailment
+- Slot tagging
+- Machine Reading Comprehension
+- Knowledge Distillation for Model Compression
+- *More on-going*
+
 ### Toolkit Usage
 Users can either pick existing models (config files) in *Model Zoo* to start model training or create new models by leveraging neural network blocks in *Block Zoo* just like playing with Lego. 
 
 <img src="https://i.imgur.com/q0p6Wvz.png" width="300">
 
 
-### NLP Tasks Supported
-- Sentence Classification 
-- Question Answering Matching
-- Textual Entailment
-- Slot tagging
-- Machine Reading Comprehension
-- *More on-going*
+# Get Started in 60 Seconds
+## <span id="installation">Installation</span>
+
+*Note: NeuronBlocks requires **Python 3.6*** and above.
+
+1. Clone this project. 
+    ```bash
+    git clone https://github.com/Microsoft/NeuronBlocks
+    ```
+
+2. Install Python packages in requirements.txt by the following command.
+    ```bash
+    pip install -r requirements.txt
+    ```
+    *NeuronBlocks requires **PyTorch 0.4.1** currently* and automatically gets installed by the above on **Linux**.
+    
+    For **Windows**, we suggest you to install PyTorch via *Conda* by following the instructions of PyTorch [here](https://pytorch.org/get-started/locally/).
+
+
+    
+
+## <span id="quick-start">Quick Start</span>
+
+Get started by trying the given examples. Both **Linux/Windows, GPU/CPU** are supported. For **Windows**, we suggest you to use PowerShell instead of CMD.
+
+*Tips: in the following instruction, PROJECTROOT denotes the root directory of this project.*
+
+```bash
+# train
+cd PROJECT_ROOT
+python train.py --conf_path=model_zoo/demo/conf.json
+
+# test
+python test.py --conf_path=model_zoo/demo/conf.json
+
+# predict
+python predict.py --conf_path=model_zoo/demo/conf.json
+```
+For more details, please refer to [Tutorial.md](Tutorial.md) and [Code documentation](https://microsoft.github.io/NeuronBlocks/).
 
 # Who should consider using NeuronBlocks
 Engineers or researchers who face the following challenges when using neural network models to address NLP problems: 
@@ -47,13 +97,15 @@ The advantages of leveraging NeuronBlocks for NLP neural network model training 
 - ***Model Sharing*** It is super easy to share models just through JSON files, instead of nasty codes. For different models or tasks, our users only need to maintain one single centralized source code base.
 - ***Code Reusability***: Common blocks can be easily shared across various models or tasks, reducing duplicate coding work.  
 - ***Platform Flexibility***: NeuronBlocks can run both on Linux and Windows machines, using both CPU and GPU. It also supports training on GPU platforms like Philly and PAI.
+
+    <table align="center">
+        <tr><td align="center"></td><td align="center">CPU inference</td><td align="center">Single-GPU inference</td><td align="center">Multi-GPU inference</td></tr>
+        <tr><td align="center">CPU train</td><td align="center">&#10003;</td><td align="center">&#10003;</td><td align="center">&#10003;</td></tr>
+        <tr><td align="center">Single-GPU train</td><td align="center">&#10003;</td><td align="center">&#10003;</td><td align="center">&#10003;</td></tr>
+        <tr><td align="center">Multi-GPU train</td><td align="center">&#10003;</td><td align="center">&#10003;</td><td align="center">&#10003;</td></tr>
+    </table>
 - ***Model Visualization***: A model visualizer is provided for visualization and configure correctness checking, which helps users to visualize the model architecture easily during debugging. 
 - ***Extensibility***: NeuronBlocks is extensible, allowing users to contribute new blocks or contributing novel models (JSON files).
-
-
-# Get Started
-Please refer to [Tutorial.md](Tutorial.md) and [Code documentation](https://microsoft.github.io/NeuronBlocks/).
-
 
 # Contribute
 NeuronBlocks operates in an open model. It is designed and developed by **STCA NLP Group, Microsoft**. Contributions from academia and industry are also highly welcome. For more details, please refer to [Contributing.md](Contributing.md).
@@ -62,6 +114,7 @@ NeuronBlocks operates in an open model. It is designed and developed by **STCA N
 Anyone who are familiar with are highly encouraged to contribute code.
 * Knowledge Distillation for Model Compression. Knowledge distillation for heavy models such as BERT, OpenAI Transformer. Teacher-Student based knowledge distillation is one common method for model compression. 
 * Multi-Lingual Support
+* Chinese Language Support 
 * NER Model Support 
 * Multi-Task Training Support 
 
@@ -80,4 +133,8 @@ Licensed under the [MIT](LICENSE) License.
 
 # Contact
 If you have any questions, please contact NeuronBlocks@microsoft.com
+
+If you have wechat, you can also add the following account:
+
+<img src="https://i.imgur.com/lI2oQWo.jpg" width="200">
 

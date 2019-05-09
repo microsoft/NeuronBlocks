@@ -1,17 +1,25 @@
 # ***NeuronBlocks*** Tutorial
 
+[简体中文](Tutorial_zh_CN.md)
+
 * [Installation](#installation)
 * [Quick Start](#quick-start)
 * [How to Design Your NLP Model](#design-model)
     * [Define the Model Configuration File](#define-conf)
+    * [Chinese Support](#chinese-support)
     * [Visualize Your Model](#visualize)
 * [Model Zoo for NLP Tasks](#model-zoo)
     * [Task 1: Text Classification](#task-1)
     * [Task 2: Question Answer Matching](#task-2)
     * [Task 3: Question Natural Language Inference](#task-3)
-    * [Task 4: Regression](#task-4)
-    * [Task 5: Sentiment Analysis](#task-5)
-    * [Task 6: Question Paraphrase](#task-6)
+    * [Task 4: Sentiment Analysis](#task-4)
+    * [Task 5: Question Paraphrase](#task-5)
+    * [Task 6: Knowledge Distillation for Model Compression](#task-6)
+        1. [Compression for Query Binary Classifier](#task-6.1)
+        2. [Compression for Text Matching Model](#task-6.2)
+        3. [Compression for Slot Filling Model](#task-6.3)
+        4. [Compression for MRC Model](#task-6.4)
+    * [Task 7: Chinese Sentiment Analysis](#task-7)
 * [Advanced Usage](#advanced-usage)
     * [Extra Feature Support](#extra-feature)
     * [Learning Rate Decay](#lr-decay)
@@ -20,7 +28,7 @@
 
 ## <span id="installation">Installation</span>
 
-*Note: NeuronBlocks is based on Python 3.6*
+*Note: NeuronBlocks is based on **Python 3.6***
 
 1. Clone this project. 
     ```bash
@@ -32,7 +40,7 @@
     pip install -r requirements.txt
     ```
 
-3. Install PyTorch (*NeuronBlocks supports PyTorch version 0.4.1 currently*).
+3. Install PyTorch (*NeuronBlocks supports **PyTorch 0.4.1** currently*).
     
     For **Linux**, run the following command:
     ```bash
@@ -45,15 +53,11 @@
 
 ## <span id="quick-start">Quick Start</span>
 
-Get started by trying the given examples.
+Get started by trying the given examples. For **Windows**, we suggest you to use PowerShell instead of CMD.
 
 *Tips: in the following instruction, PROJECTROOT denotes the root directory of this project.*
 
 ```bash
-# get GloVe pre-trained word vectors
-cd PROJECT_ROOT/dataset
-bash get_glove.sh
-
 # train
 cd PROJECT_ROOT
 python train.py --conf_path=model_zoo/demo/conf.json
@@ -78,6 +82,8 @@ Take *[PROJECTROOT/model_zoo/demo/conf.json](./model_zoo/demo/conf.json)* as an 
 The sample data lies in *[PROJECTROOT/dataset/demo/](./dataset/demo/)*.
 
 The architecture of the configuration file is:
+
+- **language**. [optional, default: English] Firstly define language type here, we support English and Chinese now.
 - **inputs**. This part defines the input configuration.
     - ***use_cache***. If *use_cache* is true, the toolkit would make cache at the first time so that we can accelerate the training process at the next time.
     - ***dataset_type***. Declare the task type here. Currently, we support classification, regression and so on.
@@ -129,11 +135,21 @@ The architecture of the configuration file is:
     - ***optimizer***. 
         - *name*. We support all the optimizers defined in [torch.optim](http://pytorch.org/docs/0.4.1/optim.html?#module-torch.optim).
         - *params*. The optimizer parameters are exactly the same as the parameters of the initialization function of optimizers in [torch.optim](http://pytorch.org/docs/0.4.1/optim.html?#module-torch.optim).
-    - ***use_gpu***. [default: true] Whether to use GPU if there is at least one GPU available. In addition,  all GPUs are used by default if there are multiple GPUs, and you can also specify which GPU to use via setting the *CUDA_VISIBLE_DEVICES* variable.
+    - ***use_gpu***. [default: true] Whether to use GPU if there is at least one GPU available. In addition,  all GPUs are used by default if there are multiple GPUs, and you can also specify which GPU to use via setting the *CUDA_VISIBLE_DEVICES* variable as below.
+        ```bash
+        # Run on GPU0
+        CUDA_VISIBLE_DEVICES=0 python train.py
+        # Run on GPU0 and GPU1
+        CUDA_VISIBLE_DEVICES=0,1 python train.py
+        # Run on CPU
+        CUDA_VISIBLE_DEVICES= python train.py
+        ```
+    - ***cpu_num_workers***. [default: -1] Define the number of processes to preprocess the dataset. The number of processes is equal to that of logical cores CPU supports if value is negtive or 0, otherwise it is equal to *cpu_num_workers*.
     - ***batch_size***. Define the batch size here. If there are multiple GPUs, *batch_size* is the batch size of each GPU.
     - ***batch_num_to_show_results***. [necessary for training] During the training process, show the results every batch_num_to_show_results batches.
     - ***max_epoch***. [necessary for training] The maximum number of epochs to train.
     - ***valid_times_per_epoch***. [optional for training, default: 1] Define how many times to conduct validation per epoch. Usually, we conduct validation after each epoch, but for a very large corpus, we'd better validate multiple times in case to miss the best state of our model. The default value is 1.
+    - ***tokenizer***. [optional] Define tokenizer here. Currently, we support 'nltk' and 'jieba'. By default, 'nltk' for English and 'jieba' for Chinese.
 - **architecture**. Define the model architecture. The node is a list of layers (blocks) in block_zoo to represent a model. The supported layers of this toolkit are given in [block_zoo overview](https://microsoft.github.io/NeuronBlocks). 
     
     - ***Embedding layer***. The first layer of this example (as shown below) defines the embedding layer, which is composed of one type of embedding: "word" (word embedding) and the dimension of "word" are 300.  You need to keep this dimension and the dimension of pre-trained embeddings consistent if you specify pre-trained embeddings in *inputs/data_paths/pre_trained_emb*.
@@ -184,8 +200,14 @@ The architecture of the configuration file is:
 *Tips: The [optional] and [necessary] mark means corresponding node in the configuration file is optional or necessary for training/test/prediction. If there is no mark, it means the node is necessary all the time. Actually, it would be more convenient to prepare a configuration file that contains all the configurations for training, test and prediction.*
 
 
+### <span id="chinese-support">Chinese Support</span>
 
-## <span id="visualize">Visualize Your Model</span>
+When using Chinese data, *language* in JSON config should be set to 'Chinese'. By default, Chinese uses the jieba tokenizer. For an example, see [Task 7: Chinese Sentiment Analysis](#task-7).
+
+In addition, we also support pre-trained Chinese word vectors. Firstly download word vectors from [Chinese Word Vectors](https://github.com/Embedding/Chinese-Word-Vectors#pre-trained-chinese-word-vectors) and *bunzip* , then place it in a directory  (e.g. *dataset/chinese_word_vectors/*). Finally remember to define *inputs/data_paths/pre_trained_emb* in JSON config.
+
+
+### <span id="visualize">Visualize Your Model</span>
 
 A model visualizer is provided for visualization and configuration correctness checking, please refer to [Model Visualizer README](./model_visualizer/README.md).
 
@@ -193,6 +215,11 @@ A model visualizer is provided for visualization and configuration correctness c
 
 In Model Zoo, we provide a suite of NLP models for common NLP tasks, in the form of JSON configuration files. You can pick one of existing models (JSON config files) in Model Zoo to start model training quickly, or build your own models by modifying the JSON config file to suit your specific task.
 
+*Note: Before trying models in NLP tasks, please download [GloVe](https://nlp.stanford.edu/projects/glove/) firstly via following commands.*
+```bash
+cd PROJECT_ROOT/dataset
+./get_glove.sh
+```
 
 ### <span id="task-1">Task 1: Text Classification</span>
 
@@ -204,15 +231,20 @@ Text classification is a core problem to many applications like spam filtering, 
 
 - ***Usage***
 
-    1. run data downloading and preprocessing script.
+    1. Run data downloading and preprocessing script.
     ```bash
     cd PROJECT_ROOT/dataset
     python get_20_newsgroups.py
     ```
-    2. train text classification model.
+    2. Train text classification model.
     ```bash
     cd PROJECT_ROOT
     python train.py --conf_path=model_zoo/nlp_tasks/text_classification/conf_text_classification_cnn.json 
+    ```
+    3. Test your model.
+    ```bash
+    cd PROJECT_ROOT
+    python test.py --conf_path=model_zoo/nlp_tasks/text_classification/conf_text_classification_cnn.json 
     ```
      *Tips: you can try different models by running different JSON config files.*
 
@@ -236,16 +268,21 @@ Question answer matching is a crucial subtask of the question answering problem,
 
 - ***Usage***
 
-    1. run data downloading script.
+    1. Run data downloading script.
     ```bash
     cd PROJECT_ROOT/dataset
     python get_WikiQACorpus.py
     ```
     
-    2. train question answer matching model.
+    2. Train question answer matching model.
     ```bash
     cd PROJECT_ROOT
     python train.py --conf_path=model_zoo/nlp_tasks/question_answer_matching/conf_question_answer_matching_bilstm.json
+    ```
+    3. Test your model.
+    ```bash
+    cd PROJECT_ROOT
+    python test.py --conf_path=model_zoo/nlp_tasks/question_answer_matching/conf_question_answer_matching_bilstm.json
     ```
     
      *Tips: you can try different models by running different JSON config files.*
@@ -273,15 +310,20 @@ Natural language inference (NLI) is a task that incorporates much of what is nec
 
 - ***Usage***
 
-    1. run data downloading script.
+    1. Run data downloading script.
     ```bash
     cd PROJECT_ROOT/dataset
     python get_QNLI.py
     ```
-    2. train the model.
+    2. Train natural language inference model.
     ```bash
     cd PROJECT_ROOT
     python train.py --conf_path=model_zoo/nlp_tasks/question_nli/conf_qnli_bilstm.json
+    ```
+    3. Test your model.
+    ```bash
+    cd PROJECT_ROOT
+    python test.py --conf_path=model_zoo/nlp_tasks/question_nli/conf_qnli_bilstm.json
     ```
      *Tips: you can try different models by running different JSON config files.*
 
@@ -297,24 +339,7 @@ Natural language inference (NLI) is a task that incorporates much of what is nec
     
     *Tips: the model file and train log file can be found in JOSN config file's outputs/save_base_dir after you finish training.*
 
-### <span id="task-4">Task 4: Regression</span>
-
-Regression is the problem of predicting a continuous number for given input, widely used in NLP tasks.
-
-- ***Dataset***
-
-    We provide a sample dataset in *PROJECT_ROOT/dataset/regression*, which you can replace with your own regression dataset for regression task training.
-
-- ***Usage***
-
-    Train regression model.
-    ```bash
-    cd PROJECT_ROOT
-    python train.py --conf_path=model_zoo/nlp_tasks/regression/conf_regression_bilstm_attn.json
-    ```
-     *Tips: you can try different models by running different JSON config files.*
-
-### <span id="task-5">Task 5: Sentiment Analysis</span>
+### <span id="task-4">Task 4: Sentiment Analysis</span>
 
 Sentiment analysis is aimed to predict the sentiment (positive, negative, etc) of a given sentence/document, which is widely applied to many fields.
 
@@ -324,15 +349,20 @@ Sentiment analysis is aimed to predict the sentiment (positive, negative, etc) o
 
 - ***Usage***
 
-    1. run data downloading script.
+    1. Run data downloading script.
     ```bash
     cd PROJECT_ROOT/dataset
     python get_SST-2.py
     ```
-    2. train the model.
+    2. Train sentiment analysis model.
     ```bash
     cd PROJECT_ROOT
     python train.py --conf_path=model_zoo/nlp_tasks/sentiment_analysis/conf_sentiment_analysis_bilstm.json
+    ```
+    3. Test your model.
+    ```bash
+    cd PROJECT_ROOT
+    python test.py --conf_path=model_zoo/nlp_tasks/sentiment_analysis/conf_sentiment_analysis_bilstm.json
     ```
      *Tips: you can try different models by running different JSON config files.*
      
@@ -347,7 +377,7 @@ Sentiment analysis is aimed to predict the sentiment (positive, negative, etc) o
     
     *Tips: the model file and train log file can be found in JOSN config file's outputs/save_base_dir after you finish training.*
 
-### <span id="task-6">Task 6: Question Paraphrase</span>
+### <span id="task-5">Task 5: Question Paraphrase</span>
 
 This task is to determine whether a pair of questions are semantically equivalent. 
 
@@ -357,15 +387,20 @@ This task is to determine whether a pair of questions are semantically equivalen
 
 - ***Usage***
 
-    1. run data downloading script.
+    1. Run data downloading script.
     ```bash
     cd PROJECT_ROOT/dataset
     python get_QQP.py
     ```
-    2. train the model.
+    2. Train question paraphrase model.
     ```bash
     cd PROJECT_ROOT
     python train.py --conf_path=model_zoo/nlp_tasks/question_pairs/conf_question_pairs_bilstm.json
+    ```
+    3. Test your model.
+    ```bash
+    cd PROJECT_ROOT
+    python test.py --conf_path=model_zoo/nlp_tasks/question_pairs/conf_question_pairs_bilstm.json
     ```
      *Tips: you can try different models by running different JSON config files.*
 
@@ -381,6 +416,124 @@ This task is to determine whether a pair of questions are semantically equivalen
      BiLSTM+Attn (NeuronBlocks) | 0.878 | 0.839 
     
     *Tips: the model file and train log file can be found in JSON config file's outputs/save_base_dir.*
+
+### <span id="task-6">Task 6: Knowledge Distillation for Model Compression</span>
+
+Knowledge Distillation is a common method to compress model in order to improve inference speed. Here are some reference papers:
+- [Distilling the Knowledge in a Neural Network](https://arxiv.org/abs/1503.02531)
+- [Model Compression with Multi-Task Knowledge Distillation for Web-scale Question Answering System](https://arxiv.org/abs/1904.09636)
+
+#### <span id="task-6.1">6.1: Compression for Query Binary Classifier</span>
+This task is to train a query regression model to learn from a heavy teacher model such as BERT based query classifier model. The training process is to minimize the score difference between the student model output and teacher model output. 
+- ***Dataset***
+*PROJECT_ROOT/dataset/knowledge_distillation/query_binary_classifier*:
+    * *train.tsv* and *valid.tsv*: two columns, namely **Query** and **Score**. 
+    **Score** is the output score of a heavy teacher model (BERT base finetune model), which is the soft label to be learned by student model as knowledge. 
+    * *test.tsv*: two columns, namely **Query** and **Label**. 
+    **Label** is a binary value which 0 means negative and 1 means positive.     
+
+        In the meanwhile, you can also replace with your own dataset for compression task trainning.
+
+- ***Usage***
+
+    1. Train student model
+    ```bash
+    cd PROJECT_ROOT
+    python train.py --conf_path=model_zoo/nlp_tasks/knowledge_distillation/query_binary_classifier_compression/conf_kdqbc_bilstmattn_cnn.json
+    ```
+    
+    2. Test student model
+    ```bash
+    cd PROJECT_ROOT
+    python test.py --conf_path=model_zoo/nlp_tasks/knowledge_distillation/query_binary_classifier_compression/conf_kdqbc_bilstmattn_cnn.json
+    ```
+    
+    3. Calculate AUC metric
+    ```bash
+    cd PROJECT_ROOT
+    python tools/calculate_AUC.py --input_file models/kdqbc_bilstmattn_cnn/train/predict.tsv --predict_index 2 --label_index 1 
+    ```
+    
+     *Tips: you can try different models by running different JSON config files.*
+
+- ***Result***
+
+    The AUC of student model is very close to that of teacher model and its inference speed is **32X~38X** times faster. 
+    
+    |Model|AUC|
+    |-----|---|
+    |Teacher (BERT base)|0.9112|
+    |Student-BiLSTMAttn+TextCNN (NeuronBlocks)|0.8941|
+    
+    *Tips: the model file and train log file can be found in JSON config file's outputs/save_base_dir.*
+
+#### <span id="task-6.2">6.2: Compression for Text Matching Model</span>
+This task is to train a query-passage regression model to learn from a heavy teacher model such as BERT based query-passage matching classifier model. The training process is to minimize the score difference between the student model output and teacher model output.
+- ***Dataset***
+*PROJECT_ROOT/dataset/knowledge_distillation/text_matching_data*:
+    * *train.tsv* and *valid.tsv*: three columns, namely **Query**, **Passage** and **Score**.
+    **Score** is the output score of a heavy teacher model (BERT base finetune model), which is the soft label to be learned by student model as knowledge. 
+    * *test.tsv*: three columns, namely **Query**, **Passage** and **Label**. 
+    **Label** is a binary value which 0 means negative and 1 means positive.     
+
+        In the meanwhile, you can also replace with your own dataset for compression task trainning.
+
+- ***Usage***
+
+    1. Train student model
+    ```bash
+    cd PROJECT_ROOT
+    python train.py --conf_path=model_zoo/nlp_tasks/knowledge_distillation/text_matching_model_compression/conf_kdtm_match_linearAttn.json
+    ```
+    
+    2. Test student model
+    ```bash
+    cd PROJECT_ROOT
+    python test.py --conf_path=model_zoo/nlp_tasks/knowledge_distillation/text_matching_model_compression/conf_kdtm_match_linearAttn.json
+    ```
+    
+    3. Calculate AUC metric
+    ```bash
+    cd PROJECT_ROOT
+    python tools/calculate_AUC.py --input_file=models/kdtm_match_linearAttn/predict.tsv --predict_index=3 --label_index=2 
+    ```
+    
+     *Tips: you can try different models by running different JSON config files.*
+- ***Result***
+
+    The AUC of student model is close to that of teacher model and its inference speed is multi-x times faster. 
+    
+    |Model|AUC|
+    |-----|---|
+    |Teacher (BERT large)|0.9284|
+    |Student-BiLSTM+matchAttn (NeuronBlocks)|0.8817|
+    
+    *NOTE: the result is achieved with 1200w data, we can only give sample data for demo, you can replace the data with your own data.*
+#### <span id="task-6.3">6.3: Compression for Slot Filling Model (ongoing)</span>
+#### <span id="task-6.4">6.4: Compression for MRC (ongoing)</span>
+
+### <span id="task-7">Task 7: Chinese Sentiment Analysis</span>
+
+Here is an example using Chinese data, for sentiment analysis task.
+
+- ***Dataset***
+
+    *PROJECT_ROOT/dataset/chinese_sentiment_analysis* is sample data of Chinese sentiment analysis.
+
+- ***Usage***
+
+    1. Train Chinese sentiment analysis model.
+    ```bash
+    cd PROJECT_ROOT
+    python train.py --conf_path=model_zoo/nlp_tasks/chinese_sentiment_analysis/conf_chinese_sentiment_analysis_bilstm.json
+    ```
+    2. Test your model.
+    ```bash
+    cd PROJECT_ROOT
+    python test.py --conf_path=model_zoo/nlp_tasks/chinese_sentiment_analysis/conf_chinese_sentiment_analysis_bilstm.json
+    ```
+     *Tips: you can try different models by running different JSON config files. The model file and train log file can be found in JOSN config file's outputs/save_base_dir after you finish training.*
+
 
 ## <span id="advanced-usage">Advanced Usage</span>
 
