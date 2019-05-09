@@ -1,10 +1,12 @@
 # ***NeuronBlocks*** - Building Your NLP DNN Models Like Playing Lego
 
+[![language](https://img.shields.io/badge/language-en%20%7C%20中文-brightgreen.svg)](#language-supported)
 [![python](https://img.shields.io/badge/python-3.6%20%7C%203.7-blue.svg)](https://www.python.org)
 [![pytorch](https://img.shields.io/badge/pytorch-0.4%20%7C%201.x-orange.svg)](https://pytorch.org)
 [![license](https://img.shields.io/badge/license-MIT-green.svg)](https://opensource.org/licenses/MIT)
 
 [简体中文](README_zh_CN.md)
+
 
 # Table of Contents
 * [Overview](#Overview)
@@ -26,6 +28,10 @@ NeuronBlocks consists of two major components: ***Block Zoo*** and ***Model Zoo*
 - In ***Model Zoo***, we provide a suite of NLP models for common NLP tasks, in the form of **JSON configuration** files. 
  
 <img src="https://i.imgur.com/LMD0PFQ.png" width="300">
+
+### <span id="language-supported">Language Supported</span>
+- English
+- Chinese
 
 ### NLP Tasks Supported
 - Sentence Classification 
@@ -57,11 +63,15 @@ Users can either pick existing models (config files) in *Model Zoo* to start mod
     ```bash
     pip install -r requirements.txt
     ```
-    *NeuronBlocks requires **PyTorch 0.4.1** currently* and automatically gets installed by the above on **Linux**.
+
+3. Install PyTorch (*NeuronBlocks supports **PyTorch 0.4.1** and above*).
     
-    For **Windows**, we suggest you to install PyTorch via *Conda* by following the instructions of PyTorch [here](https://pytorch.org/get-started/locally/).
-
-
+    For **Linux**, run the following command:
+    ```bash
+    pip install "torch>=0.4.1"
+    ```
+    
+    For **Windows**, we suggest you to install PyTorch via *Conda* by following the instruction of [PyTorch](https://pytorch.org/get-started/locally/).
     
 
 ## <span id="quick-start">Quick Start</span>
@@ -114,7 +124,6 @@ NeuronBlocks operates in an open model. It is designed and developed by **STCA N
 Anyone who are familiar with are highly encouraged to contribute code.
 * Knowledge Distillation for Model Compression. Knowledge distillation for heavy models such as BERT, OpenAI Transformer. Teacher-Student based knowledge distillation is one common method for model compression. 
 * Multi-Lingual Support
-* Chinese Language Support 
 * NER Model Support 
 * Multi-Task Training Support 
 
