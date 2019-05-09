@@ -1,6 +1,6 @@
 # ***NeuronBlocks*** - Building Your NLP DNN Models Like Playing Lego
 
-[![language](https://img.shields.io/badge/language-en%7C中文-brightgreen.svg)](#language-supported)
+[![language](https://img.shields.io/badge/language-en%20%7C%20中文-brightgreen.svg)](#language-supported)
 [![python](https://img.shields.io/badge/python-3.6%20%7C%203.7-blue.svg)](https://www.python.org)
 [![pytorch](https://img.shields.io/badge/pytorch-0.4%20%7C%201.x-orange.svg)](https://pytorch.org)
 [![license](https://img.shields.io/badge/license-MIT-green.svg)](https://opensource.org/licenses/MIT)
