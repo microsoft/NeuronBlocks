@@ -57,11 +57,15 @@ Users can either pick existing models (config files) in *Model Zoo* to start mod
     ```bash
     pip install -r requirements.txt
     ```
-    *NeuronBlocks requires **PyTorch 0.4.1** currently* and automatically gets installed by the above on **Linux**.
+
+3. Install PyTorch.
     
-    For **Windows**, we suggest you to install PyTorch via *Conda* by following the instructions of PyTorch [here](https://pytorch.org/get-started/locally/).
-
-
+    For **Linux**, run the following command:
+    ```bash
+    pip install torch
+    ```
+    
+    For **Windows**, we suggest you to install PyTorch via *Conda* by following the instruction of [PyTorch](https://pytorch.org/get-started/locally/).
     
 
 ## <span id="quick-start">Quick Start</span>
