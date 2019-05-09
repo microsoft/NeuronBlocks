@@ -1,5 +1,6 @@
 # ***NeuronBlocks*** - 像搭积木一样构建自然语言理解深度学习模型
 
+![language](https://img.shields.io/badge/language-en%7C中文-brightgreen.svg)
 [![python](https://img.shields.io/badge/python-3.6%20%7C%203.7-blue.svg)](https://www.python.org)
 [![pytorch](https://img.shields.io/badge/pytorch-0.4%20%7C%201.x-orange.svg)](https://pytorch.org)
 [![license](https://img.shields.io/badge/license-MIT-green.svg)](https://opensource.org/licenses/MIT)
@@ -119,7 +120,6 @@ NeuronBlocks以开放的模式运行。它由 **微软 STCA NLP Group** 设计�
 ## 正在进行的工作
 * 模型压缩，对诸如BERT, OpenAI Transformer之类的复杂模型进行知识蒸馏。基于Teacher-Student的知识蒸馏是模型压缩的一个常用方法。
 * 多语言支持
-* 中文模型支持
 * 命名实体识别模型支持
 * 多任务训练支持
 
