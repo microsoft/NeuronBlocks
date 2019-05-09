@@ -1,6 +1,6 @@
 # ***NeuronBlocks*** - 像搭积木一样构建自然语言理解深度学习模型
 
-![language](https://img.shields.io/badge/language-en%7C中文-brightgreen.svg)
+[![language](https://img.shields.io/badge/language-en%20%7C%20中文-brightgreen.svg)](#language-supported)
 [![python](https://img.shields.io/badge/python-3.6%20%7C%203.7-blue.svg)](https://www.python.org)
 [![pytorch](https://img.shields.io/badge/pytorch-0.4%20%7C%201.x-orange.svg)](https://pytorch.org)
 [![license](https://img.shields.io/badge/license-MIT-green.svg)](https://opensource.org/licenses/MIT)
@@ -30,6 +30,9 @@ NeuronBlocks包括 ***Block Zoo*** 和 ***Model Zoo*** 两个重要组件，其�
  
 <img src="https://i.imgur.com/LMD0PFQ.png" width="300">
 
+### <span id="language-supported">支持的语言</span>
+- English
+- 中文
 
 ### 支持的NLP任务
 - 句子分类
