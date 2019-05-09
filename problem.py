@@ -267,7 +267,7 @@ class Problem():
             # problem_type
             if ProblemTypes[self.problem_type] == ProblemTypes.classification or \
                 ProblemTypes[self.problem_type] == ProblemTypes.sequence_tagging:
-                self.output_dict.build(list(target_docs.values())[0], threshold=0)
+                self.output_dict.update(list(target_docs.values())[0])
             elif ProblemTypes[self.problem_type] == ProblemTypes.regression or \
                     ProblemTypes[self.problem_type] == ProblemTypes.mrc:
                 pass
