@@ -1,6 +1,6 @@
 # ***NeuronBlocks*** - Building Your NLP DNN Models Like Playing Lego
 
-![language](https://img.shields.io/badge/language-en%7C中文-brightgreen.svg)
+[![language](https://img.shields.io/badge/language-en%7C中文-brightgreen.svg)](#language-supported)
 [![python](https://img.shields.io/badge/python-3.6%20%7C%203.7-blue.svg)](https://www.python.org)
 [![pytorch](https://img.shields.io/badge/pytorch-0.4%20%7C%201.x-orange.svg)](https://pytorch.org)
 [![license](https://img.shields.io/badge/license-MIT-green.svg)](https://opensource.org/licenses/MIT)
@@ -28,6 +28,10 @@ NeuronBlocks consists of two major components: ***Block Zoo*** and ***Model Zoo*
 - In ***Model Zoo***, we provide a suite of NLP models for common NLP tasks, in the form of **JSON configuration** files. 
  
 <img src="https://i.imgur.com/LMD0PFQ.png" width="300">
+
+### <span id="language-supported">Language Supported</span>
+- English
+- Chinese
 
 ### NLP Tasks Supported
 - Sentence Classification 
