@@ -63,11 +63,11 @@ NeuronBlocks包括 ***Block Zoo*** 和 ***Model Zoo*** 两个重要组件，其�
     pip install -r requirements.txt
     ```
 
-3. 安装PyTorch:
+3. 安装PyTorch ( *NeuronBlocks支持 **PyTorch 0.4.1** 及以上*):
     
     对于 **Linux** ，运行以下命令：
     ```bash
-    pip install torch
+    pip install "torch>=0.4.1"
     ```
     对于 **Windows** ，建议按照[PyTorch官方安装教程](https://pytorch.org/get-started/locally/)通过Conda安装PyTorch。
     
