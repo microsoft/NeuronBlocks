@@ -10,7 +10,6 @@ import nltk
 nltk.download('punkt', quiet=True)
 nltk.download('stopwords', quiet=True)
 from utils.BPEEncoder import BPEEncoder
-import codecs
 import os
 import pickle as pkl
 from utils.common_utils import load_from_pkl, dump_to_pkl
@@ -95,7 +94,7 @@ class Problem():
             return None
 
     def get_data_generator_from_file(self, file_path, file_with_col_header, chunk_size=1000000):
-        with codecs.open(file_path, "r", encoding='utf-8') as f:
+        with open(file_path, "r", encoding='utf-8') as f:
             if file_with_col_header:
                 f.readline()
             data_list = list()
