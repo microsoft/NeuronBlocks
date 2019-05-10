@@ -197,7 +197,9 @@ python predict.py --conf_path=model_zoo/demo/conf.json
 
 ### <span id="visualize">模型可视化</span>
 
-本项目提供了一个模型可视化工具，用于模型的可视化和模型配置文件的语法正确性检查。请参考 [Model Visualizer README](./model_visualizer/README.md).
+本项目提供了一个模型可视化工具，用于模型的可视化和模型配置文件的语法正确性检查。请参考 [Model Visualizer README](./model_visualizer/README.md)。下图是一个模型可视化样例：
+
+<img src="https://i.imgur.com/mgUrsxV.png" width="250">
 
 ## <span id="model-zoo">NLP 任务 Model Zoo</span>
 
