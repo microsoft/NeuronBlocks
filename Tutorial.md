@@ -277,12 +277,12 @@ Question answer matching is a crucial subtask of the question answering problem,
     2. Train question answer matching model.
     ```bash
     cd PROJECT_ROOT
-    python train.py --conf_path=model_zoo/nlp_tasks/question_answer_matching/conf_question_answer_matching_bilstm.json
+    python train.py --conf_path=model_zoo/nlp_tasks/question_answer_matching/conf_question_answer_matching_bilstm_match_attention.json
     ```
     3. Test your model.
     ```bash
     cd PROJECT_ROOT
-    python test.py --conf_path=model_zoo/nlp_tasks/question_answer_matching/conf_question_answer_matching_bilstm.json
+    python test.py --conf_path=model_zoo/nlp_tasks/question_answer_matching/conf_question_answer_matching_bilstm_match_attention.json
     ```
     
      *Tips: you can try different models by running different JSON config files.*
