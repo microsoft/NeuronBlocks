@@ -66,23 +66,23 @@ class CellDict(object):
 
         return cell in self.cell_id_map
 
-    def build(self, docs, threshold, max_vocabulary_num=800000):
-
+    def update(self, docs):
         for doc in docs:
             # add type judge
             if isinstance(doc, list):
                 self.cell_doc_count.update(set(doc))
             else:
                 self.cell_doc_count.update([doc])
-
+        
+    def build(self, threshold, max_vocabulary_num=800000):
         # restrict the vocabulary size to prevent embedding dict weight size
         self.cell_doc_count = Counter(dict(self.cell_doc_count.most_common(max_vocabulary_num)))
         for cell in self.cell_doc_count:
-
             if cell not in self.cell_id_map and self.cell_doc_count[cell] >= threshold:
                 id = len(self.cell_id_map)
                 self.cell_id_map[cell] = id
                 self.id_cell_map[id] = cell
+        self.cell_doc_count = Counter()
 
     def id_unk(self, cell):
         """
