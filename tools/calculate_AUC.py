@@ -2,14 +2,13 @@
 # Licensed under the MIT license.
 
 import argparse
-import codecs
 from sklearn.metrics import roc_auc_score
 
 def read_tsv(params):
     prediction, label = [], []
     predict_index, label_index = int(params.predict_index), int(params.label_index)
     min_column_num = max(predict_index, label_index) + 1
-    with codecs.open(params.input_file, mode='r', encoding='utf-8') as f:
+    with open(params.input_file, mode='r', encoding='utf-8') as f:
         for index, line in enumerate(f):
             if params.header and index == 0:
                 continue
