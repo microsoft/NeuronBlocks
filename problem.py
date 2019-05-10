@@ -300,7 +300,7 @@ class Problem():
 
             assert loaded_emb_dim == word_emb_dim, "The dimension of defined word embedding is inconsistent with the pretrained embedding provided!"
 
-            logging.info("construct embedding table")
+            logging.info("constructing embedding table")
             if self.input_dicts['word'].with_unk:
                 word_emb_dict['<unk>'] = np.random.random(size=word_emb_dim)
             if self.input_dicts['word'].with_pad:
