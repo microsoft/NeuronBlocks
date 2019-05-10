@@ -209,7 +209,9 @@ In addition, we also support pre-trained Chinese word vectors. Firstly download 
 
 ### <span id="visualize">Visualize Your Model</span>
 
-A model visualizer is provided for visualization and configuration correctness checking, please refer to [Model Visualizer README](./model_visualizer/README.md).
+A model visualizer is provided for visualization and configuration correctness checking, please refer to [Model Visualizer README](./model_visualizer/README.md). An example is as below.
+
+<img src="https://i.imgur.com/mgUrsxV.png" width="250">
 
 ## <span id="model-zoo">Model Zoo for NLP Tasks</span>
 
