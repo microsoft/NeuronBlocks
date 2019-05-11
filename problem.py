@@ -26,65 +26,6 @@ import torch
 import torch.nn as nn
 
 class Problem():
-    '''
-    def __init__(self, problem_type, input_types, answer_column_name=None, lowercase=False,
-            source_with_start=True, source_with_end=True, source_with_unk=True,
-            source_with_pad=True, target_with_start=False, target_with_end=False,
-            target_with_unk=True, target_with_pad=True, same_length=True, with_bos_eos=True,
-            tagging_scheme=None, tokenizer="nltk", remove_stopwords=False, DBC2SBC=True, unicode_fix=True):
-        """
-
-        Args:
-            input_types: {
-                  "word": ["word1", "word1"],
-                  "postag": ["postag_feature1", "postag_feature2"]
-                }
-            answer_column_name: "label" after v1.0.0 answer_column_name change to list
-            source_with_start:
-            source_with_end:
-            source_with_unk:
-            source_with_pad:
-            target_with_start:
-            target_with_end:
-            target_with_unk:
-            target_with_pad:
-            same_length:
-            with_bos_eos: whether to add bos and eos when encoding
-        """
-        self.lowercase = lowercase
-
-        self.input_dicts = dict()
-        self.problem_type = problem_type
-        self.tagging_scheme = tagging_scheme
-        self.with_bos_eos = with_bos_eos
-        self.source_with_start = source_with_start
-        self.source_with_end = source_with_end
-        self.source_with_unk = source_with_unk
-        self.source_with_pad = source_with_pad
-        self.target_with_start = target_with_start
-        self.target_with_end = target_with_end
-        self.target_with_unk = target_with_unk
-        self.target_with_pad = target_with_pad
-
-        for input_type in input_types:
-           self.input_dicts[input_type] = CellDict(with_unk=source_with_unk, with_pad=source_with_pad,
-                                        with_start=source_with_start, with_end=source_with_end)
-        if ProblemTypes[self.problem_type] == ProblemTypes.sequence_tagging or \
-                ProblemTypes[self.problem_type] == ProblemTypes.classification :
-            self.output_dict = CellDict(with_unk=target_with_unk, with_pad=target_with_pad,
-                                    with_start=target_with_start, with_end=target_with_end)
-        elif ProblemTypes[self.problem_type] == ProblemTypes.regression or \
-                ProblemTypes[self.problem_type] == ProblemTypes.mrc:
-            self.output_dict = None
-
-        self.file_column_num = None
-
-        if tokenizer in ['nltk']:
-            self.tokenizer = EnglishTokenizer(tokenizer=tokenizer, remove_stopwords=remove_stopwords)
-        elif tokenizer in ['jieba']:
-            self.tokenizer = ChineseTokenizer(tokenizer=tokenizer, remove_stopwords=remove_stopwords)
-        self.text_preprocessor = EnglishTextPreprocessor(DBC2SBC=DBC2SBC, unicode_fix=unicode_fix)
-    '''
     
     def __init__(self, phase, problem_type, input_types, answer_column_name=None, lowercase=False, with_bos_eos=True,
             tagging_scheme=None, tokenizer="nltk", remove_stopwords=False, DBC2SBC=True, unicode_fix=True):
