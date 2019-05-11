@@ -26,6 +26,7 @@ import torch
 import torch.nn as nn
 
 class Problem():
+    '''
     def __init__(self, problem_type, input_types, answer_column_name=None, lowercase=False,
             source_with_start=True, source_with_end=True, source_with_unk=True,
             source_with_pad=True, target_with_start=False, target_with_end=False,
@@ -65,6 +66,73 @@ class Problem():
         self.target_with_unk = target_with_unk
         self.target_with_pad = target_with_pad
 
+        for input_type in input_types:
+           self.input_dicts[input_type] = CellDict(with_unk=source_with_unk, with_pad=source_with_pad,
+                                        with_start=source_with_start, with_end=source_with_end)
+        if ProblemTypes[self.problem_type] == ProblemTypes.sequence_tagging or \
+                ProblemTypes[self.problem_type] == ProblemTypes.classification :
+            self.output_dict = CellDict(with_unk=target_with_unk, with_pad=target_with_pad,
+                                    with_start=target_with_start, with_end=target_with_end)
+        elif ProblemTypes[self.problem_type] == ProblemTypes.regression or \
+                ProblemTypes[self.problem_type] == ProblemTypes.mrc:
+            self.output_dict = None
+
+        self.file_column_num = None
+
+        if tokenizer in ['nltk']:
+            self.tokenizer = EnglishTokenizer(tokenizer=tokenizer, remove_stopwords=remove_stopwords)
+        elif tokenizer in ['jieba']:
+            self.tokenizer = ChineseTokenizer(tokenizer=tokenizer, remove_stopwords=remove_stopwords)
+        self.text_preprocessor = EnglishTextPreprocessor(DBC2SBC=DBC2SBC, unicode_fix=unicode_fix)
+    '''
+    
+    def __init__(self, phase, problem_type, input_types, answer_column_name=None, lowercase=False, with_bos_eos=True,
+            tagging_scheme=None, tokenizer="nltk", remove_stopwords=False, DBC2SBC=True, unicode_fix=True):
+        """
+
+        Args:
+            input_types: {
+                  "word": ["word1", "word1"],
+                  "postag": ["postag_feature1", "postag_feature2"]
+                }
+            answer_column_name: "label" after v1.0.0 answer_column_name change to list
+            source_with_start:
+            source_with_end:
+            source_with_unk:
+            source_with_pad:
+            target_with_start:
+            target_with_end:
+            target_with_unk:
+            target_with_pad:
+            same_length:
+            with_bos_eos: whether to add bos and eos when encoding
+        """
+
+        # init
+        source_with_start, source_with_end, source_with_unk, source_with_pad, \
+        target_with_start, target_with_end, target_with_unk, target_with_pad, \
+        same_length = (True, ) * 9
+        if ProblemTypes[problem_type] != ProblemTypes.sequence_tagging:
+            target_with_start, target_with_end, target_with_unk, target_with_pad, same_length = (False, ) * 5
+            if phase != 'train':
+                same_length = True
+        if ProblemTypes[problem_type] == ProblemTypes.mrc:
+            with_bos_eos = False
+
+        self.lowercase = lowercase
+        self.problem_type = problem_type
+        self.tagging_scheme = tagging_scheme
+        self.with_bos_eos = with_bos_eos
+        self.source_with_start = source_with_start
+        self.source_with_end = source_with_end
+        self.source_with_unk = source_with_unk
+        self.source_with_pad = source_with_pad
+        self.target_with_start = target_with_start
+        self.target_with_end = target_with_end
+        self.target_with_unk = target_with_unk
+        self.target_with_pad = target_with_pad
+
+        self.input_dicts = dict()
         for input_type in input_types:
            self.input_dicts[input_type] = CellDict(with_unk=source_with_unk, with_pad=source_with_pad,
                                         with_start=source_with_start, with_end=source_with_end)
@@ -242,6 +310,10 @@ class Problem():
         Returns:
 
         """
+        # parameter check
+        if not word2vec_path:
+            word_emb_dim, format, file_type, involve_all_words = None, None, None, None
+
         if 'bpe' in input_types:
             try:
                 bpe_encoder = BPEEncoder(input_types['bpe']['bpe_path'])
@@ -363,7 +435,7 @@ class Problem():
                 answer_column_name, min_sentence_len, extra_feature, max_lengths=None, fixed_lengths=None, file_format="tsv", bpe_encoder=None):
         
         
-        for data in tqdm(data_generator):
+        for data in data_generator:
             scheduler = ProcessorsScheduler(cpu_num_workers)
             func_args = (data, file_columns, input_types, object_inputs,
                         answer_column_name, min_sentence_len, extra_feature, max_lengths, fixed_lengths, file_format, bpe_encoder)
@@ -695,7 +767,7 @@ class Problem():
         
         data, lengths, target = dict(), dict(), dict()
         cnt_legal, cnt_illegal = 0, 0
-        for temp_data, temp_lengths, temp_target, temp_cnt_legal, temp_cnt_illegal in encoder_generator:
+        for temp_data, temp_lengths, temp_target, temp_cnt_legal, temp_cnt_illegal in tqdm(encoder_generator):
             data = self._merge_encode_data(data, temp_data)
             lengths = self._merge_encode_lengths(lengths, temp_lengths)
             target = self._merge_target(target, temp_target)   
