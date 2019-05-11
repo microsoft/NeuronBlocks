@@ -3,4 +3,5 @@
 *.pyc
 *.cache*
 dataset/GloVe/
+dataset/20_newsgroups/
 models/
