@@ -12,7 +12,7 @@ nltk.download('stopwords', quiet=True)
 from utils.BPEEncoder import BPEEncoder
 import os
 import pickle as pkl
-from utils.common_utils import load_from_pkl, dump_to_pkl
+from utils.common_utils import load_from_pkl, dump_to_pkl, load_from_json, dump_to_json, prepare_dir, md5
 
 from settings import ProblemTypes
 import math
@@ -717,6 +717,38 @@ class Problem():
 
         logging.info("%s: %d legal samples, %d illegal samples" % (data_path, cnt_legal, cnt_illegal))
         return data, lengths, target
+
+    def build_encode_cache(self, conf, file_format="tsv", cpu_num_workers = -1):
+        if 'bpe' in conf.input_types:
+            try:
+                bpe_encoder = BPEEncoder(conf.input_types['bpe']['bpe_path'])
+            except KeyError:
+                raise Exception('Please define a bpe path at the embedding layer.')
+        else:
+            bpe_encoder = None
+
+        progress = self.get_data_generator_from_file(conf.train_data_path, conf.file_with_col_header)
+        encoder_generator = self.encode_data_multi_processor(progress, cpu_num_workers,
+                    conf.file_columns, conf.input_types, conf.object_inputs, conf.answer_column_name, 
+                    conf.min_sentence_len, conf.extra_feature, conf.max_lengths,
+                    conf.fixed_lengths, file_format, bpe_encoder=bpe_encoder)
+        
+        cnt_legal, cnt_illegal = 0, 0
+        cache_index = []
+        file_name_pattern = 'encoding_cache_%s.pkl'
+        part_number = 0
+        for temp_data, temp_lengths, temp_target, temp_cnt_legal, temp_cnt_illegal in tqdm(encoder_generator):
+            data = (temp_data, temp_lengths, temp_target)
+            file_name = file_name_pattern % (part_number)
+            file_path = os.path.join(conf.encoding_cache_dir, file_name)
+            dump_to_pkl(data, file_path)
+            cache_index.append([file_name, md5([file_path])])
+            cnt_legal += temp_cnt_legal
+            cnt_illegal += temp_cnt_illegal
+            part_number += 1
+        dump_to_json(cache_index, conf.encoding_cache_index_file_path)
+        dump_to_json(md5([conf.encoding_cache_index_file_path]), conf.encoding_cache_index_file_md5_path)
+        logging.info("%s: %d legal samples, %d illegal samples" % (conf.train_data_path, cnt_legal, cnt_illegal))
 
     def decode(self, model_output, lengths=None, batch_data=None):
         """ decode the model output, either a batch of output or a single output
