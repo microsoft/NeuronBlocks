@@ -12,7 +12,7 @@ from .BiQRNN import BiQRNN, BiQRNNConf
 from .Conv import Conv, ConvConf
 from .Pooling import Pooling, PoolingConf
 from .ConvPooling import ConvPooling, ConvPoolingConf
-from .Flatten import Flatten, FlattenConf
+from block_zoo.op.Flatten import Flatten, FlattenConf
 
 from .Dropout import Dropout, DropoutConf
 
@@ -26,10 +26,8 @@ from .attentions import MatchAttention, MatchAttentionConf
 from .attentions import Attention, AttentionConf
 from .attentions import BilinearAttention, BilinearAttentionConf
 
-# Combination classes
-from .op import Concat3D, Concat3DConf
-from .op import Concat2D, Concat2DConf
-from .op import Combination, CombinationConf
+# Operators
+from .op import *
 
 # Math operations
 from .math import Add2D, Add2DConf
