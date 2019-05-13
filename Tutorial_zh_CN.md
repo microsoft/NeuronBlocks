@@ -20,6 +20,7 @@
         3. [槽填充的模型压缩](#task-6.3)
         4. [机器阅读理解模型的模型压缩](#task-6.4)
     * [任务 7: 中文情感分析](#task-7)
+    * [任务 8：中文文本匹配](#task-8)
 * [高阶用法](#advanced-usage)
     * [额外的feature](#extra-feature)
     * [学习率衰减](#lr-decay)
