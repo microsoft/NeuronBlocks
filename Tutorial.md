@@ -20,6 +20,7 @@
         3. [Compression for Slot Filling Model](#task-6.3)
         4. [Compression for MRC Model](#task-6.4)
     * [Task 7: Chinese Sentiment Analysis](#task-7)
+    * [Task 8: Chinese Text Matching](#task-8)
 * [Advanced Usage](#advanced-usage)
     * [Extra Feature Support](#extra-feature)
     * [Learning Rate Decay](#lr-decay)
@@ -534,6 +535,28 @@ Here is an example using Chinese data, for sentiment analysis task.
     ```bash
     cd PROJECT_ROOT
     python test.py --conf_path=model_zoo/nlp_tasks/chinese_sentiment_analysis/conf_chinese_sentiment_analysis_bilstm.json
+    ```
+     *Tips: you can try different models by running different JSON config files. The model file and train log file can be found in JOSN config file's outputs/save_base_dir after you finish training.*
+     
+### <span id="task-8">Task 8: Chinese Text Matching</span>
+
+Here is an example using Chinese data, for text matching task.
+
+- ***Dataset***
+
+    *PROJECT_ROOT/dataset/chinese_text_matching* is sample data of Chinese text matching.
+
+- ***Usage***
+
+    1. Train Chinese text matching model.
+    ```bash
+    cd PROJECT_ROOT
+    python train.py --conf_path=model_zoo/nlp_tasks/chinese_text_matching/conf_chinese_text_matching.json
+    ```
+    2. Test your model.
+    ```bash
+    cd PROJECT_ROOT
+    python test.py --conf_path=model_zoo/nlp_tasks/chinese_text_matching/conf_chinese_text_matching.json
     ```
      *Tips: you can try different models by running different JSON config files. The model file and train log file can be found in JOSN config file's outputs/save_base_dir after you finish training.*
 
