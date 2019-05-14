@@ -53,11 +53,13 @@ def load_from_json(json_path):
     data = None
     with open(json_path, 'r', encoding='utf-8') as f:
         data = json.loads(f.read())
+    logging.debug("%s loaded!" % json_path)
     return data
 
 def dump_to_json(obj, json_path):
     with open(json_path, 'w', encoding='utf-8') as f:
         f.write(json.dumps(obj))
+    logging.debug("Obj dumped to %s!" % json_path)
 
 def get_trainable_param_num(model):
     """ get the number of trainable parameters

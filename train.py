@@ -115,9 +115,9 @@ class Cache:
             logging.info('[Cache] loading dictionary successfully')
         
         if not self.encoding_invalid:
-            conf = self._prepare_encoding_cache(conf, problem, build=False)
+            self._prepare_encoding_cache(conf, problem, build=False)
             logging.info('[Cache] preparing encoding successfully')
-        return conf, problem, emb_matrix
+        return problem, emb_matrix
 
     def save(self, conf, params, problem, emb_matrix):
         # make cache dir
@@ -195,19 +195,18 @@ class Cache:
 
     def _prepare_encoding_cache(self, conf, problem, build=False):
         problem_path = conf.problem_path if not conf.pretrained_model_path else conf.saved_problem_path
-        problem_md5 = md5([problem_path])
-        conf.encoding_cache_dir = os.path.join(conf.cache_dir, conf.train_data_md5 + problem_md5)
+        conf.problem_md5 = md5([problem_path])
+        conf.encoding_cache_dir = os.path.join(conf.cache_dir, conf.train_data_md5 + conf.problem_md5)
         conf.encoding_cache_index_file_path = os.path.join(conf.encoding_cache_dir, conf.encoding_cache_index_file_name)
         conf.encoding_cache_index_file_md5_path = os.path.join(conf.encoding_cache_dir, conf.encoding_cache_index_file_md5_name)
         if build:
             prepare_dir(conf.encoding_cache_dir, True, allow_overwrite=True, clear_dir_if_exist=True)
             problem.build_encode_cache(conf, file_format="tsv", cpu_num_workers=conf.cpu_num_workers)
         conf.encoding_cache_index = load_from_json(conf.encoding_cache_index_file_path)
-        conf.encoding_generator_func = self._build_encoding_generator
-        return conf
+        conf.encoding_generator_func = lambda : self._load_encoding_cache(conf)
     
     @staticmethod
-    def _build_encoding_generator(conf):
+    def _load_encoding_cache(conf):
         for cache_index in conf.encoding_cache_index:
             file_path = os.path.join(conf.encoding_cache_dir, cache_index[0])
             yield load_from_pkl(file_path)
@@ -229,7 +228,7 @@ def main(params):
         ## check
         cache.check(conf, params)
         ## load
-        conf, problem, emb_matrix = cache.load(conf, problem, emb_matrix)
+        problem, emb_matrix = cache.load(conf, problem, emb_matrix)
 
     # data preprocessing
     ## build dictionary when (not in finetune model) and (not use cache or cache invalid)

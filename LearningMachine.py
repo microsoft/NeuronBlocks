@@ -85,7 +85,7 @@ class LearningMachine(object):
         self.model.train()
         if not self.conf.train_data_path.endswith('.pkl'):
             if self.conf.use_cache:
-                training_data_func = lambda : self.conf.encoding_generator_func(self.conf)
+                training_data_func = self.conf.encoding_generator_func
             else:
                 train_data, train_length, train_target = self.problem.encode(self.conf.train_data_path, self.conf.file_columns,
                 self.conf.input_types, self.conf.file_with_col_header, self.conf.object_inputs, self.conf.answer_column_name, max_lengths=self.conf.max_lengths,
@@ -131,20 +131,21 @@ class LearningMachine(object):
         elif ProblemTypes[self.problem.problem_type] == ProblemTypes.mrc:
             streaming_recoder = StreamingRecorder(['prediction', 'answer_text'])
 
+        part_num = len(self.conf.encoding_cache_index)
         while not stop_training and epoch <= self.conf.max_epoch:
             logging.info('Training: Epoch ' + str(epoch))
 
             train_data_generator = training_data_func()
-            part_num = 0
+            part_index = 1
             for train_data, train_length, train_target in train_data_generator:
-                logging.info('Training: Epoch %s Part %s'%(epoch, part_num))
-                part_num += 1
+                logging.info('Training: Epoch %s Part (%s/%s)'%(epoch, part_index, part_num))
+                part_index += 1
                 data_batches, length_batches, target_batches = \
                     get_batches(self.problem, train_data, train_length, train_target, self.conf.batch_size_total,
                         self.conf.input_types, None, permutate=True, transform_tensor=True)
 
                 whole_batch_num = len(target_batches)
-                valid_batch_num = max(len(target_batches) // self.conf.valid_times_per_epoch, 1)
+                valid_batch_num = max(whole_batch_num // self.conf.valid_times_per_epoch, 1)
                 if torch.cuda.device_count() > 1:
                     small_batch_num = whole_batch_num * torch.cuda.device_count()       # total batch num over all the gpus
                     valid_batch_num_show = valid_batch_num * torch.cuda.device_count()      # total batch num over all the gpus to do validation
