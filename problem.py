@@ -53,11 +53,16 @@ class Problem():
         source_with_start, source_with_end, source_with_unk, source_with_pad, \
         target_with_start, target_with_end, target_with_unk, target_with_pad, \
         same_length = (True, ) * 9
-        if ProblemTypes[problem_type] != ProblemTypes.sequence_tagging:
-            target_with_start, target_with_end, target_with_unk, target_with_pad, same_length = (False, ) * 5
-            if phase != 'train':
+        if ProblemTypes[conf.problem_type] == ProblemTypes.sequence_tagging:
+            pass
+        elif \
+           ProblemTypes[conf.problem_type] == ProblemTypes.classification or \
+           ProblemTypes[conf.problem_type] == ProblemTypes.regression:
+           target_with_start, target_with_end, target_with_unk, target_with_pad, same_length = (False, ) * 5
+           if phase != 'train':
                 same_length = True
-        if ProblemTypes[problem_type] == ProblemTypes.mrc:
+        elif ProblemTypes[problem_type] == ProblemTypes.mrc:
+            target_with_start, target_with_end, target_with_unk, target_with_pad, same_length = (False, ) * 5
             with_bos_eos = False
 
         self.lowercase = lowercase
