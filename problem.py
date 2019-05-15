@@ -93,10 +93,10 @@ class Problem():
         else:
             return None
 
-    def get_data_generator_from_file(self, file_path, file_with_col_header, chunk_size=100):
+    def get_data_generator_from_file(self, data_path_list, file_with_col_header, chunk_size=1000000):
         # NOTE: file_path is a list type
-        data_list = list()
-        for single_path in file_path:
+        for single_path in data_path_list:
+            data_list = list()
             if single_path is not None:
                 with open(single_path, "r", encoding='utf-8') as f:
                     if file_with_col_header:
@@ -202,7 +202,7 @@ class Problem():
 
             yield docs, target_docs, cnt_legal, cnt_illegal
 
-    def build(self, data_path, file_columns, input_types, file_with_col_header, answer_column_name, word2vec_path=None, word_emb_dim=None,
+    def build(self, data_path_list, file_columns, input_types, file_with_col_header, answer_column_name, word2vec_path=None, word_emb_dim=None,
               format=None, file_type=None, involve_all_words=None, file_format="tsv", show_progress=True,
               cpu_num_workers=-1, max_vocabulary=800000, word_frequency=3):
         """
@@ -254,7 +254,7 @@ class Problem():
             bpe_encoder = None
 
         self.file_column_num = len(file_columns)
-        progress = self.get_data_generator_from_file(data_path, file_with_col_header)
+        progress = self.get_data_generator_from_file(data_path_list, file_with_col_header)
         preprocessed_data_generator = self.build_training_multi_processor(progress, cpu_num_workers, file_columns, input_types, answer_column_name, bpe_encoder=bpe_encoder)
         
         # update symbol universe
