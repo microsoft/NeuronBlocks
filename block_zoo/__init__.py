@@ -12,7 +12,6 @@ from .BiQRNN import BiQRNN, BiQRNNConf
 from .Conv import Conv, ConvConf
 from .Pooling import Pooling, PoolingConf
 from .ConvPooling import ConvPooling, ConvPoolingConf
-from block_zoo.op.Flatten import Flatten, FlattenConf
 
 from .Dropout import Dropout, DropoutConf
 
