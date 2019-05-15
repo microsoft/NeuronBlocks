@@ -1,5 +1,10 @@
 # ***NeuronBlocks*** - 像搭积木一样构建自然语言理解深度学习模型
 
+[![language](https://img.shields.io/badge/language-en%20%7C%20中文-brightgreen.svg)](#language-supported)
+[![python](https://img.shields.io/badge/python-3.6%20%7C%203.7-blue.svg)](https://www.python.org)
+[![pytorch](https://img.shields.io/badge/pytorch-0.4%20%7C%201.x-orange.svg)](https://pytorch.org)
+[![license](https://img.shields.io/badge/license-MIT-green.svg)](https://opensource.org/licenses/MIT)
+
 [English version](README.md)
 
 # 目录
@@ -25,6 +30,9 @@ NeuronBlocks包括 ***Block Zoo*** 和 ***Model Zoo*** 两个重要组件，其�
  
 <img src="https://i.imgur.com/LMD0PFQ.png" width="300">
 
+### <span id="language-supported">支持的语言</span>
+- English
+- 中文
 
 ### 支持的NLP任务
 - 句子分类
@@ -46,7 +54,7 @@ NeuronBlocks包括 ***Block Zoo*** 和 ***Model Zoo*** 两个重要组件，其�
 # 快速入门
 ## 安装
 
-*注: NeuronBlocks支持 **Python 3.6***
+*注: NeuronBlocks支持 **Python 3.6**及以上*
 
 1. Clone本项目： 
     ```bash
@@ -58,13 +66,13 @@ NeuronBlocks包括 ***Block Zoo*** 和 ***Model Zoo*** 两个重要组件，其�
     pip install -r requirements.txt
     ```
 
-3. 安装PyTorch ( *NeuronBlocks支持 **PyTorch 0.4.1** * ).
+3. 安装PyTorch ( *NeuronBlocks支持 **PyTorch 0.4.1** 及以上*):
     
     对于 **Linux** ，运行以下命令：
     ```bash
-    pip install torch==0.4.1
+    pip install "torch>=0.4.1"
     ```
-    对于 **Windows** ，建议按照[PyTorch官方安装教程](https://pytorch.org/get-started/previous-versions/)通过Conda安装PyTorch。
+    对于 **Windows** ，建议按照[PyTorch官方安装教程](https://pytorch.org/get-started/locally/)通过Conda安装PyTorch。
     
 
 ## 快速开始
@@ -115,7 +123,6 @@ NeuronBlocks以开放的模式运行。它由 **微软 STCA NLP Group** 设计�
 ## 正在进行的工作
 * 模型压缩，对诸如BERT, OpenAI Transformer之类的复杂模型进行知识蒸馏。基于Teacher-Student的知识蒸馏是模型压缩的一个常用方法。
 * 多语言支持
-* 中文模型支持
 * 命名实体识别模型支持
 * 多任务训练支持
 

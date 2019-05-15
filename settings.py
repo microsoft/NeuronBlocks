@@ -11,6 +11,8 @@ import nltk
 
 version = '1.1.0'
 
+# Supported languages
+LanguageTypes = Enum('LanguageTypes', ('english', 'chinese'))
 
 # Supported problems
 ProblemTypes = Enum('ProblemTypes', ('sequence_tagging', 'classification', 'regression', 'mrc'))
@@ -26,7 +28,7 @@ SupportedMetrics = {
     # if there is a type named 1, auc@1 means use 1 as the positive label
     # auc@average means enumerate all the types as the positive label and obtain the average auc.
     ProblemTypes.regression: set(['MSE', 'RMSE']),
-    ProblemTypes.mrc :set(['f1', 'em']),
+    ProblemTypes.mrc: set(['f1', 'em']),
 }
 
 # Supported prediction types

@@ -1,7 +1,7 @@
 {
   "license": "Copyright (c) Microsoft Corporation. All rights reserved. Licensed under the MIT license.",
   "tool_version": "1.1.0",
-  "model_description": "This model is used for question answer matching task, and it achieved auc: 0.7673 in WikiQACorpus test set",
+  "model_description": "This model is used for question answer matching task, and it achieved auc: 0.7854 in WikiQACorpus test set.",
   "inputs": {
     "use_cache": true,
     "dataset_type": "classification",
@@ -29,7 +29,7 @@
     "target": ["label"]
   },
   "outputs":{
-    "save_base_dir": "./models/wikiqa_bilstm/",
+    "save_base_dir": "models_wikiqa_matchatt/",
     "model_name": "model.nb",
     "train_log_name": "train.log",
     "test_log_name": "test.log",
@@ -51,10 +51,15 @@
     "minimum_lr": 0.0001,
     "epoch_start_lr_decay": 3,
     "use_gpu": true,
-    "batch_size": 30,
+    "batch_size": 128,
     "batch_num_to_show_results": 100,
-    "max_epoch": 30,
-    "valid_times_per_epoch": 5
+    "max_epoch": 20,
+    "valid_times_per_epoch": 5,
+    "max_lengths": {
+        "query": 30,
+        "passage": 200
+    },
+    "cpu_num_workers": 4
   },
   "architecture":[
     {
@@ -68,57 +73,96 @@
         }
     },
     {
-      "layer_id": "question_dropout",
-      "layer": "Dropout",
-      "conf": {
-          "dropout": 0.2
-      },
-      "inputs": ["question"]
+        "layer_id": "query_dropout",
+        "layer": "Dropout",
+        "conf": {
+            "dropout": 0.1
+        },
+        "inputs": ["question"]
     },
     {
-      "layer_id": "passage_dropout",
-      "layer": "Dropout",
-      "conf": {
-          "dropout": 0.2
-      },
-      "inputs": ["passage"]
+        "layer_id": "passage_dropout",
+        "layer": "Dropout",
+        "conf": {
+            "dropout": 0.1
+        },
+        "inputs": ["passage"]
     },
     {
-        "layer_id": "question_1",
+        "layer_id": "query_1",
         "layer": "BiLSTM",
         "conf": {
-          "hidden_dim": 128,
-          "dropout": 0.2,
-          "num_layers": 2
+            "hidden_dim": 128,
+            "dropout": 0.2,
+            "num_layers": 1
         },
-        "inputs": ["question_dropout"]
+        "inputs": ["query_dropout"]
     },
-    {
+	{
         "layer_id": "passage_1",
-        "layer": "question_1",
+        "layer": "BiLSTM",
+        "conf": {
+            "hidden_dim": 128,
+            "dropout": 0.2,
+            "num_layers": 1
+        },
         "inputs": ["passage_dropout"]
     },
+	{
+        "layer_id": "query_matched",
+        "layer": "MatchAttention",
+        "conf": {
+        },
+        "inputs": ["query_dropout", "passage_dropout"]
+    },
     {
-        "layer_id": "question_2",
+        "layer_id": "passage_matched",
+        "layer": "MatchAttention",
+        "conf": {
+        },
+        "inputs": ["passage_dropout", "query_dropout"]
+    },
+	{
+        "layer_id": "query_combined",
+        "layer": "Combination",
+        "conf": {
+          "operations": ["origin"]
+        },
+        "inputs": ["query_1","query_matched"]
+    },
+    {
+        "layer_id": "passage_combined",
+        "layer": "Combination",
+        "conf": {
+          "operations": ["origin"]
+        },
+        "inputs": ["passage_1","passage_matched"]
+    },
+    {
+        "layer_id": "query_linear_att",
         "layer": "Pooling",
         "conf": {
           "pool_axis": 1,
           "pool_type": "max"
         },
-        "inputs": ["question_1"]
+        "inputs": ["query_combined"]
     },
     {
-        "layer_id": "passage_2",
-        "layer": "question_2",
-        "inputs": ["passage_1"]
+        "layer_id": "passage_linear_att",
+        "layer": "Pooling",
+        "conf": {
+          "pool_axis": 1,
+          "pool_type": "max"
+        },
+        "inputs": ["passage_combined"]
     },
     {
-        "layer_id": "comb_qp",
+        "layer_id": "comb",
         "layer": "Combination",
         "conf": {
-            "operations": ["origin", "difference", "dot_multiply"]
+          "operations": ["origin"]
         },
-        "inputs": ["question_2", "passage_2"]
+        "inputs": ["query_linear_att","passage_linear_att"]
     },
     {
         "output_layer_flag": true,
@@ -129,7 +173,7 @@
           "activation": "PReLU",
           "last_hidden_activation": false
         },
-        "inputs": ["comb_qp"]
+        "inputs": ["comb"]
     }
   ],
   "loss": {

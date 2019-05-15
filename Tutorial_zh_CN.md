@@ -6,6 +6,7 @@
 * [快速开始](#quick-start)
 * [如何设计 NLP 模型](#design-model)
     * [定义模型配置文件](#define-conf)
+    * [中文支持](#chinese-support)
     * [模型可视化](#visualize)
 * [NLP 任务 Model Zoo](#model-zoo)
     * [任务 1: 文本分类](#task-1)
@@ -18,6 +19,8 @@
         2. [文本匹配的模型压缩](#task-6.2)
         3. [槽填充的模型压缩](#task-6.3)
         4. [机器阅读理解模型的模型压缩](#task-6.4)
+    * [任务 7: 中文情感分析](#task-7)
+    * [任务 8：中文文本匹配](#task-8)
 * [高阶用法](#advanced-usage)
     * [额外的feature](#extra-feature)
     * [学习率衰减](#lr-decay)
@@ -38,16 +41,10 @@
     pip install -r requirements.txt
     ```
 
-3. 安装 PyTorch (*NeuronBlocks 目前支持 **PyTorch 0.4.1***).
-    
-    **Linux** 用户, 请用下面命令安装:
-    ```bash
-    pip install torch==0.4.1
-    ```
-    
-    对于 **Windows** 用户，建议按照 [PyTorch官方安装教程](https://pytorch.org/get-started/previous-versions/) 通过Conda安装PyTorch。
+NeuronBlocks 目前支持 **PyTorch 0.4.1**. 
+- **Linux** 用户, 第二步中 pytorch 将被自动安装
+- **Windows** 用户，建议按照 [PyTorch官方安装教程](https://pytorch.org/get-started/previous-versions/) 通过Conda安装PyTorch。
 
-    
 
 ## <span id="quick-start">快速开始</span>
 
@@ -76,6 +73,8 @@ python predict.py --conf_path=model_zoo/demo/conf.json
 以 *[PROJECTROOT/model_zoo/demo/conf.json](./model_zoo/demo/conf.json)* 为例 (便于说明工具包的用法，这个展示用例的网络结构并不是一个实际的结构)。 这个配置文件定义的任务是问答对匹配问题， 也就是判断一个答案是否可以回答对应的问题。 相关的样例数据保存在 *[PROJECTROOT/dataset/demo/](./dataset/demo/)*.
 
 配置文件的架构如下:
+
+- **language**. [optional, default: English] Firstly define language type here, we support English and Chinese now.
 - **inputs**. This part defines the input configuration.
     - ***use_cache***. If *use_cache* is true, the toolkit would make cache at the first time so that we can accelerate the training process at the next time.
     - ***dataset_type***. Declare the task type here. Currently, we support classification, regression and so on.
@@ -141,6 +140,7 @@ python predict.py --conf_path=model_zoo/demo/conf.json
     - ***batch_num_to_show_results***. [necessary for training] During the training process, show the results every batch_num_to_show_results batches.
     - ***max_epoch***. [necessary for training] The maximum number of epochs to train.
     - ***valid_times_per_epoch***. [optional for training, default: 1] Define how many times to conduct validation per epoch. Usually, we conduct validation after each epoch, but for a very large corpus, we'd better validate multiple times in case to miss the best state of our model. The default value is 1.
+    - ***tokenizer***. [optional] Define tokenizer here. Currently, we support 'nltk' and 'jieba'. By default, 'nltk' for English and 'jieba' for Chinese.
 - **architecture**. Define the model architecture. The node is a list of layers (blocks) in block_zoo to represent a model. The supported layers of this toolkit are given in [block_zoo overview](https://microsoft.github.io/NeuronBlocks). 
     
     - ***Embedding layer***. The first layer of this example (as shown below) defines the embedding layer, which is composed of one type of embedding: "word" (word embedding) and the dimension of "word" are 300.  You need to keep this dimension and the dimension of pre-trained embeddings consistent if you specify pre-trained embeddings in *inputs/data_paths/pre_trained_emb*.
@@ -190,11 +190,17 @@ python predict.py --conf_path=model_zoo/demo/conf.json
 
 *Tips: The [optional] and [necessary] mark means corresponding node in the configuration file is optional or necessary for training/test/prediction. If there is no mark, it means the node is necessary all the time. Actually, it would be more convenient to prepare a configuration file that contains all the configurations for training, test and prediction.*
 
+### <span id="chinese-support">中文支持</span>
 
+在使用中文数据时，JSON配置里的*language*应被设置为'Chinese'。中文默认使用jieba分词。中文任务示例参见[任务 7: 中文情感分析](#task-7)。
 
-## <span id="visualize">模型可视化</span>
+另外，我们也支持中文预处理词向量。首先从[Chinese Word Vectors](https://github.com/Embedding/Chinese-Word-Vectors#pre-trained-chinese-word-vectors)下载中文词向量并解压，然后将其放置在某一文件夹下（例如 *dataset/chinese_word_vectors/* ），最后在JSON配置里定义 *inputs/data_paths/pre_trained_emb* 。
 
-本项目提供了一个模型可视化工具，用于模型的可视化和模型配置文件的语法正确性检查。请参考 [Model Visualizer README](./model_visualizer/README.md).
+### <span id="visualize">模型可视化</span>
+
+本项目提供了一个模型可视化工具，用于模型的可视化和模型配置文件的语法正确性检查。请参考 [Model Visualizer README](./model_visualizer/README.md)。下图是一个模型可视化样例：
+
+<img src="https://i.imgur.com/mgUrsxV.png" width="250">
 
 ## <span id="model-zoo">NLP 任务 Model Zoo</span>
 
@@ -263,12 +269,12 @@ Question answer matching is a crucial subtask of the question answering problem,
     2. Train question answer matching model.
     ```bash
     cd PROJECT_ROOT
-    python train.py --conf_path=model_zoo/nlp_tasks/question_answer_matching/conf_question_answer_matching_bilstm.json
+    python train.py --conf_path=model_zoo/nlp_tasks/question_answer_matching/conf_question_answer_matching_bilstm_match_attention.json
     ```
     3. Test your model.
     ```bash
     cd PROJECT_ROOT
-    python test.py --conf_path=model_zoo/nlp_tasks/question_answer_matching/conf_question_answer_matching_bilstm.json
+    python test.py --conf_path=model_zoo/nlp_tasks/question_answer_matching/conf_question_answer_matching_bilstm_match_attention.json
     ```
     
      *Tips: you can try different models by running different JSON config files.*
@@ -282,6 +288,7 @@ Question answer matching is a crucial subtask of the question answering problem,
      CNN (NeuronBlocks) | 0.747 
      BiLSTM (NeuronBlocks) | 0.767 
      BiLSTM+Attn (NeuronBlocks) | 0.754 
+     BiLSTM+Match Attention (NeuronBlocks) | 0.785
     
     *Tips: the model file and train log file can be found in JOSN config file's outputs/save_base_dir after you finish training.*
 
@@ -497,6 +504,51 @@ This task is to train a query-passage regression model to learn from a heavy tea
     *NOTE: the result is achieved with 1200w data, we can only give sample data for demo, you can replace the data with your own data.*
 #### <span id="task-6.3">6.3: 槽填充的模型压缩 (ongoing)</span>
 #### <span id="task-6.4">6.4: 机器阅读理解模型的模型压缩 (ongoing)</span>
+
+### <span id="task-7">任务 7: 中文情感分析</span>
+
+这里给出一个中文情感分析的示例。
+
+- ***数据集***
+
+    *PROJECT_ROOT/dataset/chinese_sentiment_analysis* 是中文情感分析的样例数据。
+
+- ***用法***
+
+    1. 训练中文情感分析模型。
+    ```bash
+    cd PROJECT_ROOT
+    python train.py --conf_path=model_zoo/nlp_tasks/chinese_sentiment_analysis/conf_chinese_sentiment_analysis_bilstm.json
+    ```
+    2. 测试模型。
+    ```bash
+    cd PROJECT_ROOT
+    python test.py --conf_path=model_zoo/nlp_tasks/chinese_sentiment_analysis/conf_chinese_sentiment_analysis_bilstm.json
+    ```
+     *提示：您可以通过运行不同的JSON配置文件来尝试不同的模型。当训练完成后，模型文件和训练日志文件可以在JSON配置的outputs/save_base_dir目录中找到。*
+     
+### <span id="task-8">任务 8：中文文本匹配</span>
+
+这里给出一个中文文本匹配的示例
+
+- ***数据集***
+
+    *PROJECT_ROOT/dataset/chinese_text_matching* 是中文文本匹配的样例数据。
+    
+- ***用法***
+
+    1. 训练中文文本匹配模型。
+    ```bash
+    cd PROJECT_ROOT
+    python train.py --conf_path=model_zoo/nlp_tasks/chinese_text_matching/conf_chinese_text_matching.json
+    ```
+    
+    2. 测试模型。
+    ```bash
+    cd PROJECT_ROOT
+    python test.py --conf_path=model_zoo/nlp_tasks/chinese_text_matching/conf_chinese_text_matching.json
+    ```
+     *提示：您可以通过运行不同的JSON配置文件来尝试不同的模型。当训练完成后，模型文件和训练日志文件可以在JSON配置的outputs/save_base_dir目录中找到。*
 
 ## <span id="advanced-usage">高阶用法</span>
 

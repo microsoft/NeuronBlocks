@@ -6,6 +6,7 @@
 * [Quick Start](#quick-start)
 * [How to Design Your NLP Model](#design-model)
     * [Define the Model Configuration File](#define-conf)
+    * [Chinese Support](#chinese-support)
     * [Visualize Your Model](#visualize)
 * [Model Zoo for NLP Tasks](#model-zoo)
     * [Task 1: Text Classification](#task-1)
@@ -18,6 +19,8 @@
         2. [Compression for Text Matching Model](#task-6.2)
         3. [Compression for Slot Filling Model](#task-6.3)
         4. [Compression for MRC Model](#task-6.4)
+    * [Task 7: Chinese Sentiment Analysis](#task-7)
+    * [Task 8: Chinese Text Matching](#task-8)
 * [Advanced Usage](#advanced-usage)
     * [Extra Feature Support](#extra-feature)
     * [Learning Rate Decay](#lr-decay)
@@ -80,6 +83,8 @@ Take *[PROJECTROOT/model_zoo/demo/conf.json](./model_zoo/demo/conf.json)* as an 
 The sample data lies in *[PROJECTROOT/dataset/demo/](./dataset/demo/)*.
 
 The architecture of the configuration file is:
+
+- **language**. [optional, default: English] Firstly define language type here, we support English and Chinese now.
 - **inputs**. This part defines the input configuration.
     - ***use_cache***. If *use_cache* is true, the toolkit would make cache at the first time so that we can accelerate the training process at the next time.
     - ***dataset_type***. Declare the task type here. Currently, we support classification, regression and so on.
@@ -145,6 +150,7 @@ The architecture of the configuration file is:
     - ***batch_num_to_show_results***. [necessary for training] During the training process, show the results every batch_num_to_show_results batches.
     - ***max_epoch***. [necessary for training] The maximum number of epochs to train.
     - ***valid_times_per_epoch***. [optional for training, default: 1] Define how many times to conduct validation per epoch. Usually, we conduct validation after each epoch, but for a very large corpus, we'd better validate multiple times in case to miss the best state of our model. The default value is 1.
+    - ***tokenizer***. [optional] Define tokenizer here. Currently, we support 'nltk' and 'jieba'. By default, 'nltk' for English and 'jieba' for Chinese.
 - **architecture**. Define the model architecture. The node is a list of layers (blocks) in block_zoo to represent a model. The supported layers of this toolkit are given in [block_zoo overview](https://microsoft.github.io/NeuronBlocks). 
     
     - ***Embedding layer***. The first layer of this example (as shown below) defines the embedding layer, which is composed of one type of embedding: "word" (word embedding) and the dimension of "word" are 300.  You need to keep this dimension and the dimension of pre-trained embeddings consistent if you specify pre-trained embeddings in *inputs/data_paths/pre_trained_emb*.
@@ -195,10 +201,18 @@ The architecture of the configuration file is:
 *Tips: The [optional] and [necessary] mark means corresponding node in the configuration file is optional or necessary for training/test/prediction. If there is no mark, it means the node is necessary all the time. Actually, it would be more convenient to prepare a configuration file that contains all the configurations for training, test and prediction.*
 
 
+### <span id="chinese-support">Chinese Support</span>
 
-## <span id="visualize">Visualize Your Model</span>
+When using Chinese data, *language* in JSON config should be set to 'Chinese'. By default, Chinese uses the jieba tokenizer. For an example, see [Task 7: Chinese Sentiment Analysis](#task-7).
 
-A model visualizer is provided for visualization and configuration correctness checking, please refer to [Model Visualizer README](./model_visualizer/README.md).
+In addition, we also support pre-trained Chinese word vectors. Firstly download word vectors from [Chinese Word Vectors](https://github.com/Embedding/Chinese-Word-Vectors#pre-trained-chinese-word-vectors) and *bunzip* , then place it in a directory  (e.g. *dataset/chinese_word_vectors/*). Finally remember to define *inputs/data_paths/pre_trained_emb* in JSON config.
+
+
+### <span id="visualize">Visualize Your Model</span>
+
+A model visualizer is provided for visualization and configuration correctness checking, please refer to [Model Visualizer README](./model_visualizer/README.md). An example is as below.
+
+<img src="https://i.imgur.com/mgUrsxV.png" width="250">
 
 ## <span id="model-zoo">Model Zoo for NLP Tasks</span>
 
@@ -266,12 +280,12 @@ Question answer matching is a crucial subtask of the question answering problem,
     2. Train question answer matching model.
     ```bash
     cd PROJECT_ROOT
-    python train.py --conf_path=model_zoo/nlp_tasks/question_answer_matching/conf_question_answer_matching_bilstm.json
+    python train.py --conf_path=model_zoo/nlp_tasks/question_answer_matching/conf_question_answer_matching_bilstm_match_attention.json
     ```
     3. Test your model.
     ```bash
     cd PROJECT_ROOT
-    python test.py --conf_path=model_zoo/nlp_tasks/question_answer_matching/conf_question_answer_matching_bilstm.json
+    python test.py --conf_path=model_zoo/nlp_tasks/question_answer_matching/conf_question_answer_matching_bilstm_match_attention.json
     ```
     
      *Tips: you can try different models by running different JSON config files.*
@@ -285,6 +299,7 @@ Question answer matching is a crucial subtask of the question answering problem,
      CNN (NeuronBlocks) | 0.747 
      BiLSTM (NeuronBlocks) | 0.767 
      BiLSTM+Attn (NeuronBlocks) | 0.754 
+     BiLSTM+Match Attention (NeuronBlocks) | 0.785
     
     *Tips: the model file and train log file can be found in JOSN config file's outputs/save_base_dir after you finish training.*
 
@@ -500,6 +515,50 @@ This task is to train a query-passage regression model to learn from a heavy tea
     *NOTE: the result is achieved with 1200w data, we can only give sample data for demo, you can replace the data with your own data.*
 #### <span id="task-6.3">6.3: Compression for Slot Filling Model (ongoing)</span>
 #### <span id="task-6.4">6.4: Compression for MRC (ongoing)</span>
+
+### <span id="task-7">Task 7: Chinese Sentiment Analysis</span>
+
+Here is an example using Chinese data, for sentiment analysis task.
+
+- ***Dataset***
+
+    *PROJECT_ROOT/dataset/chinese_sentiment_analysis* is sample data of Chinese sentiment analysis.
+
+- ***Usage***
+
+    1. Train Chinese sentiment analysis model.
+    ```bash
+    cd PROJECT_ROOT
+    python train.py --conf_path=model_zoo/nlp_tasks/chinese_sentiment_analysis/conf_chinese_sentiment_analysis_bilstm.json
+    ```
+    2. Test your model.
+    ```bash
+    cd PROJECT_ROOT
+    python test.py --conf_path=model_zoo/nlp_tasks/chinese_sentiment_analysis/conf_chinese_sentiment_analysis_bilstm.json
+    ```
+     *Tips: you can try different models by running different JSON config files. The model file and train log file can be found in JOSN config file's outputs/save_base_dir after you finish training.*
+     
+### <span id="task-8">Task 8: Chinese Text Matching</span>
+
+Here is an example using Chinese data, for text matching task.
+
+- ***Dataset***
+
+    *PROJECT_ROOT/dataset/chinese_text_matching* is sample data of Chinese text matching.
+
+- ***Usage***
+
+    1. Train Chinese text matching model.
+    ```bash
+    cd PROJECT_ROOT
+    python train.py --conf_path=model_zoo/nlp_tasks/chinese_text_matching/conf_chinese_text_matching.json
+    ```
+    2. Test your model.
+    ```bash
+    cd PROJECT_ROOT
+    python test.py --conf_path=model_zoo/nlp_tasks/chinese_text_matching/conf_chinese_text_matching.json
+    ```
+     *Tips: you can try different models by running different JSON config files. The model file and train log file can be found in JOSN config file's outputs/save_base_dir after you finish training.*
 
 
 ## <span id="advanced-usage">Advanced Usage</span>

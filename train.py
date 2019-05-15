@@ -68,14 +68,14 @@ def main(params):
         problem = Problem(conf.problem_type, conf.input_types, conf.answer_column_name,
             source_with_start=True, source_with_end=True, source_with_unk=True, source_with_pad=True,
             target_with_start=False, target_with_end=False, target_with_unk=False, target_with_pad=False,
-            same_length=False, with_bos_eos=conf.add_start_end_for_seq, remove_stopwords=conf.remove_stopwords,
-            DBC2SBC=conf.DBC2SBC, unicode_fix=conf.unicode_fix)
+            same_length=False, with_bos_eos=conf.add_start_end_for_seq, tokenizer=conf.tokenizer,
+                          remove_stopwords=conf.remove_stopwords, DBC2SBC=conf.DBC2SBC, unicode_fix=conf.unicode_fix)
     elif ProblemTypes[conf.problem_type] == ProblemTypes.mrc:
         problem = Problem(conf.problem_type, conf.input_types, conf.answer_column_name,
                           source_with_start=True, source_with_end=True, source_with_unk=True, source_with_pad=True,
                           target_with_start=False, target_with_end=False, target_with_unk=False, target_with_pad=False,
-                          same_length=False, with_bos_eos=False, remove_stopwords=conf.remove_stopwords,
-                          DBC2SBC=conf.DBC2SBC, unicode_fix=conf.unicode_fix)
+                          same_length=False, with_bos_eos=False, tokenizer=conf.tokenizer,
+                          remove_stopwords=conf.remove_stopwords, DBC2SBC=conf.DBC2SBC, unicode_fix=conf.unicode_fix)
 
     cache_load_flag = False
     if not conf.pretrained_model_path:
