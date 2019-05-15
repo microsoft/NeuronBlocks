@@ -16,6 +16,9 @@ from .Flatten import Flatten, FlattenConf
 
 from .Dropout import Dropout, DropoutConf
 
+from .Conv2d import Conv2d, Conv2dConf
+from .Pooling2d import Pooling2d, Pooling2dConf
+
 from .embedding import CNNCharEmbedding, CNNCharEmbeddingConf
 
 from .attentions import FullAttention, FullAttentionConf
@@ -25,6 +28,7 @@ from .attentions import BiAttFlow, BiAttFlowConf
 from .attentions import MatchAttention, MatchAttentionConf
 from .attentions import Attention, AttentionConf
 from .attentions import BilinearAttention, BilinearAttentionConf
+from .attentions import Interaction, InteractionConf
 
 # Combination classes
 from .op import Concat3D, Concat3DConf
