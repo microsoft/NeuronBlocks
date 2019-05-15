@@ -52,11 +52,17 @@ def main(params):
     logging.info('Configuration file is backed up to %s' % (conf.save_base_dir))
 
     if ProblemTypes[conf.problem_type] == ProblemTypes.sequence_tagging:
+        # problem = Problem(conf.problem_type, conf.input_types, conf.answer_column_name,
+        #     source_with_start=True, source_with_end=True, source_with_unk=True, source_with_pad=True,
+        #     target_with_start=True, target_with_end=True, target_with_unk=True, target_with_pad=True, same_length=True,
+        #     with_bos_eos=conf.add_start_end_for_seq, tagging_scheme=conf.tagging_scheme,
+        #     remove_stopwords=conf.remove_stopwords, DBC2SBC=conf.DBC2SBC, unicode_fix=conf.unicode_fix)
         problem = Problem(conf.problem_type, conf.input_types, conf.answer_column_name,
-            source_with_start=True, source_with_end=True, source_with_unk=True, source_with_pad=True,
-            target_with_start=True, target_with_end=True, target_with_unk=True, target_with_pad=True, same_length=True,
-            with_bos_eos=conf.add_start_end_for_seq, tagging_scheme=conf.tagging_scheme,
-            remove_stopwords=conf.remove_stopwords, DBC2SBC=conf.DBC2SBC, unicode_fix=conf.unicode_fix)
+                          source_with_start=False, source_with_end=False, source_with_unk=True, source_with_pad=True,
+                          target_with_start=False, target_with_end=False, target_with_unk=False, target_with_pad=True,
+                          same_length=True,
+                          with_bos_eos=conf.add_start_end_for_seq, tagging_scheme=conf.tagging_scheme,
+                          remove_stopwords=conf.remove_stopwords, DBC2SBC=conf.DBC2SBC, unicode_fix=conf.unicode_fix)
     elif ProblemTypes[conf.problem_type] == ProblemTypes.classification \
             or ProblemTypes[conf.problem_type] == ProblemTypes.regression:
         problem = Problem(conf.problem_type, conf.input_types, conf.answer_column_name,
@@ -240,6 +246,7 @@ def main(params):
 
 
 if __name__ == "__main__":
+    os.environ["CUDA_VISIBLE_DEVICES"] = "2"
     parser = argparse.ArgumentParser(description='Training')
     parser.add_argument("--conf_path", type=str, help="configuration path")
     parser.add_argument("--train_data_path", type=str)

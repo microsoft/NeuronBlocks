@@ -110,7 +110,8 @@ class Linear(BaseLayer):
                     raise Exception("%s; Activation layer \"nn.%s\"" % (str(e), layer_conf.activation))
 
             if layer_conf.last_hidden_softmax is True and i == len(layer_conf.hidden_dim) - 1:
-                layers['linear_softmax_%d' % len(layers)] = nn.Softmax(layer_conf.output_rank - 1)
+                # layers['linear_softmax_%d' % len(layers)] = nn.Softmax(layer_conf.output_rank - 1)
+                layers['linear_softmax_%d' % len(layers)] = nn.LogSoftmax(layer_conf.output_rank - 1)
 
             former_dim = layer_conf.hidden_dim[i]
 

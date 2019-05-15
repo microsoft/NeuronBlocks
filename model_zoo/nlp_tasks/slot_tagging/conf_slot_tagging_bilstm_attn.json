@@ -10,8 +10,9 @@
       "train_data_path": "./dataset/slot_tagging/conll_2003/eng.train.tsv",
       "valid_data_path": "./dataset/slot_tagging/conll_2003/eng.testa.tsv",
       "test_data_path": "./dataset/slot_tagging/conll_2003/eng.testb.tsv",
-      "pre_trained_emb": "dataset/GloVe/glove.840B.300d.txt"
+      "pre_trained_emb": "./dataset/GloVe/glove.840B.300d.txt"
     },
+    "involve_all_words_in_pretrained_emb": true,
     "add_start_end_for_seq": false,
     "file_header": {
       "word": 0,
@@ -23,14 +24,14 @@
     "target": ["tag"]
   },
   "outputs":{
-    "save_base_dir": "./models/slot_tagging_encoder_decoder_conll/",
+    "save_base_dir": "./models/slot_tagging_bilstm_attn_involve_all/",
     "model_name": "model.nb",
     "train_log_name": "train.log",
     "test_log_name": "test.log",
     "predict_log_name": "predict.log",
     "predict_fields": ["prediction"],
     "predict_output_name": "predict.tsv",
-    "cache_dir": ".cache.slot_tagging_encoder_decoder_conll/"
+    "cache_dir": ".cache.slot_tagging_bilstm_attn_involve_all/"
   },
   "training_params": {
     "vocabulary": {
@@ -42,14 +43,14 @@
         "lr": 0.001
       }
     },
-    "lr_decay": 1,
-    "minimum_lr": 0.0001,
+    "lr_decay": 0.95,
+    "minimum_lr": 0.00001,
     "epoch_start_lr_decay": 1,
     "use_gpu": true,
     "batch_size": 32,
     "batch_num_to_show_results": 50,
     "max_epoch": 20,
-    "valid_times_per_epoch": 1
+    "valid_times_per_epoch": 2
   },
   "architecture":[
     {
@@ -62,25 +63,42 @@
         }
     },
     {
-        "output_layer_flag": true,
-        "layer_id": "encoder_decoder_1",
-        "layer": "EncoderDecoder",
+      "layer_id": "sentence_dropout",
+      "layer": "Dropout",
+      "conf": {
+          "dropout": 0.2
+      },
+      "inputs": ["words"]
+    },
+    {
+        "layer_id": "sentence_bilstm",
+        "layer": "BiLSTM",
         "conf": {
-            "encoder": "SLUEncoder",
-            "encoder_conf": {
-              "hidden_dim": 128,
-              "dropout": 0,
-              "num_layers": 1
-            },
-            "decoder": "SLUDecoder",
-            "decoder_conf": {
-              "hidden_dim": 256,
-              "dropout": 0,
-              "num_layers": 1,
-              "decoder_emb_dim": 30
-            }
+          "hidden_dim": 256,
+          "dropout": 0.2,
+          "num_layers": 2
         },
-        "inputs": ["words"]
+        "inputs": ["sentence_dropout"]
+    },
+    {
+        "layer_id": "sentence_attn",
+        "layer": "Attention",
+        "conf": {
+        },
+        "inputs": ["sentence_bilstm","sentence_bilstm"]
+    },
+    {
+        "output_layer_flag": true,
+        "layer_id": "output",
+        "layer": "Linear",
+        "conf": {
+          "hidden_dim": [-1],
+          "activation": "PReLU",
+          "batch_norm": false,
+          "last_hidden_activation": false,
+          "last_hidden_softmax": false
+        },
+        "inputs": ["sentence_attn"]
     }
   ],
   "loss": {
@@ -90,9 +108,9 @@
           "conf": {
               "size_average": true
           },
-          "inputs": ["encoder_decoder_1","tag"]
+          "inputs": ["output","tag"]
         }
       ]
   },
-  "metrics": ["seq_tag_f1"]
+  "metrics": ["seq_tag_f1","seq_tag_accuracy"]
 }

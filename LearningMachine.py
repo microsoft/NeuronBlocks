@@ -130,7 +130,7 @@ class LearningMachine(object):
 
             data_batches, length_batches, target_batches = \
                 get_batches(self.problem, train_data, train_length, train_target, self.conf.batch_size_total,
-                    self.conf.input_types, None, permutate=True, transform_tensor=True)
+                    self.conf.input_types, None, permutate=False, transform_tensor=True)
 
             whole_batch_num = len(target_batches)
             valid_batch_num = max(len(target_batches) // self.conf.valid_times_per_epoch, 1)
@@ -261,11 +261,16 @@ class LearningMachine(object):
                                                          y_pred_pos_score=None, y_pred_scores_all=None, formatting=True)
 
                     if torch.cuda.device_count() > 1:
+                        # logging.info("Epoch %d batch idx: %d; lr: %f; since last log, loss=%f; %s" % \
+                        #     (epoch, i * torch.cuda.device_count(), lr_scheduler.get_lr(), np.mean(all_costs), result))
                         logging.info("Epoch %d batch idx: %d; lr: %f; since last log, loss=%f; %s" % \
-                            (epoch, i * torch.cuda.device_count(), lr_scheduler.get_lr(), np.mean(all_costs), result))
+                                     (epoch, i * torch.cuda.device_count(), lr_scheduler.get_lr(), all_costs,
+                                      result))
                     else:
+                        # logging.info("Epoch %d batch idx: %d; lr: %f; since last log, loss=%f; %s" % \
+                        #     (epoch, i, lr_scheduler.get_lr(), np.mean(all_costs), result))
                         logging.info("Epoch %d batch idx: %d; lr: %f; since last log, loss=%f; %s" % \
-                            (epoch, i, lr_scheduler.get_lr(), np.mean(all_costs), result))
+                            (epoch, i, lr_scheduler.get_lr(), np.sum(all_costs), result))
                     show_result_cnt = 0
                     # The loss and other metrics printed during a training epoch are just the result of part of the training data.
                     all_costs = []

@@ -5,13 +5,14 @@
   "inputs": {
     "use_cache": true,
     "dataset_type": "sequence_tagging",
-    "tagging_scheme": "BIO",
+    "tagging_scheme": "BIOES",
     "data_paths": {
-      "train_data_path": "./dataset/slot_tagging/atis.train.iob",
-      "test_data_path": "./dataset/slot_tagging/atis.test.iob",
-      "pre_trained_emb": "./dataset/GloVe/glove.840B.300d.txt"
+      "train_data_path": "./dataset/slot_tagging/conll_2003/eng.train.tsv",
+      "valid_data_path": "./dataset/slot_tagging/conll_2003/eng.testa.tsv",
+      "test_data_path": "./dataset/slot_tagging/conll_2003/eng.testb.tsv",
+      "pre_trained_emb": "dataset/GloVe/glove.6B.100d.txt"
     },
-    "add_start_end_for_seq": true,
+    "add_start_end_for_seq": false,
     "file_header": {
       "word": 0,
       "tag": 1
@@ -22,33 +23,34 @@
     "target": ["tag"]
   },
   "outputs":{
-    "save_base_dir": "./models/slot_tagging/",
+    "save_base_dir": "./models_drop2_ignore_pad/slot_tagging/",
     "model_name": "model.nb",
     "train_log_name": "train.log",
     "test_log_name": "test.log",
     "predict_log_name": "predict.log",
     "predict_fields": ["prediction"],
     "predict_output_name": "predict.tsv",
-    "cache_dir": ".cache.slot_tagging/"
+    "cache_dir": ".cache.models_drop2_ignore_pad/"
   },
   "training_params": {
     "vocabulary": {
       "min_word_frequency": 1
     },
     "optimizer": {
-      "name": "Adam",
+      "name": "SGD",
       "params": {
-        "lr": 0.001
+        "lr": 0.015,
+        "weight_decay": 1e-8
       }
     },
-    "lr_decay": 1,
-    "minimum_lr": 0.0001,
+    "lr_decay": 0.95,
+    "minimum_lr": 0.00001,
     "epoch_start_lr_decay": 1,
     "use_gpu": true,
-    "batch_size": 32,
-    "batch_num_to_show_results": 50,
-    "max_epoch": 20,
-    "valid_times_per_epoch": 1
+    "batch_size": 10,
+    "batch_num_to_show_results": 1000000,
+    "max_epoch": 100,
+    "valid_times_per_epoch": 2
   },
   "architecture":[
     {
@@ -56,32 +58,47 @@
         "conf": {
           "word": {
             "cols": ["word"],
-            "dim": 300
+            "dim": 100
           }
         }
+    },
+    {
+        "layer_id": "emb_drop",
+        "layer": "Dropout",
+        "conf": {
+            "dropout": 0.5
+        },
+        "inputs": ["words"]
     },
     {
         "layer_id": "sentence_BiLSTM",
         "layer": "BiLSTM",
         "conf": {
-          "hidden_dim": 256,
-          "dropout": 0.2,
-          "num_layers": 2
+          "hidden_dim": 100,
+          "num_layers": 1
         },
-        "inputs": ["words"]
+        "inputs": ["emb_drop"]
+    },
+    {
+        "layer_id": "lstm_dropout",
+        "layer": "Dropout",
+        "conf": {
+            "dropout": 0.5
+        },
+        "inputs": ["sentence_BiLSTM"]
     },
     {
         "output_layer_flag": true,
         "layer_id": "output",
         "layer": "Linear",
         "conf": {
-          "hidden_dim": [128, -1],
+          "hidden_dim": [-1],
           "activation": "PReLU",
-          "batch_norm": true,
+          "batch_norm": false,
           "last_hidden_activation": false,
           "last_hidden_softmax": false
         },
-        "inputs": ["sentence_BiLSTM"]
+        "inputs": ["lstm_dropout"]
     }
   ],
   "loss": {
@@ -89,11 +106,13 @@
         {
           "type": "CrossEntropyLoss",
           "conf": {
-              "size_average": true
+              "size_average": false,
+              "ignore_index": 0,
+              "reduction": "sum"
           },
           "inputs": ["output","tag"]
         }
       ]
   },
-  "metrics": ["seq_tag_f1"]
+  "metrics": ["seq_tag_f1","seq_tag_accuracy"]
 }
