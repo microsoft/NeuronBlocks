@@ -392,7 +392,7 @@ class LearningMachine(object):
         self.model.eval()
         with torch.no_grad():
             data_batches, length_batches, target_batches = \
-                get_batches(self.problem, data, length, target, self.conf.batch_size_total, input_types, pad_ids, permutate=False, transform_tensor=True)
+                get_batches(self.problem, data, length, target, self.conf.batch_size_total, input_types, pad_ids, permutate=True, transform_tensor=True)
 
             if ProblemTypes[self.problem.problem_type] == ProblemTypes.classification:
                 streaming_recoder = StreamingRecorder(['prediction', 'pred_scores', 'pred_scores_all', 'target'])

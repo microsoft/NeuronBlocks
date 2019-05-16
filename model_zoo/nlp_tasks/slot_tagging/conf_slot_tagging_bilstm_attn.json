@@ -12,7 +12,7 @@
       "test_data_path": "./dataset/slot_tagging/conll_2003/eng.testb.tsv",
       "pre_trained_emb": "./dataset/GloVe/glove.840B.300d.txt"
     },
-    "involve_all_words_in_pretrained_emb": true,
+    "involve_all_words_in_pretrained_emb": false,
     "add_start_end_for_seq": false,
     "file_header": {
       "word": 0,
@@ -24,14 +24,14 @@
     "target": ["tag"]
   },
   "outputs":{
-    "save_base_dir": "./models/slot_tagging_bilstm_attn_involve_all/",
+    "save_base_dir": "./models/slot_tagging_bilstm_attn/",
     "model_name": "model.nb",
     "train_log_name": "train.log",
     "test_log_name": "test.log",
     "predict_log_name": "predict.log",
     "predict_fields": ["prediction"],
     "predict_output_name": "predict.tsv",
-    "cache_dir": ".cache.slot_tagging_bilstm_attn_involve_all/"
+    "cache_dir": ".cache.slot_tagging_bilstm_attn/"
   },
   "training_params": {
     "vocabulary": {

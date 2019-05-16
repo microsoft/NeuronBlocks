@@ -23,24 +23,24 @@
     "target": ["tag"]
   },
   "outputs":{
-    "save_base_dir": "./models_drop2_ignore_pad/slot_tagging/",
+    "save_base_dir": "./models/slot_tagging_bilstm_100d_hidden_200_drop5_ignore_index/",
     "model_name": "model.nb",
     "train_log_name": "train.log",
     "test_log_name": "test.log",
     "predict_log_name": "predict.log",
     "predict_fields": ["prediction"],
     "predict_output_name": "predict.tsv",
-    "cache_dir": ".cache.models_drop2_ignore_pad/"
+    "cache_dir": ".cache.slot_tagging_bilstm_100d_hidden_200_drop5_ignore_index/"
   },
   "training_params": {
     "vocabulary": {
       "min_word_frequency": 1
     },
+    "cpu_num_workers": 4,
     "optimizer": {
-      "name": "SGD",
+      "name": "Adam",
       "params": {
-        "lr": 0.015,
-        "weight_decay": 1e-8
+        "lr": 0.001
       }
     },
     "lr_decay": 0.95,
@@ -48,8 +48,8 @@
     "epoch_start_lr_decay": 1,
     "use_gpu": true,
     "batch_size": 10,
-    "batch_num_to_show_results": 1000000,
-    "max_epoch": 100,
+    "batch_num_to_show_results": 50,
+    "max_epoch": 50,
     "valid_times_per_epoch": 2
   },
   "architecture":[
@@ -63,29 +63,29 @@
         }
     },
     {
-        "layer_id": "emb_drop",
-        "layer": "Dropout",
-        "conf": {
-            "dropout": 0.5
-        },
-        "inputs": ["words"]
+      "layer_id": "emb_dropout",
+      "layer": "Dropout",
+      "conf": {
+          "dropout": 0.5
+      },
+      "inputs": ["words"]
     },
     {
         "layer_id": "sentence_BiLSTM",
         "layer": "BiLSTM",
         "conf": {
-          "hidden_dim": 100,
+          "hidden_dim": 200,
           "num_layers": 1
         },
-        "inputs": ["emb_drop"]
+        "inputs": ["emb_dropout"]
     },
     {
-        "layer_id": "lstm_dropout",
-        "layer": "Dropout",
-        "conf": {
-            "dropout": 0.5
-        },
-        "inputs": ["sentence_BiLSTM"]
+      "layer_id": "lstm_dropout",
+      "layer": "Dropout",
+      "conf": {
+          "dropout": 0.5
+      },
+      "inputs": ["sentence_BiLSTM"]
     },
     {
         "output_layer_flag": true,
@@ -107,8 +107,7 @@
           "type": "CrossEntropyLoss",
           "conf": {
               "size_average": false,
-              "ignore_index": 0,
-              "reduction": "sum"
+              "ignore_index": 0
           },
           "inputs": ["output","tag"]
         }

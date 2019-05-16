@@ -249,7 +249,6 @@ def main(params):
 
 
 if __name__ == "__main__":
-    os.environ["CUDA_VISIBLE_DEVICES"] = "2"
     parser = argparse.ArgumentParser(description='Training')
     parser.add_argument("--conf_path", type=str, help="configuration path")
     parser.add_argument("--train_data_path", type=str)

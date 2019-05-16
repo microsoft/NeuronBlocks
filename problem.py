@@ -295,7 +295,8 @@ class Problem():
                 self.input_dicts['word'].update([list(word_emb_dict.keys())])
                 self.input_dicts['word'].build(threshold=0, max_vocabulary_num=len(word_emb_dict))
             else:
-                word_emb_dict = load_embedding(word2vec_path, word_emb_dim, format, file_type, with_head=False, word_set=self.input_dicts['word'].cell_id_map.keys())
+                # word_emb_dict = load_embedding(word2vec_path, word_emb_dim, format, file_type, with_head=False, word_set=self.input_dicts['word'].cell_id_map.keys())
+                word_emb_dict = load_embedding(word2vec_path, word_emb_dim, format, file_type, with_head=False, word_set=None)
 
             for word in word_emb_dict:
                 loaded_emb_dim = len(word_emb_dict[word])
@@ -311,11 +312,22 @@ class Problem():
 
             word_emb_matrix = []
             unknown_word_count = 0
+            scale = np.sqrt(3.0 / word_emb_dim)
             for i in range(self.input_dicts['word'].cell_num()):
+                '''
                 if self.input_dicts['word'].id_cell_map[i] in word_emb_dict:
                     word_emb_matrix.append(word_emb_dict[self.input_dicts['word'].id_cell_map[i]])
                 else:
                     word_emb_matrix.append(word_emb_dict['<unk>'])
+                    unknown_word_count += 1
+                '''
+                single_word = self.input_dicts['word'].id_cell_map[i]
+                if single_word in word_emb_dict:
+                    word_emb_matrix.append(word_emb_dict[single_word])
+                elif single_word.lower() in word_emb_dict:
+                    word_emb_matrix.append(word_emb_dict[single_word.lower()])
+                else:
+                    word_emb_matrix.append(np.random.uniform(-scale, scale, word_emb_dim))
                     unknown_word_count += 1
             word_emb_matrix = np.array(word_emb_matrix)
             logging.info("word embedding matrix shape:(%d, %d); unknown word count: %d;" %

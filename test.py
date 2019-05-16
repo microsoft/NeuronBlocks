@@ -15,7 +15,6 @@ from LearningMachine import LearningMachine
 
 
 def main(params):
-    os.environ["CUDA_VISIBLE_DEVICES"] = "3"
     conf = ModelConf("test", params.conf_path, version, params, mode=params.mode)
 
     if ProblemTypes[conf.problem_type] == ProblemTypes.sequence_tagging:
