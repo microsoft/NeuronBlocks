@@ -1,7 +1,7 @@
 {
   "license": "Copyright (c) Microsoft Corporation. All rights reserved. Licensed under the MIT license.",
   "tool_version": "1.1.0",
-  "model_description": "This model is used for question answer matching task, and it achieved auc: 0.7425 in WikiQACorpus test set",
+  "model_description": "This model is used for question answer matching task, and it achieved auc: 0.7634 in WikiQACorpus test set",
   "inputs": {
     "use_cache": true,
     "dataset_type": "classification",
@@ -53,7 +53,7 @@
     "use_gpu": true,
     "batch_size": 30,
     "batch_num_to_show_results": 100,
-    "max_epoch": 30,
+    "max_epoch": 20,
     "valid_times_per_epoch": 5,
     "fixed_lengths":{
       "question": 30,

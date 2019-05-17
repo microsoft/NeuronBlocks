@@ -17,7 +17,7 @@ class InteractionConf(BaseConf):
 
     Args:
         hidden_dim (int): dimension of hidden state
-        dropout (float): dropout rate
+        matching_type (string): shoule be 'general', 'mul', 'plus', 'minus', 'dot', 'concat'
 
     """
     def __init__(self, **kwargs):
@@ -25,8 +25,6 @@ class InteractionConf(BaseConf):
 
     @DocInherit
     def default(self):
-        self.hidden_dim = 128
-        self.dropout = 0.0
         self.matching_type = 'general'
 
     @DocInherit
@@ -59,8 +57,6 @@ class InteractionConf(BaseConf):
     @DocInherit
     def verify(self):
         super(InteractionConf, self).verify()
-        assert hasattr(self, 'hidden_dim'), "Please define hidden_dim attribute of BiGRUConf in default() or the configuration file"
-        assert hasattr(self, 'dropout'), "Please define dropout attribute of BiGRUConf in default() or the configuration file"
         assert hasattr(self, 'matching_type'), "Please define matching_type attribute of BiGRUConf in default() or the configuration file"
         assert self.matching_type in ['general', 'dot', 'mul', 'plus', 'minus', 'add'], "Invalid `matching_type`{self.matching_type} received. Must be in `mul`, `general`, `plus`, `minus`, `dot` and `concat`."
 
@@ -74,8 +70,10 @@ class Interaction(BaseLayer):
     def __init__(self, layer_conf):
         super(Interaction, self).__init__(layer_conf)
         self.matching_type = layer_conf.matching_type
+        shape1 = layer_conf.input_dims[0]
+        shape2 = layer_conf.input_dims[1]
         if self.matching_type == 'general':
-            self.linear_in = nn.Linear(layer_conf.hidden_dim, layer_conf.hidden_dim, bias=False)
+            self.linear_in = nn.Linear(shape1[-1], shape2[-1], bias=False)
 
     def forward(self, string1, string1_len, string2, string2_len):
         """ process inputs
@@ -92,6 +90,8 @@ class Interaction(BaseLayer):
         """
         padded_seq_len1 = string1.shape[1]
         padded_seq_len2 = string2.shape[1]
+        seq_dim1 = string1.shape[-1]
+        seq_dim2 = string2.shape[-1]
         x1 = string1
         x2 = string2
         result = None
@@ -102,9 +102,9 @@ class Interaction(BaseLayer):
             #     x1 = K.l2_normalize(x1, axis=2)
             #     x2 = K.l2_normalize(x2, axis=2)
             if self.matching_type=='general':
-                x1 = x1.view(-1, self.layer_conf.hidden_dim)
+                x1 = x1.view(-1, seq_dim1)
                 x1 = self.linear_in(x1)
-                x1 = x1.view(-1, padded_seq_len1, self.layer_conf.hidden_dim)
+                x1 = x1.view(-1, padded_seq_len1, seq_dim2)
             result = torch.bmm(x1, x2.transpose(1, 2).contiguous())
             result = torch.unsqueeze(result, -1)
             # print("result", result.size())
