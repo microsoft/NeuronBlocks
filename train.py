@@ -1,7 +1,7 @@
 # Copyright (c) Microsoft Corporation. All rights reserved.
 # Licensed under the MIT license.
 
-from settings import ProblemTypes, version
+from settings import ProblemTypes, version, Setting as st
 
 import os
 import argparse
@@ -56,6 +56,7 @@ class Cache:
                 self.embedding_invalid = False
         
             self.dictionary_invalid = False
+            logging.info('[Cache] dictionary found')
         return True
         
     def _check_encoding(self, conf):
@@ -75,26 +76,32 @@ class Cache:
         # check the valid of encoding cache
         ## encoding cache dir
         conf.encoding_cache_dir = os.path.join(conf.cache_dir, conf.train_data_md5 + conf.problem_md5)
-        logging.info('conf.encoding_cache_dir %s'%(conf.encoding_cache_dir))
+        logging.debug('[Cache] conf.encoding_cache_dir %s' % (conf.encoding_cache_dir))
         if not os.path.exists(conf.encoding_cache_dir):
             return False
         
         ## encoding cache index 
-        conf.encoding_cache_index_file_path = os.path.join(conf.encoding_cache_dir, conf.encoding_cache_index_file_name)
-        conf.encoding_cache_index_file_md5_path = os.path.join(conf.encoding_cache_dir, conf.encoding_cache_index_file_md5_name)
+        conf.encoding_cache_index_file_path = os.path.join(conf.encoding_cache_dir, st.cencodig_index_file_name)
+        conf.encoding_cache_index_file_md5_path = os.path.join(conf.encoding_cache_dir, st.cencoding_index_md5_file_name)
         if not os.path.exists(conf.encoding_cache_index_file_path) or not os.path.exists(conf.encoding_cache_index_file_md5_path):
             return False
         if md5([conf.encoding_cache_index_file_path]) != load_from_json(conf.encoding_cache_index_file_md5_path):
             return False
-        conf.encoding_cache_index = load_from_json(conf.encoding_cache_index_file_path)
+        cache_index = load_from_json(conf.encoding_cache_index_file_path)
 
         ## encoding cache content
-        for index in conf.encoding_cache_index:
+        for index in cache_index[st.cencoding_key_index]:
             file_name, file_md5 = index[0], index[1]
             if file_md5 != md5([os.path.join(conf.encoding_cache_dir, file_name)]):
                 return False
-
+        
+        if hasattr(cache_index, st.cencoding_key_legal_cnt) and hasattr(cache_index, st.cencoding_key_illegal_cnt):
+            conf.encoding_cache_legal_line_cnt = cache_index[st.cencoding_key_legal_cnt]
+            conf.encoding_cache_illegal_line_cnt = cache_index[st.cencoding_key_illegal_cnt]
+        
         self.encoding_invalid = False
+        logging.info('[Cache] encoding found')
+        logging.info('%s: %d legal samples, %d illegal samples' % (conf.train_data_path, conf.encoding_cache_legal_line_cnt, conf.encoding_cache_illegal_line_cnt))
         return True
 
     def check(self, conf, params):
@@ -107,7 +114,7 @@ class Cache:
             self._renew_cache(params, conf.encoding_cache_dir)
 
     def load(self, conf, problem, emb_matrix):
-        # load dictionary when (not finetune) and (cache invalid)
+        # load dictionary when (not finetune) and (cache valid)
         if not conf.pretrained_model_path and not self.dictionary_invalid:
             problem.load_problem(conf.problem_path)
             if not self.embedding_invalid:
@@ -143,11 +150,7 @@ class Cache:
         
         # encoding
         if self.encoding_invalid:
-            self._prepare_encoding_cache(conf, problem, build=True)
-            logging.info("[Cache] encoding is saved to %s" % conf.encoding_cache_dir)
-            logging.info("[Cache] encoding_cache_index_file_path is %s" % conf.encoding_cache_index_file_path)
-            logging.info("[Cache] encoding_cache_index_file_md5_path is %s" % conf.encoding_cache_index_file_md5_path)
-            logging.info("[Cache] encoding_cache_index is %s" % conf.encoding_cache_index)
+            self._prepare_encoding_cache(conf, problem, build=params.make_cache_only) 
 
     def back_up(self, conf, problem):
         cache_bakup_path = os.path.join(conf.save_base_dir, 'necessary_cache/')
@@ -194,23 +197,33 @@ class Cache:
         return flag
 
     def _prepare_encoding_cache(self, conf, problem, build=False):
+        # encoding cache dir
         problem_path = conf.problem_path if not conf.pretrained_model_path else conf.saved_problem_path
         conf.problem_md5 = md5([problem_path])
         conf.encoding_cache_dir = os.path.join(conf.cache_dir, conf.train_data_md5 + conf.problem_md5)
-        conf.encoding_cache_index_file_path = os.path.join(conf.encoding_cache_dir, conf.encoding_cache_index_file_name)
-        conf.encoding_cache_index_file_md5_path = os.path.join(conf.encoding_cache_dir, conf.encoding_cache_index_file_md5_name)
+        if not os.path.exists(conf.encoding_cache_dir):
+            os.makedirs(conf.encoding_cache_dir)
+        
+        # encoding cache files
+        conf.encoding_cache_index_file_path = os.path.join(conf.encoding_cache_dir, st.cencodig_index_file_name)
+        conf.encoding_cache_index_file_md5_path = os.path.join(conf.encoding_cache_dir, st.cencoding_index_md5_file_name) 
+        conf.load_encoding_cache_generator = self._load_encoding_cache_generator
+        
         if build:
             prepare_dir(conf.encoding_cache_dir, True, allow_overwrite=True, clear_dir_if_exist=True)
-            problem.build_encode_cache(conf, file_format="tsv", cpu_num_workers=conf.cpu_num_workers)
-        conf.encoding_cache_index = load_from_json(conf.encoding_cache_index_file_path)
-        conf.encoding_generator_func = lambda : self._load_encoding_cache(conf)
-    
-    @staticmethod
-    def _load_encoding_cache(conf):
-        for cache_index in conf.encoding_cache_index:
-            file_path = os.path.join(conf.encoding_cache_dir, cache_index[0])
-            yield load_from_pkl(file_path)
+            problem.build_encode_cache(conf)
+            self.encoding_invalid = False
 
+        if not self.encoding_invalid:
+            cache_index = load_from_json(conf.encoding_cache_index_file_path)
+            conf.encoding_file_index = cache_index[st.cencoding_key_index]
+
+    @staticmethod
+    def _load_encoding_cache_generator(cache_dir, file_index):
+        for index in file_index:
+            file_path = os.path.join(cache_dir, index[0])
+            yield load_from_pkl(file_path)
+    
 def main(params):
     # init
     conf = ModelConf("train", params.conf_path, version, params, mode=params.mode)
@@ -241,10 +254,6 @@ def main(params):
                                     show_progress=True if params.mode == 'normal' else False, cpu_num_workers = conf.cpu_num_workers,
                                     max_vocabulary=conf.max_vocabulary, word_frequency=conf.min_word_frequency)
 
-    ## encode rawdata when do not use cache
-    if conf.use_cache == False:
-        pass
-
     # environment preparing
     ## cache save
     if conf.use_cache:
@@ -270,7 +279,7 @@ def main(params):
     vocab_info, initialize = None, False
     if not conf.pretrained_model_path:
         vocab_info, initialize = get_vocab_info(problem, emb_matrix), True
-    print(initialize)    
+   
     lm = LearningMachine('train', conf, problem, vocab_info=vocab_info, initialize=initialize, use_gpu=conf.use_gpu)
     if conf.pretrained_model_path:
         logging.info('Loading the pretrained model: %s...' % conf.pretrained_model_path)

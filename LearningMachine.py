@@ -13,7 +13,7 @@ import codecs
 import pickle as pkl
 
 from utils.common_utils import dump_to_pkl, load_from_pkl, get_param_num, get_trainable_param_num, \
-    transfer_to_gpu, transform_params2tensors
+    transfer_to_gpu, transform_params2tensors, load_from_json, dump_to_json
 from utils.philly_utils import HDFSDirectTransferer, open_and_move, convert_to_tmppath, \
     convert_to_hdfspath, move_from_local_to_hdfs
 from Model import Model
@@ -22,7 +22,7 @@ from metrics.Evaluator import Evaluator
 from utils.corpus_utils import get_batches
 from core.StreamingRecorder import StreamingRecorder
 from core.LRScheduler import LRScheduler
-from settings import ProblemTypes
+from settings import ProblemTypes, Setting as st
 from block_zoo import Linear
 
 
@@ -83,38 +83,15 @@ class LearningMachine(object):
 
     def train(self, optimizer, loss_fn):
         self.model.train()
-        if not self.conf.train_data_path.endswith('.pkl'):
-            if self.conf.use_cache:
-                training_data_func = self.conf.encoding_generator_func
-            else:
-                train_data, train_length, train_target = self.problem.encode(self.conf.train_data_path, self.conf.file_columns,
-                self.conf.input_types, self.conf.file_with_col_header, self.conf.object_inputs, self.conf.answer_column_name, max_lengths=self.conf.max_lengths,
-                min_sentence_len = self.conf.min_sentence_len, extra_feature=self.conf.extra_feature,fixed_lengths=self.conf.fixed_lengths, file_format='tsv',
-                show_progress=True if self.conf.mode == 'normal' else False, cpu_num_workers=self.conf.cpu_num_workers)
-                training_data_func = lambda : [(train_data, train_length, train_target)]
-        else:
-            train_pkl_data = load_from_pkl(self.conf.train_data_path)
-            train_data, train_length, train_target = train_pkl_data['data'], train_pkl_data['length'], train_pkl_data['target']
-            training_data_func = lambda : [(train_data, train_length, train_target)]
-
-        if not self.conf.valid_data_path.endswith('.pkl'):
-            valid_data, valid_length, valid_target = self.problem.encode(self.conf.valid_data_path, self.conf.file_columns,
-                self.conf.input_types, self.conf.file_with_col_header, self.conf.object_inputs, self.conf.answer_column_name, max_lengths=self.conf.max_lengths,
-                min_sentence_len = self.conf.min_sentence_len, extra_feature = self.conf.extra_feature,fixed_lengths=self.conf.fixed_lengths, file_format='tsv',
-                show_progress=True if self.conf.mode == 'normal' else False, cpu_num_workers=self.conf.cpu_num_workers)
-        else:
-            valid_pkl_data = load_from_pkl(self.conf.valid_data_path)
-            valid_data, valid_length, valid_target = valid_pkl_data['data'], valid_pkl_data['length'], valid_pkl_data['target']
-
-        if self.conf.test_data_path is not None:
-            if not self.conf.test_data_path.endswith('.pkl'):
-                test_data, test_length, test_target = self.problem.encode(self.conf.test_data_path, self.conf.file_columns, self.conf.input_types,
-                    self.conf.file_with_col_header, self.conf.object_inputs, self.conf.answer_column_name, max_lengths=self.conf.max_lengths,
-                    min_sentence_len = self.conf.min_sentence_len, extra_feature = self.conf.extra_feature,fixed_lengths=self.conf.fixed_lengths,
-                    file_format='tsv', show_progress=True if self.conf.mode == 'normal' else False, cpu_num_workers=self.conf.cpu_num_workers)
-            else:
-                test_pkl_data = load_from_pkl(self.conf.test_data_path)
-                test_data, test_length, test_target = test_pkl_data['data'], test_pkl_data['length'], test_pkl_data['target']
+        valid_data, valid_length, valid_target = self.problem.encode(self.conf.valid_data_path, self.conf.file_columns,
+            self.conf.input_types, self.conf.file_with_col_header, self.conf.object_inputs, self.conf.answer_column_name, max_lengths=self.conf.max_lengths,
+            min_sentence_len = self.conf.min_sentence_len, extra_feature = self.conf.extra_feature,fixed_lengths=self.conf.fixed_lengths, file_format='tsv',
+            show_progress=True if self.conf.mode == 'normal' else False, cpu_num_workers=self.conf.cpu_num_workers)
+    
+        test_data, test_length, test_target = self.problem.encode(self.conf.test_data_path, self.conf.file_columns, self.conf.input_types,
+            self.conf.file_with_col_header, self.conf.object_inputs, self.conf.answer_column_name, max_lengths=self.conf.max_lengths,
+            min_sentence_len = self.conf.min_sentence_len, extra_feature = self.conf.extra_feature,fixed_lengths=self.conf.fixed_lengths,
+            file_format='tsv', show_progress=True if self.conf.mode == 'normal' else False, cpu_num_workers=self.conf.cpu_num_workers)
 
         stop_training = False
         epoch = 1
@@ -131,14 +108,13 @@ class LearningMachine(object):
         elif ProblemTypes[self.problem.problem_type] == ProblemTypes.mrc:
             streaming_recoder = StreamingRecorder(['prediction', 'answer_text'])
 
-        part_num = len(self.conf.encoding_cache_index)
         while not stop_training and epoch <= self.conf.max_epoch:
             logging.info('Training: Epoch ' + str(epoch))
 
-            train_data_generator = training_data_func()
+            train_data_generator = self._get_training_data_generator()
             part_index = 1
             for train_data, train_length, train_target in train_data_generator:
-                logging.info('Training: Epoch %s Part (%s/%s)'%(epoch, part_index, part_num))
+                logging.debug('Training: Epoch %s Part %s'%(epoch, part_index))
                 part_index += 1
                 data_batches, length_batches, target_batches = \
                     get_batches(self.problem, train_data, train_length, train_target, self.conf.batch_size_total,
@@ -156,7 +132,7 @@ class LearningMachine(object):
                 streaming_recoder.clear_records()
                 all_costs = []
 
-                logging.info('There are %d batches during an epoch; validation are conducted every %d batch' % (small_batch_num, valid_batch_num_show))
+                logging.info('There are %d batches during current period; validation are conducted every %d batch' % (small_batch_num, valid_batch_num_show))
 
                 if self.conf.mode == 'normal':
                     progress = tqdm(range(len(target_batches)))
@@ -762,5 +738,19 @@ class LearningMachine(object):
         logging.info("Model %s loaded!" % model_path)
         logging.info("Total trainable parameters: %d" % (get_trainable_param_num(self.model)))
 
+    def _get_training_data_generator(self):
+        if not self.conf.use_cache:
+            return self.problem.get_encode_generator(self.conf, build_cache=False)
+        if not self.conf.encoding_file_index:
+            return self._get_save_encode_generator()
+        assert self.conf.load_encoding_cache_generator, 'function conf.load_encoding_cache_generator is not defined'
+        return self.conf.load_encoding_cache_generator(self.conf.encoding_cache_dir, self.conf.encoding_file_index)
+
+    def _get_save_encode_generator(self):
+        load_save_encode_generator = self.problem.get_encode_generator(self.conf, build_cache=True)
+        for data, lengths, target in load_save_encode_generator:
+            yield data, lengths, target
+        cache_index = load_from_json(self.conf.encoding_cache_index_file_path)
+        self.conf.encoding_file_index = cache_index[st.cencoding_key_index]
 
 

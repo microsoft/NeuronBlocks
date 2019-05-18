@@ -538,9 +538,10 @@ class ModelConf(object):
         
         # encoding 
         self.encoding_cache_dir = None
-        self.encoding_cache_index_file_name = 'index.json'
         self.encoding_cache_index_file_path = None
-        self.encoding_cache_index = None
-        self.encoding_cache_index_file_md5_name = 'index_md5.json'
         self.encoding_cache_index_file_md5_path = None
+        self.encoding_file_index = None
+        self.encoding_cache_legal_line_cnt = 0
+        self.encoding_cache_illegal_line_cnt = 0
+        self.load_encoding_cache_generator = None
         

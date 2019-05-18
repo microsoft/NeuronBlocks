@@ -53,3 +53,29 @@ DefaultPredictionFields = {
 # nltk's models
 nltk.data.path.append(os.path.join(os.getcwd(), 'dataset', 'nltk_data'))
 
+
+class Constant(type):
+    def __setattr__(self, name, value):
+        raise AttributeError("Class %s can not be modified"%(self.__name__))
+
+class ConstantStatic(metaclass=Constant):
+    def __init__(self, *args,**kwargs):
+        raise Exception("Class %s can not be instantiated"%(self.__class__.__name__))
+
+
+class Setting(ConstantStatic):
+    # cache
+
+    ## cencoding (cache_encoding)
+    cencodig_index_file_name = 'index.json'
+    cencoding_index_md5_file_name = 'index_md5.json'
+    cencoding_file_name_pattern = 'encoding_cache_%s.pkl'
+    cencoding_key_finish = 'finish'
+    cencoding_key_index = 'index'
+    cencoding_key_legal_cnt = 'legal_line_cnt'
+    cencoding_key_illegal_cnt = 'illegal_line_cnt'
+
+    # lazy load
+    chunk_size = 1000 * 1000
+
+
