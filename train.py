@@ -71,7 +71,7 @@ class Cache:
             self._renew_cache(params, conf.cache_dir)
 
     def load(self, conf, problem, emb_matrix):
-        # load dictionary when (not finetune) and (cache invalid)
+        # load dictionary when (not finetune) and (cache valid)
         if not conf.pretrained_model_path and not self.dictionary_invalid:
             problem.load_problem(conf.problem_path)
             if not self.embedding_invalid:
@@ -207,7 +207,7 @@ def main(params):
     vocab_info, initialize = None, False
     if not conf.pretrained_model_path:
         vocab_info, initialize = get_vocab_info(problem, emb_matrix), True
-    print(initialize)    
+  
     lm = LearningMachine('train', conf, problem, vocab_info=vocab_info, initialize=initialize, use_gpu=conf.use_gpu)
     if conf.pretrained_model_path:
         logging.info('Loading the pretrained model: %s...' % conf.pretrained_model_path)
