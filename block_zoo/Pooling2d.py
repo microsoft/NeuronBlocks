@@ -11,7 +11,7 @@ from block_zoo.BaseLayer import BaseLayer, BaseConf
 from utils.DocInherit import DocInherit
 
 
-class Pooling2dConf(BaseConf):
+class Pooling2DConf(BaseConf):
     """
 
     Args:
@@ -24,7 +24,7 @@ class Pooling2dConf(BaseConf):
 
     """
     def __init__(self, **kwargs):
-        super(Pooling2dConf, self).__init__(**kwargs)
+        super(Pooling2DConf, self).__init__(**kwargs)
 
     @DocInherit
     def default(self):
@@ -61,7 +61,7 @@ class Pooling2dConf(BaseConf):
 
     @DocInherit
     def verify(self):
-        super(Pooling2dConf, self).verify()
+        super(Pooling2DConf, self).verify()
 
         necessary_attrs_for_user = ['pool_type']
         for attr in necessary_attrs_for_user:
@@ -73,19 +73,19 @@ class Pooling2dConf(BaseConf):
 
         assert self.output_dim[-1] != -1, "Pooling on the axis %d while the input shape is %s requires that the sequence lengths should be fixed! Please set it on conf/training_params/fixed_lengths" % (self.pool_axis, str(self.input_dims[0]))
 
-class Pooling2d(BaseLayer):
+class Pooling2D(BaseLayer):
     """ Pooling layer
 
     Args:
         layer_conf (PoolingConf): configuration of a layer
     """
     def __init__(self, layer_conf):
-        super(Pooling2d, self).__init__(layer_conf)
+        super(Pooling2D, self).__init__(layer_conf)
         self.pool = None
         if layer_conf.pool_type == "max":
-            self.pool = nn.MaxPool2d(kernel_size=layer_conf.window_size,stride=layer_conf.stride,padding=layer_conf.padding)
+            self.pool = nn.MaxPool2D(kernel_size=layer_conf.window_size,stride=layer_conf.stride,padding=layer_conf.padding)
         elif layer_conf.pool_type == "mean":
-            self.pool = nn.AvgPool2d(kernel_size=layer_conf.window_size,stride=layer_conf.stride,padding=layer_conf.padding)
+            self.pool = nn.AvgPool2D(kernel_size=layer_conf.window_size,stride=layer_conf.stride,padding=layer_conf.padding)
 
     def forward(self, string, string_len=None):
         """ process inputs

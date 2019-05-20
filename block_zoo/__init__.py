@@ -16,8 +16,8 @@ from .Flatten import Flatten, FlattenConf
 
 from .Dropout import Dropout, DropoutConf
 
-from .Conv2d import Conv2d, Conv2dConf
-from .Pooling2d import Pooling2d, Pooling2dConf
+from .Conv2D import Conv2D, Conv2DConf
+from .Pooling2D import Pooling2D, Pooling2DConf
 
 from .embedding import CNNCharEmbedding, CNNCharEmbeddingConf
 

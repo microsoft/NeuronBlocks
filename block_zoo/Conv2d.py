@@ -10,7 +10,7 @@ from block_zoo.BaseLayer import BaseLayer, BaseConf
 from utils.DocInherit import DocInherit
 
 
-class Conv2dConf(BaseConf):
+class Conv2DConf(BaseConf):
     """ Configuration of Conv
 
     Args:
@@ -24,7 +24,7 @@ class Conv2dConf(BaseConf):
 
     """
     def __int__(self, **kwargs):
-        super(Conv2dConf, self).__init__(**kwargs)
+        super(Conv2DConf, self).__init__(**kwargs)
 
     @DocInherit
     def default(self):
@@ -55,40 +55,40 @@ class Conv2dConf(BaseConf):
             self.output_dim.append(-1)
         self.output_dim.append(self.output_channel_num)
         print("cov2d",self.output_dim)
-        super(Conv2dConf, self).inference()  # PUT THIS LINE AT THE END OF inference()
+        super(Conv2DConf, self).inference()  # PUT THIS LINE AT THE END OF inference()
         # print(self.output_rank)
 
     @DocInherit
     def verify_before_inference(self):
-        super(Conv2dConf, self).verify_before_inference()
+        super(Conv2DConf, self).verify_before_inference()
         necessary_attrs_for_user = ['output_channel_num']
         for attr in necessary_attrs_for_user:
             self.add_attr_exist_assertion_for_user(attr)
 
     @DocInherit
     def verify(self):
-        super(Conv2dConf, self).verify()
+        super(Conv2DConf, self).verify()
 
         necessary_attrs_for_user = ['stride', 'padding', 'window_size', 'input_channel_num', 'output_channel_num', 'activation']
         for attr in necessary_attrs_for_user:
             self.add_attr_exist_assertion_for_user(attr)
 
 
-class Conv2d(BaseLayer):
+class Conv2D(BaseLayer):
     """ Convolution along just 1 direction
 
     Args:
         layer_conf (ConvConf): configuration of a layer
     """
     def __init__(self, layer_conf):
-        super(Conv2d, self).__init__(layer_conf)
+        super(Conv2D, self).__init__(layer_conf)
         self.layer_conf = layer_conf
         if layer_conf.activation:
             self.activation = eval("nn." + self.layer_conf.activation)()
         else:
             self.activation = None
         
-        self.cnn = nn.Conv2d(in_channels=layer_conf.input_channel_num, out_channels=layer_conf.output_channel_num,kernel_size=layer_conf.window_size,stride=layer_conf.stride,padding=layer_conf.padding)
+        self.cnn = nn.Conv2D(in_channels=layer_conf.input_channel_num, out_channels=layer_conf.output_channel_num,kernel_size=layer_conf.window_size,stride=layer_conf.stride,padding=layer_conf.padding)
 
         if layer_conf.batch_norm:
             self.batch_norm = nn.BatchNorm2d(layer_conf.output_channel_num)    # the output_chanel of Conv is the input_channel of BN
