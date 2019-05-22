@@ -62,6 +62,6 @@ class Flatten(nn.Module):
         Returns:
             Tensor: [batch_size, seq_len*dim], [batch_size]
         """
-        return string.view(string.shape[0], -1), string_len
+        return string.view(string.shape[0], -1), None
 
 
