@@ -20,6 +20,7 @@
         3. [槽填充的模型压缩](#task-6.3)
         4. [机器阅读理解模型的模型压缩](#task-6.4)
     * [任务 7: 中文情感分析](#task-7)
+    * [任务 8：中文文本匹配](#task-8)
 * [高阶用法](#advanced-usage)
     * [额外的feature](#extra-feature)
     * [学习率衰减](#lr-decay)
@@ -525,7 +526,29 @@ This task is to train a query-passage regression model to learn from a heavy tea
     python test.py --conf_path=model_zoo/nlp_tasks/chinese_sentiment_analysis/conf_chinese_sentiment_analysis_bilstm.json
     ```
      *提示：您可以通过运行不同的JSON配置文件来尝试不同的模型。当训练完成后，模型文件和训练日志文件可以在JSON配置的outputs/save_base_dir目录中找到。*
+     
+### <span id="task-8">任务 8：中文文本匹配</span>
 
+这里给出一个中文文本匹配的示例
+
+- ***数据集***
+
+    *PROJECT_ROOT/dataset/chinese_text_matching* 是中文文本匹配的样例数据。
+    
+- ***用法***
+
+    1. 训练中文文本匹配模型。
+    ```bash
+    cd PROJECT_ROOT
+    python train.py --conf_path=model_zoo/nlp_tasks/chinese_text_matching/conf_chinese_text_matching.json
+    ```
+    
+    2. 测试模型。
+    ```bash
+    cd PROJECT_ROOT
+    python test.py --conf_path=model_zoo/nlp_tasks/chinese_text_matching/conf_chinese_text_matching.json
+    ```
+     *提示：您可以通过运行不同的JSON配置文件来尝试不同的模型。当训练完成后，模型文件和训练日志文件可以在JSON配置的outputs/save_base_dir目录中找到。*
 
 ## <span id="advanced-usage">高阶用法</span>
 

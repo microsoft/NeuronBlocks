@@ -171,7 +171,10 @@ def main(params):
     ## build dictionary when (not in finetune model) and (not use cache or cache invalid)
     if (not conf.pretrained_model_path) and ((conf.use_cache == False) or cache.dictionary_invalid):
         logging.info("Preprocessing... Depending on your corpus size, this step may take a while.")
-        emb_matrix = problem.build(conf.train_data_path, conf.file_columns, conf.input_types, conf.file_with_col_header,
+        # modify train_data_path to [train_data_path, valid_data_path, test_data_path]
+        # remember the test_data may be None
+        data_path_list = [conf.train_data_path, conf.valid_data_path, conf.test_data_path]
+        emb_matrix = problem.build(data_path_list, conf.file_columns, conf.input_types, conf.file_with_col_header,
                                     conf.answer_column_name, word2vec_path=conf.pretrained_emb_path,
                                     word_emb_dim=conf.pretrained_emb_dim, format=conf.pretrained_emb_type,
                                     file_type=conf.pretrained_emb_binary_or_text, involve_all_words=conf.involve_all_words_in_pretrained_emb,
