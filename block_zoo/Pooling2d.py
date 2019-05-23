@@ -45,7 +45,7 @@ class Pooling2DConf(BaseConf):
         elif (isinstance(self.window_size, tuple) or isinstance(self.window_size, list)) and len(value)==2:
             res = list(value)
         else:
-            raise AttributeError('The Atrribute %s should be given an integer or a list/tuple with length of 2, instead of %s.' %(attr,str(attr)))
+            raise AttributeError("The Atrribute `%s' should be given an integer or a list/tuple with length of 2, instead of %s." %(attr,str(value)))
         return res
             
     @DocInherit

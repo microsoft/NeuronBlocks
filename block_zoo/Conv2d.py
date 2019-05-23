@@ -30,7 +30,6 @@ class Conv2DConf(BaseConf):
         self.stride = 1
         self.padding = 0
         self.window_size = 3
-        # self.input_channel_num = 1      # for NLP tasks, input_channel_num would always be 1
         self.output_channel_num = 16
         self.batch_norm = True
         self.activation = 'ReLU'
@@ -47,7 +46,7 @@ class Conv2DConf(BaseConf):
         elif (isinstance(self.window_size, tuple) or isinstance(self.window_size, list)) and len(value)==2:
             res = list(value)
         else:
-            raise AttributeError('The Atrribute %s should be given an integer or a list/tuple with length of 2, instead of %s.' %(attr,str(attr)))
+            raise AttributeError("The Atrribute `%s' should be given an integer or a list/tuple with length of 2, instead of %s." %(attr,str(value)))
         return res
 
     @DocInherit
