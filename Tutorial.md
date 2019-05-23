@@ -300,6 +300,7 @@ Question answer matching is a crucial subtask of the question answering problem,
      BiLSTM (NeuronBlocks) | 0.767 
      BiLSTM+Attn (NeuronBlocks) | 0.754 
      BiLSTM+Match Attention (NeuronBlocks) | 0.785
+     [MatchPyramid](https://arxiv.org/abs/1602.06359) (NeuronBlocks) | 0.763
     
     *Tips: the model file and train log file can be found in JOSN config file's outputs/save_base_dir after you finish training.*
 
