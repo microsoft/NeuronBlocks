@@ -35,7 +35,7 @@ def verify_cache(cache_conf, cur_conf):
     if cache_conf.tool_version != cur_conf.tool_version:
         return False
 
-    attribute_to_cmp = ['file_columns', 'object_inputs', 'answer_column_name', 'input_types', 'language']
+    attribute_to_cmp = ['file_columns', 'object_inputs', 'answer_column_name', 'input_types']
 
     flag = True
     for attr in attribute_to_cmp:
