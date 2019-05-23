@@ -65,9 +65,13 @@ class Flatten(nn.Module):
         Returns:
             Tensor: [batch_size, seq_len*dim], [batch_size]
         """
+<<<<<<< HEAD:block_zoo/Flatten.py
         flattened = string.view(string.shape[0], -1)
         string_len = flattened.size(1)
 
         return flattened, string_len
+=======
+        return string.view(string.shape[0], -1), None
+>>>>>>> upstream/master:block_zoo/op/Flatten.py
 
 
