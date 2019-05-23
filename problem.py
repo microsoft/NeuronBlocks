@@ -687,23 +687,10 @@ class Problem():
             target: [...]
 
         """
-<<<<<<< HEAD
-        if 'bpe' in input_types:
-            try:
-                bpe_encoder = BPEEncoder(input_types['bpe']['bpe_path'])
-            except KeyError:
-                raise Exception('Please define a bpe path at the embedding layer.')
-        else:
-            bpe_encoder = None
-
-        progress = self.get_data_generator_from_file([data_path], file_with_col_header)
-        encoder_generator = self.encode_data_multi_processor(progress, cpu_num_workers,
-=======
         bpe_encoder = self._check_bpe_encoder(input_types)  
 
         progress = self.get_data_generator_from_file(data_path, file_with_col_header, chunk_size=st.chunk_size)
         encode_generator = self.encode_data_multi_processor(progress, cpu_num_workers,
->>>>>>> add_encoding_cache
                     file_columns, input_types, object_inputs, answer_column_name, min_sentence_len, extra_feature, max_lengths,
                     fixed_lengths, file_format, bpe_encoder=bpe_encoder)
         
