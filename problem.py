@@ -255,18 +255,7 @@ class Problem():
 
         """
         # parameter check
-        if not word2vec_path:
-            word_emb_dim, format, file_type, involve_all_words = None, None, None, None
-
-        if 'bpe' in input_types:
-            try:
-                bpe_encoder = BPEEncoder(input_types['bpe']['bpe_path'])
-            except KeyError:
-                raise Exception('Please define a bpe path at the embedding layer.')
-        else:
-            bpe_encoder = None
-
-        
+        bpe_encoder = self._check_bpe_encoder(input_types)  
         chunk_size = st.chunk_size
         for data_path in data_path_list:
             if data_path:
@@ -696,13 +685,7 @@ class Problem():
             target: [...]
 
         """
-        if 'bpe' in input_types:
-            try:
-                bpe_encoder = BPEEncoder(input_types['bpe']['bpe_path'])
-            except KeyError:
-                raise Exception('Please define a bpe path at the embedding layer.')
-        else:
-            bpe_encoder = None
+        bpe_encoder = self._check_bpe_encoder(input_types)  
 
         progress = self.get_data_generator_from_file(data_path, file_with_col_header)
         encode_generator = self.encode_data_multi_processor(progress, cpu_num_workers,
