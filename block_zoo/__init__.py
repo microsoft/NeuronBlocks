@@ -15,6 +15,9 @@ from .ConvPooling import ConvPooling, ConvPoolingConf
 
 from .Dropout import Dropout, DropoutConf
 
+from .Conv2D import Conv2D, Conv2DConf
+from .Pooling2D import Pooling2D, Pooling2DConf
+
 from .embedding import CNNCharEmbedding, CNNCharEmbeddingConf
 
 from .attentions import FullAttention, FullAttentionConf
@@ -24,6 +27,7 @@ from .attentions import BiAttFlow, BiAttFlowConf
 from .attentions import MatchAttention, MatchAttentionConf
 from .attentions import Attention, AttentionConf
 from .attentions import BilinearAttention, BilinearAttentionConf
+from .attentions import Interaction, InteractionConf
 
 # Operators
 from .op import *
