@@ -19,7 +19,6 @@ class Pooling2DConf(BaseConf):
         stride (int): which axis to conduct pooling, default is 1.
         padding (int): implicit zero paddings on both sides of the input. Can be a single number or a tuple (padH, padW). Default: 0
         window_size (int): the size of the pooling
-        input_channel_num (int): number of input channels
         activation (string): activation functions, e.g. ReLU
 
     """
@@ -30,30 +29,44 @@ class Pooling2DConf(BaseConf):
     def default(self):
         #self.input_dim = 128
         self.pool_type = 'max'  # Supported: ['max', mean']
-        # self.pool_axis = 1
         self.stride = 1
         self.padding = 0
         self.window_size = 3
-        self.input_channel_num = 1
         
-
     @DocInherit
     def declare(self):
         self.num_of_inputs = 1
         self.input_ranks = [4]
-
+    
+    def check_size(self, value, attr):
+        res = value
+        if isinstance(value,int):
+            res = [value, value]
+        elif (isinstance(self.window_size, tuple) or isinstance(self.window_size, list)) and len(value)==2:
+            res = list(value)
+        else:
+            raise AttributeError('The Atrribute %s should be given an integer or a list/tuple with length of 2, instead of %s.' %(attr,str(attr)))
+        return res
+            
     @DocInherit
     def inference(self):
+        
+        self.window_size = self.check_size(self.window_size, "window_size")
+        self.stride = self.check_size(self.stride, "stride")
+        self.padding = self.check_size(self.padding, "padding")
+        
         self.output_dim = [self.input_dims[0][0]]
         if self.input_dims[0][1] != -1:
-            self.output_dim.append((self.input_dims[0][1] + 2 * self.padding - self.window_size) // self.stride + 1)
+            self.output_dim.append((self.input_dims[0][1] + 2 * self.padding[0] - self.window_size[0]) // self.stride[0] + 1)
         else:
             self.output_dim.append(-1)
         if self.input_dims[0][2] != -1:
-            self.output_dim.append((self.input_dims[0][2] + 2 * self.padding - self.window_size) // self.stride + 1)
+            self.output_dim.append((self.input_dims[0][2] + 2 * self.padding[1] - self.window_size[1]) // self.stride[1] + 1)
         else:
             self.output_dim.append(-1)
-        print("pool",self.output_dim)
+        # print("pool",self.output_dim)
+        self.input_channel_num = self.input_dims[0][-1]
+
         self.output_dim.append(self.input_dims[0][-1])
 
         # DON'T MODIFY THIS
@@ -71,7 +84,7 @@ class Pooling2DConf(BaseConf):
 
         assert all([input_rank >= 4 for input_rank in self.input_ranks]), "Cannot apply a pooling layer on a tensor of which the rank is less than 4. Usually, a tensor whose rank is at least 4, e.g. [batch size, length, width, feature]"
 
-        assert self.output_dim[-1] != -1, "Pooling on the axis %d while the input shape is %s requires that the sequence lengths should be fixed! Please set it on conf/training_params/fixed_lengths" % (self.pool_axis, str(self.input_dims[0]))
+        assert self.output_dim[-1] != -1, "The shape of input is %s , and the input channel number of pooling should not be -1." % (str(self.input_dims[0]))
 
 class Pooling2D(BaseLayer):
     """ Pooling layer
@@ -83,9 +96,9 @@ class Pooling2D(BaseLayer):
         super(Pooling2D, self).__init__(layer_conf)
         self.pool = None
         if layer_conf.pool_type == "max":
-            self.pool = nn.MaxPool2D(kernel_size=layer_conf.window_size,stride=layer_conf.stride,padding=layer_conf.padding)
+            self.pool = nn.MaxPool2d(kernel_size=layer_conf.window_size,stride=layer_conf.stride,padding=layer_conf.padding)
         elif layer_conf.pool_type == "mean":
-            self.pool = nn.AvgPool2D(kernel_size=layer_conf.window_size,stride=layer_conf.stride,padding=layer_conf.padding)
+            self.pool = nn.AvgPool2d(kernel_size=layer_conf.window_size,stride=layer_conf.stride,padding=layer_conf.padding)
 
     def forward(self, string, string_len=None):
         """ process inputs

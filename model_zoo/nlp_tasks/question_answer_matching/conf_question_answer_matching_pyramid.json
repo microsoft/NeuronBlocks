@@ -99,48 +99,44 @@
     },
     {
       "layer_id": "cnn_1",
-      "layer": "Conv2d",
+      "layer": "Conv2D",
       "conf": {
           "stride": 1,
           "window_size": 3,
           "padding": 1,
-          "input_channel_num": 1,
           "output_channel_num": 8
       },
       "inputs": ["interaction"]
     },
     {
       "layer_id": "maxpooling_1",
-      "layer": "Pooling2d",
+      "layer": "Pooling2D",
       "conf": {
           "stride": 1,
           "window_size": 3,
           "padding": 1,
-          "input_channel_num": 8,
           "pool_type": "max"
       },
       "inputs": ["cnn_1"]
     },
     {
       "layer_id": "cnn_2",
-      "layer": "Conv2d",
+      "layer": "Conv2D",
       "conf": {
           "stride": 1,
-          "window_size": 5,
+          "window_size": [5,5],
           "padding": 2,
-          "input_channel_num": 8,
           "output_channel_num": 8
       },
       "inputs": ["maxpooling_1"]
     },
     {
       "layer_id": "maxpooling_2",
-      "layer": "Pooling2d",
+      "layer": "Pooling2D",
       "conf": {
           "stride": 1,
           "window_size": 5,
           "padding": 2,
-          "input_channel_num": 8,
           "pool_type": "max"
       },
       "inputs": ["cnn_2"]
