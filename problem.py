@@ -53,11 +53,16 @@ class Problem():
         source_with_start, source_with_end, source_with_unk, source_with_pad, \
         target_with_start, target_with_end, target_with_unk, target_with_pad, \
         same_length = (True, ) * 9
-        if ProblemTypes[problem_type] != ProblemTypes.sequence_tagging:
-            target_with_start, target_with_end, target_with_unk, target_with_pad, same_length = (False, ) * 5
-            if phase != 'train':
+        if ProblemTypes[problem_type] == ProblemTypes.sequence_tagging:
+            pass
+        elif \
+           ProblemTypes[problem_type] == ProblemTypes.classification or \
+           ProblemTypes[problem_type] == ProblemTypes.regression:
+           target_with_start, target_with_end, target_with_unk, target_with_pad, same_length = (False, ) * 5
+           if phase != 'train':
                 same_length = True
-        if ProblemTypes[problem_type] == ProblemTypes.mrc:
+        elif ProblemTypes[problem_type] == ProblemTypes.mrc:
+            target_with_start, target_with_end, target_with_unk, target_with_pad, same_length = (False, ) * 5
             with_bos_eos = False
 
         self.lowercase = lowercase
@@ -85,8 +90,6 @@ class Problem():
                 ProblemTypes[self.problem_type] == ProblemTypes.mrc:
             self.output_dict = None
 
-        self.file_column_num = None
-
         if tokenizer in ['nltk']:
             self.tokenizer = EnglishTokenizer(tokenizer=tokenizer, remove_stopwords=remove_stopwords)
         elif tokenizer in ['jieba']:
@@ -102,11 +105,11 @@ class Problem():
         else:
             return None
 
-    def get_data_generator_from_file(self, file_path, file_with_col_header, chunk_size=1000000):
-        with open(file_path, "r", encoding='utf-8') as f:
+    def get_data_generator_from_file(self, data_path, file_with_col_header, chunk_size=1000000):
+        data_list = list()
+        with open(data_path, "r", encoding='utf-8') as f:
             if file_with_col_header:
                 f.readline()
-            data_list = list()
             for index, line in enumerate(f):
                 line = line.rstrip()
                 if not line:
@@ -208,13 +211,13 @@ class Problem():
 
             yield docs, target_docs, cnt_legal, cnt_illegal
 
-    def build(self, training_data_path, file_columns, input_types, file_with_col_header, answer_column_name, word2vec_path=None, word_emb_dim=None,
+    def build(self, data_path_list, file_columns, input_types, file_with_col_header, answer_column_name, word2vec_path=None, word_emb_dim=None,
               format=None, file_type=None, involve_all_words=None, file_format="tsv", show_progress=True,
               cpu_num_workers=-1, max_vocabulary=800000, word_frequency=3):
         """
 
         Args:
-            training_data_path:
+            data_path_list:
             file_columns: {
                   "word1": 0,
                   "word2": 1,
@@ -263,30 +266,28 @@ class Problem():
         else:
             bpe_encoder = None
 
-        self.file_column_num = len(file_columns)
+        
         chunk_size = st.chunk_size
-        progress = self.get_data_generator_from_file(training_data_path, file_with_col_header, chunk_size=chunk_size)
-        preprocessed_data_generator= self.build_training_multi_processor(progress, cpu_num_workers, file_columns, input_types, answer_column_name, bpe_encoder=bpe_encoder)
+        for data_path in data_path_list:
+            if data_path:
+                progress = self.get_data_generator_from_file(data_path, file_with_col_header, chunk_size=chunk_size)
+                preprocessed_data_generator= self.build_training_multi_processor(progress, cpu_num_workers, file_columns, input_types, answer_column_name, bpe_encoder=bpe_encoder)
         
-        # update symbol universe
-        total_cnt_legal, total_cnt_illegal = 0, 0
-        #for docs, target_docs, cnt_legal, cnt_illegal in tqdm(preprocessed_data_generator):
-        docs, target_docs, cnt_legal, cnt_illegal = next(preprocessed_data_generator)
-        total_cnt_legal += cnt_legal
-        total_cnt_illegal += cnt_illegal
+                # update symbol universe
+                docs, target_docs, cnt_legal, cnt_illegal = next(preprocessed_data_generator)
 
-        # input_type
-        for input_type in input_types:
-            self.input_dicts[input_type].update(docs[input_type])
+                # input_type
+                for input_type in input_types:
+                    self.input_dicts[input_type].update(docs[input_type])
         
-        # problem_type
-        if ProblemTypes[self.problem_type] == ProblemTypes.classification or \
-            ProblemTypes[self.problem_type] == ProblemTypes.sequence_tagging:
-            self.output_dict.update(list(target_docs.values())[0])
-        elif ProblemTypes[self.problem_type] == ProblemTypes.regression or \
-                ProblemTypes[self.problem_type] == ProblemTypes.mrc:
-            pass
-        logging.info("[Corpus] at most %d lines imported: %d legal lines, %d illegal lines." % (chunk_size, total_cnt_legal, total_cnt_illegal))
+                # problem_type
+                if ProblemTypes[self.problem_type] == ProblemTypes.classification or \
+                    ProblemTypes[self.problem_type] == ProblemTypes.sequence_tagging:
+                    self.output_dict.update(list(target_docs.values())[0])
+                elif ProblemTypes[self.problem_type] == ProblemTypes.regression or \
+                        ProblemTypes[self.problem_type] == ProblemTypes.mrc:
+                    pass
+                logging.info("[Building Dictionary] in %s at most %d lines imported: %d legal lines, %d illegal lines." % (data_path, chunk_size, cnt_legal, cnt_illegal))
      
         # build dictionary
         for input_type in input_types:

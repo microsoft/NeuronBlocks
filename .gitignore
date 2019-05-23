@@ -2,6 +2,7 @@
 *~
 *.pyc
 *.cache*
+*.vs*
 dataset/GloVe/
 dataset/20_newsgroups/
 models/

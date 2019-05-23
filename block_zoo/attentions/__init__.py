@@ -7,3 +7,4 @@ from .BiAttFlow import BiAttFlow, BiAttFlowConf
 from .MatchAttention import MatchAttention, MatchAttentionConf
 from .Attention import Attention, AttentionConf
 from .BilinearAttention import BilinearAttention, BilinearAttentionConf
+from .Interaction import Interaction, InteractionConf
