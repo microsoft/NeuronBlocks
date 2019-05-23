@@ -27,7 +27,6 @@ class Pooling2DConf(BaseConf):
 
     @DocInherit
     def default(self):
-        #self.input_dim = 128
         self.pool_type = 'max'  # Supported: ['max', mean']
         self.stride = 1
         self.padding = 0
