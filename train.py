@@ -21,202 +21,207 @@ from optimizers import *
 
 from LearningMachine import LearningMachine
 
+class Cache:
+    def __init__(self):
+        self.dictionary_invalid = True
+        self.embedding_invalid = True
+        self.encoding_invalid = True
+    
+    def _check_dictionary(self, conf, params):
+        # init status
+        self.dictionary_invalid = True
+        self.embedding_invalid = True
 
-def verify_cache(cache_conf, cur_conf):
-    """ To verify if the cache is appliable to current configuration
+        # cache_conf
+        cache_conf = None
+        cache_conf_path = os.path.join(conf.cache_dir, 'conf_cache.json')
+        if os.path.isfile(cache_conf_path):
+            params_cache = copy.deepcopy(params)
+            try:
+                cache_conf = ModelConf('cache', cache_conf_path, version, params_cache)
+            except Exception as e:
+                cache_conf = None
+        if cache_conf is None or not self._verify_conf(cache_conf, conf):
+            return False
+        
+        # problem
+        if not os.path.isfile(conf.problem_path):
+            return False
 
-    Args:
-        cache_conf (ModelConf):
-        cur_conf (ModelConf):
+        # embedding
+        if conf.emb_pkl_path:
+            if not os.path.isfile(conf.emb_pkl_path):
+                return False
+            self.embedding_invalid = False
+        
+        self.dictionary_invalid = False
+        return True
+        
+    def _check_encoding(self, conf):
+        self.encoding_invalid = False
+        return True
 
-    Returns:
+    def check(self, conf, params):
+        # dictionary
+        if not self._check_dictionary(conf, params):
+            self._renew_cache(params, conf.cache_dir)
+            return
+        # encoding
+        if not self._check_encoding(conf):
+            self._renew_cache(params, conf.cache_dir)
 
-    """
-    if cache_conf.tool_version != cur_conf.tool_version:
-        return False
-
-    attribute_to_cmp = ['file_columns', 'object_inputs', 'answer_column_name', 'input_types']
-
-    flag = True
-    for attr in attribute_to_cmp:
-        if not (hasattr(cache_conf, attr) and hasattr(cur_conf, attr) and getattr(cache_conf, attr) == getattr(cur_conf, attr)):
-            logging.error('configuration %s is inconsistent with the old cache' % attr)
-            flag = False
-    return flag
-
-
-def main(params):
-    conf = ModelConf("train", params.conf_path, version, params, mode=params.mode)
-
-    shutil.copy(params.conf_path, conf.save_base_dir)
-    logging.info('Configuration file is backed up to %s' % (conf.save_base_dir))
-
-    if ProblemTypes[conf.problem_type] == ProblemTypes.sequence_tagging:
-        problem = Problem(conf.problem_type, conf.input_types, conf.answer_column_name,
-            source_with_start=True, source_with_end=True, source_with_unk=True, source_with_pad=True,
-            target_with_start=True, target_with_end=True, target_with_unk=True, target_with_pad=True, same_length=True,
-            with_bos_eos=conf.add_start_end_for_seq, tagging_scheme=conf.tagging_scheme, tokenizer=conf.tokenizer,
-            remove_stopwords=conf.remove_stopwords, DBC2SBC=conf.DBC2SBC, unicode_fix=conf.unicode_fix)
-    elif ProblemTypes[conf.problem_type] == ProblemTypes.classification \
-            or ProblemTypes[conf.problem_type] == ProblemTypes.regression:
-        problem = Problem(conf.problem_type, conf.input_types, conf.answer_column_name,
-            source_with_start=True, source_with_end=True, source_with_unk=True, source_with_pad=True,
-            target_with_start=False, target_with_end=False, target_with_unk=False, target_with_pad=False,
-            same_length=False, with_bos_eos=conf.add_start_end_for_seq, tokenizer=conf.tokenizer,
-                          remove_stopwords=conf.remove_stopwords, DBC2SBC=conf.DBC2SBC, unicode_fix=conf.unicode_fix)
-    elif ProblemTypes[conf.problem_type] == ProblemTypes.mrc:
-        problem = Problem(conf.problem_type, conf.input_types, conf.answer_column_name,
-                          source_with_start=True, source_with_end=True, source_with_unk=True, source_with_pad=True,
-                          target_with_start=False, target_with_end=False, target_with_unk=False, target_with_pad=False,
-                          same_length=False, with_bos_eos=False, tokenizer=conf.tokenizer,
-                          remove_stopwords=conf.remove_stopwords, DBC2SBC=conf.DBC2SBC, unicode_fix=conf.unicode_fix)
-
-    cache_load_flag = False
-    if not conf.pretrained_model_path:
-        # first time training, load cache if appliable
-        if conf.use_cache:
-            cache_conf_path = os.path.join(conf.cache_dir, 'conf_cache.json')
-            if os.path.isfile(cache_conf_path):
-                params_cache = copy.deepcopy(params)
-                '''
-                for key in vars(params_cache):
-                    setattr(params_cache, key, None)
-                params_cache.mode = params.mode
-                '''
-                try:
-                    cache_conf = ModelConf('cache', cache_conf_path, version, params_cache)
-                except Exception as e:
-                    cache_conf = None
-                if cache_conf is None or verify_cache(cache_conf, conf) is not True:
-                    logging.info('Found cache that is ineffective')
-                    if params.mode == 'philly' or params.force is True:
-                        renew_option = 'yes'
-                    else:
-                        renew_option = input('There exists ineffective cache %s for old models. Input "yes" to renew cache and "no" to exit. (default:no): ' % os.path.abspath(conf.cache_dir))
-                    if renew_option.lower() != 'yes':
-                        exit(0)
-                    else:
-                        shutil.rmtree(conf.cache_dir)
-                        time.sleep(2)  # sleep 2 seconds since the deleting is asynchronous
-                        logging.info('Old cache is deleted')
-                else:
-                    logging.info('Found cache that is appliable to current configuration...')
-
-            elif os.path.isdir(conf.cache_dir):
-                renew_option = input('There exists ineffective cache %s for old models. Input "yes" to renew cache and "no" to exit. (default:no): ' % os.path.abspath(conf.cache_dir))
-                if renew_option.lower() != 'yes':
-                    exit(0)
-                else:
-                    shutil.rmtree(conf.cache_dir)
-                    time.sleep(2)  # Sleep 2 seconds since the deleting is asynchronous
-                    logging.info('Old cache is deleted')
-
-            if not os.path.exists(conf.cache_dir):
-                os.makedirs(conf.cache_dir)
-                shutil.copy(params.conf_path, os.path.join(conf.cache_dir, 'conf_cache.json'))
-
-        # first time training, load problem from cache, and then backup the cache to model_save_dir/.necessary_cache/
-        if conf.use_cache and os.path.isfile(conf.problem_path):
+    def load(self, conf, problem, emb_matrix):
+        # load dictionary when (not finetune) and (cache valid)
+        if not conf.pretrained_model_path and not self.dictionary_invalid:
             problem.load_problem(conf.problem_path)
-            if conf.emb_pkl_path is not None:
-                if os.path.isfile(conf.emb_pkl_path):
-                    emb_matrix = np.array(load_from_pkl(conf.emb_pkl_path))
-                    cache_load_flag = True
-                else:
-                    if params.mode == 'normal':
-                        renew_option = input('The cache is invalid because the embedding matrix does not exist in the cache directory. Input "yes" to renew cache and "no" to exit. (default:no): ')
-                        if renew_option.lower() != 'yes':
-                            exit(0)
-                    else:
-                        # by default, renew cache
-                        renew_option = 'yes'
-            else:
-                emb_matrix = None
-                cache_load_flag = True
-            if cache_load_flag:
-                logging.info("Cache loaded!")
+            if not self.embedding_invalid:
+                emb_matrix = np.array(load_from_pkl(conf.emb_pkl_path))
+            logging.info('[Cache] loading dictionary successfully')
+        
+        if not self.encoding_invalid:
+            pass  
+        return problem, emb_matrix
 
-        if cache_load_flag is False:
-            logging.info("Preprocessing... Depending on your corpus size, this step may take a while.")
-            # modify train_data_path to [train_data_path, valid_data_path, test_data_path]
-            # remember the test_data may be None
-            data_path_list = [conf.train_data_path, conf.valid_data_path, conf.test_data_path]
-            if conf.pretrained_emb_path:
-                emb_matrix = problem.build(data_path_list, conf.file_columns, conf.input_types, conf.file_with_col_header,
-                                           conf.answer_column_name, word2vec_path=conf.pretrained_emb_path,
-                                           word_emb_dim=conf.pretrained_emb_dim, format=conf.pretrained_emb_type,
-                                           file_type=conf.pretrained_emb_binary_or_text, involve_all_words=conf.involve_all_words_in_pretrained_emb,
-                                           show_progress=True if params.mode == 'normal' else False, cpu_num_workers = conf.cpu_num_workers,
-                                           max_vocabulary=conf.max_vocabulary, word_frequency=conf.min_word_frequency)
-            else:
-                emb_matrix = problem.build(data_path_list, conf.file_columns, conf.input_types, conf.file_with_col_header,
-                                           conf.answer_column_name, word2vec_path=None, word_emb_dim=None, format=None,
-                                           file_type=None, involve_all_words=conf.involve_all_words_in_pretrained_emb,
-                                           show_progress=True if params.mode == 'normal' else False,  cpu_num_workers = conf.cpu_num_workers,
-                                           max_vocabulary=conf.max_vocabulary, word_frequency=conf.min_word_frequency)
-
+    def save(self, conf, params, problem, emb_matrix):
+        if not os.path.exists(conf.cache_dir):
+            os.makedirs(conf.cache_dir)
+        shutil.copy(params.conf_path, os.path.join(conf.cache_dir, 'conf_cache.json'))
+        if self.dictionary_invalid:
             if conf.mode == 'philly' and conf.emb_pkl_path.startswith('/hdfs/'):
                 with HDFSDirectTransferer(conf.problem_path, with_hdfs_command=True) as transferer:
                     transferer.pkl_dump(problem.export_problem(conf.problem_path, ret_without_save=True))
             else:
                 problem.export_problem(conf.problem_path)
-            if conf.use_cache:
-                logging.info("Cache saved to %s" % conf.problem_path)
-                if emb_matrix is not None and conf.emb_pkl_path is not None:
-                    if conf.mode == 'philly' and conf.emb_pkl_path.startswith('/hdfs/'):
-                        with HDFSDirectTransferer(conf.emb_pkl_path, with_hdfs_command=True) as transferer:
-                            transferer.pkl_dump(emb_matrix)
-                    else:
-                        dump_to_pkl(emb_matrix, conf.emb_pkl_path)
-                    logging.info("Embedding matrix saved to %s" % conf.emb_pkl_path)
-            else:
-                logging.debug("Cache saved to %s" % conf.problem_path)
+            logging.info("[Cache] problem is saved to %s" % conf.problem_path)
+            if emb_matrix is not None and conf.emb_pkl_path is not None:
+                if conf.mode == 'philly' and conf.emb_pkl_path.startswith('/hdfs/'):
+                    with HDFSDirectTransferer(conf.emb_pkl_path, with_hdfs_command=True) as transferer:
+                        transferer.pkl_dump(emb_matrix)
+                else:
+                    dump_to_pkl(emb_matrix, conf.emb_pkl_path)
+            logging.info("Embedding matrix saved to %s" % conf.emb_pkl_path)
+        
+        if self.encoding_invalid:
+            pass
 
-        # Back up the problem.pkl to save_base_dir/.necessary_cache. During test phase, we would load cache from save_base_dir/.necessary_cache/problem.pkl
+    def back_up(self, conf, problem):
         cache_bakup_path = os.path.join(conf.save_base_dir, 'necessary_cache/')
         logging.debug('Prepare dir: %s' % cache_bakup_path)
         prepare_dir(cache_bakup_path, True, allow_overwrite=True, clear_dir_if_exist=True)
 
-        shutil.copy(conf.problem_path, cache_bakup_path)
+        problem.export_problem(cache_bakup_path+'problem.pkl')
         logging.debug("Problem %s is backed up to %s" % (conf.problem_path, cache_bakup_path))
-        if problem.output_dict:
-            logging.debug("Problem target cell dict: %s" % (problem.output_dict.cell_id_map))
 
-        if params.make_cache_only:
-            logging.info("Finish building cache!")
+    def _renew_cache(self, params, cache_path):
+        if not os.path.exists(cache_path):
             return
+        logging.info('Found cache that is ineffective')
+        renew_option = 'yes'
+        if params.mode != 'philly' and params.force is not True:
+            renew_option = input('There exists ineffective cache %s for old models. Input "yes" to renew cache and "no" to exit. (default:no): ' % os.path.abspath(cache_path))
+        if renew_option.lower() != 'yes':
+            exit(0)
+        else:
+            shutil.rmtree(cache_path)
+            time.sleep(2)  # sleep 2 seconds since the deleting is asynchronous
+            logging.info('Old cache is deleted')
 
-        vocab_info = dict() # include input_type's vocab_size & init_emd_matrix
-        vocab_sizes = problem.get_vocab_sizes()
-        for input_cluster in vocab_sizes:
-            vocab_info[input_cluster] = dict()
-            vocab_info[input_cluster]['vocab_size'] = vocab_sizes[input_cluster]
-            # add extra info for char_emb
-            if input_cluster.lower() == 'char':
-                for key, value in conf.input_types[input_cluster].items():
-                    if key != 'cols':
-                        vocab_info[input_cluster][key] = value
-            if input_cluster == 'word' and emb_matrix is not None:
-                vocab_info[input_cluster]['init_weights'] = emb_matrix
-            else:
-                vocab_info[input_cluster]['init_weights'] = None
+    def _verify_conf(self, cache_conf, cur_conf):
+        """ To verify if the cache is appliable to current configuration
 
-        lm = LearningMachine('train', conf, problem, vocab_info=vocab_info, initialize=True, use_gpu=conf.use_gpu)
-    else:
-        # when finetuning, load previous saved problem
+        Args:
+            cache_conf (ModelConf):
+            cur_conf (ModelConf):
+
+        Returns:
+
+        """
+        if cache_conf.tool_version != cur_conf.tool_version:
+            return False
+
+        attribute_to_cmp = ['file_columns', 'object_inputs', 'answer_column_name', 'input_types', 'language']
+
+        flag = True
+        for attr in attribute_to_cmp:
+            if not (hasattr(cache_conf, attr) and hasattr(cur_conf, attr) and getattr(cache_conf, attr) == getattr(cur_conf, attr)):
+                logging.error('configuration %s is inconsistent with the old cache' % attr)
+                flag = False
+        return flag
+
+def main(params):
+    # init
+    conf = ModelConf("train", params.conf_path, version, params, mode=params.mode)
+    problem = Problem("train", conf.problem_type, conf.input_types, conf.answer_column_name,
+        with_bos_eos=conf.add_start_end_for_seq, tagging_scheme=conf.tagging_scheme, tokenizer=conf.tokenizer,
+        remove_stopwords=conf.remove_stopwords, DBC2SBC=conf.DBC2SBC, unicode_fix=conf.unicode_fix)
+    if conf.pretrained_model_path:
+        ### when finetuning, load previous saved problem
         problem.load_problem(conf.saved_problem_path)
-        lm = LearningMachine('train', conf, problem, vocab_info=None, initialize=False, use_gpu=conf.use_gpu)
+   
+    # cache verification
+    emb_matrix = None
+    cache = Cache()
+    if conf.use_cache:
+        ## check
+        cache.check(conf, params)
+        ## load
+        problem, emb_matrix = cache.load(conf, problem, emb_matrix)
 
+    # data preprocessing
+    ## build dictionary when (not in finetune model) and (not use cache or cache invalid)
+    if (not conf.pretrained_model_path) and ((conf.use_cache == False) or cache.dictionary_invalid):
+        logging.info("Preprocessing... Depending on your corpus size, this step may take a while.")
+        # modify train_data_path to [train_data_path, valid_data_path, test_data_path]
+        # remember the test_data may be None
+        data_path_list = [conf.train_data_path, conf.valid_data_path, conf.test_data_path]
+        emb_matrix = problem.build(data_path_list, conf.file_columns, conf.input_types, conf.file_with_col_header,
+                                    conf.answer_column_name, word2vec_path=conf.pretrained_emb_path,
+                                    word_emb_dim=conf.pretrained_emb_dim, format=conf.pretrained_emb_type,
+                                    file_type=conf.pretrained_emb_binary_or_text, involve_all_words=conf.involve_all_words_in_pretrained_emb,
+                                    show_progress=True if params.mode == 'normal' else False, cpu_num_workers = conf.cpu_num_workers,
+                                    max_vocabulary=conf.max_vocabulary, word_frequency=conf.min_word_frequency)
+
+    ## encode rawdata when do not use cache
+    if conf.use_cache == False:
+        pass
+
+    # environment preparing
+    ## cache save
+    if conf.use_cache:
+        cache.save(conf, params, problem, emb_matrix)
+
+    if params.make_cache_only:
+        if conf.use_cache:
+            logging.info("Finish building cache!")
+        else:
+            logging.info('Please set parameters "use_cache" is true')
+        return
+
+    ## back up the problem.pkl to save_base_dir/.necessary_cache. 
+    ## During test phase, we would load cache from save_base_dir/.necessary_cache/problem.pkl
+    conf.back_up(params) 
+    cache.back_up(conf, problem)
+    if problem.output_dict:
+        logging.debug("Problem target cell dict: %s" % (problem.output_dict.cell_id_map))
+    
+    # train phase
+    ## init 
+    ### model
+    vocab_info, initialize = None, False
+    if not conf.pretrained_model_path:
+        vocab_info, initialize = get_vocab_info(conf, problem, emb_matrix), True
+  
+    lm = LearningMachine('train', conf, problem, vocab_info=vocab_info, initialize=initialize, use_gpu=conf.use_gpu)
+    if conf.pretrained_model_path:
+        logging.info('Loading the pretrained model: %s...' % conf.pretrained_model_path)
+        lm.load_model(conf.pretrained_model_path)
+
+    ### loss
     if len(conf.metrics_post_check) > 0:
         for metric_to_chk in conf.metrics_post_check:
             metric, target = metric_to_chk.split('@')
             if not problem.output_dict.has_cell(target):
                 raise Exception("The target %s of %s does not exist in the training data." % (target, metric_to_chk))
-
-    if conf.pretrained_model_path:
-        logging.info('Loading the pretrained model: %s...' % conf.pretrained_model_path)
-        lm.load_model(conf.pretrained_model_path)
-
     loss_conf = conf.loss
     loss_conf['output_layer_id'] = conf.output_layer_id
     loss_conf['answer_column_name'] = conf.answer_column_name
@@ -225,11 +230,13 @@ def main(params):
     if conf.use_gpu is True:
         loss_fn.cuda()
 
+    ### optimizer
     optimizer = eval(conf.optimizer_name)(lm.model.parameters(), **conf.optimizer_params)
 
+    ## train
     lm.train(optimizer, loss_fn)
 
-    # test the best model with the best model saved
+    ## test the best model with the best model saved
     lm.load_model(conf.model_save_path)
     if conf.test_data_path is not None:
         test_path = conf.test_data_path
@@ -241,6 +248,22 @@ def main(params):
     else:
         lm.test(loss_fn, test_path)
 
+def get_vocab_info(conf, problem, emb_matrix):
+    vocab_info = dict() # include input_type's vocab_size & init_emd_matrix
+    vocab_sizes = problem.get_vocab_sizes()
+    for input_cluster in vocab_sizes:
+        vocab_info[input_cluster] = dict()
+        vocab_info[input_cluster]['vocab_size'] = vocab_sizes[input_cluster]
+        # add extra info for char_emb
+        if input_cluster.lower() == 'char':
+            for key, value in conf.input_types[input_cluster].items():
+                if key != 'cols':
+                    vocab_info[input_cluster][key] = value
+        if input_cluster == 'word' and emb_matrix is not None:
+            vocab_info[input_cluster]['init_weights'] = emb_matrix
+        else:
+            vocab_info[input_cluster]['init_weights'] = None
+    return vocab_info
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Training')
