@@ -131,6 +131,14 @@ Anyone who are familiar with are highly encouraged to contribute code.
 
 # Reference
 **NeuronBlocks -- Building Your NLP DNN Models Like Playing Lego**, at https://arxiv.org/abs/1904.09535.
+```
+@article{gong2019neuronblocks,
+  title={NeuronBlocks--Building Your NLP DNN Models Like Playing Lego},
+  author={Gong, Ming and Shou, Linjun and Lin, Wutao and Sang, Zhijie and Yan, Quanjia and Yang, Ze and Jiang, Daxin},
+  journal={arXiv preprint arXiv:1904.09535},
+  year={2019}
+}
+```
 
 # Related Project
 * [OpenPAI](https://github.com/Microsoft/pai) is an open source platform that provides complete AI model training and resource management capabilities, it is easy to extend and supports on-premise, cloud and hybrid environments in various scale.

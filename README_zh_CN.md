@@ -131,7 +131,15 @@ NeuronBlocks以开放的模式运行。它由 **微软 STCA NLP Group** 设计�
 我们鼓励感兴趣的用户一起加入我们贡献code. 
 
 # 参考文献
-[**NeuronBlocks -- Building Your NLP DNN Models Like Playing Lego**](https://arxiv.org/abs/1904.09535).
+**NeuronBlocks -- Building Your NLP DNN Models Like Playing Lego**, at https://arxiv.org/abs/1904.09535.
+```
+@article{gong2019neuronblocks,
+  title={NeuronBlocks--Building Your NLP DNN Models Like Playing Lego},
+  author={Gong, Ming and Shou, Linjun and Lin, Wutao and Sang, Zhijie and Yan, Quanjia and Yang, Ze and Jiang, Daxin},
+  journal={arXiv preprint arXiv:1904.09535},
+  year={2019}
+}
+```
 
 # 相关项目
 * [OpenPAI](https://github.com/Microsoft/pai): 作为开源平台，提供了完整的 AI 模型训练和资源管理能力，能轻松扩展，并支持各种规模的私有部署、云和混合环境。
