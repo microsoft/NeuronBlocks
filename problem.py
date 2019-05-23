@@ -90,6 +90,8 @@ class Problem():
                 ProblemTypes[self.problem_type] == ProblemTypes.mrc:
             self.output_dict = None
 
+        self.file_column_num = None
+
         if tokenizer in ['nltk']:
             self.tokenizer = EnglishTokenizer(tokenizer=tokenizer, remove_stopwords=remove_stopwords)
         elif tokenizer in ['jieba']:
@@ -256,6 +258,8 @@ class Problem():
         """
         # parameter check
         bpe_encoder = self._check_bpe_encoder(input_types)  
+        self.file_column_num = len(file_columns)
+
         chunk_size = st.chunk_size
         for data_path in data_path_list:
             if data_path:
@@ -366,8 +370,6 @@ class Problem():
 
     def encode_data_multi_processor(self, data_generator, cpu_num_workers, file_columns, input_types, object_inputs,
                 answer_column_name, min_sentence_len, extra_feature, max_lengths=None, fixed_lengths=None, file_format="tsv", bpe_encoder=None):
-        
-        
         for data in data_generator:
             scheduler = ProcessorsScheduler(cpu_num_workers)
             func_args = (data, file_columns, input_types, object_inputs,
@@ -687,7 +689,7 @@ class Problem():
         """
         bpe_encoder = self._check_bpe_encoder(input_types)  
 
-        progress = self.get_data_generator_from_file(data_path, file_with_col_header)
+        progress = self.get_data_generator_from_file(data_path, file_with_col_header, chunk_size=st.chunk_size)
         encode_generator = self.encode_data_multi_processor(progress, cpu_num_workers,
                     file_columns, input_types, object_inputs, answer_column_name, min_sentence_len, extra_feature, max_lengths,
                     fixed_lengths, file_format, bpe_encoder=bpe_encoder)
@@ -719,7 +721,7 @@ class Problem():
             assert conf.encoding_cache_index_file_md5_path, 'There is no property encoding_cache_index_file_md5_path in object conf'
 
         bpe_encoder = self._check_bpe_encoder(conf.input_types)   
-        data_generator = self.get_data_generator_from_file(conf.train_data_path, conf.file_with_col_header)
+        data_generator = self.get_data_generator_from_file(conf.train_data_path, conf.file_with_col_header, chunk_size=st.chunk_size)
         encode_generator = self.encode_data_multi_processor(data_generator, conf.cpu_num_workers,
                     conf.file_columns, conf.input_types, conf.object_inputs, conf.answer_column_name, 
                     conf.min_sentence_len, conf.extra_feature, conf.max_lengths,
