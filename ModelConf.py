@@ -15,7 +15,7 @@ import shutil
 from losses.BaseLossConf import BaseLossConf
 #import traceback
 from settings import LanguageTypes, ProblemTypes, TaggingSchemes, SupportedMetrics, PredictionTypes, DefaultPredictionFields
-from utils.common_utils import log_set, prepare_dir
+from utils.common_utils import log_set, prepare_dir, md5
 from utils.exceptions import ConfigurationError
 import numpy as np
 
@@ -280,6 +280,9 @@ class ModelConf(object):
             tmp_problem_path = os.path.join(self.save_base_dir, '.necessary_cache', 'problem.pkl')
             self.problem_path = tmp_problem_path if os.path.isfile(tmp_problem_path) else os.path.join(self.save_base_dir, 'necessary_cache', 'problem.pkl')
 
+        # cache configuration
+        self._load_cache_config_from_conf()
+
         # training params
         self.training_params = self.get_item(['training_params'])
 
@@ -523,4 +526,22 @@ class ModelConf(object):
     def back_up(self, params):
         shutil.copy(params.conf_path, self.save_base_dir)
         logging.info('Configuration file is backed up to %s' % (self.save_base_dir))
+        
+    def _load_cache_config_from_conf(self):
+        # training data
+        self.train_data_md5 = None
+        if self.phase == 'train' and self.train_data_path:
+            self.train_data_md5 = md5([self.train_data_path])
+
+        # problem
+        self.problem_md5 = None
+        
+        # encoding 
+        self.encoding_cache_dir = None
+        self.encoding_cache_index_file_path = None
+        self.encoding_cache_index_file_md5_path = None
+        self.encoding_file_index = None
+        self.encoding_cache_legal_line_cnt = 0
+        self.encoding_cache_illegal_line_cnt = 0
+        self.load_encoding_cache_generator = None
         

@@ -12,9 +12,9 @@ nltk.download('stopwords', quiet=True)
 from utils.BPEEncoder import BPEEncoder
 import os
 import pickle as pkl
-from utils.common_utils import load_from_pkl, dump_to_pkl
+from utils.common_utils import load_from_pkl, dump_to_pkl, load_from_json, dump_to_json, prepare_dir, md5
 
-from settings import ProblemTypes
+from settings import ProblemTypes, Setting as st
 import math
 from utils.ProcessorsScheduler import ProcessorsScheduler
 
@@ -107,24 +107,21 @@ class Problem():
         else:
             return None
 
-    def get_data_generator_from_file(self, data_path_list, file_with_col_header, chunk_size=1000000):
-        # NOTE: file_path is a list type
-        for single_path in data_path_list:
-            data_list = list()
-            if single_path is not None:
-                with open(single_path, "r", encoding='utf-8') as f:
-                    if file_with_col_header:
-                        f.readline()
-                    for index, line in enumerate(f):
-                        line = line.rstrip()
-                        if not line:
-                            break
-                        data_list.append(line)
-                        if (index + 1) % chunk_size == 0:
-                            yield data_list
-                            data_list = list()
-                    if len(data_list) > 0:
-                        yield data_list
+    def get_data_generator_from_file(self, data_path, file_with_col_header, chunk_size=1000000):
+        data_list = list()
+        with open(data_path, "r", encoding='utf-8') as f:
+            if file_with_col_header:
+                f.readline()
+            for index, line in enumerate(f):
+                line = line.rstrip()
+                if not line:
+                    break
+                data_list.append(line)
+                if (index + 1) % chunk_size == 0:
+                    yield data_list
+                    data_list = list()
+            if len(data_list) > 0:
+                yield data_list
 
     def build_training_data_list(self, training_data_list, file_columns, input_types, answer_column_name, bpe_encoder=None):
         docs = dict()           # docs of each type of input
@@ -222,7 +219,7 @@ class Problem():
         """
 
         Args:
-            training_data_path:
+            data_path_list:
             file_columns: {
                   "word1": 0,
                   "word2": 1,
@@ -260,39 +257,30 @@ class Problem():
 
         """
         # parameter check
-        if not word2vec_path:
-            word_emb_dim, format, file_type, involve_all_words = None, None, None, None
-
-        if 'bpe' in input_types:
-            try:
-                bpe_encoder = BPEEncoder(input_types['bpe']['bpe_path'])
-            except KeyError:
-                raise Exception('Please define a bpe path at the embedding layer.')
-        else:
-            bpe_encoder = None
-
+        bpe_encoder = self._check_bpe_encoder(input_types)  
         self.file_column_num = len(file_columns)
-        progress = self.get_data_generator_from_file(data_path_list, file_with_col_header)
-        preprocessed_data_generator = self.build_training_multi_processor(progress, cpu_num_workers, file_columns, input_types, answer_column_name, bpe_encoder=bpe_encoder)
-        
-        # update symbol universe
-        total_cnt_legal, total_cnt_illegal = 0, 0
-        for docs, target_docs, cnt_legal, cnt_illegal in tqdm(preprocessed_data_generator):
-            total_cnt_legal += cnt_legal
-            total_cnt_illegal += cnt_illegal
 
-            # input_type
-            for input_type in input_types:
-                self.input_dicts[input_type].update(docs[input_type])
-            
-            # problem_type
-            if ProblemTypes[self.problem_type] == ProblemTypes.classification or \
-                ProblemTypes[self.problem_type] == ProblemTypes.sequence_tagging:
-                self.output_dict.update(list(target_docs.values())[0])
-            elif ProblemTypes[self.problem_type] == ProblemTypes.regression or \
-                    ProblemTypes[self.problem_type] == ProblemTypes.mrc:
-                pass
-        logging.info("Corpus imported: %d legal lines, %d illegal lines." % (total_cnt_legal, total_cnt_illegal))
+        chunk_size = st.chunk_size
+        for data_path in data_path_list:
+            if data_path:
+                progress = self.get_data_generator_from_file(data_path, file_with_col_header, chunk_size=chunk_size)
+                preprocessed_data_generator= self.build_training_multi_processor(progress, cpu_num_workers, file_columns, input_types, answer_column_name, bpe_encoder=bpe_encoder)
+        
+                # update symbol universe
+                docs, target_docs, cnt_legal, cnt_illegal = next(preprocessed_data_generator)
+
+                # input_type
+                for input_type in input_types:
+                    self.input_dicts[input_type].update(docs[input_type])
+        
+                # problem_type
+                if ProblemTypes[self.problem_type] == ProblemTypes.classification or \
+                    ProblemTypes[self.problem_type] == ProblemTypes.sequence_tagging:
+                    self.output_dict.update(list(target_docs.values())[0])
+                elif ProblemTypes[self.problem_type] == ProblemTypes.regression or \
+                        ProblemTypes[self.problem_type] == ProblemTypes.mrc:
+                    pass
+                logging.info("[Building Dictionary] in %s at most %d lines imported: %d legal lines, %d illegal lines." % (data_path, chunk_size, cnt_legal, cnt_illegal))
      
         # build dictionary
         for input_type in input_types:
@@ -382,8 +370,6 @@ class Problem():
 
     def encode_data_multi_processor(self, data_generator, cpu_num_workers, file_columns, input_types, object_inputs,
                 answer_column_name, min_sentence_len, extra_feature, max_lengths=None, fixed_lengths=None, file_format="tsv", bpe_encoder=None):
-        
-        
         for data in data_generator:
             scheduler = ProcessorsScheduler(cpu_num_workers)
             func_args = (data, file_columns, input_types, object_inputs,
@@ -701,6 +687,7 @@ class Problem():
             target: [...]
 
         """
+<<<<<<< HEAD
         if 'bpe' in input_types:
             try:
                 bpe_encoder = BPEEncoder(input_types['bpe']['bpe_path'])
@@ -711,12 +698,18 @@ class Problem():
 
         progress = self.get_data_generator_from_file([data_path], file_with_col_header)
         encoder_generator = self.encode_data_multi_processor(progress, cpu_num_workers,
+=======
+        bpe_encoder = self._check_bpe_encoder(input_types)  
+
+        progress = self.get_data_generator_from_file(data_path, file_with_col_header, chunk_size=st.chunk_size)
+        encode_generator = self.encode_data_multi_processor(progress, cpu_num_workers,
+>>>>>>> add_encoding_cache
                     file_columns, input_types, object_inputs, answer_column_name, min_sentence_len, extra_feature, max_lengths,
                     fixed_lengths, file_format, bpe_encoder=bpe_encoder)
         
         data, lengths, target = dict(), dict(), dict()
         cnt_legal, cnt_illegal = 0, 0
-        for temp_data, temp_lengths, temp_target, temp_cnt_legal, temp_cnt_illegal in tqdm(encoder_generator):
+        for temp_data, temp_lengths, temp_target, temp_cnt_legal, temp_cnt_illegal in tqdm(encode_generator):
             data = self._merge_encode_data(data, temp_data)
             lengths = self._merge_encode_lengths(lengths, temp_lengths)
             target = self._merge_target(target, temp_target)   
@@ -725,6 +718,59 @@ class Problem():
 
         logging.info("%s: %d legal samples, %d illegal samples" % (data_path, cnt_legal, cnt_illegal))
         return data, lengths, target
+
+    def build_encode_cache(self, conf, file_format="tsv"):
+        logging.info("[Cache] building encoding cache") 
+        build_encode_cache_generator = self.get_encode_generator(conf, build_cache=True, file_format=file_format)
+        for _ in build_encode_cache_generator:
+            continue
+        logging.info("[Cache] encoding is saved to %s" % conf.encoding_cache_dir)    
+        
+    def get_encode_generator(self, conf, build_cache=True, file_format="tsv"):
+        # parameter check
+        if build_cache:
+            assert conf.encoding_cache_dir, 'There is no property encoding_cache_dir in object conf'
+            assert conf.encoding_cache_index_file_path, 'There is no property encoding_cache_index_file_path in object conf'
+            assert conf.encoding_cache_index_file_md5_path, 'There is no property encoding_cache_index_file_md5_path in object conf'
+
+        bpe_encoder = self._check_bpe_encoder(conf.input_types)   
+        data_generator = self.get_data_generator_from_file(conf.train_data_path, conf.file_with_col_header, chunk_size=st.chunk_size)
+        encode_generator = self.encode_data_multi_processor(data_generator, conf.cpu_num_workers,
+                    conf.file_columns, conf.input_types, conf.object_inputs, conf.answer_column_name, 
+                    conf.min_sentence_len, conf.extra_feature, conf.max_lengths,
+                    conf.fixed_lengths, file_format, bpe_encoder=bpe_encoder)
+      
+        file_index = []
+        total_cnt_legal, total_cnt_illegal = 0, 0
+        for part_number, encode_data in enumerate(encode_generator):
+            data, lengths, target, cnt_legal, cnt_illegal = encode_data
+            if build_cache:
+                total_cnt_legal = total_cnt_legal + cnt_legal
+                total_cnt_illegal = total_cnt_illegal + cnt_illegal
+                file_name = st.cencoding_file_name_pattern % (part_number)
+                file_path = os.path.join(conf.encoding_cache_dir, file_name)
+                dump_to_pkl((data, lengths, target), file_path)
+                file_index.append([file_name, md5([file_path])])
+                logging.info("Up to now, in %s: %d legal samples, %d illegal samples" % (conf.train_data_path, total_cnt_legal, total_cnt_illegal))
+            yield data, lengths, target
+        
+        if build_cache:
+            cache_index = dict()
+            cache_index[st.cencoding_key_index] = file_index
+            cache_index[st.cencoding_key_legal_cnt] = total_cnt_legal
+            cache_index[st.cencoding_key_illegal_cnt] = total_cnt_illegal
+            dump_to_json(cache_index, conf.encoding_cache_index_file_path)
+            dump_to_json(md5([conf.encoding_cache_index_file_path]), conf.encoding_cache_index_file_md5_path)            
+            
+    @staticmethod
+    def _check_bpe_encoder(input_types):
+        bpe_encoder = None
+        if 'bpe' in input_types:
+            try:
+                bpe_encoder = BPEEncoder(input_types['bpe']['bpe_path'])
+            except KeyError:
+                raise Exception('Please define a bpe path at the embedding layer.')
+        return bpe_encoder
 
     def decode(self, model_output, lengths=None, batch_data=None):
         """ decode the model output, either a batch of output or a single output

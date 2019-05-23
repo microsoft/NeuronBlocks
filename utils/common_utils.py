@@ -3,6 +3,7 @@
 
 import logging
 import pickle as pkl
+import json
 import torch
 import os
 import shutil
@@ -48,6 +49,17 @@ def dump_to_pkl(obj, pkl_path):
         pkl.dump(obj, fout, protocol=pkl.HIGHEST_PROTOCOL)
     logging.debug("Obj dumped to %s!" % pkl_path)
 
+def load_from_json(json_path):
+    data = None
+    with open(json_path, 'r', encoding='utf-8') as f:
+        data = json.loads(f.read())
+    logging.debug("%s loaded!" % json_path)
+    return data
+
+def dump_to_json(obj, json_path):
+    with open(json_path, 'w', encoding='utf-8') as f:
+        f.write(json.dumps(obj))
+    logging.debug("Obj dumped to %s!" % json_path)
 
 def get_trainable_param_num(model):
     """ get the number of trainable parameters
@@ -222,7 +234,7 @@ def md5(file_paths, chunk_size=1024*1024*1024):
     """ Calculate a md5 of lists of files. 
 
     Args:
-        file_paths:  an iterable object contains files. Files will be concatenated orderly if there are more than one file
+        file_paths:  an iterable object contains file paths. Files will be concatenated orderly if there are more than one file
         chunk_size:  unit is byte, default value is 1GB
     Returns:
         md5
