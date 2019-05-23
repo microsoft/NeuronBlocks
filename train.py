@@ -209,7 +209,7 @@ def main(params):
     ### model
     vocab_info, initialize = None, False
     if not conf.pretrained_model_path:
-        vocab_info, initialize = get_vocab_info(problem, emb_matrix), True
+        vocab_info, initialize = get_vocab_info(conf, problem, emb_matrix), True
   
     lm = LearningMachine('train', conf, problem, vocab_info=vocab_info, initialize=initialize, use_gpu=conf.use_gpu)
     if conf.pretrained_model_path:
@@ -248,7 +248,7 @@ def main(params):
     else:
         lm.test(loss_fn, test_path)
 
-def get_vocab_info(problem, emb_matrix):
+def get_vocab_info(conf, problem, emb_matrix):
     vocab_info = dict() # include input_type's vocab_size & init_emd_matrix
     vocab_sizes = problem.get_vocab_sizes()
     for input_cluster in vocab_sizes:
