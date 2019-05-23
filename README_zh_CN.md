@@ -7,6 +7,8 @@
 
 [English version](README.md)
 
+[中文教程](Tutorial_zh_CN.md) [Tutorial](Tutorial.md)
+
 # 目录
 
 * [概览](#概览)

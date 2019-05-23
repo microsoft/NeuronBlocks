@@ -7,6 +7,8 @@
 
 [简体中文](README_zh_CN.md)
 
+[Tutorial](Tutorial.md) [中文教程](Tutorial_zh_CN.md) 
+
 
 # Table of Contents
 * [Overview](#Overview)
