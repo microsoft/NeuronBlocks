@@ -139,7 +139,7 @@ class Cache:
         if cache_conf.tool_version != cur_conf.tool_version:
             return False
 
-        attribute_to_cmp = ['file_columns', 'object_inputs', 'answer_column_name', 'input_types']
+        attribute_to_cmp = ['file_columns', 'object_inputs', 'answer_column_name', 'input_types', 'language']
 
         flag = True
         for attr in attribute_to_cmp:
