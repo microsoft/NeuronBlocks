@@ -113,8 +113,7 @@ class Embedding(BaseLayer):
         super(Embedding, self).__init__(layer_conf)
         self.layer_conf = layer_conf
 
-        # self.embeddings = dict()
-        self.embeddings = nn.ModuleDict()
+        self.embeddings = dict()
         for input_cluster in layer_conf.conf:
             if 'type' in layer_conf.conf[input_cluster]:
                 # char embedding
@@ -162,8 +161,7 @@ class Embedding(BaseLayer):
             #     emb = self.embeddings[input_cluster](input, lengths[input]).float()
             # else:
             #     emb = self.embeddings[input_cluster](input).float()
-            # emb = self.embeddings[input_cluster](input.cpu()).float()
-            emb = self.embeddings[input_cluster](input).to(torch.float32)
+            emb = self.embeddings[input_cluster](input.cpu()).float()
             if use_gpu is True:
                 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
                 emb = emb.to(device)
