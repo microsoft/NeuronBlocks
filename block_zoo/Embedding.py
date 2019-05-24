@@ -11,6 +11,7 @@ from utils.DocInherit import DocInherit
 from block_zoo.embedding import *
 import copy
 import logging
+import itertools
 
 class EmbeddingConf(BaseConf):
     """ Configuration for Embedding
@@ -170,6 +171,11 @@ class Embedding(BaseLayer):
             return torch.cat(features, 2)
         else:
             return features[0]
+
+    def get_parameters(self):
+        for sub_emb in self.embeddings:
+            for param in self.embeddings[sub_emb].parameters():
+                yield param
 
 
 

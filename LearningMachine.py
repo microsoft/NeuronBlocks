@@ -260,6 +260,10 @@ class LearningMachine(object):
                 optimizer.zero_grad()
                 loss.backward()
                 torch.nn.utils.clip_grad_norm_(self.model.parameters(), self.conf.clip_grad_norm_max_norm)
+                if isinstance(self.model, nn.DataParallel):
+                    torch.nn.utils.clip_grad_norm_(self.model.module.layers['embedding'].get_parameters(), self.conf.clip_grad_norm_max_norm)
+                else:
+                    torch.nn.utils.clip_grad_norm_(self.model.layers['embedding'].get_parameters(), self.conf.clip_grad_norm_max_norm)
                 optimizer.step()
 
                 del loss, logits, logits_softmax, logits_flat
