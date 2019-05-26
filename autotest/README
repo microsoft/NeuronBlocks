@@ -2,7 +2,7 @@
 1. 下载Glove词向量：
 cd PROJECT_ROOT/dataset
 ./get_glove.sh
-2. 下载中文词向量，首先从https://github.com/Embedding/Chinese-Word-Vectors#pre-trained-chinese-word-vectors中下载中文词向量并解压，
+2. 下载中文词向量，首先从https://github.com/Embedding/Chinese-Word-Vectors#pre-trained-chinese-word-vectors 中下载中文词向量并解压，
 然后将其放置在某一文件夹下（例如 PROJECT_ROOT/dataset/chinese_word_vectors/ ），
 最后在PROJECT_ROOT/autotest/conf/conf_chinese_text_matching_emb_char_autotest.json中配置里定义 inputs/data_paths/pre_trained_emb；
 3. 下载20 Newsgroups dataset：
