@@ -1,0 +1,17 @@
+自动测试脚本使用说明
+1. 下载Glove词向量：
+cd PROJECT_ROOT/dataset
+./get_glove.sh
+2. 下载中文词向量，首先从https://github.com/Embedding/Chinese-Word-Vectors#pre-trained-chinese-word-vectors中下载中文词向量并解压，
+然后将其放置在某一文件夹下（例如 PROJECT_ROOT/dataset/chinese_word_vectors/ ），
+最后在PROJECT_ROOT/autotest/conf/conf_chinese_text_matching_emb_char_autotest.json中配置里定义 inputs/data_paths/pre_trained_emb；
+3. 下载20 Newsgroups dataset：
+cd PROJECT_ROOT/dataset
+python get_20_newsgroups.py
+4. 执行自动测试脚本：
+cd PROJECT_ROOT
+sh autotest.sh A B
+参数A代表单进程或多进程执行测试脚本，当参数值为Y时执行多进程，默认为单进程；
+参数B代表使用CPU或GPU执行测试脚本，当参数非空时，代表使用GPU，此时需指定使用的显卡号，默认为使用CPU。
+例如：sh autotest.sh Y 1 代表使用１号GPU显卡多进程执行自动测试脚本
+5. 最终生成contrast_results.txt文件，存储模型更新前后在四个子任务的效果。
