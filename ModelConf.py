@@ -286,9 +286,8 @@ class ModelConf(object):
         if self.phase == 'train':
             self.optimizer_name = self.get_item(['training_params', 'optimizer', 'name'])
             self.optimizer_params = self.get_item(['training_params', 'optimizer', 'params'])
-            self.use_clip_grad_norm = self.get_item(['training_params', 'use_clip_grad_norm'], default=False)
-            if self.use_clip_grad_norm:
-                self.clip_grad_norm_max_norm = self.get_item(['training_params', 'clip_grad_norm_max_norm'], default=5)
+
+            self.clip_grad_norm_max_norm = self.get_item(['training_params', 'clip_grad_norm_max_norm'], default=-1)
 
             if hasattr(self.params, 'learning_rate') and self.params.learning_rate:
                 self.optimizer_params['lr'] = self.params.learning_rate

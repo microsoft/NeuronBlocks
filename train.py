@@ -19,7 +19,6 @@ from utils.common_utils import dump_to_pkl, load_from_pkl, prepare_dir
 from utils.philly_utils import HDFSDirectTransferer
 from losses import *
 from optimizers import *
-import itertools
 
 from LearningMachine import LearningMachine
 

@@ -259,7 +259,7 @@ class LearningMachine(object):
                 all_costs.append(loss.item())
                 optimizer.zero_grad()
                 loss.backward()
-                if self.conf.use_clip_grad_norm:
+                if self.conf.clip_grad_norm_max_norm != -1:
                     torch.nn.utils.clip_grad_norm_(self.model.parameters(), self.conf.clip_grad_norm_max_norm)
                     if isinstance(self.model, nn.DataParallel):
                         torch.nn.utils.clip_grad_norm_(self.model.module.layers['embedding'].get_parameters(), self.conf.clip_grad_norm_max_norm)
