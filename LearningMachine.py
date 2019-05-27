@@ -34,6 +34,12 @@ class LearningMachine(object):
             if use_gpu is True:
                 self.model = nn.DataParallel(self.model)
                 self.model = transfer_to_gpu(self.model)
+            # judge the embedding matrix weight's device
+            emb_weight_device = list(self.model.module.layers.embedding.embeddings.values())[0].weight.device.type if isinstance(self.model, nn.DataParallel) \
+                else list(self.model.layers.embedding.embeddings.values())[0].weight.device.type
+            device = 'GPU' if 'cuda' in emb_weight_device else 'CPU'
+            logging.info(
+                "The embedding matrix is on %s now, you can modify the weight_on_gpu parameter to change embeddings weight device." % device)
             logging.info(self.model)
             #logging.info("Total parameters: %d; trainable parameters: %d" % (get_param_num(self.model), get_trainable_param_num(self.model)))
             logging.info("Total trainable parameters: %d" % (get_trainable_param_num(self.model)))

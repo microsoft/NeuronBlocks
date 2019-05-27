@@ -112,7 +112,7 @@ class Embedding(BaseLayer):
         super(Embedding, self).__init__(layer_conf)
         self.layer_conf = layer_conf
 
-        self.embeddings = dict()
+        self.embeddings = nn.ModuleDict() if layer_conf.weight_on_gpu else dict()
         for input_cluster in layer_conf.conf:
             if 'type' in layer_conf.conf[input_cluster]:
                 # char embedding
@@ -129,13 +129,6 @@ class Embedding(BaseLayer):
                 if 'init_weights' in layer_conf.conf[input_cluster] and layer_conf.conf[input_cluster]['init_weights'] is not None:
                     self.embeddings[input_cluster].weight = nn.Parameter(torch.from_numpy(layer_conf.conf[input_cluster]['init_weights']))
 
-                # judge the embedding matrix weight's device
-                if layer_conf.conf[input_cluster]['weight_on_gpu']:
-                    self.embeddings[input_cluster].to(torch.device("cuda" if torch.cuda.is_available() else "cpu"))
-                    logging.info("The embeddings[%s]'s weight is on GPU now, you can modify the weight_on_gpu parameter to change embeddings weight device" % input_cluster)
-                else:
-                    logging.info(
-                        "The embeddings[%s]'s weight is on cpu now, you can modify the weight_on_gpu parameter to change embeddings weight device" % input_cluster)
                 # judge if fix the embedding weight
                 if layer_conf.conf[input_cluster]['fix_weight']:
                     self.embeddings[input_cluster].weight.requires_grad = False
