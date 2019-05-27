@@ -5,6 +5,7 @@ import logging
 import pickle as pkl
 import json
 import torch
+import torch.nn as nn
 import os
 import shutil
 import time
@@ -70,7 +71,12 @@ def get_trainable_param_num(model):
     Returns:
 
     """
-    return sum(p.numel() for p in model.parameters() if p.requires_grad)
+    if isinstance(model, nn.DataParallel):
+        model_param = list(model.parameters()) + list(model.module.layers['embedding'].get_parameters())
+    else:
+        model_param = list(model.parameters()) + list(model.layers['embedding'].get_parameters())
+
+    return sum(p.numel() for p in model_param if p.requires_grad)
 
 
 def get_param_num(model):

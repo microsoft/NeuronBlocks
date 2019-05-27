@@ -12,6 +12,7 @@ import numpy as np
 import copy
 
 import torch
+import torch.nn as nn
 from ModelConf import ModelConf
 from problem import Problem
 from utils.common_utils import dump_to_pkl, load_from_pkl, load_from_json, dump_to_json, prepare_dir, md5
@@ -303,7 +304,10 @@ def main(params):
         loss_fn.cuda()
 
     ### optimizer
-    optimizer = eval(conf.optimizer_name)(lm.model.parameters(), **conf.optimizer_params)
+    if isinstance(lm.model, nn.DataParallel):
+        optimizer = eval(conf.optimizer_name)(list(lm.model.parameters()) + list(lm.model.module.layers['embedding'].get_parameters()), **conf.optimizer_params)
+    else:
+        optimizer = eval(conf.optimizer_name)(list(lm.model.parameters()) + list(lm.model.layers['embedding'].get_parameters()), **conf.optimizer_params)
 
     ## train
     lm.train(optimizer, loss_fn)
