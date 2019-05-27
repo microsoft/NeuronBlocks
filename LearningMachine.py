@@ -135,7 +135,6 @@ class LearningMachine(object):
 
                 logging.info('There are %d batches during current period; validation are conducted every %d batch' % (small_batch_num, valid_batch_num_show))
 
-<<<<<<< HEAD
                 if self.conf.mode == 'normal':
                     progress = tqdm(range(len(target_batches)))
                 elif self.conf.mode == 'philly':
@@ -144,18 +143,6 @@ class LearningMachine(object):
                     # the result shape: for classification: [batch_size, # of classes]; for sequence tagging: [batch_size, seq_len, # of tags]
                     param_list, inputs_desc, length_desc = transform_params2tensors(data_batches[i], length_batches[i])
                     logits = self.model(inputs_desc, length_desc, *param_list)
-=======
-                all_costs.append(loss.item())
-                optimizer.zero_grad()
-                loss.backward()
-                if self.conf.clip_grad_norm_max_norm != -1:
-                    torch.nn.utils.clip_grad_norm_(self.model.parameters(), self.conf.clip_grad_norm_max_norm)
-                    if isinstance(self.model, nn.DataParallel):
-                        torch.nn.utils.clip_grad_norm_(self.model.module.layers['embedding'].get_parameters(), self.conf.clip_grad_norm_max_norm)
-                    else:
-                        torch.nn.utils.clip_grad_norm_(self.model.layers['embedding'].get_parameters(), self.conf.clip_grad_norm_max_norm)
-                optimizer.step()
->>>>>>> master
 
                     logits_softmax = {}
                     if isinstance(self.model, nn.DataParallel):
