@@ -201,6 +201,7 @@ class Model(nn.Module):
                 for input_cluster in emb_conf:
                     emb_conf[input_cluster]['dim'] = layer_arch['conf'][input_cluster]['dim']
                     emb_conf[input_cluster]['fix_weight'] = layer_arch['conf'][input_cluster].get('fix_weight', False)
+                    emb_conf[input_cluster]['weight_on_gpu'] = layer_arch['conf'][input_cluster].get('weight_on_gpu', True)
 
                 all_layer_configs[EMBED_LAYER_ID] = get_conf(EMBED_LAYER_ID, layer_arch['layer'],
                     None, all_layer_configs, inputs, self.use_gpu, conf_dict={'conf': emb_conf},

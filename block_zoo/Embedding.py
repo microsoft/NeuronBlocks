@@ -129,6 +129,13 @@ class Embedding(BaseLayer):
                 if 'init_weights' in layer_conf.conf[input_cluster] and layer_conf.conf[input_cluster]['init_weights'] is not None:
                     self.embeddings[input_cluster].weight = nn.Parameter(torch.from_numpy(layer_conf.conf[input_cluster]['init_weights']))
 
+                # judge the embedding matrix weight's device
+                if layer_conf.conf[input_cluster]['weight_on_gpu']:
+                    self.embeddings[input_cluster].to(torch.device("cuda" if torch.cuda.is_available() else "cpu"))
+                    logging.info("The embeddings[%s]'s weight is on GPU now, you can modify the weight_on_gpu parameter to change embeddings weight device" % input_cluster)
+                else:
+                    logging.info(
+                        "The embeddings[%s]'s weight is on cpu now, you can modify the weight_on_gpu parameter to change embeddings weight device" % input_cluster)
                 # judge if fix the embedding weight
                 if layer_conf.conf[input_cluster]['fix_weight']:
                     self.embeddings[input_cluster].weight.requires_grad = False
@@ -160,7 +167,10 @@ class Embedding(BaseLayer):
             #     emb = self.embeddings[input_cluster](input, lengths[input]).float()
             # else:
             #     emb = self.embeddings[input_cluster](input).float()
-            emb = self.embeddings[input_cluster](input.cpu()).float()
+            if self.embeddings[input_cluster].weight.device.type == 'cpu':
+                emb = self.embeddings[input_cluster](input.cpu()).float()
+            else:
+                emb = self.embeddings[input_cluster](input).float()
             if use_gpu is True:
                 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
                 emb = emb.to(device)
@@ -170,6 +180,11 @@ class Embedding(BaseLayer):
             return torch.cat(features, 2)
         else:
             return features[0]
+
+    def get_parameters(self):
+        for sub_emb in self.embeddings:
+            for param in self.embeddings[sub_emb].parameters():
+                yield param
 
 
 
