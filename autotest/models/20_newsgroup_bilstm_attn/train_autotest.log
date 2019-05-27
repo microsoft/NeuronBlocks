@@ -1,0 +1,2 @@
+2019-05-27 00:21:46,401 DEBUG ModelConf.py load_from_file 129: Prepare dir for: ./autotest/models/20_newsgroup_bilstm_attn/predict.tsv
+2019-05-27 00:21:46,565 INFO ModelConf.py load_from_file 353: Activating CPU mode

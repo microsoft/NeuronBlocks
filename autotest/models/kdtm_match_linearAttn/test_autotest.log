@@ -1,0 +1,78 @@
+2019-05-26 07:18:34,949 DEBUG ModelConf.py load_from_file 128: Prepare dir for: ./autotest/models/kdtm_match_linearAttn/predict.tsv
+2019-05-26 07:18:35,115 INFO ModelConf.py load_from_file 352: Activating CPU mode
+2019-05-26 07:18:35,116 DEBUG ModelConf.py __init__ 45: Print ModelConf below:
+2019-05-26 07:18:35,116 DEBUG ModelConf.py __init__ 46: ================================================================================
+2019-05-26 07:18:35,116 DEBUG ModelConf.py __init__ 50: phase: test
+2019-05-26 07:18:35,116 DEBUG ModelConf.py __init__ 50: conf_path: autotest/conf/conf_kdtm_match_linearAttn_autotest.json
+2019-05-26 07:18:35,116 DEBUG ModelConf.py __init__ 50: params: Namespace(batch_size=None, conf_path='autotest/conf/conf_kdtm_match_linearAttn_autotest.json', debug=False, disable_log_file=False, force=True, log_dir=None, mode='normal', predict_output_path=None, previous_model_path=None, test_data_path=None)
+2019-05-26 07:18:35,116 DEBUG ModelConf.py __init__ 50: mode: normal
+2019-05-26 07:18:35,116 DEBUG ModelConf.py __init__ 50: conf: {'license': 'Copyright (c) Microsoft Corporation. All rights reserved. Licensed under the MIT license.', 'tool_version': '1.1.0', 'model_description': 'This model is used for model compression', 'inputs': {'use_cache': True, 'dataset_type': 'regression', 'data_paths': {'train_data_path': './autotest/dataset/knowledge_distillation/text_matching_data/train_autotest.tsv', 'valid_data_path': './autotest/dataset/knowledge_distillation/text_matching_data/valid.tsv', 'test_data_path': './autotest/dataset/knowledge_distillation/text_matching_data/test.tsv', 'pre_trained_emb': 'dataset/GloVe/glove.840B.300d.txt'}, 'add_start_end_for_seq': True, 'file_header': {'query_text': 0, 'passage_text': 1, 'label_score': 2}, 'predict_file_header': {'query_text': 0, 'passage_text': 1}, 'model_inputs': {'query': ['query_text'], 'passage': ['passage_text']}, 'target': ['label_score']}, 'outputs': {'save_base_dir': './autotest/models/kdtm_match_linearAttn/', 'model_name': 'model.nb', 'train_log_name': 'train_autotest.log', 'test_log_name': 'test_autotest.log', 'predict_log_name': 'predict.log', 'predict_fields': ['prediction'], 'predict_output_name': 'predict.tsv', 'cache_dir': '.cache.kdtm_match_linearAttn/'}, 'training_params': {'vocabulary': {'min_word_frequency': 1}, 'optimizer': {'name': 'SGD', 'params': {'lr': 0.2, 'momentum': 0.9, 'nesterov': True}}, 'lr_decay': 0.95, 'minimum_lr': 0.005, 'epoch_start_lr_decay': 1, 'use_gpu': True, 'batch_size': 128, 'batch_num_to_show_results': 100, 'max_epoch': 10, 'valid_times_per_epoch': 2, 'max_lengths': {'query': 30, 'passage': 200}}, 'architecture': [{'layer': 'Embedding', 'conf': {'word': {'cols': ['query_text', 'passage_text'], 'dim': 300}}}, {'layer_id': 'query_dropout', 'layer': 'Dropout', 'conf': {'dropout': 0.3}, 'inputs': ['query']}, {'layer_id': 'passage_dropout', 'layer': 'Dropout', 'conf': {'dropout': 0.3}, 'inputs': ['passage']}, {'layer_id': 'query_1', 'layer': 'BiLSTM', 'conf': {'hidden_dim': 128, 'dropout': 0.3, 'num_layers': 3}, 'inputs': ['query_dropout']}, {'layer_id': 'passage_matched', 'layer': 'MatchAttention', 'conf': {}, 'inputs': ['passage_dropout', 'query_dropout']}, {'layer_id': 'passage_combined', 'layer': 'Combination', 'conf': {'operations': ['origin']}, 'inputs': ['passage_dropout', 'passage_matched']}, {'layer_id': 'passage_1', 'layer': 'BiLSTM', 'conf': {'hidden_dim': 128, 'dropout': 0.3, 'num_layers': 3}, 'inputs': ['passage_combined']}, {'layer_id': 'query_linear_att', 'layer': 'LinearAttention', 'conf': {'attention_weight_dim': 256, 'keep_dim': False}, 'inputs': ['query_1']}, {'layer_id': 'passage_linear_att', 'layer': 'LinearAttention', 'conf': {'attention_weight_dim': 256, 'keep_dim': False}, 'inputs': ['passage_1']}, {'layer_id': 'comb', 'layer': 'Combination', 'conf': {'operations': ['origin']}, 'inputs': ['query_linear_att', 'passage_linear_att']}, {'layer_id': 'linear', 'layer': 'Linear', 'conf': {'hidden_dim': [512], 'activation': 'PReLU', 'batch_norm': True, 'last_hidden_activation': True}, 'inputs': ['comb']}, {'output_layer_flag': True, 'layer_id': 'output', 'layer': 'Linear', 'conf': {'hidden_dim': [1], 'activation': 'Sigmoid', 'last_hidden_activation': True, 'last_hidden_softmax': False}, 'inputs': ['linear']}], 'loss': {'losses': [{'type': 'MSELoss', 'conf': {}, 'inputs': ['output', 'label_score']}]}, 'metrics': ['RMSE', 'MSE']}
+2019-05-26 07:18:35,116 DEBUG ModelConf.py __init__ 50: tool_version: 1.1.0
+2019-05-26 07:18:35,116 DEBUG ModelConf.py __init__ 50: language: english
+2019-05-26 07:18:35,117 DEBUG ModelConf.py __init__ 50: problem_type: regression
+2019-05-26 07:18:35,117 DEBUG ModelConf.py __init__ 50: use_cache: True
+2019-05-26 07:18:35,117 DEBUG ModelConf.py __init__ 50: save_base_dir: ./autotest/models/kdtm_match_linearAttn/
+2019-05-26 07:18:35,117 DEBUG ModelConf.py __init__ 50: previous_model_path: ./autotest/models/kdtm_match_linearAttn/model.nb
+2019-05-26 07:18:35,117 DEBUG ModelConf.py __init__ 50: pretrained_model_path: ./autotest/models/kdtm_match_linearAttn/model.nb
+2019-05-26 07:18:35,117 DEBUG ModelConf.py __init__ 50: saved_problem_path: ./autotest/models/kdtm_match_linearAttn/necessary_cache/problem.pkl
+2019-05-26 07:18:35,117 DEBUG ModelConf.py __init__ 50: log_dir: ./autotest/models/kdtm_match_linearAttn/
+2019-05-26 07:18:35,117 DEBUG ModelConf.py __init__ 50: test_log_path: ./autotest/models/kdtm_match_linearAttn/test_autotest.log
+2019-05-26 07:18:35,117 DEBUG ModelConf.py __init__ 50: predict_output_path: ./autotest/models/kdtm_match_linearAttn/predict.tsv
+2019-05-26 07:18:35,117 DEBUG ModelConf.py __init__ 50: predict_fields: ['prediction']
+2019-05-26 07:18:35,117 DEBUG ModelConf.py __init__ 50: model_save_path: ./autotest/models/kdtm_match_linearAttn/model.nb
+2019-05-26 07:18:35,117 DEBUG ModelConf.py __init__ 50: train_data_path: ./autotest/dataset/knowledge_distillation/text_matching_data/train_autotest.tsv
+2019-05-26 07:18:35,117 DEBUG ModelConf.py __init__ 50: valid_data_path: ./autotest/dataset/knowledge_distillation/text_matching_data/valid.tsv
+2019-05-26 07:18:35,117 DEBUG ModelConf.py __init__ 50: test_data_path: ./autotest/dataset/knowledge_distillation/text_matching_data/test.tsv
+2019-05-26 07:18:35,117 DEBUG ModelConf.py __init__ 50: file_columns: {'query_text': 0, 'passage_text': 1, 'label_score': 2}
+2019-05-26 07:18:35,117 DEBUG ModelConf.py __init__ 50: answer_column_name: ['label_score']
+2019-05-26 07:18:35,117 DEBUG ModelConf.py __init__ 50: input_types: {'word': {'cols': ['query_text', 'passage_text'], 'dim': 300}}
+2019-05-26 07:18:35,117 DEBUG ModelConf.py __init__ 50: extra_feature: False
+2019-05-26 07:18:35,117 DEBUG ModelConf.py __init__ 50: object_inputs: {'query': ['query_text'], 'passage': ['passage_text']}
+2019-05-26 07:18:35,117 DEBUG ModelConf.py __init__ 50: object_inputs_names: ['query', 'passage']
+2019-05-26 07:18:35,117 DEBUG ModelConf.py __init__ 50: max_vocabulary: 800000
+2019-05-26 07:18:35,118 DEBUG ModelConf.py __init__ 50: min_word_frequency: 1
+2019-05-26 07:18:35,118 DEBUG ModelConf.py __init__ 50: file_with_col_header: False
+2019-05-26 07:18:35,118 DEBUG ModelConf.py __init__ 50: add_start_end_for_seq: True
+2019-05-26 07:18:35,118 DEBUG ModelConf.py __init__ 50: pretrained_emb_path: dataset/GloVe/glove.840B.300d.txt
+2019-05-26 07:18:35,118 DEBUG ModelConf.py __init__ 50: involve_all_words_in_pretrained_emb: False
+2019-05-26 07:18:35,118 DEBUG ModelConf.py __init__ 50: pretrained_emb_type: glove
+2019-05-26 07:18:35,118 DEBUG ModelConf.py __init__ 50: pretrained_emb_binary_or_text: text
+2019-05-26 07:18:35,118 DEBUG ModelConf.py __init__ 50: pretrained_emb_dim: 300
+2019-05-26 07:18:35,118 DEBUG ModelConf.py __init__ 50: problem_path: ./autotest/models/kdtm_match_linearAttn/necessary_cache/problem.pkl
+2019-05-26 07:18:35,118 DEBUG ModelConf.py __init__ 50: training_params: {'vocabulary': {'min_word_frequency': 1}, 'optimizer': {'name': 'SGD', 'params': {'lr': 0.2, 'momentum': 0.9, 'nesterov': True}}, 'lr_decay': 0.95, 'minimum_lr': 0.005, 'epoch_start_lr_decay': 1, 'use_gpu': True, 'batch_size': 128, 'batch_num_to_show_results': 100, 'max_epoch': 10, 'valid_times_per_epoch': 2, 'max_lengths': {'query': 30, 'passage': 200}}
+2019-05-26 07:18:35,118 DEBUG ModelConf.py __init__ 50: batch_size_each_gpu: 128
+2019-05-26 07:18:35,118 DEBUG ModelConf.py __init__ 50: lr_decay: 0.95
+2019-05-26 07:18:35,118 DEBUG ModelConf.py __init__ 50: minimum_lr: 0.005
+2019-05-26 07:18:35,118 DEBUG ModelConf.py __init__ 50: epoch_start_lr_decay: 1
+2019-05-26 07:18:35,118 DEBUG ModelConf.py __init__ 50: max_epoch: 10
+2019-05-26 07:18:35,118 DEBUG ModelConf.py __init__ 50: valid_times_per_epoch: 2
+2019-05-26 07:18:35,118 DEBUG ModelConf.py __init__ 50: batch_num_to_show_results: 100
+2019-05-26 07:18:35,118 DEBUG ModelConf.py __init__ 50: max_lengths: {'query': 30, 'passage': 200}
+2019-05-26 07:18:35,118 DEBUG ModelConf.py __init__ 50: fixed_lengths: None
+2019-05-26 07:18:35,118 DEBUG ModelConf.py __init__ 50: batch_size_total: 128
+2019-05-26 07:18:35,118 DEBUG ModelConf.py __init__ 50: cpu_num_workers: -1
+2019-05-26 07:18:35,118 DEBUG ModelConf.py __init__ 50: _ModelConf__text_preprocessing: []
+2019-05-26 07:18:35,119 DEBUG ModelConf.py __init__ 50: DBC2SBC: False
+2019-05-26 07:18:35,119 DEBUG ModelConf.py __init__ 50: unicode_fix: False
+2019-05-26 07:18:35,119 DEBUG ModelConf.py __init__ 50: remove_stopwords: False
+2019-05-26 07:18:35,119 DEBUG ModelConf.py __init__ 50: tokenizer: nltk
+2019-05-26 07:18:35,119 DEBUG ModelConf.py __init__ 50: use_gpu: False
+2019-05-26 07:18:35,119 DEBUG ModelConf.py __init__ 50: architecture: [{'layer': 'Embedding', 'conf': {'word': {'cols': ['query_text', 'passage_text'], 'dim': 300}}}, {'layer_id': 'query_dropout', 'layer': 'Dropout', 'conf': {'dropout': 0.3}, 'inputs': ['query']}, {'layer_id': 'passage_dropout', 'layer': 'Dropout', 'conf': {'dropout': 0.3}, 'inputs': ['passage']}, {'layer_id': 'query_1', 'layer': 'BiLSTM', 'conf': {'hidden_dim': 128, 'dropout': 0.3, 'num_layers': 3}, 'inputs': ['query_dropout']}, {'layer_id': 'passage_matched', 'layer': 'MatchAttention', 'conf': {}, 'inputs': ['passage_dropout', 'query_dropout']}, {'layer_id': 'passage_combined', 'layer': 'Combination', 'conf': {'operations': ['origin']}, 'inputs': ['passage_dropout', 'passage_matched']}, {'layer_id': 'passage_1', 'layer': 'BiLSTM', 'conf': {'hidden_dim': 128, 'dropout': 0.3, 'num_layers': 3}, 'inputs': ['passage_combined']}, {'layer_id': 'query_linear_att', 'layer': 'LinearAttention', 'conf': {'attention_weight_dim': 256, 'keep_dim': False}, 'inputs': ['query_1']}, {'layer_id': 'passage_linear_att', 'layer': 'LinearAttention', 'conf': {'attention_weight_dim': 256, 'keep_dim': False}, 'inputs': ['passage_1']}, {'layer_id': 'comb', 'layer': 'Combination', 'conf': {'operations': ['origin']}, 'inputs': ['query_linear_att', 'passage_linear_att']}, {'layer_id': 'linear', 'layer': 'Linear', 'conf': {'hidden_dim': [512], 'activation': 'PReLU', 'batch_norm': True, 'last_hidden_activation': True}, 'inputs': ['comb']}, {'output_layer_flag': True, 'layer_id': 'output', 'layer': 'Linear', 'conf': {'hidden_dim': [1], 'activation': 'Sigmoid', 'last_hidden_activation': True, 'last_hidden_softmax': False}, 'inputs': ['linear']}]
+2019-05-26 07:18:35,119 DEBUG ModelConf.py __init__ 50: output_layer_id: ['output']
+2019-05-26 07:18:35,119 DEBUG ModelConf.py __init__ 50: min_sentence_len: 0
+2019-05-26 07:18:35,119 DEBUG ModelConf.py __init__ 50: loss: {'losses': [{'type': 'MSELoss', 'conf': {}, 'inputs': ['output', 'label_score']}], 'multiLoss': False}
+2019-05-26 07:18:35,119 DEBUG ModelConf.py __init__ 50: metrics: ['RMSE', 'MSE']
+2019-05-26 07:18:35,119 DEBUG ModelConf.py __init__ 50: metrics_post_check: set()
+2019-05-26 07:18:35,119 DEBUG ModelConf.py __init__ 51: ================================================================================
+2019-05-26 07:18:35,160 DEBUG common_utils.py load_from_pkl 41: ./autotest/models/kdtm_match_linearAttn/necessary_cache/problem.pkl loaded!
+2019-05-26 07:18:35,160 DEBUG problem.py load_problem 808: Problem loaded
+2019-05-26 07:18:35,160 INFO test.py main 42: Problem loaded!
+2019-05-26 07:18:35,160 DEBUG test.py main 43: Problem loaded from ./autotest/models/kdtm_match_linearAttn/necessary_cache/problem.pkl
+2019-05-26 07:18:35,502 INFO LearningMachine.py load_model 751: Model ./autotest/models/kdtm_match_linearAttn/model.nb loaded!
+2019-05-26 07:18:35,502 INFO LearningMachine.py load_model 752: Total trainable parameters: 3123904
+2019-05-26 07:18:35,503 INFO test.py main 70: Testing the best model saved at ./autotest/models/kdtm_match_linearAttn/model.nb, with ./autotest/dataset/knowledge_distillation/text_matching_data/test.tsv
+2019-05-26 07:18:37,495 INFO problem.py encode 684: ./autotest/dataset/knowledge_distillation/text_matching_data/test.tsv: 2400 legal samples, 0 illegal samples
+2019-05-26 07:18:37,495 INFO LearningMachine.py evaluate 386: Starting test ...
+2019-05-26 07:18:37,496 INFO corpus_utils.py get_batches 235: Start making batches
+2019-05-26 07:18:37,531 INFO corpus_utils.py get_batches 395: Batches got!
+2019-05-26 07:20:07,791 INFO LearningMachine.py evaluate 580: test RMSE: 0.483306; MSE: 0.233585 loss: 0.233706

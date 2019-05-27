@@ -1,0 +1,79 @@
+2019-05-26 07:18:50,224 DEBUG ModelConf.py load_from_file 128: Prepare dir for: ./autotest/models/question_pairs_bilstm_attn/predict.tsv
+2019-05-26 07:18:50,367 INFO ModelConf.py load_from_file 352: Activating CPU mode
+2019-05-26 07:18:50,367 DEBUG ModelConf.py __init__ 45: Print ModelConf below:
+2019-05-26 07:18:50,367 DEBUG ModelConf.py __init__ 46: ================================================================================
+2019-05-26 07:18:50,367 DEBUG ModelConf.py __init__ 50: phase: test
+2019-05-26 07:18:50,367 DEBUG ModelConf.py __init__ 50: conf_path: autotest/conf/conf_question_pairs_bilstm_attn_autotest.json
+2019-05-26 07:18:50,368 DEBUG ModelConf.py __init__ 50: params: Namespace(batch_size=None, conf_path='autotest/conf/conf_question_pairs_bilstm_attn_autotest.json', debug=False, disable_log_file=False, force=True, log_dir=None, mode='normal', predict_output_path=None, previous_model_path=None, test_data_path=None)
+2019-05-26 07:18:50,368 DEBUG ModelConf.py __init__ 50: mode: normal
+2019-05-26 07:18:50,368 DEBUG ModelConf.py __init__ 50: conf: {'license': 'Copyright (c) Microsoft Corporation. All rights reserved. Licensed under the MIT license.', 'tool_version': '1.1.0', 'model_description': 'This model is used for query query pairs task. It achieved accuracy: 0.878506; f1: 0.839425 on dev set', 'inputs': {'use_cache': True, 'dataset_type': 'classification', 'data_paths': {'train_data_path': './autotest/dataset/QQP/train_autotest.tsv', 'valid_data_path': './autotest/dataset/QQP/dev_autotest.tsv', 'test_data_path': './autotest/dataset/QQP/dev_autotest.tsv', 'pre_trained_emb': './dataset/GloVe/glove.840B.300d.txt'}, 'file_with_col_header': True, 'add_start_end_for_seq': True, 'file_header': {'id': 0, 'qid1': 1, 'qid2': 2, 'question1': 3, 'question2': 4, 'is_duplicate': 5}, 'model_inputs': {'sentence_1': ['question1'], 'sentence_2': ['question2']}, 'target': ['is_duplicate']}, 'outputs': {'save_base_dir': './autotest/models/question_pairs_bilstm_attn/', 'model_name': 'model.nb', 'train_log_name': 'train_autotest.log', 'test_log_name': 'test_autotest.log', 'predict_log_name': 'predict.log', 'predict_fields': ['prediction', 'confidence'], 'predict_output_name': 'predict.tsv', 'cache_dir': '.cache.QQP/'}, 'training_params': {'optimizer': {'name': 'Adam', 'params': {}}, 'vocabulary': {'min_word_frequency': 1}, 'lr_decay': 0.95, 'minimum_lr': 0.0001, 'epoch_start_lr_decay': 1, 'use_gpu': True, 'batch_size': 128, 'batch_num_to_show_results': 300, 'max_epoch': 25, 'valid_times_per_epoch': 2}, 'architecture': [{'layer': 'Embedding', 'conf': {'word': {'cols': ['question1', 'question2'], 'dim': 300, 'fix_weight': True}}}, {'layer_id': 's1_dropout', 'layer': 'Dropout', 'conf': {'dropout': 0.2}, 'inputs': ['sentence_1']}, {'layer_id': 's2_dropout', 'layer': 'Dropout', 'conf': {'dropout': 0.2}, 'inputs': ['sentence_2']}, {'layer_id': 's1_bilstm', 'layer': 'BiLSTM', 'conf': {'hidden_dim': 256, 'dropout': 0.2, 'num_layers': 2}, 'inputs': ['s1_dropout']}, {'layer_id': 's2_bilstm', 'layer': 's1_bilstm', 'inputs': ['s2_dropout']}, {'layer_id': 's1_attn', 'layer': 'Attention', 'conf': {}, 'inputs': ['s1_bilstm', 's2_bilstm']}, {'layer_id': 's2_attn', 'layer': 'Attention', 'conf': {}, 'inputs': ['s2_bilstm', 's1_bilstm']}, {'layer_id': 's1_comb', 'layer': 'Combination', 'conf': {'operations': ['origin']}, 'inputs': ['s1_bilstm', 's1_attn']}, {'layer_id': 's2_comb', 'layer': 'Combination', 'conf': {'operations': ['origin']}, 'inputs': ['s2_bilstm', 's2_attn']}, {'layer_id': 's1_bilstm2', 'layer': 'BiLSTM', 'conf': {'hidden_dim': 256, 'dropout': 0.2, 'num_layers': 2}, 'inputs': ['s1_comb']}, {'layer_id': 's2_bilstm2', 'layer': 'BiLSTM', 'conf': {'hidden_dim': 256, 'dropout': 0.2, 'num_layers': 2}, 'inputs': ['s2_comb']}, {'layer_id': 's1_pooling', 'layer': 'Pooling', 'conf': {'pool_axis': 1, 'pool_type': 'max'}, 'inputs': ['s1_bilstm2']}, {'layer_id': 's2_pooling', 'layer': 'Pooling', 'conf': {'pool_axis': 1, 'pool_type': 'max'}, 'inputs': ['s2_bilstm2']}, {'layer_id': 'sentence_comb', 'layer': 'Combination', 'conf': {'operations': ['origin', 'difference', 'dot_multiply']}, 'inputs': ['s1_pooling', 's2_pooling']}, {'output_layer_flag': True, 'layer_id': 'output', 'layer': 'Linear', 'conf': {'hidden_dim': [128, 2], 'activation': 'PReLU', 'batch_norm': True, 'last_hidden_activation': False}, 'inputs': ['sentence_comb']}], 'loss': {'losses': [{'type': 'CrossEntropyLoss', 'conf': {'size_average': True}, 'inputs': ['output', 'is_duplicate']}]}, 'metrics': ['accuracy', 'f1']}
+2019-05-26 07:18:50,368 DEBUG ModelConf.py __init__ 50: tool_version: 1.1.0
+2019-05-26 07:18:50,368 DEBUG ModelConf.py __init__ 50: language: english
+2019-05-26 07:18:50,368 DEBUG ModelConf.py __init__ 50: problem_type: classification
+2019-05-26 07:18:50,368 DEBUG ModelConf.py __init__ 50: use_cache: True
+2019-05-26 07:18:50,368 DEBUG ModelConf.py __init__ 50: save_base_dir: ./autotest/models/question_pairs_bilstm_attn/
+2019-05-26 07:18:50,368 DEBUG ModelConf.py __init__ 50: previous_model_path: ./autotest/models/question_pairs_bilstm_attn/model.nb
+2019-05-26 07:18:50,368 DEBUG ModelConf.py __init__ 50: pretrained_model_path: ./autotest/models/question_pairs_bilstm_attn/model.nb
+2019-05-26 07:18:50,368 DEBUG ModelConf.py __init__ 50: saved_problem_path: ./autotest/models/question_pairs_bilstm_attn/necessary_cache/problem.pkl
+2019-05-26 07:18:50,368 DEBUG ModelConf.py __init__ 50: log_dir: ./autotest/models/question_pairs_bilstm_attn/
+2019-05-26 07:18:50,368 DEBUG ModelConf.py __init__ 50: test_log_path: ./autotest/models/question_pairs_bilstm_attn/test_autotest.log
+2019-05-26 07:18:50,368 DEBUG ModelConf.py __init__ 50: predict_output_path: ./autotest/models/question_pairs_bilstm_attn/predict.tsv
+2019-05-26 07:18:50,368 DEBUG ModelConf.py __init__ 50: predict_fields: ['prediction', 'confidence']
+2019-05-26 07:18:50,368 DEBUG ModelConf.py __init__ 50: model_save_path: ./autotest/models/question_pairs_bilstm_attn/model.nb
+2019-05-26 07:18:50,368 DEBUG ModelConf.py __init__ 50: train_data_path: ./autotest/dataset/QQP/train_autotest.tsv
+2019-05-26 07:18:50,368 DEBUG ModelConf.py __init__ 50: valid_data_path: ./autotest/dataset/QQP/dev_autotest.tsv
+2019-05-26 07:18:50,369 DEBUG ModelConf.py __init__ 50: test_data_path: ./autotest/dataset/QQP/dev_autotest.tsv
+2019-05-26 07:18:50,369 DEBUG ModelConf.py __init__ 50: file_columns: {'id': 0, 'qid1': 1, 'qid2': 2, 'question1': 3, 'question2': 4, 'is_duplicate': 5}
+2019-05-26 07:18:50,369 DEBUG ModelConf.py __init__ 50: answer_column_name: ['is_duplicate']
+2019-05-26 07:18:50,369 DEBUG ModelConf.py __init__ 50: input_types: {'word': {'cols': ['question1', 'question2'], 'dim': 300, 'fix_weight': True}}
+2019-05-26 07:18:50,369 DEBUG ModelConf.py __init__ 50: extra_feature: False
+2019-05-26 07:18:50,369 DEBUG ModelConf.py __init__ 50: object_inputs: {'sentence_1': ['question1'], 'sentence_2': ['question2']}
+2019-05-26 07:18:50,369 DEBUG ModelConf.py __init__ 50: object_inputs_names: ['sentence_1', 'sentence_2']
+2019-05-26 07:18:50,369 DEBUG ModelConf.py __init__ 50: max_vocabulary: 800000
+2019-05-26 07:18:50,369 DEBUG ModelConf.py __init__ 50: min_word_frequency: 1
+2019-05-26 07:18:50,369 DEBUG ModelConf.py __init__ 50: file_with_col_header: True
+2019-05-26 07:18:50,369 DEBUG ModelConf.py __init__ 50: add_start_end_for_seq: True
+2019-05-26 07:18:50,369 DEBUG ModelConf.py __init__ 50: pretrained_emb_path: ./dataset/GloVe/glove.840B.300d.txt
+2019-05-26 07:18:50,369 DEBUG ModelConf.py __init__ 50: involve_all_words_in_pretrained_emb: False
+2019-05-26 07:18:50,369 DEBUG ModelConf.py __init__ 50: pretrained_emb_type: glove
+2019-05-26 07:18:50,369 DEBUG ModelConf.py __init__ 50: pretrained_emb_binary_or_text: text
+2019-05-26 07:18:50,370 DEBUG ModelConf.py __init__ 50: pretrained_emb_dim: 300
+2019-05-26 07:18:50,370 DEBUG ModelConf.py __init__ 50: problem_path: ./autotest/models/question_pairs_bilstm_attn/necessary_cache/problem.pkl
+2019-05-26 07:18:50,370 DEBUG ModelConf.py __init__ 50: training_params: {'optimizer': {'name': 'Adam', 'params': {}}, 'vocabulary': {'min_word_frequency': 1}, 'lr_decay': 0.95, 'minimum_lr': 0.0001, 'epoch_start_lr_decay': 1, 'use_gpu': True, 'batch_size': 128, 'batch_num_to_show_results': 300, 'max_epoch': 25, 'valid_times_per_epoch': 2}
+2019-05-26 07:18:50,370 DEBUG ModelConf.py __init__ 50: batch_size_each_gpu: 128
+2019-05-26 07:18:50,370 DEBUG ModelConf.py __init__ 50: lr_decay: 0.95
+2019-05-26 07:18:50,370 DEBUG ModelConf.py __init__ 50: minimum_lr: 0.0001
+2019-05-26 07:18:50,370 DEBUG ModelConf.py __init__ 50: epoch_start_lr_decay: 1
+2019-05-26 07:18:50,370 DEBUG ModelConf.py __init__ 50: max_epoch: 25
+2019-05-26 07:18:50,370 DEBUG ModelConf.py __init__ 50: valid_times_per_epoch: 2
+2019-05-26 07:18:50,370 DEBUG ModelConf.py __init__ 50: batch_num_to_show_results: 300
+2019-05-26 07:18:50,370 DEBUG ModelConf.py __init__ 50: max_lengths: None
+2019-05-26 07:18:50,370 DEBUG ModelConf.py __init__ 50: fixed_lengths: None
+2019-05-26 07:18:50,370 DEBUG ModelConf.py __init__ 50: batch_size_total: 128
+2019-05-26 07:18:50,370 DEBUG ModelConf.py __init__ 50: cpu_num_workers: -1
+2019-05-26 07:18:50,370 DEBUG ModelConf.py __init__ 50: _ModelConf__text_preprocessing: []
+2019-05-26 07:18:50,370 DEBUG ModelConf.py __init__ 50: DBC2SBC: False
+2019-05-26 07:18:50,370 DEBUG ModelConf.py __init__ 50: unicode_fix: False
+2019-05-26 07:18:50,370 DEBUG ModelConf.py __init__ 50: remove_stopwords: False
+2019-05-26 07:18:50,370 DEBUG ModelConf.py __init__ 50: tokenizer: nltk
+2019-05-26 07:18:50,370 DEBUG ModelConf.py __init__ 50: use_gpu: False
+2019-05-26 07:18:50,370 DEBUG ModelConf.py __init__ 50: architecture: [{'layer': 'Embedding', 'conf': {'word': {'cols': ['question1', 'question2'], 'dim': 300, 'fix_weight': True}}}, {'layer_id': 's1_dropout', 'layer': 'Dropout', 'conf': {'dropout': 0.2}, 'inputs': ['sentence_1']}, {'layer_id': 's2_dropout', 'layer': 'Dropout', 'conf': {'dropout': 0.2}, 'inputs': ['sentence_2']}, {'layer_id': 's1_bilstm', 'layer': 'BiLSTM', 'conf': {'hidden_dim': 256, 'dropout': 0.2, 'num_layers': 2}, 'inputs': ['s1_dropout']}, {'layer_id': 's2_bilstm', 'layer': 's1_bilstm', 'inputs': ['s2_dropout']}, {'layer_id': 's1_attn', 'layer': 'Attention', 'conf': {}, 'inputs': ['s1_bilstm', 's2_bilstm']}, {'layer_id': 's2_attn', 'layer': 'Attention', 'conf': {}, 'inputs': ['s2_bilstm', 's1_bilstm']}, {'layer_id': 's1_comb', 'layer': 'Combination', 'conf': {'operations': ['origin']}, 'inputs': ['s1_bilstm', 's1_attn']}, {'layer_id': 's2_comb', 'layer': 'Combination', 'conf': {'operations': ['origin']}, 'inputs': ['s2_bilstm', 's2_attn']}, {'layer_id': 's1_bilstm2', 'layer': 'BiLSTM', 'conf': {'hidden_dim': 256, 'dropout': 0.2, 'num_layers': 2}, 'inputs': ['s1_comb']}, {'layer_id': 's2_bilstm2', 'layer': 'BiLSTM', 'conf': {'hidden_dim': 256, 'dropout': 0.2, 'num_layers': 2}, 'inputs': ['s2_comb']}, {'layer_id': 's1_pooling', 'layer': 'Pooling', 'conf': {'pool_axis': 1, 'pool_type': 'max'}, 'inputs': ['s1_bilstm2']}, {'layer_id': 's2_pooling', 'layer': 'Pooling', 'conf': {'pool_axis': 1, 'pool_type': 'max'}, 'inputs': ['s2_bilstm2']}, {'layer_id': 'sentence_comb', 'layer': 'Combination', 'conf': {'operations': ['origin', 'difference', 'dot_multiply']}, 'inputs': ['s1_pooling', 's2_pooling']}, {'output_layer_flag': True, 'layer_id': 'output', 'layer': 'Linear', 'conf': {'hidden_dim': [128, 2], 'activation': 'PReLU', 'batch_norm': True, 'last_hidden_activation': False}, 'inputs': ['sentence_comb']}]
+2019-05-26 07:18:50,370 DEBUG ModelConf.py __init__ 50: output_layer_id: ['output']
+2019-05-26 07:18:50,370 DEBUG ModelConf.py __init__ 50: min_sentence_len: 0
+2019-05-26 07:18:50,371 DEBUG ModelConf.py __init__ 50: loss: {'losses': [{'type': 'CrossEntropyLoss', 'conf': {'size_average': True}, 'inputs': ['output', 'is_duplicate']}], 'multiLoss': False}
+2019-05-26 07:18:50,371 DEBUG ModelConf.py __init__ 50: metrics: ['accuracy', 'f1']
+2019-05-26 07:18:50,371 DEBUG ModelConf.py __init__ 50: metrics_post_check: set()
+2019-05-26 07:18:50,371 DEBUG ModelConf.py __init__ 51: ================================================================================
+2019-05-26 07:18:50,439 DEBUG common_utils.py load_from_pkl 41: ./autotest/models/question_pairs_bilstm_attn/necessary_cache/problem.pkl loaded!
+2019-05-26 07:18:50,439 DEBUG CellDict.py load_cell_dict 211: Cell dict loaded
+2019-05-26 07:18:50,439 DEBUG problem.py load_problem 808: Problem loaded
+2019-05-26 07:18:50,439 INFO test.py main 42: Problem loaded!
+2019-05-26 07:18:50,439 DEBUG test.py main 43: Problem loaded from ./autotest/models/question_pairs_bilstm_attn/necessary_cache/problem.pkl
+2019-05-26 07:18:50,988 INFO LearningMachine.py load_model 751: Model ./autotest/models/question_pairs_bilstm_attn/model.nb loaded!
+2019-05-26 07:18:50,988 INFO LearningMachine.py load_model 752: Total trainable parameters: 11387523
+2019-05-26 07:18:50,989 INFO test.py main 70: Testing the best model saved at ./autotest/models/question_pairs_bilstm_attn/model.nb, with ./autotest/dataset/QQP/dev_autotest.tsv
+2019-05-26 07:18:53,946 INFO problem.py encode 684: ./autotest/dataset/QQP/dev_autotest.tsv: 1999 legal samples, 0 illegal samples
+2019-05-26 07:18:53,946 INFO LearningMachine.py evaluate 386: Starting test ...
+2019-05-26 07:18:53,947 INFO corpus_utils.py get_batches 235: Start making batches
+2019-05-26 07:18:53,966 INFO corpus_utils.py get_batches 395: Batches got!
+2019-05-26 07:20:21,079 INFO LearningMachine.py evaluate 580: test accuracy: 0.720860; f1: 0.568779 loss: 0.645252
