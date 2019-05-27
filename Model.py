@@ -44,6 +44,11 @@ def get_conf(layer_id, layer_name, input_layer_ids, all_layer_configs, model_inp
         try:
             conf_dict['use_gpu'] = use_gpu
 
+            # for Embedding layer, add weight_on_gpu parameters
+            if layer_id == EMBED_LAYER_ID:
+                conf_dict['weight_on_gpu'] = conf_dict['conf']['weight_on_gpu']
+                del conf_dict['conf']['weight_on_gpu']
+
             # for classification tasks, we usually add a Linear layer to project the output to dimension of number of classes. If we don't know the #classes, we can use '-1' instead and we would calculate the number of classes from the corpus.
             if layer_name == 'Linear':
                 if isinstance(conf_dict['hidden_dim'], list) and conf_dict['hidden_dim'][-1] == -1:
@@ -201,7 +206,7 @@ class Model(nn.Module):
                 for input_cluster in emb_conf:
                     emb_conf[input_cluster]['dim'] = layer_arch['conf'][input_cluster]['dim']
                     emb_conf[input_cluster]['fix_weight'] = layer_arch['conf'][input_cluster].get('fix_weight', False)
-                    emb_conf[input_cluster]['weight_on_gpu'] = layer_arch['conf'][input_cluster].get('weight_on_gpu', True)
+                emb_conf['weight_on_gpu'] = layer_arch.get('weight_on_gpu', True)
 
                 all_layer_configs[EMBED_LAYER_ID] = get_conf(EMBED_LAYER_ID, layer_arch['layer'],
                     None, all_layer_configs, inputs, self.use_gpu, conf_dict={'conf': emb_conf},
