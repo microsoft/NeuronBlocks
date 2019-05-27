@@ -11,7 +11,6 @@ from utils.DocInherit import DocInherit
 from block_zoo.embedding import *
 import copy
 import logging
-import itertools
 
 class EmbeddingConf(BaseConf):
     """ Configuration for Embedding
