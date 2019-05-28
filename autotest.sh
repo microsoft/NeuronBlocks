@@ -1,3 +1,5 @@
+rm -rf ./autotest/models/
+
 if [ -n "$2" ]; then
     gpu_device=$2
 else
