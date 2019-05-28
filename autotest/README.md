@@ -20,13 +20,13 @@ You can choose any one of the following scripts according to your needs.
 ```bash
 # Using multiple processes with GPU 0,1
 sh autotest.sh Y 0,1
-# Using multiple processes with GPU 1
-sh autotest.sh Y 1
+# Using multiple processes with GPU 0
+sh autotest.sh Y 0
 # Using multiple processes with CPU
 sh autotest.sh Y
-# Using single processes with GPU 1
-sh autotest.sh N 1
-# Using single processes with CPU
+# Using single process with GPU 0
+sh autotest.sh N 0
+# Using single process with CPU
 sh autotest.sh N
 ```
 4. Finally, you can get the contrast_results.txt in PROJECT_ROOT/autotest, which stores the results of your model.
