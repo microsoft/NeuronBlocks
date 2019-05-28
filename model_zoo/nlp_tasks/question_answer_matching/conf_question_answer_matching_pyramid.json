@@ -57,11 +57,7 @@
     "valid_times_per_epoch": 5,
     "fixed_lengths":{
       "question": 30,
-<<<<<<< HEAD
       "passage": 200  
-=======
-      "passage": 120  
->>>>>>> upstream/master
     }
   },
   "architecture":[

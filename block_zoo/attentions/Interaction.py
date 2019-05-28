@@ -58,11 +58,7 @@ class InteractionConf(BaseConf):
     def verify(self):
         super(InteractionConf, self).verify()
         assert hasattr(self, 'matching_type'), "Please define matching_type attribute of BiGRUConf in default() or the configuration file"
-<<<<<<< HEAD
         assert self.matching_type in ['general', 'dot', 'mul', 'plus', 'minus', 'add', 'concat'], "Invalid `matching_type`{self.matching_type} received. Must be in `mul`, `general`, `plus`, `minus`, `dot` and `concat`."
-=======
-        assert self.matching_type in ['general', 'dot', 'mul', 'plus', 'minus', 'add'], "Invalid `matching_type`{self.matching_type} received. Must be in `mul`, `general`, `plus`, `minus`, `dot` and `concat`."
->>>>>>> upstream/master
 
 
 class Interaction(BaseLayer):
