@@ -1,8 +1,0 @@
-tasks					GPU/CPU	old accuracy/AUC	accuracy/new AUC 
-english_text_matching		GPU		0.96655			0.967
-english_text_matching		CPU		0.96655			0.967
-chinese_text_matching		GPU		0.70001			0.7
-chinese_text_matching		CPU		0.70001			0.7
-quora_question_pairs		GPU		0.72596			0.72086
-quora_question_pairs		CPU		0.72596			0.72086
-knowledge_distillation		CPU		0.66329			0.6628427083333334

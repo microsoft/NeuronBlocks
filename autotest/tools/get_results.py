@@ -38,7 +38,7 @@ except:
     results['knowledge_distillation'].append('wrong')
 
 with open('./autotest/contrast_results.txt', 'w') as f_w:
-    f_w.write('tasks' + '\t'*5 + 'GPU/CPU' + '\t' + 'old accuracy/AUC' + '\t' + 'accuracy/new AUC ' + '\n')
+    f_w.write('tasks' + '\t'*5 + 'GPU/CPU' + '\t' + 'old accuracy/AUC' + '\t' + 'new accuracy/AUC ' + '\n')
     for key, value in results.items():
         if key == 'knowledge_distillation':
             #f_w.write(key + '\t'*2 + 'GPU' + str(value[0]) + '\t'*3 + str(value[1]) + '\n')
