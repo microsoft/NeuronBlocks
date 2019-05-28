@@ -57,7 +57,11 @@
     "valid_times_per_epoch": 5,
     "fixed_lengths":{
       "question": 30,
+<<<<<<< HEAD
       "passage": 200  
+=======
+      "passage": 120  
+>>>>>>> upstream/master
     }
   },
   "architecture":[
@@ -92,6 +96,10 @@
       "layer": "Interaction",
       "conf": {
           "dropout": 0.2,
+<<<<<<< HEAD
+=======
+          "hidden_dim": 300,
+>>>>>>> upstream/master
           "matching_type": "general"
       },
       "inputs": ["question_dropout", "passage_dropout"]
