@@ -25,16 +25,19 @@ class FlattenConf(BaseConf):
     @DocInherit
     def declare(self):
         self.num_of_inputs = 1
-        self.input_ranks = [3]
+        self.input_ranks = [-1]
 
     @DocInherit
     def inference(self):
         self.output_dim = []
-        if self.input_dims[0][1] == -1:
-            raise ConfigurationError("For Flatten layer, the sequence length should be fixed")
-        else:
-            self.output_dim.append(self.input_dims[0][0])
-            self.output_dim.append(self.input_dims[0][1]*self.input_dims[0][-1])
+        flatted_length = 1
+        for i in range(1, len(self.input_dims[0])):
+            if self.input_dims[0][i] == -1:
+                raise ConfigurationError("For Flatten layer, the sequence length should be fixed")
+            else:
+                flatted_length *= self.input_dims[0][i]
+        
+        self.output_dim = [self.input_dims[0][0], flatted_length]
             
         super(FlattenConf, self).inference()
 
@@ -62,6 +65,8 @@ class Flatten(nn.Module):
         Returns:
             Tensor: [batch_size, seq_len*dim], [batch_size]
         """
-        return string.view(string.shape[0], -1), string_len
+        flattened = string.view(string.shape[0], -1)
+        string_len = flattened.size(1)
 
+        return flattened, string_len
 

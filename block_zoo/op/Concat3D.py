@@ -105,9 +105,10 @@ class Concat3D(nn.Module):
         if self.layer_conf.concat3D_axis == 2:
             input_shape = args[0].shape[1]
             for idx, input in enumerate(args):
-                if idx % 2 == 0 and input_shape == input.shape[1]:
-                    result.append(input)
-                else:
-                    raise Exception("Concat3D with axis = 2 require that the input sequences length should be the same!")
+                if idx % 2 == 0:
+                    if input_shape == input.shape[1]:
+                        result.append(input)
+                    else:
+                        raise Exception("Concat3D with axis = 2 require that the input sequences length should be the same!")
 
         return torch.cat(result, self.layer_conf.concat3D_axis), args[1]

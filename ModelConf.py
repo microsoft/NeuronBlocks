@@ -10,6 +10,7 @@ import string
 import copy
 import torch
 import logging
+import shutil
 
 from losses.BaseLossConf import BaseLossConf
 #import traceback
@@ -60,8 +61,8 @@ class ModelConf(object):
         self.tool_version = self.get_item(['tool_version'])
         self.language = self.get_item(['language'], default='english').lower()
         self.problem_type = self.get_item(['inputs', 'dataset_type']).lower()
-        if ProblemTypes[self.problem_type] == ProblemTypes.sequence_tagging:
-            self.tagging_scheme = self.get_item(['inputs', 'tagging_scheme'], default=None, use_default=True)
+        #if ProblemTypes[self.problem_type] == ProblemTypes.sequence_tagging:
+        self.tagging_scheme = self.get_item(['inputs', 'tagging_scheme'], default=None, use_default=True)
 
         if self.mode == 'normal':
             self.use_cache = self.get_item(['inputs', 'use_cache'], True)
@@ -285,7 +286,8 @@ class ModelConf(object):
         if self.phase == 'train':
             self.optimizer_name = self.get_item(['training_params', 'optimizer', 'name'])
             self.optimizer_params = self.get_item(['training_params', 'optimizer', 'params'])
-            self.clip_grad_norm_max_norm = self.get_item(['training_params', 'clip_grad_norm_max_norm'], default=5)
+
+            self.clip_grad_norm_max_norm = self.get_item(['training_params', 'clip_grad_norm_max_norm'], default=-1)
 
             if hasattr(self.params, 'learning_rate') and self.params.learning_rate:
                 self.optimizer_params['lr'] = self.params.learning_rate
@@ -519,3 +521,7 @@ class ModelConf(object):
         if not (nb_version_split[0] == conf_version_split[0] and nb_version_split[1] == conf_version_split[1]):
             raise ConfigurationError('The NeuronBlocks version is %s, but the configuration version is %s, please update your configuration to %s.%s.X' % (nb_version, conf_version, nb_version_split[0], nb_version_split[1]))
 
+    def back_up(self, params):
+        shutil.copy(params.conf_path, self.save_base_dir)
+        logging.info('Configuration file is backed up to %s' % (self.save_base_dir))
+        

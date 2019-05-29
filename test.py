@@ -16,26 +16,9 @@ from LearningMachine import LearningMachine
 
 def main(params):
     conf = ModelConf("test", params.conf_path, version, params, mode=params.mode)
-
-    if ProblemTypes[conf.problem_type] == ProblemTypes.sequence_tagging:
-        problem = Problem(conf.problem_type, conf.input_types, conf.answer_column_name,
-            source_with_start=True, source_with_end=True, source_with_unk=True, source_with_pad=True,
-            target_with_start=False, target_with_end=False, target_with_unk=False, target_with_pad=True, same_length=True,
-            with_bos_eos=conf.add_start_end_for_seq, tagging_scheme=conf.tagging_scheme,
-            remove_stopwords=conf.remove_stopwords, DBC2SBC=conf.DBC2SBC, unicode_fix=conf.unicode_fix)
-    elif ProblemTypes[conf.problem_type] == ProblemTypes.classification \
-            or ProblemTypes[conf.problem_type] == ProblemTypes.regression:
-        problem = Problem(conf.problem_type, conf.input_types, conf.answer_column_name,
-            source_with_start=True, source_with_end=True, source_with_unk=True, source_with_pad=True,
-            target_with_start=False, target_with_end=False, target_with_unk=False, target_with_pad=False, same_length=True,
-            with_bos_eos=conf.add_start_end_for_seq, tokenizer=conf.tokenizer, remove_stopwords=conf.remove_stopwords,
-            DBC2SBC=conf.DBC2SBC, unicode_fix=conf.unicode_fix)
-    elif ProblemTypes[conf.problem_type] == ProblemTypes.mrc:
-        problem = Problem(conf.problem_type, conf.input_types, conf.answer_column_name,
-                          source_with_start=True, source_with_end=True, source_with_unk=True, source_with_pad=True,
-                          target_with_start=False, target_with_end=False, target_with_unk=False, target_with_pad=False,
-                          same_length=False, with_bos_eos=False, tokenizer=conf.tokenizer,
-                          remove_stopwords=conf.remove_stopwords, DBC2SBC=conf.DBC2SBC, unicode_fix=conf.unicode_fix)
+    problem = Problem("test", conf.problem_type, conf.input_types, conf.answer_column_name,
+        with_bos_eos=conf.add_start_end_for_seq, tagging_scheme=conf.tagging_scheme, tokenizer=conf.tokenizer,
+        remove_stopwords=conf.remove_stopwords, DBC2SBC=conf.DBC2SBC, unicode_fix=conf.unicode_fix)
 
     if os.path.isfile(conf.saved_problem_path):
         problem.load_problem(conf.saved_problem_path)

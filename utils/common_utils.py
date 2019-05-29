@@ -4,11 +4,13 @@
 import logging
 import pickle as pkl
 import torch
+import torch.nn as nn
 import os
 import shutil
 import time
 import tempfile
 import subprocess
+import hashlib
 
 def log_set(log_path, console_level='INFO', console_detailed=False, disable_log_file=False):
     """
@@ -57,7 +59,12 @@ def get_trainable_param_num(model):
     Returns:
 
     """
-    return sum(p.numel() for p in model.parameters() if p.requires_grad)
+    if isinstance(model, nn.DataParallel):
+        model_param = list(model.parameters()) + list(model.module.layers['embedding'].get_parameters())
+    else:
+        model_param = list(model.parameters()) + list(model.layers['embedding'].get_parameters())
+
+    return sum(p.numel() for p in model_param if p.requires_grad)
 
 
 def get_param_num(model):
@@ -216,3 +223,23 @@ def prepare_dir(path, is_dir, allow_overwrite=False, clear_dir_if_exist=False, e
                 overwrite_option = input('The file %s already exists, input "yes" to allow us to overwrite it or "no" to exit. (default:no): ' % path)
                 if overwrite_option.lower() != 'yes':
                     exit(0)
+
+def md5(file_paths, chunk_size=1024*1024*1024):
+    """ Calculate a md5 of lists of files. 
+
+    Args:
+        file_paths:  an iterable object contains files. Files will be concatenated orderly if there are more than one file
+        chunk_size:  unit is byte, default value is 1GB
+    Returns:
+        md5
+
+    """
+    md5 = hashlib.md5()
+    for path in file_paths:
+        with open(path, 'rb') as fin:
+            while True:
+                data = fin.read(chunk_size)
+                if not data:
+                    break
+                md5.update(data)
+    return md5.hexdigest()

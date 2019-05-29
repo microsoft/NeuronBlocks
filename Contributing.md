@@ -19,3 +19,5 @@ contact [opencode@microsoft.com](mailto:opencode@microsoft.com) with any additio
     - We encourage everyone to contribute their NLP models (namely JSON configuration files). Please follow the structure in model_zoo to  create a pull request.
 - Contribute Block to **Block Zoo**
     - We encourage everyone to improve this toolkit by contributing code, such as customized Blocks. So other users can further benefit from these new Blocks. 
+    
+*Tips: Before you contribute your code, we strongly suggest to verify that your improvements are valid by **[AUTOTEST](./autotest)**. We also encourage everyone to improve this autotest tool by contributing code, such as adding test tasks.*
