@@ -1,7 +1,7 @@
 {
   "license": "Copyright (c) Microsoft Corporation. All rights reserved. Licensed under the MIT license.",
   "tool_version": "1.1.0",
-  "model_description": "This model is used for slot tagging task. It achieved a f1-score of 94.66 on the dataset below",
+  "model_description": "This model is used for slot tagging task. It achieved a f1-score of 88.32 on the dataset below",
   "inputs": {
     "use_cache": true,
     "dataset_type": "sequence_tagging",
@@ -23,14 +23,14 @@
     "target": ["tag"]
   },
   "outputs":{
-    "save_base_dir": "./models/slot_tagging_bilstm_100d_hidden_200_drop5_ignore_index/",
+    "save_base_dir": "./models/slot_tagging/",
     "model_name": "model.nb",
     "train_log_name": "train.log",
     "test_log_name": "test.log",
     "predict_log_name": "predict.log",
     "predict_fields": ["prediction"],
     "predict_output_name": "predict.tsv",
-    "cache_dir": ".cache.slot_tagging_bilstm_100d_hidden_200_drop5_ignore_index/"
+    "cache_dir": ".cache.slot_tagging/"
   },
   "training_params": {
     "vocabulary": {
@@ -38,9 +38,10 @@
     },
     "cpu_num_workers": 4,
     "optimizer": {
-      "name": "Adam",
+      "name": "SGD",
       "params": {
-        "lr": 0.001
+        "lr": 0.015,
+        "weight_decay": 1e-8
       }
     },
     "lr_decay": 0.95,
@@ -48,9 +49,9 @@
     "epoch_start_lr_decay": 1,
     "use_gpu": true,
     "batch_size": 10,
-    "batch_num_to_show_results": 50,
-    "max_epoch": 50,
-    "valid_times_per_epoch": 2
+    "batch_num_to_show_results": 500,
+    "max_epoch": 20,
+    "valid_times_per_epoch": 1
   },
   "architecture":[
     {
@@ -66,7 +67,7 @@
       "layer_id": "emb_dropout",
       "layer": "Dropout",
       "conf": {
-          "dropout": 0.5
+          "dropout": 0.2
       },
       "inputs": ["words"]
     },
@@ -74,7 +75,7 @@
         "layer_id": "sentence_BiLSTM",
         "layer": "BiLSTM",
         "conf": {
-          "hidden_dim": 200,
+          "hidden_dim": 100,
           "num_layers": 1
         },
         "inputs": ["emb_dropout"]
@@ -83,7 +84,7 @@
       "layer_id": "lstm_dropout",
       "layer": "Dropout",
       "conf": {
-          "dropout": 0.5
+          "dropout": 0.2
       },
       "inputs": ["sentence_BiLSTM"]
     },

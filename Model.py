@@ -385,7 +385,7 @@ class Model(nn.Module):
         return representation_output
 
     def is_cuda(self):
-        return next(self.parameters()).data.is_cuda
+        return list(self.parameters())[-1].data.is_cuda
 
     def update_use_gpu(self, new_use_gpu):
         self.use_gpu = new_use_gpu

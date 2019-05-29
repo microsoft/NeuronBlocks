@@ -12,6 +12,7 @@ import numpy as np
 import copy
 
 import torch
+import torch.nn as nn
 from ModelConf import ModelConf
 from problem import Problem
 from utils.common_utils import dump_to_pkl, load_from_pkl, prepare_dir
@@ -20,6 +21,13 @@ from losses import *
 from optimizers import *
 
 from LearningMachine import LearningMachine
+import itertools
+
+import random
+seed_num = 42
+random.seed(seed_num)
+torch.manual_seed(seed_num)
+np.random.seed(seed_num)
 
 
 def verify_cache(cache_conf, cur_conf):
@@ -52,14 +60,9 @@ def main(params):
     logging.info('Configuration file is backed up to %s' % (conf.save_base_dir))
 
     if ProblemTypes[conf.problem_type] == ProblemTypes.sequence_tagging:
-        # problem = Problem(conf.problem_type, conf.input_types, conf.answer_column_name,
-        #     source_with_start=True, source_with_end=True, source_with_unk=True, source_with_pad=True,
-        #     target_with_start=True, target_with_end=True, target_with_unk=True, target_with_pad=True, same_length=True,
-        #     with_bos_eos=conf.add_start_end_for_seq, tagging_scheme=conf.tagging_scheme,
-        #     remove_stopwords=conf.remove_stopwords, DBC2SBC=conf.DBC2SBC, unicode_fix=conf.unicode_fix)
         problem = Problem(conf.problem_type, conf.input_types, conf.answer_column_name,
                           source_with_start=False, source_with_end=False, source_with_unk=True, source_with_pad=True,
-                          target_with_start=False, target_with_end=False, target_with_unk=False, target_with_pad=True,
+                          target_with_start=False, target_with_end=False, target_with_unk=True, target_with_pad=True,
                           same_length=True,
                           with_bos_eos=conf.add_start_end_for_seq, tagging_scheme=conf.tagging_scheme,
                           remove_stopwords=conf.remove_stopwords, DBC2SBC=conf.DBC2SBC, unicode_fix=conf.unicode_fix)
@@ -231,7 +234,23 @@ def main(params):
     if conf.use_gpu is True:
         loss_fn.cuda()
 
-    optimizer = eval(conf.optimizer_name)(lm.model.parameters(), **conf.optimizer_params)
+    # if isinstance(lm.model, nn.DataParallel):
+    #     optimizer = eval(conf.optimizer_name)((it.__next__() for it in itertools.cycle(
+    #         [lm.model.parameters(), lm.model.module.layers['embedding'].get_parameters()])), **conf.optimizer_params)
+    # else:
+    #     optimizer = eval(conf.optimizer_name)((it.__next__() for it in itertools.cycle(
+    #         [lm.model.parameters(), lm.model.layers['embedding'].get_parameters()])), **conf.optimizer_params)
+    # optimizer = eval(conf.optimizer_name)(lm.model.parameters(), **conf.optimizer_params)
+    #optimizer = eval(conf.optimizer_name)(list(lm.model.parameters()) + list(lm.model.module.layers.embedding.embeddings['word'].parameters()), **conf.optimizer_params)
+
+    if isinstance(lm.model, nn.DataParallel):
+        optimizer = eval(conf.optimizer_name)(
+            list(lm.model.parameters()) + list(lm.model.module.layers['embedding'].get_parameters()),
+            **conf.optimizer_params)
+    else:
+        optimizer = eval(conf.optimizer_name)(
+            list(lm.model.parameters()) + list(lm.model.layers['embedding'].get_parameters()),
+            **conf.optimizer_params)
 
     lm.train(optimizer, loss_fn)
 
@@ -249,6 +268,7 @@ def main(params):
 
 
 if __name__ == "__main__":
+    os.environ["CUDA_VISIBLE_DEVICES"] = "4"
     parser = argparse.ArgumentParser(description='Training')
     parser.add_argument("--conf_path", type=str, help="configuration path")
     parser.add_argument("--train_data_path", type=str)

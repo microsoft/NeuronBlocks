@@ -148,7 +148,10 @@ class Problem():
                     line_split[i] = self.text_preprocessor.preprocess(line_split[i])
 
                     if col_index_types[i] == 'word':
-                        token_list = self.tokenizer.tokenize(line_split[i])
+                        if ProblemTypes[self.problem_type] == ProblemTypes.sequence_tagging:
+                            token_list = line_split[i].split(" ")
+                        else:
+                            token_list = self.tokenizer.tokenize(line_split[i])
                         docs[col_index_types[i]].append(token_list)
                         if 'char' in docs:
                             # add char
@@ -314,13 +317,6 @@ class Problem():
             unknown_word_count = 0
             scale = np.sqrt(3.0 / word_emb_dim)
             for i in range(self.input_dicts['word'].cell_num()):
-                '''
-                if self.input_dicts['word'].id_cell_map[i] in word_emb_dict:
-                    word_emb_matrix.append(word_emb_dict[self.input_dicts['word'].id_cell_map[i]])
-                else:
-                    word_emb_matrix.append(word_emb_dict['<unk>'])
-                    unknown_word_count += 1
-                '''
                 single_word = self.input_dicts['word'].id_cell_map[i]
                 if single_word in word_emb_dict:
                     word_emb_matrix.append(word_emb_dict[single_word])
@@ -476,7 +472,7 @@ class Problem():
                                 data[extra_info_type]['extra_passage_text'].append(line_split[i])
                                 data[extra_info_type]['extra_passage_token_offsets'].append(passage_token_offsets)
                         else:
-                            if extra_feature == False:
+                            if extra_feature == False and ProblemTypes[self.problem_type] != ProblemTypes.sequence_tagging:
                                 tokens = self.tokenizer.tokenize(line_split[i])
                             else:
                                 tokens = line_split[i].split(' ')

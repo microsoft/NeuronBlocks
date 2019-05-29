@@ -139,25 +139,6 @@ class Evaluator(object):
     def accuracy(self, y_true, y_pred):
         return metrics.accuracy_score(y_true, y_pred)
 
-    # def seq_tag_f1(self, y_true, y_pred):
-    #     """ For sequence tagging task, calculate F1-score(e.g. CONLL 2000)
-    #
-    #     Args:
-    #         y_true:
-    #         y_pred:
-    #
-    #     Returns:
-    #
-    #     """
-    #     assert self.__tagging_scheme is not None, "Please define tagging scheme!"
-    #     if TaggingSchemes[self.__tagging_scheme] == TaggingSchemes.BIO:
-    #         result_conll_format = to_conll_format(y_true, y_pred)
-    #         correctChunk, foundGuessed, foundCorrect, correctTags, tokenCounter = countChunks(result_conll_format)
-    #         overall_precision, overall_recall, overall_FB1 = evaluate(correctChunk, foundGuessed, foundCorrect, correctTags, tokenCounter)
-    #     else:
-    #         raise Exception("TO DO: SUPPORT MORE TAGGING SCHEMES")
-    #     return overall_FB1
-
     def seq_tag_f1(self, y_ture, y_pred):
         '''
 
@@ -165,20 +146,23 @@ class Evaluator(object):
         :param y_pred:
         :return:
         '''
+        assert self.__tagging_scheme is not None, "Please define tagging scheme!"
         sent_num = len(y_pred)
         golden_full = []
         predict_full = []
         right_full = []
         for idx in range(0, sent_num):
-            # word_list = sentence_lists[idx]
             golden_list = y_ture[idx]
             predict_list = y_pred[idx]
             if self.__tagging_scheme == "BMES" or self.__tagging_scheme == "BIOES":
                 gold_matrix = get_ner_BIOES(golden_list)
                 pred_matrix = get_ner_BIOES(predict_list)
-            else:
+            elif self.__tagging_scheme == "BIO":
                 gold_matrix = get_ner_BIO(golden_list)
                 pred_matrix = get_ner_BIO(predict_list)
+            else:
+                # raise Exception("DETECT UNKNOWN TAGGING SCHEMES! YOU CAN USE OUR SCRIPT TO CONVERT TAG SCHEME!")
+                raise Exception("DETECT UNKNOWN TAGGING SCHEMES!")
             right_ner = list(set(gold_matrix).intersection(set(pred_matrix)))
             golden_full += gold_matrix
             predict_full += pred_matrix
