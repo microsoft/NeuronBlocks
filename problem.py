@@ -316,8 +316,7 @@ class Problem():
                 self.input_dicts['word'].update([list(word_emb_dict.keys())])
                 self.input_dicts['word'].build(threshold=0, max_vocabulary_num=len(word_emb_dict))
             else:
-                # word_emb_dict = load_embedding(word2vec_path, word_emb_dim, format, file_type, with_head=False, word_set=self.input_dicts['word'].cell_id_map.keys())
-                word_emb_dict = load_embedding(word2vec_path, word_emb_dim, format, file_type, with_head=False, word_set=None)
+                word_emb_dict = load_embedding(word2vec_path, word_emb_dim, format, file_type, with_head=False, word_set=self.input_dicts['word'].cell_id_map.keys())
 
             for word in word_emb_dict:
                 loaded_emb_dim = len(word_emb_dict[word])
