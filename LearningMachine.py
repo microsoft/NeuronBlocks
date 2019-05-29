@@ -34,6 +34,12 @@ class LearningMachine(object):
             if use_gpu is True:
                 self.model = nn.DataParallel(self.model)
                 self.model = transfer_to_gpu(self.model)
+            # judge the embedding matrix weight's device
+            emb_weight_device = list(self.model.module.layers.embedding.embeddings.values())[0].weight.device.type if isinstance(self.model, nn.DataParallel) \
+                else list(self.model.layers.embedding.embeddings.values())[0].weight.device.type
+            device = 'GPU' if 'cuda' in emb_weight_device else 'CPU'
+            logging.info(
+                "The embedding matrix is on %s now, you can modify the weight_on_gpu parameter to change embeddings weight device." % device)
             logging.info(self.model)
             #logging.info("Total parameters: %d; trainable parameters: %d" % (get_param_num(self.model), get_trainable_param_num(self.model)))
             logging.info("Total trainable parameters: %d" % (get_trainable_param_num(self.model)))
@@ -259,11 +265,12 @@ class LearningMachine(object):
                 all_costs.append(loss.item())
                 optimizer.zero_grad()
                 loss.backward()
-                torch.nn.utils.clip_grad_norm_(self.model.parameters(), self.conf.clip_grad_norm_max_norm)
-                if isinstance(self.model, nn.DataParallel):
-                    torch.nn.utils.clip_grad_norm_(self.model.module.layers['embedding'].get_parameters(), self.conf.clip_grad_norm_max_norm)
-                else:
-                    torch.nn.utils.clip_grad_norm_(self.model.layers['embedding'].get_parameters(), self.conf.clip_grad_norm_max_norm)
+                if self.conf.clip_grad_norm_max_norm != -1:
+                    torch.nn.utils.clip_grad_norm_(self.model.parameters(), self.conf.clip_grad_norm_max_norm)
+                    if isinstance(self.model, nn.DataParallel):
+                        torch.nn.utils.clip_grad_norm_(self.model.module.layers['embedding'].get_parameters(), self.conf.clip_grad_norm_max_norm)
+                    else:
+                        torch.nn.utils.clip_grad_norm_(self.model.layers['embedding'].get_parameters(), self.conf.clip_grad_norm_max_norm)
                 optimizer.step()
 
                 del loss, logits, logits_softmax, logits_flat
