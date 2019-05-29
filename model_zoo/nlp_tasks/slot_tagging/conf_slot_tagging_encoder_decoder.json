@@ -5,14 +5,13 @@
   "inputs": {
     "use_cache": true,
     "dataset_type": "sequence_tagging",
-    "tagging_scheme": "BIOES",
+    "tagging_scheme": "BIO",
     "data_paths": {
-      "train_data_path": "./dataset/slot_tagging/conll_2003/eng.train.tsv",
-      "valid_data_path": "./dataset/slot_tagging/conll_2003/eng.testa.tsv",
-      "test_data_path": "./dataset/slot_tagging/conll_2003/eng.testb.tsv",
-      "pre_trained_emb": "dataset/GloVe/glove.840B.300d.txt"
+      "train_data_path": "./dataset/atis/atis.train.iob",
+      "test_data_path": "./dataset/atis/atis.test.iob",
+      "pre_trained_emb": "./dataset/GloVe/glove.840B.300d.txt"
     },
-    "add_start_end_for_seq": false,
+    "add_start_end_for_seq": true,
     "file_header": {
       "word": 0,
       "tag": 1
@@ -23,14 +22,14 @@
     "target": ["tag"]
   },
   "outputs":{
-    "save_base_dir": "./models/slot_tagging_encoder_decoder_conll/",
+    "save_base_dir": "./models/slot_tagging_encoder_decoder/",
     "model_name": "model.nb",
     "train_log_name": "train.log",
     "test_log_name": "test.log",
     "predict_log_name": "predict.log",
     "predict_fields": ["prediction"],
     "predict_output_name": "predict.tsv",
-    "cache_dir": ".cache.slot_tagging_encoder_decoder_conll/"
+    "cache_dir": ".cache.slot_tagging_encoder_decoder/"
   },
   "training_params": {
     "vocabulary": {
