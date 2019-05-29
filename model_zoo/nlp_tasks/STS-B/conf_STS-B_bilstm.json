@@ -1,0 +1,173 @@
+{
+  "license": "Copyright (c) Microsoft Corporation. All rights reserved. Licensed under the MIT license.",
+  "tool_version": "1.1.0",
+  "model_description": "This model is used for query query pairs task. It achieved accuracy: 0.864259; f1: 0.831045 on dev set",
+  "inputs": {
+    "use_cache": true,
+    "dataset_type": "regression",
+    "data_paths": {
+      "train_data_path": "./dataset/glue_data/STS-B/train.tsv",
+      "valid_data_path": "./dataset/glue_data/STS-B/dev.tsv",
+      "test_data_path": "./dataset/glue_data/STS-B/dev.tsv",
+      "predict_data_path": "./dataset/glue_data/STS-B/dev.tsv",
+      "pre_trained_emb": "./dataset/GloVe/glove.840B.300d.txt"
+    },
+    "file_with_col_header": true,
+    "add_start_end_for_seq": true,
+    "file_header": {
+      "index": 0,
+      "genre": 1,
+      "filename": 2,
+      "year": 3,
+      "old_index": 4,
+      "source1": 5,
+      "source2": 6,
+      "sentence1": 7,
+      "sentence2": 8,
+      "score": 9
+    },
+    "model_inputs": {
+      "sentence_1": ["sentence1"],
+      "sentence_2": ["sentence2"]
+    },
+    "target": ["score"]
+  },
+  "outputs":{
+    "save_base_dir": "./models/STS-B_bilstm/",
+    "model_name": "model.nb",
+    "train_log_name": "train.log",
+    "test_log_name": "test.log",
+    "predict_log_name": "predict.log",
+    "predict_fields": ["prediction"],
+    "predict_output_name": "predict.tsv",
+    "cache_dir": ".cache.STS-B/"
+  },
+  "training_params": {
+    "optimizer": {
+      "name": "Adam",
+      "params": {
+        "lr": 0.001
+      }
+    },
+    "vocabulary": {
+      "min_word_frequency": 1
+    },
+    "lr_decay": 0.95,
+    "minimum_lr": 0.00001,
+    "epoch_start_lr_decay": 10,
+    "use_gpu": true,
+    "batch_size": 128,
+    "batch_num_to_show_results": 30,
+    "max_epoch": 100,
+    "valid_times_per_epoch": 1
+  },
+  "architecture":[
+    {
+        "layer": "Embedding",
+        "conf": {
+          "word": {
+            "cols": ["sentence1", "sentence2"],
+            "dim": 300,
+            "fix_weight": false
+          }
+        }
+    },
+    {
+      "layer_id": "s1_dropout",
+      "layer": "Dropout",
+      "conf": {
+          "dropout": 0.2
+      },
+      "inputs": ["sentence_1"]
+    },
+    {
+      "layer_id": "s2_dropout",
+      "layer": "Dropout",
+      "conf": {
+          "dropout": 0.2
+      },
+      "inputs": ["sentence_2"]
+    },
+    {
+        "layer_id": "s1_bilstm",
+        "layer": "BiLSTM",
+        "conf": {
+          "hidden_dim": 256,
+          "dropout": 0.2,
+          "num_layers": 2
+        },
+        "inputs": ["s1_dropout"]
+    },
+    {
+        "layer_id": "s2_bilstm",
+        "layer": "BiLSTM",
+        "conf": {
+          "hidden_dim": 256,
+          "dropout": 0.2,
+          "num_layers": 2
+        },
+        "inputs": ["s2_dropout"]
+    },
+    {
+        "layer_id": "s1_pooling",
+        "layer": "Pooling",
+        "conf": {
+          "pool_axis": 1,
+          "pool_type": "max"
+        },
+        "inputs": ["s1_bilstm"]
+    },
+    {
+        "layer_id": "s2_pooling",
+        "layer": "Pooling",
+        "conf": {
+          "pool_axis": 1,
+          "pool_type": "max"
+        },
+        "inputs": ["s2_bilstm"]
+    },
+    {
+        "layer_id": "sentence_comb",
+        "layer": "Combination",
+        "conf": {
+            "operations": ["origin", "difference", "dot_multiply"]
+        },
+        "inputs": ["s1_pooling", "s2_pooling"]
+    },
+    {
+        "layer_id": "comb_linear",
+        "layer": "Linear",
+        "conf": {
+          "hidden_dim": [512],
+          "activation": "PReLU",
+          "batch_norm": true,
+          "last_hidden_activation": true
+        },
+        "inputs": ["sentence_comb"]
+    },
+    {
+        "output_layer_flag": true,
+        "layer_id": "output",
+        "layer": "Linear",
+        "conf": {
+          "hidden_dim": [1],
+          "activation": "Sigmoid",
+          "last_hidden_activation": true,
+          "last_hidden_softmax": false
+        },
+        "inputs": ["comb_linear"]
+    }
+  ],
+  "loss": {
+    "losses": [
+      {
+        "type": "MSELoss",
+        "conf": {
+          "size_average": true
+        },
+        "inputs": ["output", "score"]
+      }
+    ]
+  },
+  "metrics": ["pearsonr", "spearmanr"]
+}

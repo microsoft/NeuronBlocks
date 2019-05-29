@@ -3,6 +3,7 @@
 
 from sklearn import metrics
 from sklearn.metrics import mean_squared_error
+from scipy.stats import pearsonr, spearmanr
 from .conlleval import countChunks, evaluate, to_conll_format
 from settings import TaggingSchemes
 import numpy as np
@@ -353,6 +354,41 @@ class Evaluator(object):
             em += (self.normalize_answer(single_true) == self.normalize_answer(single_pred))
         return 100.0 * em / total
 
+    def matthews_corrcoef(self, y_true, y_pred):
+        """ Matthews correlation.
+
+        Args:
+            y_true:
+            y_pred:
+
+        Returns:
+
+        """
+        return metrics.matthews_corrcoef(y_true, y_pred)
+
+    def pearsonr(self, y_true, y_pred):
+        """ Pearson correlation.
+
+        Args:
+            y_true:
+            y_pred:
+
+        Returns:
+
+        """
+        return pearsonr(y_true, y_pred)[0]
+
+    def spearmanr(self, y_true, y_pred):
+        """ Spearman correlation.
+
+        Args:
+            y_true:
+            y_pred:
+
+        Returns:
+
+        """
+        return spearmanr(y_true, y_pred)[0]
 
 if __name__ == '__main__':
     evaluator = Evaluator(['auc', 'accuracy'])
