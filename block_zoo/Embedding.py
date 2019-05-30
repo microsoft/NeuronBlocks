@@ -160,7 +160,7 @@ class Embedding(BaseLayer):
             #     emb = self.embeddings[input_cluster](input, lengths[input]).float()
             # else:
             #     emb = self.embeddings[input_cluster](input).float()
-            if self.embeddings[input_cluster].weight.device.type == 'cpu':
+            if list(self.embeddings[input_cluster].parameters())[0].device.type == 'cpu':
                 emb = self.embeddings[input_cluster](input.cpu()).float()
             else:
                 emb = self.embeddings[input_cluster](input).float()
