@@ -301,6 +301,7 @@ class LearningMachine(object):
                     else:
                         logging.info("Epoch %d batch idx: %d; lr: %f; since last log, loss=%f; %s" % \
                             (epoch, i, lr_scheduler.get_lr(), np.mean(all_costs), result))
+
                     show_result_cnt = 0
                     # The loss and other metrics printed during a training epoch are just the result of part of the training data.
                     all_costs = []

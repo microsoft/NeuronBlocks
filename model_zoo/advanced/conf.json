@@ -75,6 +75,7 @@
   "architecture":[
     {
         "layer": "Embedding",
+        "weight_on_gpu": false,
         "conf": {
           "word": {
             "cols": ["question_text", "answer_text"],
@@ -93,7 +94,7 @@
             "embedding_matrix_dim": 8,
             "stride":1,
             "window_size": 5,
-            "activation": null
+            "activation": "ReLU"
           }
         }
     },

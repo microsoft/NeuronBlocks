@@ -233,9 +233,20 @@ def main(params):
 
     ### optimizer
     if isinstance(lm.model, nn.DataParallel):
-        optimizer = eval(conf.optimizer_name)(list(lm.model.parameters()) + list(lm.model.module.layers['embedding'].get_parameters()), **conf.optimizer_params)
+        if isinstance(lm.model.module.layers['embedding'].embeddings, nn.ModuleDict):
+            optimizer = eval(conf.optimizer_name)(list(lm.model.parameters()), **conf.optimizer_params)
+        else:
+            optimizer = eval(conf.optimizer_name)(
+                list(lm.model.parameters()) + list(lm.model.module.layers['embedding'].get_parameters()),
+                **conf.optimizer_params)
     else:
-        optimizer = eval(conf.optimizer_name)(list(lm.model.parameters()) + list(lm.model.layers['embedding'].get_parameters()), **conf.optimizer_params)
+        if isinstance(lm.model.layers['embedding'].embeddings, nn.ModuleDict):
+            optimizer = eval(conf.optimizer_name)(
+                list(lm.model.parameters()), **conf.optimizer_params)
+        else:
+            optimizer = eval(conf.optimizer_name)(
+                list(lm.model.parameters()) + list(lm.model.layers['embedding'].get_parameters()),
+                **conf.optimizer_params)
 
     ## train
     lm.train(optimizer, loss_fn)

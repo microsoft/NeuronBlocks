@@ -68,16 +68,16 @@ class CNNCharEmbedding(BaseLayer):
         self.char_embeddings = nn.Embedding(layer_conf.vocab_size, layer_conf.embedding_matrix_dim, padding_idx=self.layer_conf.padding)
         nn.init.uniform_(self.char_embeddings.weight, -0.001, 0.001)
 
-        self.filters = Variable(torch.randn(layer_conf.output_channel_num, layer_conf.input_channel_num,
-                                            layer_conf.window_size, layer_conf.embedding_matrix_dim).float(),
-                                requires_grad=True)
+        self.char_cnn = nn.Conv2d(1, layer_conf.output_channel_num, (layer_conf.window_size, layer_conf.embedding_matrix_dim),
+                                   stride=self.layer_conf.stride, padding=self.layer_conf.padding)
         if layer_conf.activation:
             self.activation = eval("nn." + self.layer_conf.activation)()
         else:
             self.activation = None
         if self.is_cuda():
-            self.filters = self.filters.cuda()
-            if self.activation:
+            self.char_embeddings = self.char_embeddings.cuda()
+            self.char_cnn = self.char_cnn.cuda()
+            if self.activation and hasattr(self.activation, 'weight'):
                 self.activation.weight = torch.nn.Parameter(self.activation.weight.cuda())
 
     def forward(self, string):
@@ -97,24 +97,19 @@ class CNNCharEmbedding(BaseLayer):
 
         """
         string_reshaped = string.view(string.size()[0], -1)     #[batch_size, seq_len * char num in words]
+
         char_embs_lookup = self.char_embeddings(string_reshaped).float()    # [batch_size, seq_len * char num in words, embedding_dim]
-        if self.is_cuda():
-            if self.filters.device == torch.device('cpu'):
-                self.filters = self.filters.cuda()
-            char_embs_lookup = char_embs_lookup.cuda(device=self.filters.device)
         char_embs_lookup = char_embs_lookup.view(-1, string.size()[2], self.layer_conf.embedding_matrix_dim)    #[batch_size * seq_len, char num in words, embedding_dim]
 
         string_input = torch.unsqueeze(char_embs_lookup, 1)   # [batch_size * seq_len, input_channel_num=1, char num in words, embedding_dim]
-
-        string_conv = F.conv2d(string_input, self.filters, stride=self.layer_conf.stride, padding=self.layer_conf.padding)    # [batch_size * seq_len, output_channel_num, char num in word related, 1]
-        string_conv = torch.squeeze(string_conv, 3).permute(0, 2, 1)      # [batch_size * seq_len, char num in word related, output_channel_num]
+        string_conv = self.char_cnn(string_input).squeeze()
         if self.activation:
             string_conv = self.activation(string_conv)
 
-        string_maxpooling = torch.max(string_conv, 1)[0]
-        string_out = string_maxpooling.view(string.size()[0], string.size()[1], -1)
+        string_maxpooling = F.max_pool1d(string_conv, string_conv.size(2)).squeeze()
+        string_out = string_maxpooling.view(string.size()[0], -1, self.layer_conf.output_channel_num)
 
-        return string_out.cpu()
+        return string_out
 
 
 if __name__ == '__main__':
