@@ -1,4 +1,6 @@
-# ***NeuronBlocks*** - Building Your NLP DNN Models Like Playing Lego
+<img src="https://i.imgur.com/3pTjaKX.png" width="400"> 
+
+# Building Your NLP DNN Models Like Playing Lego
 
 [![language](https://img.shields.io/badge/language-en%20%7C%20中文-brightgreen.svg)](#language-supported)
 [![python](https://img.shields.io/badge/python-3.6%20%7C%203.7-blue.svg)](https://www.python.org)

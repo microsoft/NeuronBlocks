@@ -1,4 +1,6 @@
-# ***NeuronBlocks*** - 像搭积木一样构建自然语言理解深度学习模型
+<img src="https://i.imgur.com/3pTjaKX.png" width="400"> 
+
+# 像搭积木一样构建自然语言理解深度学习模型
 
 [![language](https://img.shields.io/badge/language-en%20%7C%20中文-brightgreen.svg)](#language-supported)
 [![python](https://img.shields.io/badge/python-3.6%20%7C%203.7-blue.svg)](https://www.python.org)
@@ -157,3 +159,4 @@ Licensed under the [MIT](LICENSE) License.
 如果您有微信，也可以添加工具包的官方账号:
 
 <img src="https://i.imgur.com/UfOYvt1.jpg" width="200">
+
