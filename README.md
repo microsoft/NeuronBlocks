@@ -155,5 +155,5 @@ If you have any questions, please contact NeuronBlocks@microsoft.com
 
 If you have wechat, you can also add the following account:
 
-<img src="https://i.imgur.com/lI2oQWo.jpg" width="200">
+<img src="https://i.imgur.com/UfOYvt1.jpg" width="200">
 

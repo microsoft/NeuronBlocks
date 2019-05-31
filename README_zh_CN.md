@@ -156,4 +156,4 @@ Licensed under the [MIT](LICENSE) License.
 
 如果您有微信，也可以添加工具包的官方账号:
 
-<img src="https://i.imgur.com/lI2oQWo.jpg" width="200">
+<img src="https://i.imgur.com/UfOYvt1.jpg" width="200">
