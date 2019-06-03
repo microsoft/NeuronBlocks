@@ -1,4 +1,4 @@
-<img src="https://i.imgur.com/3pTjaKX.png" width="450"> 
+<img src="https://i.imgur.com/IanH6xI.png" width="450"> 
 
 ## 像搭积木一样构建自然语言理解深度学习模型
 

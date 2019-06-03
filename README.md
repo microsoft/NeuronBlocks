@@ -1,4 +1,4 @@
-<img src="https://i.imgur.com/3pTjaKX.png" width="450"> 
+<img src="https://i.imgur.com/IanH6xI.png" width="450"> 
 
 ## Building Your NLP DNN Models Like Playing Lego
 
