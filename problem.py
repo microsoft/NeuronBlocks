@@ -162,7 +162,10 @@ class Problem():
                     line_split[i] = self.text_preprocessor.preprocess(line_split[i])
 
                     if col_index_types[i] == 'word':
-                        token_list = self.tokenizer.tokenize(line_split[i])
+                        if ProblemTypes[self.problem_type] == ProblemTypes.sequence_tagging:
+                            token_list = line_split[i].split(" ")
+                        else:
+                            token_list = self.tokenizer.tokenize(line_split[i])
                         docs[col_index_types[i]].append(token_list)
                         if 'char' in docs:
                             # add char
@@ -313,7 +316,12 @@ class Problem():
                 self.input_dicts['word'].update([list(word_emb_dict.keys())])
                 self.input_dicts['word'].build(threshold=0, max_vocabulary_num=len(word_emb_dict))
             else:
-                word_emb_dict = load_embedding(word2vec_path, word_emb_dim, format, file_type, with_head=False, word_set=self.input_dicts['word'].cell_id_map.keys())
+                extend_vocabulary = set()
+                for single_word in self.input_dicts['word'].cell_id_map.keys():
+                    extend_vocabulary.add(single_word)
+                    if single_word.lower() != single_word:
+                        extend_vocabulary.add(single_word.lower())
+                word_emb_dict = load_embedding(word2vec_path, word_emb_dim, format, file_type, with_head=False, word_set=extend_vocabulary)
 
             for word in word_emb_dict:
                 loaded_emb_dim = len(word_emb_dict[word])
@@ -329,11 +337,15 @@ class Problem():
 
             word_emb_matrix = []
             unknown_word_count = 0
+            scale = np.sqrt(3.0 / word_emb_dim)
             for i in range(self.input_dicts['word'].cell_num()):
-                if self.input_dicts['word'].id_cell_map[i] in word_emb_dict:
-                    word_emb_matrix.append(word_emb_dict[self.input_dicts['word'].id_cell_map[i]])
+                single_word = self.input_dicts['word'].id_cell_map[i]
+                if single_word in word_emb_dict:
+                    word_emb_matrix.append(word_emb_dict[single_word])
+                elif single_word.lower() in word_emb_dict:
+                    word_emb_matrix.append(word_emb_dict[single_word.lower()])
                 else:
-                    word_emb_matrix.append(word_emb_dict['<unk>'])
+                    word_emb_matrix.append(np.random.uniform(-scale, scale, word_emb_dim))
                     unknown_word_count += 1
             word_emb_matrix = np.array(word_emb_matrix)
             logging.info("word embedding matrix shape:(%d, %d); unknown word count: %d;" %
@@ -496,7 +508,7 @@ class Problem():
                                 data[extra_info_type]['extra_passage_text'].append(line_split[i])
                                 data[extra_info_type]['extra_passage_token_offsets'].append(passage_token_offsets)
                         else:
-                            if extra_feature == False:
+                            if extra_feature == False and ProblemTypes[self.problem_type] != ProblemTypes.sequence_tagging:
                                 tokens = self.tokenizer.tokenize(line_split[i])
                             else:
                                 tokens = line_split[i].split(' ')
