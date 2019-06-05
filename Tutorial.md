@@ -1,4 +1,4 @@
-# ***NeuronBlocks*** Tutorial
+# <img src="https://i.imgur.com/YLrkvW3.png" width="80">  ***NeuronBlocks*** Tutorial
 
 [简体中文](Tutorial_zh_CN.md)
 

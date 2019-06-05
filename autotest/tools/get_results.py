@@ -1,6 +1,3 @@
-# Copyright (c) Microsoft Corporation. All rights reserved.
-# Licensed under the MIT license.
-
 import re
 from calculate_AUC import main
 
@@ -10,24 +7,29 @@ task_dir = ['/20_newsgroup_bilstm_attn', '/chinese_text_matching', '/question_pa
 results = {'english_text_matching': [0.96655], 'chinese_text_matching': [0.70001], 'quora_question_pairs': [0.72596], 'knowledge_distillation': [0.66329]}
 for each_dir, key in zip(task_dir, results.keys()):
     target_dir = base_dir + each_dir
-    with open(target_dir + '/train_autotest.log', 'r') as f_r:
-        last_line = f_r.readlines()[-1].strip()
-        score = ''.join(re.findall(r'(?<=accuracy:).*?(?=loss|;)', last_line))
-        try:
-            results[key].append(float(score))
-        except:
-            results[key].append('wrong')
-            print ('GPU test. Wrong number in %s/train_autotest.log' %target_dir)
+    try:
+        with open(target_dir + '/train_autotest.log', 'r') as f_r:
+            last_line = f_r.readlines()[-1].strip()
+            score = ''.join(re.findall(r'(?<=accuracy:).*?(?=loss|;)', last_line))
+            try:
+                results[key].append(float(score))
+            except:
+                results[key].append('wrong number in train log')
+                print ('GPU test. Wrong number in %s/train_autotest.log' %target_dir)
+    except:
+        results[key].append('no train log')
 
-    with open(target_dir + '/test_autotest.log', 'r') as f_r:
-        last_line = f_r.readlines()[-1].strip()
-        score = ''.join(re.findall(r'(?<=accuracy:).*?(?=loss|;)', last_line))
-        try:
-            results[key].append(float(score))
-        except:
-            results[key].append('wrong')
-            print ('CPU test. Wrong number in %s/test_autotest.log' %target_dir)
-
+    try:
+        with open(target_dir + '/test_autotest.log', 'r') as f_r:
+            last_line = f_r.readlines()[-1].strip()
+            score = ''.join(re.findall(r'(?<=accuracy:).*?(?=loss|;)', last_line))
+            try:
+                results[key].append(float(score))
+            except:
+                results[key].append('wrong number in test log')
+                print ('CPU test. Wrong number in %s/test_autotest.log' %target_dir)
+    except:
+        results[key].append('no test log')
 
 # for kdtm_match_linearAttn task, we use calculate_AUC.main()
 params = {'input_file': './autotest/models/kdtm_match_linearAttn/predict.tsv', 'predict_index': '3', 'label_index': '2', 'header': False}
