@@ -35,6 +35,10 @@ class ConvConf(BaseConf):
         self.output_channel_num = 16
         self.batch_norm = True
         self.activation = 'ReLU'
+        self.padding_type = 'VALID'
+        self.use_dropout = False
+        self.dropout = 0.2
+
 
     @DocInherit
     def declare(self):
@@ -43,6 +47,10 @@ class ConvConf(BaseConf):
 
     @DocInherit
     def inference(self):
+
+        if self.padding_type == 'SAME':
+            self.padding = int((self.window_size-1)/2)
+
         self.output_dim = [-1]
         if self.input_dims[0][1] != -1:
             self.output_dim.append((self.input_dims[0][1] - self.window_size) // self.stride + 1)
@@ -82,12 +90,14 @@ class Conv(BaseLayer):
         else:
             self.activation = None
 
+        self.m = nn.Conv1d(layer_conf.input_dims[0][-1], layer_conf.output_channel_num, kernel_size=layer_conf.window_size, padding=layer_conf.padding).cuda()
         self.filters = nn.ParameterList([nn.Parameter(torch.randn(layer_conf.output_channel_num,
-            layer_conf.input_channel_num, layer_conf.window_size, layer_conf.input_dims[0][-1],
+            layer_conf.input_channel_num, layer_conf.window_size, layer_conf.input_dims[0][-1] + layer_conf.padding*2,
             requires_grad=True).float())])
 
         if layer_conf.batch_norm:
             self.batch_norm = nn.BatchNorm2d(layer_conf.output_channel_num)    # the output_chanel of Conv is the input_channel of BN
+            #self.batch_norm = nn.BatchNorm1d(layer_conf.output_channel_num)
         else:
             self.batch_norm = None
 
@@ -102,28 +112,42 @@ class Conv(BaseLayer):
             Tensor: shape: [batch_size, (seq_len - conv_window_size) // stride + 1, output_channel_num]
 
         """
-        if string_len is not None:
-            string_len_val = string_len.cpu().data.numpy()
-            masks = []
-            for i in range(len(string_len)):
-                masks.append(torch.cat([torch.ones(string_len_val[i]), torch.zeros(string.shape[1] - string_len_val[i])]))
-            masks = torch.stack(masks).view(string.shape[0], string.shape[1], 1).expand_as(string)
-            if self.is_cuda():
-                device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-                masks = masks.to(device)
-            string = string * masks
+        # if string_len is not None:
+        #     string_len_val = string_len.cpu().data.numpy()
+        #     masks = []
+        #     for i in range(len(string_len)):
+        #         masks.append(torch.cat([torch.ones(string_len_val[i]), torch.zeros(string.shape[1] - string_len_val[i])]))
+        #     masks = torch.stack(masks).view(string.shape[0], string.shape[1], 1).expand_as(string)
+        #     if self.is_cuda():
+        #         device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+        #         masks = masks.to(device)
+        #     string = string * masks
 
-        string = torch.unsqueeze(string, 1)     # [batch_size, input_channel_num=1, seq_len, feature_dim]
-        string_out = F.conv2d(string, self.filters[0], stride=self.layer_conf.stride, padding=self.layer_conf.padding)
-        if hasattr(self, 'batch_norms') and self.batch_norm:
-            string_out = self.batch_norm(string_out)
+        # string = torch.unsqueeze(string, 1)     # [batch_size, input_channel_num=1, seq_len, feature_dim]
+        # print (string.shape)
+        # string_out = F.conv2d(string, self.filters[0], stride=self.layer_conf.stride, padding=self.layer_conf.padding)
+        # print (string_out.shape)
 
-        string_out = torch.squeeze(string_out, 3).permute(0, 2, 1)
+        string_ = string.transpose(2, 1).contiguous()
+        # print (string_.shape)
+        string_out = self.m(string_)
 
         if self.activation:
             string_out = self.activation(string_out)
+
+        # if self.layer_conf.use_dropout:
+        #     dropout_layer = nn.Dropout(self.layer_conf.dropout)
+        #     string_out = dropout_layer(string_out)
+
+        if hasattr(self, 'batch_norms') and self.batch_norm:
+            string_out = self.batch_norm(string_out)
+
+        # string_out = torch.squeeze(string_out, 3).permute(0, 2, 1)
+        string_out = string_out.permute(0,2,1)
+        # print (string_out.shape)
+
         if string_len is not None:
-            string_len_out = (string_len - self.layer_conf.window_size) // self.layer_conf.stride + 1
+            string_len_out = None
         else:
             string_len_out = None
         return string_out, string_len_out

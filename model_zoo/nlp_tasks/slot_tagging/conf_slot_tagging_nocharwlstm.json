@@ -10,7 +10,7 @@
       "train_data_path": "./dataset/slot_tagging/conll_2003/eng.train.tsv",
       "valid_data_path": "./dataset/slot_tagging/conll_2003/eng.testa.tsv",
       "test_data_path": "./dataset/slot_tagging/conll_2003/eng.testb.tsv",
-      "pre_trained_emb": "dataset/GloVe/glove.6B.100d.txt"
+      "pre_trained_emb": "./dataset/GloVe/glove.6B.100d.txt"
     },
     "add_start_end_for_seq": false,
     "file_header": {

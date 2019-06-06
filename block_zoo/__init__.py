@@ -19,6 +19,7 @@ from .Conv2D import Conv2D, Conv2DConf
 from .Pooling2D import Pooling2D, Pooling2DConf
 
 from .embedding import CNNCharEmbedding, CNNCharEmbeddingConf
+from .embedding import LSTMCharEmbedding, LSTMCharEmbeddingConf
 
 from .attentions import FullAttention, FullAttentionConf
 from .attentions import Seq2SeqAttention, Seq2SeqAttentionConf
