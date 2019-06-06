@@ -80,7 +80,7 @@ class CNNCharEmbedding(BaseLayer):
             if self.activation and hasattr(self.activation, 'weight'):
                 self.activation.weight = torch.nn.Parameter(self.activation.weight.cuda())
 
-    def forward(self, string):
+    def forward(self, string, length):
         """
         Step1: [batch_size, seq_len, char num in words] -> [batch_size, seq_len * char num in words]
         Step2: lookup embedding matrix -> [batch_size, seq_len * char num in words, embedding_dim]
@@ -91,6 +91,7 @@ class CNNCharEmbedding(BaseLayer):
 
         Args:
             string (Variable): [[char ids of word1], [char ids of word2], [...], ...], shape: [batch_size, seq_len, char num in words]
+            length :record length of each word. [batch_size, sequence_length]
 
         Returns:
             Variable: [batch_size, seq_len, output_dim]

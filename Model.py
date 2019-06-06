@@ -368,11 +368,11 @@ class Model(nn.Module):
         repre_lengths[EMBED_LAYER_ID] = dict()
 
         for input in inputs:
-            representation[input] = self.layers[EMBED_LAYER_ID](inputs[input], use_gpu=self.is_cuda())
+            representation[input] = self.layers[EMBED_LAYER_ID](inputs[input], lengths[input], use_gpu=self.is_cuda())
             if self.use_gpu:
-                repre_lengths[input] = transfer_to_gpu(lengths[input])
+                repre_lengths[input] = transfer_to_gpu(lengths[input]['sentence_length'])
             else:
-                repre_lengths[input] = lengths[input]
+                repre_lengths[input] = lengths[input]['sentence_length']
 
         for layer_id in self.layer_topological_sequence:
             #logging.debug("To proces layer %s" % layer_id)

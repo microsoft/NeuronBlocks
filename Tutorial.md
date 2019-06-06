@@ -1,4 +1,4 @@
-# ***NeuronBlocks*** Tutorial
+# <img src="https://i.imgur.com/YLrkvW3.png" width="80">  ***NeuronBlocks*** Tutorial
 
 [简体中文](Tutorial_zh_CN.md)
 
@@ -21,6 +21,7 @@
         4. [Compression for MRC Model](#task-6.4)
     * [Task 7: Chinese Sentiment Analysis](#task-7)
     * [Task 8: Chinese Text Matching](#task-8)
+    * [Task 9: Sequence Tagging](#task-9)
 * [Advanced Usage](#advanced-usage)
     * [Extra Feature Support](#extra-feature)
     * [Learning Rate Decay](#lr-decay)
@@ -562,6 +563,7 @@ Here is an example using Chinese data, for text matching task.
     ```
      *Tips: you can try different models by running different JSON config files. The model file and train log file can be found in JOSN config file's outputs/save_base_dir after you finish training.*
 
+### <span id="task-9">Task 9: Sequence Tagging</span>
 
 ## <span id="advanced-usage">Advanced Usage</span>
 

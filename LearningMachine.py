@@ -438,6 +438,8 @@ class LearningMachine(object):
 
                 param_list, inputs_desc, length_desc = transform_params2tensors(data_batches[i], length_batches[i])
                 logits = self.model(inputs_desc, length_desc, *param_list)
+                for single_key in temp_key_list:
+                    length_batches[i][single_key] = length_batches[i][single_key]['sentence_length']
 
                 logits_softmax = {}
                 if isinstance(self.model, nn.DataParallel):
