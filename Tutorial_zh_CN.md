@@ -564,7 +564,7 @@ This task is to train a query-passage regression model to learn from a heavy tea
 
     - NeuronBlocks 支持 BIO 和 BIOES 标注策略。
     - IOB 标注标注是不被支持的，因为在大多[实验](https://arxiv.org/pdf/1707.06799.pdf)中它具有很差的表现。
-    - NeuronBlocks 提供一个在不同标注策略(IOB/BIO/BIOES)中的转化脚本(脚本仅支持具有 数据和标签 的两列tsv文件输入)。
+    - NeuronBlocks 提供一个在不同标注策略(IOB/BIO/BIOES)中的[转化脚本](./tools/taggingSchemes_Converter.py)(脚本仅支持具有 数据和标签 的两列tsv文件输入)。
 
 - ***用法***
 

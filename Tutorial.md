@@ -574,7 +574,7 @@ Sequence Labeling is an important NLP task, which can be used to improve many ot
     
     - NeuronBlocks support both BIO and BIOES tag schemes.
     - The IOB scheme is not supported, because of its worse performance in most [experiment](https://arxiv.org/pdf/1707.06799.pdf).
-    - NeuronBlocks provides a script that converts the tag scheme among IOB/BIO/BIOES (NOTE: the script only supports tsv file which has data and label in two columns).
+    - NeuronBlocks provides a [script](./tools/taggingSchemes_Converter.py) that converts the tag scheme among IOB/BIO/BIOES (NOTE: the script only supports tsv file which has data and label in two columns).
 
 - ***Usages***
 
