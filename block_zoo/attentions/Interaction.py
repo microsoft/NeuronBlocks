@@ -120,11 +120,7 @@ class Interaction(BaseLayer):
                     return x - y
             elif self.matching_type == 'concat':
                 def func(x, y):
-<<<<<<< HEAD
                     return torch.cat([x, y], dim=-1)
-=======
-                    return torch.concat([x, y], axis=-1)
->>>>>>> upstream/master
             else:
                 raise ValueError(f"Invalid matching type."
                                  f"{self.matching_type} received."
