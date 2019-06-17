@@ -554,7 +554,7 @@ This task is to train a query-passage regression model to learn from a heavy tea
      *提示：您可以通过运行不同的JSON配置文件来尝试不同的模型。当训练完成后，模型文件和训练日志文件可以在JSON配置的outputs/save_base_dir目录中找到。*
 
 ### <span id="task-9">任务 9: 序列标注</span>
-序列标注是一项重要的NLP任务，它可以用来改进 NER 和 QA 等许多其他NLP任务。
+序列标注是一项重要的NLP任务，包括 NER, Slot Tagging, Pos Tagging 等任务。
 
 - ***数据集***
 
@@ -580,8 +580,8 @@ This task is to train a query-passage regression model to learn from a heavy tea
     
     Model    | F1-score 
     -------- | -------- 
-    Ma and Hovy(2016)|87.00
-    NeuronBlocks|88.50
+    [Ma and Hovy(2016)](https://arxiv.org/pdf/1603.01354.pdf)|87.00
+    BiLSTM+Softmax(NeuronBlocks)|88.50
 
 ## <span id="advanced-usage">高阶用法</span>
 

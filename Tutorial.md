@@ -564,7 +564,7 @@ Here is an example using Chinese data, for text matching task.
      *Tips: you can try different models by running different JSON config files. The model file and train log file can be found in JOSN config file's outputs/save_base_dir after you finish training.*
 
 ### <span id="task-9">Task 9: Sequence Labeling</span>
-Sequence Labeling is an important NLP task, which can be used to improve many other NLP tasks such as named entity recognition and question answering.
+Sequence Labeling is an important NLP task, which includes NER, Slot Tagging, Pos Tagging, etc.
 
 - ***Dataset***
 
@@ -590,8 +590,8 @@ Sequence Labeling is an important NLP task, which can be used to improve many ot
     
     Model    | F1-score 
     -------- | -------- 
-    Ma and Hovy(2016)|87.00
-    NeuronBlocks|88.50
+    [Ma and Hovy(2016)](https://arxiv.org/pdf/1603.01354.pdf)|87.00
+    BiLSTM+Softmax(NeuronBlocks)|88.50
     
 ## <span id="advanced-usage">Advanced Usage</span>
 
