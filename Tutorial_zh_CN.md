@@ -1,4 +1,4 @@
-# ***NeuronBlocks*** 教程
+# <img src="https://i.imgur.com/YLrkvW3.png" width="80">  ***NeuronBlocks*** 教程
 
 [English Version](Tutorial.md)
 
@@ -21,6 +21,7 @@
         4. [机器阅读理解模型的模型压缩](#task-6.4)
     * [任务 7: 中文情感分析](#task-7)
     * [任务 8：中文文本匹配](#task-8)
+    * [任务 9：序列标注](#task-9)
 * [高阶用法](#advanced-usage)
     * [额外的feature](#extra-feature)
     * [学习率衰减](#lr-decay)
@@ -551,6 +552,36 @@ This task is to train a query-passage regression model to learn from a heavy tea
     python test.py --conf_path=model_zoo/nlp_tasks/chinese_text_matching/conf_chinese_text_matching.json
     ```
      *提示：您可以通过运行不同的JSON配置文件来尝试不同的模型。当训练完成后，模型文件和训练日志文件可以在JSON配置的outputs/save_base_dir目录中找到。*
+
+### <span id="task-9">任务 9: 序列标注</span>
+序列标注是一项重要的NLP任务，包括 NER, Slot Tagging, Pos Tagging 等任务。
+
+- ***数据集***
+
+    在序列标注任务中，[CoNLL 2003](https://www.clips.uantwerpen.be/conll2003/)是一个很常用的数据集。在我们的序列标注任务中，使用 CoNLL 2003 中英文 NER 数据作为实验数据，其中数据格式可以参考我们给出的[抽样数据](https://github.com/microsoft/NeuronBlocks/tree/master/dataset/slot_tagging/conll_2003)。
+    
+- ***标注策略***
+
+    - NeuronBlocks 支持 BIO 和 BIOES 标注策略。
+    - IOB 标注标注是不被支持的，因为在大多[实验](https://arxiv.org/pdf/1707.06799.pdf)中它具有很差的表现。
+    - NeuronBlocks 提供一个在不同标注策略(IOB/BIO/BIOES)中的[转化脚本](./tools/taggingSchemes_Converter.py)(脚本仅支持具有 数据和标签 的两列tsv文件输入)。
+
+- ***用法***
+
+    1. BiLSTM 词表示和 Softmax 输出
+    ```bash
+    cd PROJECT_ROOT
+    python train.py --conf_path=model_zoo/nlp_tasks/slot_tagging/conf_slot_tagging.json
+    ``` 
+    
+- ***结果***
+
+    1. BiLSTM 词表示和 Softmax 输出
+    
+    Model    | F1-score 
+    -------- | -------- 
+    [Ma and Hovy(2016)](https://arxiv.org/pdf/1603.01354.pdf)|87.00
+    BiLSTM+Softmax(NeuronBlocks)|88.50
 
 ## <span id="advanced-usage">高阶用法</span>
 

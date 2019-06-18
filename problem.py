@@ -331,8 +331,7 @@ class Problem():
                     extend_vocabulary.add(single_word)
                     if single_word.lower() != single_word:
                         extend_vocabulary.add(single_word.lower())
-                word_emb_dict = load_embedding(word2vec_path, word_emb_dim, format, file_type, with_head=False,
-                                               word_set=extend_vocabulary)
+                word_emb_dict = load_embedding(word2vec_path, word_emb_dim, format, file_type, with_head=False, word_set=extend_vocabulary)
 
             for word in word_emb_dict:
                 loaded_emb_dim = len(word_emb_dict[word])
