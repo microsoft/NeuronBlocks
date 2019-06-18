@@ -1,11 +1,7 @@
 {
   "license": "Copyright (c) Microsoft Corporation. All rights reserved. Licensed under the MIT license.",
   "tool_version": "1.1.0",
-<<<<<<< HEAD
   "model_description": "This model is used for sequence tagging task. It achieved a f1-score of 88.50 on the dataset conll-2003",
-=======
-  "model_description": "This model is used for slot tagging task. It achieved a f1-score of 88.50 on the dataset conll-2003",
->>>>>>> master
   "inputs": {
     "use_cache": true,
     "dataset_type": "sequence_tagging",
