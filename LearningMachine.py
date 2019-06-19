@@ -13,7 +13,7 @@ import codecs
 import pickle as pkl
 
 from utils.common_utils import dump_to_pkl, load_from_pkl, get_param_num, get_trainable_param_num, \
-    transfer_to_gpu, transform_params2tensors
+    transfer_to_gpu, transform_params2tensors, get_layer_class
 from utils.philly_utils import HDFSDirectTransferer, open_and_move, convert_to_tmppath, \
     convert_to_hdfspath, move_from_local_to_hdfs
 from Model import Model
@@ -24,6 +24,8 @@ from core.StreamingRecorder import StreamingRecorder
 from core.LRScheduler import LRScheduler
 from settings import ProblemTypes
 from block_zoo import Linear
+from block_zoo import CRF
+from losses.CRFLoss import CRFLoss
 
 
 class LearningMachine(object):
@@ -169,6 +171,8 @@ class LearningMachine(object):
                                 (not self.model.module.layers[tmp_output_layer_id].layer_conf.last_hidden_softmax):
                             logits_softmax[tmp_output_layer_id] = nn.functional.softmax(
                                 logits[tmp_output_layer_id], dim=-1)
+                        elif isinstance(get_layer_class(self.model, tmp_output_layer_id), CRF):
+                            pass
                         else:
                             logits_softmax[tmp_output_layer_id] = logits[tmp_output_layer_id]
                 else:
@@ -177,6 +181,8 @@ class LearningMachine(object):
                                 (not self.model.layers[tmp_output_layer_id].layer_conf.last_hidden_softmax):
                             logits_softmax[tmp_output_layer_id] = nn.functional.softmax(
                                 logits[tmp_output_layer_id], dim=-1)
+                        elif isinstance(get_layer_class(self.model, tmp_output_layer_id), CRF):
+                            pass
                         else:
                             logits_softmax[tmp_output_layer_id] = logits[tmp_output_layer_id]
 
@@ -194,8 +200,9 @@ class LearningMachine(object):
                         prediction_scores_all = None
                 elif ProblemTypes[self.problem.problem_type] == ProblemTypes.sequence_tagging:
                     logits = list(logits.values())[0]
-                    logits_softmax = list(logits_softmax.values())[0]
-                    assert len(logits_softmax.shape) == 3, 'The dimension of your output is %s, but we need [batch_size*GPUs, sequence length, representation dim]' % (str(list(logits_softmax.shape)), )
+                    if not isinstance(get_layer_class(self.model, tmp_output_layer_id), CRF):
+                        logits_softmax = list(logits_softmax.values())[0]
+                        assert len(logits_softmax.shape) == 3, 'The dimension of your output is %s, but we need [batch_size*GPUs, sequence length, representation dim]' % (str(list(logits_softmax.shape)), )
                     prediction_scores = None
                     prediction_scores_all = None
                 elif ProblemTypes[self.problem.problem_type] == ProblemTypes.regression:
@@ -214,16 +221,25 @@ class LearningMachine(object):
                 if ProblemTypes[self.problem.problem_type] == ProblemTypes.sequence_tagging:
                     # Transform output shapes for metric evaluation
                     # for seq_tag_f1 metric
-                    prediction_indices = logits_softmax.data.max(2)[1].cpu().numpy()    # [batch_size, seq_len]
-                    streaming_recoder.record_one_row([self.problem.decode(prediction_indices, length_batches[i]['target'][self.conf.answer_column_name[0]].numpy()),
-                                                      prediction_scores, self.problem.decode(target_batches[i][self.conf.answer_column_name[0]],
-                                                                                             length_batches[i]['target'][self.conf.answer_column_name[0]].numpy())], keep_dim=False)
+                    if isinstance(get_layer_class(self.model, tmp_output_layer_id), CRF):
+                        forward_score, scores, masks, tag_seq, transitions, layer_conf = logits
+                        prediction_indices = tag_seq.cpu().numpy()
+                        streaming_recoder.record_one_row([self.problem.decode(prediction_indices, length_batches[i]['target'][self.conf.answer_column_name[0]].numpy()),
+                                                          prediction_scores, self.problem.decode(
+                                target_batches[i][self.conf.answer_column_name[0]],
+                                length_batches[i]['target'][self.conf.answer_column_name[0]].numpy())], keep_dim=False)
 
-                    # pytorch's CrossEntropyLoss only support this
-                    logits_flat[self.conf.output_layer_id[0]] = logits.view(-1, logits.size(2))    # [batch_size * seq_len, # of tags]
-                    #target_batches[i] = target_batches[i].view(-1)                      # [batch_size * seq_len]
-                    # [batch_size * seq_len]
-                    target_batches[i][self.conf.answer_column_name[0]] = target_batches[i][self.conf.answer_column_name[0]].reshape(-1)
+                    else:
+                        prediction_indices = logits_softmax.data.max(2)[1].cpu().numpy()    # [batch_size, seq_len]
+                        # pytorch's CrossEntropyLoss only support this
+                        logits_flat[self.conf.output_layer_id[0]] = logits.view(-1, logits.size(2))  # [batch_size * seq_len, # of tags]
+                        streaming_recoder.record_one_row([self.problem.decode(prediction_indices, length_batches[i]['target'][self.conf.answer_column_name[0]].numpy()),
+                                                          prediction_scores, self.problem.decode(
+                                target_batches[i][self.conf.answer_column_name[0]],
+                                length_batches[i]['target'][self.conf.answer_column_name[0]].numpy())], keep_dim=False)
+
+                        target_batches[i][self.conf.answer_column_name[0]] = target_batches[i][
+                            self.conf.answer_column_name[0]].reshape(-1)
 
                 elif ProblemTypes[self.problem.problem_type] == ProblemTypes.classification:
                     prediction_indices = logits_softmax.detach().max(1)[1].cpu().numpy()
@@ -260,7 +276,10 @@ class LearningMachine(object):
                     for single_target in self.conf.answer_column_name:
                         if isinstance(target_batches[i][single_target], torch.Tensor):
                             target_batches[i][single_target] = transfer_to_gpu(target_batches[i][single_target])
-                loss = loss_fn(logits_flat, target_batches[i])
+                if isinstance(loss_fn.loss_fn[0], CRFLoss):
+                    loss = loss_fn.loss_fn[0](forward_score, scores, masks, list(target_batches[i].values())[0], transitions, layer_conf)
+                else:
+                    loss = loss_fn(logits_flat, target_batches[i])
 
                 all_costs.append(loss.item())
                 optimizer.zero_grad()
@@ -297,7 +316,7 @@ class LearningMachine(object):
 
                     if torch.cuda.device_count() > 1:
                         logging.info("Epoch %d batch idx: %d; lr: %f; since last log, loss=%f; %s" % \
-                            (epoch, i * torch.cuda.device_count(), lr_scheduler.get_lr(), np.mean(all_costs), result))
+                            (epoch, i * torch.cuda.device_count(), lr_scheduler.get_lr(), np.sum(all_costs), result))
                     else:
                         logging.info("Epoch %d batch idx: %d; lr: %f; since last log, loss=%f; %s" % \
                             (epoch, i, lr_scheduler.get_lr(), np.mean(all_costs), result))
@@ -473,18 +492,29 @@ class LearningMachine(object):
                 logits_flat = {}
                 if ProblemTypes[self.problem.problem_type] == ProblemTypes.sequence_tagging:
                     logits = list(logits.values())[0]
-                    logits_softmax = list(logits_softmax.values())[0]
-                    # Transform output shapes for metric evaluation
-                    # for seq_tag_f1 metric
-                    prediction_indices = logits_softmax.data.max(2)[1].cpu().numpy()  # [batch_size, seq_len]
-                    streaming_recoder.record_one_row(
-                        [self.problem.decode(prediction_indices, length_batches[i]['target'][self.conf.answer_column_name[0]].numpy()), prediction_pos_scores,
-                         self.problem.decode(target_batches[i], length_batches[i]['target'][self.conf.answer_column_name[0]].numpy())], keep_dim=False)
+                    if isinstance(get_layer_class(self.model, tmp_output_layer_id), CRF):
+                        forward_score, scores, masks, tag_seq, transitions, layer_conf = logits
+                        prediction_indices = tag_seq.cpu().numpy()
+                        streaming_recoder.record_one_row(
+                            [self.problem.decode(prediction_indices, length_batches[i]['target'][self.conf.answer_column_name[0]].numpy()),
+                             prediction_pos_scores,
+                             self.problem.decode(target_batches[i], length_batches[i]['target'][self.conf.answer_column_name[0]].numpy())],
+                            keep_dim=False)
+                    else:
+                        logits_softmax = list(logits_softmax.values())[0]
+                        # Transform output shapes for metric evaluation
+                        # for seq_tag_f1 metric
+                        prediction_indices = logits_softmax.data.max(2)[1].cpu().numpy()  # [batch_size, seq_len]
+                        # pytorch's CrossEntropyLoss only support this
+                        logits_flat[self.conf.output_layer_id[0]] = logits.view(-1, logits.size(2))  # [batch_size * seq_len, # of tags]
+                        streaming_recoder.record_one_row(
+                            [self.problem.decode(prediction_indices, length_batches[i]['target'][self.conf.answer_column_name[0]].numpy()),
+                             prediction_pos_scores,
+                             self.problem.decode(target_batches[i], length_batches[i]['target'][self.conf.answer_column_name[0]].numpy())],
+                            keep_dim=False)
 
-                    # pytorch's CrossEntropyLoss only support this
-                    logits_flat[self.conf.output_layer_id[0]] = logits.view(-1, logits.size(2))  # [batch_size * seq_len, # of tags]
-                    #target_batches[i] = target_batches[i].view(-1)  # [batch_size * seq_len]
-                    target_batches[i][self.conf.answer_column_name[0]] = target_batches[i][self.conf.answer_column_name[0]].reshape(-1)  # [batch_size * seq_len]
+                        target_batches[i][self.conf.answer_column_name[0]] = target_batches[i][
+                            self.conf.answer_column_name[0]].reshape(-1)  # [batch_size * seq_len]
 
                     if to_predict:
                         prediction_batch = self.problem.decode(prediction_indices, length_batches[i][key_random].numpy())
@@ -547,8 +577,13 @@ class LearningMachine(object):
                         predict_stream_recoder.record_one_row([prediction])
 
                 if to_predict:
-                    logits_len = len(list(logits.values())[0]) \
-                        if ProblemTypes[self.problem.problem_type] == ProblemTypes.mrc else len(logits)
+                    if ProblemTypes[self.problem.problem_type] == ProblemTypes.mrc:
+                        logits_len = len(list(logits.values())[0])
+                    elif ProblemTypes[self.problem.problem_type] == ProblemTypes.sequence_tagging and isinstance(get_layer_class(self.model, tmp_output_layer_id), CRF):
+                        # for sequence_tagging task, logits is tuple type which index 3 is tag_seq [batch_size*seq_len]
+                        logits_len = logits[3].size(0)
+                    else:
+                        logits_len = len(logits)
                     for sample_idx in range(logits_len):
                         while True:
                             sample = fin.readline().rstrip()
@@ -564,7 +599,10 @@ class LearningMachine(object):
                     for single_target in self.conf.answer_column_name:
                         if isinstance(target_batches[i][single_target], torch.Tensor):
                             target_batches[i][single_target] = transfer_to_gpu(target_batches[i][single_target])
-                loss = loss_fn(logits_flat, target_batches[i])
+                if isinstance(loss_fn.loss_fn[0], CRFLoss):
+                    loss = loss_fn.loss_fn[0](forward_score, scores, masks, list(target_batches[i].values())[0], transitions, layer_conf)
+                else:
+                    loss = loss_fn(logits_flat, target_batches[i])
                 loss_recoder.record('loss', loss.item())
 
                 del loss, logits, logits_softmax, logits_flat
@@ -686,9 +724,14 @@ class LearningMachine(object):
 
                     if ProblemTypes[self.problem.problem_type] == ProblemTypes.sequence_tagging:
                         logits = list(logits.values())[0]
-                        logits_softmax = list(logits_softmax.values())[0]
-                        # Transform output shapes for metric evaluation
-                        prediction_indices = logits_softmax.data.max(2)[1].cpu().numpy()  # [batch_size, seq_len]
+                        if isinstance(get_layer_class(self.model, tmp_output_layer_id), CRF):
+                            forward_score, scores, masks, tag_seq, transitions, layer_conf = logits
+                            prediction_indices = tag_seq.cpu().numpy()
+                        else:
+                            logits_softmax = list(logits_softmax.values())[0]
+                            # Transform output shapes for metric evaluation
+                            # for seq_tag_f1 metric
+                            prediction_indices = logits_softmax.data.max(2)[1].cpu().numpy()  # [batch_size, seq_len]
                         prediction_batch = self.problem.decode(prediction_indices, length_batches[i][key_random].numpy())
                         for prediction_sample in prediction_batch:
                             streaming_recoder.record('prediction', " ".join(prediction_sample))
