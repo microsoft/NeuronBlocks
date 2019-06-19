@@ -42,14 +42,23 @@ def main(params):
     elif params.predict_mode == 'interactive':
         print('='*80)
         task_type = str(ProblemTypes[problem.problem_type]).split('.')[1]
-        sample_format = list(conf.predict_file_columns.keys())
-
-        print('%s Task Interactive. The sample format is %s' % (task_type.upper(), '\\t'.join(sample_format)))
+        predict_file_columns_set = set(conf.predict_file_columns.keys())
+        target_ = conf.conf['inputs'].get('target', None)
+        target_set = set(target_) if target_ else set()
+        sample_format = list(predict_file_columns_set - target_set)
+        predict_file_columns = {}
+        for index, single in enumerate(sample_format):
+            predict_file_columns[single] = index
+        print('%s Task Interactive. The sample format is <%s>' % (task_type.upper(), ', '.join(sample_format)))
         while True:
-            sample = input('Case: ')
-            if sample.lower() == 'exit':
-                exit(0)
-            result = lm.interactive([sample], conf.predict_file_columns, conf.predict_fields, params.predict_mode)
+            sample = []
+            for single in sample_format:
+                temp_ = input('%s: ' % single)
+                if temp_.lower() == 'exit':
+                    exit(0)
+                sample.append(temp_)
+            sample = '\t'.join(sample)
+            result = lm.interactive([sample], predict_file_columns, conf.predict_fields, params.predict_mode)
             print('Inference result: %s' % result)
     else:
         raise Exception('Predict mode support interactive|batch, get %s' % params.predict_mode)

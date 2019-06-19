@@ -753,7 +753,8 @@ class LearningMachine(object):
         """ interactive prediction
 
          Args:
-
+            file_columns: representation the columns of sample
+            predict_mode: interactive|batch(need a predict file)
         """
         predict_data, predict_length, _, _, _ = \
             self.problem.encode_data_list(sample, file_columns, self.conf.input_types, self.conf.object_inputs, None,

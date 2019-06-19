@@ -17,9 +17,6 @@
       "word": 0,
       "tag": 1
     },
-    "predict_file_header": {
-       "word": 0
-    },
     "model_inputs": {
       "words": ["word"]
     },

@@ -378,7 +378,7 @@ class ModelConf(object):
             if 'auc' in self.metrics and ProblemTypes[self.problem_type] == ProblemTypes.classification:
                 self.pos_label = self.get_item(['inputs', 'positive_label'], default=None, use_default=True)
 
-    def get_item(self, keys, default=None, use_default=False, log_set=True):
+    def get_item(self, keys, default=None, use_default=False):
         """
 
         Args:
