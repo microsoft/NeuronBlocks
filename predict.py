@@ -49,6 +49,7 @@ def main(params):
         predict_file_columns = {}
         for index, single in enumerate(sample_format):
             predict_file_columns[single] = index
+        print('Enabling Interactive Inference Mode for %s Task...' % (task_type.upper()))
         print('%s Task Interactive. The sample format is <%s>' % (task_type.upper(), ', '.join(sample_format)))
         while True:
             sample = []
