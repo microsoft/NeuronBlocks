@@ -807,7 +807,7 @@ class LearningMachine(object):
                     if field == 'prediction':
                         streaming_recoder.record(field,
                                                  self.problem.decode(prediction_indices,
-                                                                     length_batches[i][key_random].numpy()))
+                                                                     length_batches[0][key_random].numpy()))
                     elif field == 'confidence':
                         prediction_scores = logits_softmax.cpu().data.numpy()
                         for prediction_score, prediction_idx in zip(prediction_scores, prediction_indices):
@@ -830,14 +830,14 @@ class LearningMachine(object):
                 for key, value in logits_softmax.items():
                     logits_softmax[key] = value.squeeze()
                 passage_identify = None
-                for type_key in data_batches[i].keys():
+                for type_key in data_batches[0].keys():
                     if 'p' in type_key.lower():
                         passage_identify = type_key
                         break
                 if not passage_identify:
                     raise Exception('MRC task need passage information.')
-                prediction = self.problem.decode(logits_softmax, lengths=length_batches[i][passage_identify],
-                                                 batch_data=data_batches[i][passage_identify])
+                prediction = self.problem.decode(logits_softmax, lengths=length_batches[0][passage_identify],
+                                                 batch_data=data_batches[0][passage_identify])
                 streaming_recoder.record_one_row([prediction])
 
             return "\t".join([str(streaming_recoder.get(field)[0]) for field in predict_fields])
