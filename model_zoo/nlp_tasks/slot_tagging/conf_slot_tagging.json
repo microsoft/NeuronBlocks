@@ -17,6 +17,9 @@
       "word": 0,
       "tag": 1
     },
+    "predict_file_header": {
+       "word": 0
+    },
     "model_inputs": {
       "words": ["word"]
     },
@@ -50,7 +53,7 @@
     "use_gpu": true,
     "batch_size": 10,
     "batch_num_to_show_results": 500,
-    "max_epoch": 50,
+    "max_epoch": 2,
     "valid_times_per_epoch": 1
   },
   "architecture":[

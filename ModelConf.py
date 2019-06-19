@@ -378,7 +378,7 @@ class ModelConf(object):
             if 'auc' in self.metrics and ProblemTypes[self.problem_type] == ProblemTypes.classification:
                 self.pos_label = self.get_item(['inputs', 'positive_label'], default=None, use_default=True)
 
-    def get_item(self, keys, default=None, use_default=False):
+    def get_item(self, keys, default=None, use_default=False, log_set=True):
         """
 
         Args:
@@ -403,7 +403,8 @@ class ModelConf(object):
                     "The configuration file %s is illegal. There should be an item configuration[%s], "
                     "but the item %s is not found." % (self.conf_path, "][".join(error_keys), key))
             else:
-                print("configuration[%s] is not found in %s, use default value %s" % ("][".join(error_keys), self.conf_path, repr(default)))
+                # print("configuration[%s] is not found in %s, use default value %s" %
+                #               ("][".join(error_keys), self.conf_path, repr(default)))
                 item = default
 
         return item

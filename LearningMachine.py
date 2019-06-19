@@ -40,6 +40,7 @@ class LearningMachine(object):
             device = 'GPU' if 'cuda' in emb_weight_device else 'CPU'
             logging.info(
                 "The embedding matrix is on %s now, you can modify the weight_on_gpu parameter to change embeddings weight device." % device)
+            logging.info("="*100 + '\n' + "*"*15 + "Model Achitecture" + "*"*15)
             logging.info(self.model)
             #logging.info("Total parameters: %d; trainable parameters: %d" % (get_param_num(self.model), get_trainable_param_num(self.model)))
             logging.info("Total trainable parameters: %d" % (get_trainable_param_num(self.model)))
@@ -89,6 +90,7 @@ class LearningMachine(object):
 
     def train(self, optimizer, loss_fn):
         self.model.train()
+        logging.info("="*100 + '\n' + "*"*15 + 'Prepare data for training' + "*"*15)
         if not self.conf.train_data_path.endswith('.pkl'):
             train_data, train_length, train_target = self.problem.encode(self.conf.train_data_path, self.conf.file_columns,
                 self.conf.input_types, self.conf.file_with_col_header, self.conf.object_inputs, self.conf.answer_column_name, max_lengths=self.conf.max_lengths,
@@ -132,6 +134,7 @@ class LearningMachine(object):
         elif ProblemTypes[self.problem.problem_type] == ProblemTypes.mrc:
             streaming_recoder = StreamingRecorder(['prediction', 'answer_text'])
 
+        logging.info("=" * 100 + '\n' + "*" * 15 + 'Start training' + "*" * 15)
         while not stop_training and epoch <= self.conf.max_epoch:
             logging.info('Training: Epoch ' + str(epoch))
 
@@ -745,6 +748,99 @@ class LearningMachine(object):
                     del logits, logits_softmax
 
         fin.close()
+
+    def interactive(self, sample, file_columns, predict_fields=['prediction'], predict_mode='batch'):
+        """ interactive prediction
+
+         Args:
+
+        """
+        predict_data, predict_length, _, _, _ = \
+            self.problem.encode_data_list(sample, file_columns, self.conf.input_types, self.conf.object_inputs, None,
+                                          self.conf.min_sentence_len, self.conf.extra_feature, self.conf.max_lengths,
+                                          self.conf.fixed_lengths)
+        self.model.eval()
+        with torch.no_grad():
+            data_batches, length_batches, _ = \
+                get_batches(self.problem, predict_data, predict_length, None, 1,
+                            self.conf.input_types, None, permutate=False, transform_tensor=True, predict_mode=predict_mode)
+            streaming_recoder = StreamingRecorder(predict_fields)
+
+            key_random = random.choice(
+                list(length_batches[0].keys()).remove('target') if 'target' in list(length_batches[0].keys()) else
+                list(length_batches[0].keys()))
+            param_list, inputs_desc, length_desc = transform_params2tensors(data_batches[0], length_batches[0])
+            logits = self.model(inputs_desc, length_desc, *param_list)
+
+            logits_softmax = {}
+            if isinstance(self.model, nn.DataParallel):
+                for tmp_output_layer_id in self.model.module.output_layer_id:
+                    if isinstance(self.model.module.layers[tmp_output_layer_id], Linear) and \
+                            (not self.model.module.layers[tmp_output_layer_id].layer_conf.last_hidden_softmax):
+                        logits_softmax[tmp_output_layer_id] = nn.functional.softmax(
+                            logits[tmp_output_layer_id], dim=-1)
+                    else:
+                        logits_softmax[tmp_output_layer_id] = logits[tmp_output_layer_id]
+            else:
+                for tmp_output_layer_id in self.model.output_layer_id:
+                    if isinstance(self.model.layers[tmp_output_layer_id], Linear) and \
+                            (not self.model.layers[tmp_output_layer_id].layer_conf.last_hidden_softmax):
+                        logits_softmax[tmp_output_layer_id] = nn.functional.softmax(
+                            logits[tmp_output_layer_id], dim=-1)
+                    else:
+                        logits_softmax[tmp_output_layer_id] = logits[tmp_output_layer_id]
+
+            if ProblemTypes[self.problem.problem_type] == ProblemTypes.sequence_tagging:
+                logits = list(logits.values())[0]
+                logits_softmax = list(logits_softmax.values())[0]
+                # Transform output shapes for metric evaluation
+                prediction_indices = logits_softmax.data.max(2)[1].cpu().numpy()  # [batch_size, seq_len]
+                prediction_batch = self.problem.decode(prediction_indices, length_batches[0][key_random].numpy())
+                for prediction_sample in prediction_batch:
+                    streaming_recoder.record('prediction', " ".join(prediction_sample))
+            elif ProblemTypes[self.problem.problem_type] == ProblemTypes.classification:
+                logits = list(logits.values())[0]
+                logits_softmax = list(logits_softmax.values())[0]
+                prediction_indices = logits_softmax.data.max(1)[1].cpu().numpy()
+
+                for field in predict_fields:
+                    if field == 'prediction':
+                        streaming_recoder.record(field,
+                                                 self.problem.decode(prediction_indices,
+                                                                     length_batches[i][key_random].numpy()))
+                    elif field == 'confidence':
+                        prediction_scores = logits_softmax.cpu().data.numpy()
+                        for prediction_score, prediction_idx in zip(prediction_scores, prediction_indices):
+                            streaming_recoder.record(field, prediction_score[prediction_idx])
+                    elif field.startswith('confidence') and field.find('@') != -1:
+                        label_specified = field.split('@')[1]
+                        label_specified_idx = self.problem.output_dict.id(label_specified)
+                        confidence_specified = torch.index_select(logits_softmax.cpu(), 1, torch.tensor([label_specified_idx], dtype=torch.long)).squeeze(1)
+                        streaming_recoder.record(field, confidence_specified.data.numpy())
+            elif ProblemTypes[self.problem.problem_type] == ProblemTypes.regression:
+                logits = list(logits.values())[0]
+                # logits_softmax is unuseful for regression task!
+                logits_softmax = list(logits_softmax.values())[0]
+                logits_flat = logits.squeeze(1)
+                prediction_scores = logits_flat.detach().cpu().numpy()
+                streaming_recoder.record_one_row([prediction_scores])
+            elif ProblemTypes[self.problem.problem_type] == ProblemTypes.mrc:
+                for key, value in logits.items():
+                    logits[key] = value.squeeze()
+                for key, value in logits_softmax.items():
+                    logits_softmax[key] = value.squeeze()
+                passage_identify = None
+                for type_key in data_batches[i].keys():
+                    if 'p' in type_key.lower():
+                        passage_identify = type_key
+                        break
+                if not passage_identify:
+                    raise Exception('MRC task need passage information.')
+                prediction = self.problem.decode(logits_softmax, lengths=length_batches[i][passage_identify],
+                                                 batch_data=data_batches[i][passage_identify])
+                streaming_recoder.record_one_row([prediction])
+
+            return "\t".join([str(streaming_recoder.get(field)[0]) for field in predict_fields])
 
     def load_model(self, model_path):
         if self.use_gpu is True:

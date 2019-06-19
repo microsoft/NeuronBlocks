@@ -34,13 +34,32 @@ def main(params):
     lm = LearningMachine('predict', conf, problem, vocab_info=None, initialize=False, use_gpu=conf.use_gpu)
     lm.load_model(conf.previous_model_path)
 
-    logging.info('Predicting %s with the model saved at %s' % (conf.predict_data_path, conf.previous_model_path))
-    lm.predict(conf.predict_data_path, conf.predict_output_path, conf.predict_file_columns, conf.predict_fields)
-    logging.info("Predict done! The predict result: %s" % conf.predict_output_path)
+    if params.predict_mode == 'batch':
+        logging.info('Predicting %s with the model saved at %s' % (conf.predict_data_path, conf.previous_model_path))
+    if params.predict_mode == 'batch':
+        lm.predict(conf.predict_data_path, conf.predict_output_path, conf.predict_file_columns, conf.predict_fields)
+        logging.info("Predict done! The predict result: %s" % conf.predict_output_path)
+    elif params.predict_mode == 'interactive':
+        print('='*80)
+        task_type = str(ProblemTypes[problem.problem_type]).split('.')[1]
+        sample_format = list(conf.predict_file_columns.keys())
+
+        print('%s Task Interactive. The sample format is %s' % (task_type.upper(), '\\t'.join(sample_format)))
+        while True:
+            sample = input('Case: ')
+            if sample.lower() == 'exit':
+                exit(0)
+            result = lm.interactive([sample], conf.predict_file_columns, conf.predict_fields, params.predict_mode)
+            print('Inference result: %s' % result)
+    else:
+        raise Exception('Predict mode support interactive|batch, get %s' % params.predict_mode)
+
 
 if __name__ == "__main__":
+    os.environ["CUDA_VISIBLE_DEVICES"] = "5"
     parser = argparse.ArgumentParser(description='Prediction')
     parser.add_argument("--conf_path", type=str, help="configuration path")
+    parser.add_argument("--predict_mode", type=str, default='batch', help='interactive|batch')
     parser.add_argument("--predict_data_path", type=str, help='specify another predict data path, instead of the one defined in configuration file')
     parser.add_argument("--previous_model_path", type=str, help='load model trained previously.')
     parser.add_argument("--predict_output_path", type=str, help='specify another prediction output path, instead of conf[outputs][save_base_dir] + conf[outputs][predict_output_name] defined in configuration file')

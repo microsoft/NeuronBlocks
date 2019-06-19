@@ -171,6 +171,7 @@ def main(params):
     # data preprocessing
     ## build dictionary when (not in finetune model) and (not use cache or cache invalid)
     if (not conf.pretrained_model_path) and ((conf.use_cache == False) or cache.dictionary_invalid):
+        logging.info("="*100)
         logging.info("Preprocessing... Depending on your corpus size, this step may take a while.")
         # modify train_data_path to [train_data_path, valid_data_path, test_data_path]
         # remember the test_data may be None
@@ -281,6 +282,7 @@ def get_vocab_info(conf, problem, emb_matrix):
     return vocab_info
 
 if __name__ == "__main__":
+    os.environ["CUDA_VISIBLE_DEVICES"] = "5"
     parser = argparse.ArgumentParser(description='Training')
     parser.add_argument("--conf_path", type=str, help="configuration path")
     parser.add_argument("--train_data_path", type=str)
