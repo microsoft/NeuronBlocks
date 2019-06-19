@@ -42,10 +42,12 @@ def main(params):
     elif params.predict_mode == 'interactive':
         print('='*80)
         task_type = str(ProblemTypes[problem.problem_type]).split('.')[1]
-        predict_file_columns_set = set(conf.predict_file_columns.keys())
+        sample_format = list(conf.predict_file_columns.keys())
         target_ = conf.conf['inputs'].get('target', None)
-        target_set = set(target_) if target_ else set()
-        sample_format = list(predict_file_columns_set - target_set)
+        target_list = list(target_) if target_ else []
+        for single_element in sample_format[:]:
+            if single_element in target_list:
+                sample_format.remove(single_element)
         predict_file_columns = {}
         for index, single in enumerate(sample_format):
             predict_file_columns[single] = index
