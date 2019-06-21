@@ -53,16 +53,19 @@ def main(params):
             predict_file_columns[single] = index
         print('Enabling Interactive Inference Mode for %s Task...' % (task_type.upper()))
         print('%s Task Interactive. The sample format is <%s>' % (task_type.upper(), ', '.join(sample_format)))
+        case_cnt = 1
         while True:
+            print('Case%d:' % case_cnt)
             sample = []
             for single in sample_format:
-                temp_ = input('%s: ' % single)
+                temp_ = input('\t%s: ' % single)
                 if temp_.lower() == 'exit':
                     exit(0)
                 sample.append(temp_)
             sample = '\t'.join(sample)
             result = lm.interactive([sample], predict_file_columns, conf.predict_fields, params.predict_mode)
             print('Inference result: %s' % result)
+            case_cnt += 1
     else:
         raise Exception('Predict mode support interactive|batch, get %s' % params.predict_mode)
 
