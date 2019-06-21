@@ -14,11 +14,11 @@
     },
     "add_start_end_for_seq": false,
     "file_header": {
-      "word": 0,
+      "sequence": 0,
       "tag": 1
     },
     "model_inputs": {
-      "words": ["word"]
+      "words": ["sequence"]
     },
     "target": ["tag"]
   },
@@ -59,7 +59,7 @@
         "weight_on_gpu": true,
         "conf": {
           "word": {
-            "cols": ["word"],
+            "cols": ["sequence"],
             "dim": 100
           }
         }
