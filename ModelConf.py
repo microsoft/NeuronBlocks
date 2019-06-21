@@ -309,6 +309,9 @@ class ModelConf(object):
         self.fixed_lengths = self.get_item(['training_params', 'fixed_lengths'], default=None, use_default=True)
         if self.fixed_lengths:
             self.max_lengths = None
+        if ProblemTypes[self.problem_type] == ProblemTypes.sequence_tagging:
+            self.fixed_lengths = None
+            self.max_lengths = None
 
         if torch.cuda.device_count() > 1:
             self.batch_size_total = torch.cuda.device_count() * self.training_params['batch_size']

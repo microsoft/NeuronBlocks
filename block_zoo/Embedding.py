@@ -135,7 +135,7 @@ class Embedding(BaseLayer):
                     logging.info("The Embedding[%s][fix_weight] is true, fix the embeddings[%s]'s weight" % (input_cluster, input_cluster))
 
 
-    def forward(self, inputs, lengths, use_gpu=False):
+    def forward(self, inputs, use_gpu=False):
         """ process inputs
 
         Args:
@@ -159,12 +159,12 @@ class Embedding(BaseLayer):
             if 'extra' in input_cluster:
                 continue
             input = inputs[input_cluster]
+            # if 'type' in self.layer_conf.conf[input_cluster]:
+            #     emb = self.embeddings[input_cluster](input, lengths[input]).float()
+            # else:
+            #     emb = self.embeddings[input_cluster](input).float()
             if list(self.embeddings[input_cluster].parameters())[0].device.type == 'cpu':
-                # for char embedding type
-                if 'type' in self.layer_conf.conf[input_cluster]:
-                    emb = self.embeddings[input_cluster](input.cpu(), lengths['word_length'].cpu()).float()
-                else:
-                    emb = self.embeddings[input_cluster](input.cpu()).float()
+                emb = self.embeddings[input_cluster](input.cpu()).float()
             else:
                 if 'type' in self.layer_conf.conf[input_cluster]:
                     emb = self.embeddings[input_cluster](input, lengths['word_length']).float()

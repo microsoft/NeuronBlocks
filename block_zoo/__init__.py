@@ -21,6 +21,8 @@ from .Pooling2D import Pooling2D, Pooling2DConf
 from .embedding import CNNCharEmbedding, CNNCharEmbeddingConf
 from .embedding import LSTMCharEmbedding, LSTMCharEmbeddingConf
 
+from .CRF import CRFConf, CRF
+
 from .attentions import FullAttention, FullAttentionConf
 from .attentions import Seq2SeqAttention, Seq2SeqAttentionConf
 from .attentions import LinearAttention, LinearAttentionConf       # The output rank of this layer can be either unchanged or reduced

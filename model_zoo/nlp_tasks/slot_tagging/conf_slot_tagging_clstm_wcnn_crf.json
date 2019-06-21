@@ -1,0 +1,191 @@
+{
+  "license": "Copyright (c) Microsoft Corporation. All rights reserved. Licensed under the MIT license.",
+  "tool_version": "1.1.0",
+  "model_description": "This model is used for sequence tagging task. It achieved a f1-score of 90.27 on the dataset conll-2003",
+  "inputs": {
+    "use_cache": true,
+    "dataset_type": "sequence_tagging",
+    "tagging_scheme": "BIOES",
+    "data_paths": {
+      "train_data_path": "./dataset/slot_tagging/conll_2003/eng.train.tsv",
+      "valid_data_path": "./dataset/slot_tagging/conll_2003/eng.testa.tsv",
+      "test_data_path": "./dataset/slot_tagging/conll_2003/eng.testb.tsv",
+      "pre_trained_emb": "./dataset/GloVe/glove.6B.100d.txt"
+    },
+    "add_start_end_for_seq": false,
+    "file_header": {
+      "word": 0,
+      "tag": 1
+    },
+    "model_inputs": {
+      "words": ["word", "word_char"]
+    },
+    "target": ["tag"]
+  },
+  "outputs":{
+    "save_base_dir": "./models/slot_tagging_clstm_wcnn_crf/",
+    "model_name": "model.nb",
+    "train_log_name": "train.log",
+    "test_log_name": "test.log",
+    "predict_log_name": "predict.log",
+    "predict_fields": ["prediction"],
+    "predict_output_name": "predict.tsv",
+    "cache_dir": ".cache.slot_tagging_clstm_wcnn_crf/"
+  },
+  "training_params": {
+    "vocabulary": {
+      "min_word_frequency": 1
+    },
+    "cpu_num_workers": 4,
+    "optimizer": {
+      "name": "SGD",
+      "params": {
+        "lr": 0.005,
+        "weight_decay": 1e-8
+      }
+    },
+    "lr_decay": 0.95,
+    "minimum_lr": 0.00001,
+    "epoch_start_lr_decay": 1,
+    "use_gpu": true,
+    "batch_size": 10,
+    "batch_num_to_show_results": 500,
+    "max_epoch": 100,
+    "valid_times_per_epoch": 1
+  },
+  "architecture":[
+    {
+        "layer": "Embedding",
+        "weight_on_gpu": true,
+        "conf": {
+          "word": {
+            "cols": ["word"],
+            "dim": 100
+          },
+          "char":{
+          "cols":["word_char"],
+          "type":"LSTMCharEmbedding",
+            "dropout": 0.5,
+            "dim": 50,
+            "embedding_matrix_dim": 30,
+            "bidirect_flag": true
+          }
+        }
+    },
+    {
+      "layer_id": "emb_dropout",
+      "layer": "Dropout",
+      "conf": {
+          "dropout": 0.2
+      },
+      "inputs": ["words"]
+    },
+    {
+      "layer_id": "Linear1",
+      "layer": "Linear",
+      "conf": {
+          "hidden_dim": [200],
+          "activation": "Tanh",
+          "batch_norm": false,
+          "last_hidden_activation": true,
+          "last_hidden_softmax": false
+      },
+      "inputs": ["emb_dropout"]
+    },
+    {
+      "layer_id": "Conv1",
+      "layer": "Conv",
+      "conf": {
+          "stride": 1,
+          "window_size": 3,
+          "output_channel_num": 200,
+          "batch_norm": true,
+          "activation": "ReLU",
+          "padding_type": "SAME",
+          "dropout": 0.2,
+          "remind_lengths": true
+      },
+      "inputs": ["Linear1"]
+    },
+
+    {
+      "layer_id": "Conv2",
+      "layer": "Conv",
+      "conf": {
+          "stride": 1,
+          "window_size": 3,
+          "output_channel_num": 200,
+          "batch_norm": true,
+          "activation": "ReLU",
+          "padding_type": "SAME",
+          "dropout": 0.2,
+          "remind_lengths": true
+      },
+      "inputs": ["Conv1"]
+    },
+
+    {
+      "layer_id": "Conv3",
+      "layer": "Conv",
+      "conf": {
+          "stride": 1,
+          "window_size": 3,
+          "output_channel_num": 200,
+          "batch_norm": true,
+          "activation": "ReLU",
+          "padding_type": "SAME",
+          "dropout": 0.2,
+          "remind_lengths": true
+      },
+      "inputs": ["Conv2"]
+    },
+
+    {
+      "layer_id": "Conv4",
+      "layer": "Conv",
+      "conf": {
+          "stride": 1,
+          "window_size": 3,
+          "output_channel_num": 200,
+          "batch_norm": true,
+          "activation": "ReLU",
+          "padding_type": "SAME",
+          "dropout": 0.2,
+          "remind_lengths": true
+      },
+      "inputs": ["Conv3"]
+    },
+
+    {
+        "layer_id": "rep2tag",
+        "layer": "Linear",
+        "conf": {
+          "hidden_dim": "#target#",
+          "activation": "PReLU",
+          "batch_norm": false,
+          "last_hidden_activation": false,
+          "last_hidden_softmax": false
+        },
+        "inputs": ["Conv4"]
+    },
+    {
+        "output_layer_flag": true,
+        "layer_id": "output",
+        "layer": "CRF",
+        "conf": {},
+        "inputs": ["rep2tag"]
+    }
+  ],
+  "loss": {
+      "losses": [
+        {
+          "type": "CRFLoss",
+          "conf": {
+
+          },
+          "inputs": ["output","tag"]
+        }
+      ]
+  },
+  "metrics": ["seq_tag_f1","seq_tag_accuracy"]
+}
