@@ -1,7 +1,7 @@
 {
   "license": "Copyright (c) Microsoft Corporation. All rights reserved. Licensed under the MIT license.",
   "tool_version": "1.1.0",
-  "model_description": "This model is used for sequence tagging task. It achieved a f1-score of 88.50 on the dataset conll-2003",
+  "model_description": "This model is used for sequence tagging task. It achieved a f1-score of 90.83 on the dataset conll-2003",
   "inputs": {
     "use_cache": true,
     "dataset_type": "sequence_tagging",
@@ -10,27 +10,27 @@
       "train_data_path": "./dataset/slot_tagging/conll_2003/eng.train.tsv",
       "valid_data_path": "./dataset/slot_tagging/conll_2003/eng.testa.tsv",
       "test_data_path": "./dataset/slot_tagging/conll_2003/eng.testb.tsv",
-      "pre_trained_emb": "dataset/GloVe/glove.6B.100d.txt"
+      "pre_trained_emb": "./dataset/GloVe/glove.6B.100d.txt"
     },
     "add_start_end_for_seq": false,
     "file_header": {
-      "sequence": 0,
+      "word": 0,
       "tag": 1
     },
     "model_inputs": {
-      "words": ["sequence"]
+      "words": ["word", "word_char"]
     },
     "target": ["tag"]
   },
   "outputs":{
-    "save_base_dir": "./models/slot_tagging/",
+    "save_base_dir": "./models/slot_tagging_clstm_wlstm_crf/",
     "model_name": "model.nb",
     "train_log_name": "train.log",
     "test_log_name": "test.log",
     "predict_log_name": "predict.log",
     "predict_fields": ["prediction"],
     "predict_output_name": "predict.tsv",
-    "cache_dir": ".cache.slot_tagging/"
+    "cache_dir": ".cache.slot_tagging_clstm_wlstm_crf/"
   },
   "training_params": {
     "vocabulary": {
@@ -50,7 +50,7 @@
     "use_gpu": true,
     "batch_size": 10,
     "batch_num_to_show_results": 500,
-    "max_epoch": 2,
+    "max_epoch": 100,
     "valid_times_per_epoch": 1
   },
   "architecture":[
@@ -59,8 +59,16 @@
         "weight_on_gpu": true,
         "conf": {
           "word": {
-            "cols": ["sequence"],
+            "cols": ["word"],
             "dim": 100
+          },
+          "char":{
+          "cols":["word_char"],
+          "type":"LSTMCharEmbedding",
+            "dropout": 0.2,
+            "dim": 50,
+            "embedding_matrix_dim": 30,
+            "bidirect_flag": true
           }
         }
     },
@@ -68,7 +76,7 @@
       "layer_id": "emb_dropout",
       "layer": "Dropout",
       "conf": {
-          "dropout": 0.5
+          "dropout": 0.2
       },
       "inputs": ["words"]
     },
@@ -85,31 +93,36 @@
       "layer_id": "lstm_dropout",
       "layer": "Dropout",
       "conf": {
-          "dropout": 0.5
+          "dropout": 0.2
       },
       "inputs": ["sentence_BiLSTM"]
     },
     {
-        "output_layer_flag": true,
-        "layer_id": "output",
+        "layer_id": "rep2tag",
         "layer": "Linear",
         "conf": {
-          "hidden_dim": [-1],
+          "hidden_dim": "#target#",
           "activation": "PReLU",
           "batch_norm": false,
           "last_hidden_activation": false,
           "last_hidden_softmax": false
         },
         "inputs": ["lstm_dropout"]
+    },
+    {
+        "output_layer_flag": true,
+        "layer_id": "output",
+        "layer": "CRF",
+        "conf": {},
+        "inputs": ["rep2tag"]
     }
   ],
   "loss": {
       "losses": [
         {
-          "type": "CrossEntropyLoss",
+          "type": "CRFLoss",
           "conf": {
-              "size_average": false,
-              "ignore_index": 0
+
           },
           "inputs": ["output","tag"]
         }
