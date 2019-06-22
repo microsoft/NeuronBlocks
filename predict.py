@@ -64,7 +64,7 @@ def main(params):
                 sample.append(temp_)
             sample = '\t'.join(sample)
             result = lm.interactive([sample], predict_file_columns, conf.predict_fields, params.predict_mode)
-            print('Inference result: %s' % result)
+            print('\tInference result: %s' % result)
             case_cnt += 1
     else:
         raise Exception('Predict mode support interactive|batch, get %s' % params.predict_mode)
