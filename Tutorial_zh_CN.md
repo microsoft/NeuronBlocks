@@ -568,20 +568,41 @@ This task is to train a query-passage regression model to learn from a heavy tea
 
 - ***用法***
 
-    1. BiLSTM 词表示和 Softmax 输出
+    1. Softmax 输出.
     ```bash
+    # train model
     cd PROJECT_ROOT
     python train.py --conf_path=model_zoo/nlp_tasks/slot_tagging/conf_slot_tagging.json
+    
+    # test model
+    cd PROJECT_ROOT
+    python test.py --conf_path=model_zoo/nlp_tasks/slot_tagging/conf_slot_tagging.json
     ``` 
+    2. CRF 输出.
+    ```bash
+    # train model
+    cd PROJECT_ROOT
+    python train.py --conf_path=model_zoo/nlp_tasks/slot_tagging/conf_slot_tagging_ccnn_wlstm_crf.json
+    
+    # test model
+    cd PROJECT_ROOT
+    python test.py --conf_path=model_zoo/nlp_tasks/slot_tagging/conf_slot_tagging_ccnn_wlstm_crf.json
+    ```
+    *提示: 尝试更多模型可 [点击](https://github.com/microsoft/NeuronBlocks/tree/master/model_zoo/nlp_tasks/slot_tagging)。*
     
 - ***结果***
 
-    1. BiLSTM 词表示和 Softmax 输出
+    实验采用 CoNLL 2003 英文 NER 数据集。
     
     Model    | F1-score 
     -------- | -------- 
     [Ma and Hovy(2016)](https://arxiv.org/pdf/1603.01354.pdf)|87.00
-    BiLSTM+Softmax(NeuronBlocks)|88.50
+    [BiLSTM+Softmax](https://github.com/microsoft/NeuronBlocks/blob/master/model_zoo/nlp_tasks/slot_tagging/conf_slot_tagging.json) (NeuronBlocks)|88.50
+    [Lample et al.(2016)](https://arxiv.org/pdf/1603.01360.pdf)| 89.15
+    [CLSTM+WLSTM+CRF](https://github.com/microsoft/NeuronBlocks/blob/master/model_zoo/nlp_tasks/slot_tagging/conf_slot_tagging_clstm_wlstm_crf.json) (NeuronBlocks)|90.83
+    [Chiu and Nichols(2016)](https://www.mitpressjournals.org/doi/pdf/10.1162/tacl_a_00104)|90.91
+    [CCNN+WLSTM+CRF](https://github.com/microsoft/NeuronBlocks/blob/master/model_zoo/nlp_tasks/slot_tagging/conf_slot_tagging_ccnn_wlstm_crf.json) (NeuronBlocks)|91.38
+    *提示: C 代表字符，W 代表单词。 CCNN 代表使用 CNN 模型的字符级别表示， CLSTM 代表使用 LSTM 模型的字符级别表示。*
 
 ## <span id="advanced-usage">高阶用法</span>
 

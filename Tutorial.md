@@ -578,20 +578,41 @@ Sequence Labeling is an important NLP task, which includes NER, Slot Tagging, Po
 
 - ***Usages***
 
-    1. BiLSTM representation and Softmax output.
+    1. Softmax output.
     ```bash
+    # train model
     cd PROJECT_ROOT
     python train.py --conf_path=model_zoo/nlp_tasks/slot_tagging/conf_slot_tagging.json
+    
+    # test model
+    cd PROJECT_ROOT
+    python test.py --conf_path=model_zoo/nlp_tasks/slot_tagging/conf_slot_tagging.json
     ``` 
+    2. CRF output.
+    ```bash
+    # train model
+    cd PROJECT_ROOT
+    python train.py --conf_path=model_zoo/nlp_tasks/slot_tagging/conf_slot_tagging_ccnn_wlstm_crf.json
+    
+    # test model
+    cd PROJECT_ROOT
+    python test.py --conf_path=model_zoo/nlp_tasks/slot_tagging/conf_slot_tagging_ccnn_wlstm_crf.json
+    ```
+    *Tips: you can try more model in [here](https://github.com/microsoft/NeuronBlocks/tree/master/model_zoo/nlp_tasks/slot_tagging).*
     
 - ***Result***
     
-    1. BiLSTM representation and Softmax output.
+    The result on CoNLL 2003 English NER dataset.
     
     Model    | F1-score 
     -------- | -------- 
     [Ma and Hovy(2016)](https://arxiv.org/pdf/1603.01354.pdf)|87.00
-    BiLSTM+Softmax(NeuronBlocks)|88.50
+    [BiLSTM+Softmax](https://github.com/microsoft/NeuronBlocks/blob/master/model_zoo/nlp_tasks/slot_tagging/conf_slot_tagging.json) (NeuronBlocks)|88.50
+    [Lample et al.(2016)](https://arxiv.org/pdf/1603.01360.pdf)| 89.15
+    [CLSTM+WLSTM+CRF](https://github.com/microsoft/NeuronBlocks/blob/master/model_zoo/nlp_tasks/slot_tagging/conf_slot_tagging_clstm_wlstm_crf.json) (NeuronBlocks)|90.83
+    [Chiu and Nichols(2016)](https://www.mitpressjournals.org/doi/pdf/10.1162/tacl_a_00104)|90.91
+    [CCNN+WLSTM+CRF](https://github.com/microsoft/NeuronBlocks/blob/master/model_zoo/nlp_tasks/slot_tagging/conf_slot_tagging_ccnn_wlstm_crf.json) (NeuronBlocks)|91.38
+    *Tips: C means Char and W means Word. CCNN means Char-level representation with CNN model and CLSTM means Char-level representation with LSTM model.*
     
 ## <span id="advanced-usage">Advanced Usage</span>
 
