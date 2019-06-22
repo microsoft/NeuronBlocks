@@ -612,6 +612,7 @@ Sequence Labeling is an important NLP task, which includes NER, Slot Tagging, Po
     [CLSTM+WLSTM+CRF](https://github.com/microsoft/NeuronBlocks/blob/master/model_zoo/nlp_tasks/slot_tagging/conf_slot_tagging_clstm_wlstm_crf.json) (NeuronBlocks)|90.83
     [Chiu and Nichols(2016)](https://www.mitpressjournals.org/doi/pdf/10.1162/tacl_a_00104)|90.91
     [CCNN+WLSTM+CRF](https://github.com/microsoft/NeuronBlocks/blob/master/model_zoo/nlp_tasks/slot_tagging/conf_slot_tagging_ccnn_wlstm_crf.json) (NeuronBlocks)|91.38
+    
     *Tips: C means Char and W means Word. CCNN means Char-level representation with CNN model and CLSTM means Char-level representation with LSTM model.*
     
 ## <span id="advanced-usage">Advanced Usage</span>
