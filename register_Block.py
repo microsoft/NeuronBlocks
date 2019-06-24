@@ -44,7 +44,7 @@ def register(block_name, new_block_path):
         for i in range(len(block_path_split)-1, 1, -1):
             # need_add_file.append(os.path.join('/'.join(block_path_split[:i])))
             write_file(new_block_path, os.path.join('/'.join(block_path_split[:i])))
-        print('The block %s is registered successfully.')
+        print('The block %s is registered successfully.' % block_name)
     else:
         raise Exception('The %s.py file does not exist! Please check your program or file name.' % block_name)
 
