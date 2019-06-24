@@ -25,10 +25,11 @@ def get_block_path(block_name, path='./block_zoo'):
 
 def write_file(new_block_path, file_path):
     init_path = os.path.join(file_path, '__init__.py')
-    diff = new_block_path.strip(file_path).split('/')
+    diff = new_block_path[len(file_path):].split('/')
     if diff[0] == '':
         diff.pop(0)
-    diff[-1] = diff[-1].strip('.py')
+    # delete '.py' in the last str
+    diff[-1] = diff[-1][:-3]
     line = 'from .' + diff[0] + ' import ' + diff[-1] + ', ' + diff[-1] + 'Conf'
     with open(init_path, 'a', encoding='utf-8') as fin:
         fin.write('\n' + line + '\n')
