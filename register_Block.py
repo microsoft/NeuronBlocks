@@ -2,6 +2,7 @@
 # Licensed under the MIT license.
 
 import os
+import argparse
 
 
 def get_block_path(block_name, path='./block_zoo'):
@@ -48,8 +49,14 @@ def register(block_name, new_block_path):
         raise Exception('The %s.py file does not exist! Please check your program or file name.' % block_name)
 
 
+def main(params):
+    new_block_path = get_block_path(params.block_name)
+    register(params.block_name, new_block_path)
+
+
 if __name__ == '__main__':
-    block_name = 'Conv'
-    new_block_path = get_block_path(block_name)
-    # print('block_path: ', new_block_path)
-    register(block_name, new_block_path)
+    parse = argparse.ArgumentParser(description='Register Block')
+    parse.add_argument("--block_name", type=str, help="block name want to be registered")
+    params, _ = parse.parse_known_args()
+    assert params.block_name, 'Please specify a block_name via --block_name'
+    main(params)
