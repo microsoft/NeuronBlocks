@@ -802,7 +802,9 @@ class LearningMachine(object):
         predict_data, predict_length, _, _, _ = \
             self.problem.encode_data_list(sample, file_columns, self.conf.input_types, self.conf.object_inputs, None,
                                           self.conf.min_sentence_len, self.conf.extra_feature, self.conf.max_lengths,
-                                          self.conf.fixed_lengths)
+                                          self.conf.fixed_lengths, predict_mode=predict_mode)
+        if predict_data is None:
+            return 'Wrong Case!'
         self.model.eval()
         with torch.no_grad():
             data_batches, length_batches, _ = \
@@ -836,9 +838,14 @@ class LearningMachine(object):
 
             if ProblemTypes[self.problem.problem_type] == ProblemTypes.sequence_tagging:
                 logits = list(logits.values())[0]
-                logits_softmax = list(logits_softmax.values())[0]
-                # Transform output shapes for metric evaluation
-                prediction_indices = logits_softmax.data.max(2)[1].cpu().numpy()  # [batch_size, seq_len]
+                if isinstance(get_layer_class(self.model, tmp_output_layer_id), CRF):
+                    forward_score, scores, masks, tag_seq, transitions, layer_conf = logits
+                    prediction_indices = tag_seq.cpu().numpy()
+                else:
+                    logits_softmax = list(logits_softmax.values())[0]
+                    # Transform output shapes for metric evaluation
+                    # for seq_tag_f1 metric
+                    prediction_indices = logits_softmax.data.max(2)[1].cpu().numpy()  # [batch_size, seq_len]
                 prediction_batch = self.problem.decode(prediction_indices, length_batches[0][key_random].numpy())
                 for prediction_sample in prediction_batch:
                     streaming_recoder.record('prediction', " ".join(prediction_sample))

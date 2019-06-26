@@ -58,7 +58,6 @@ def main(params):
 
 
 if __name__ == "__main__":
-    os.environ["CUDA_VISIBLE_DEVICES"] = "5"
     parser = argparse.ArgumentParser(description='testing')
     parser.add_argument("--conf_path", type=str, help="configuration path")
     parser.add_argument("--test_data_path", type=str, help='specify another test data path, instead of the one defined in configuration file')

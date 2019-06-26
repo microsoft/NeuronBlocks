@@ -71,7 +71,6 @@ def main(params):
 
 
 if __name__ == "__main__":
-    os.environ["CUDA_VISIBLE_DEVICES"] = "5"
     parser = argparse.ArgumentParser(description='Prediction')
     parser.add_argument("--conf_path", type=str, help="configuration path")
     parser.add_argument("--predict_mode", type=str, default='batch', help='interactive|batch')
