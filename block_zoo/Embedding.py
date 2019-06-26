@@ -134,7 +134,6 @@ class Embedding(BaseLayer):
                     self.embeddings[input_cluster].weight.requires_grad = False
                     logging.info("The Embedding[%s][fix_weight] is true, fix the embeddings[%s]'s weight" % (input_cluster, input_cluster))
 
-
     def forward(self, inputs, use_gpu=False):
         """ process inputs
 

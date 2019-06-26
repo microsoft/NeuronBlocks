@@ -65,6 +65,11 @@ class Problem():
             target_with_start, target_with_end, target_with_unk, target_with_pad, same_length = (False, ) * 5
             with_bos_eos = False
 
+        if ProblemTypes[problem_type] == ProblemTypes.sequence_tagging:
+            target_with_start = False
+            target_with_end = False
+            target_with_unk = False
+
         self.lowercase = lowercase
         self.problem_type = problem_type
         self.tagging_scheme = tagging_scheme
@@ -303,6 +308,11 @@ class Problem():
             logging.info("%d types in %s column" % (self.input_dicts[input_type].cell_num(), input_type))
         if self.output_dict:
             self.output_dict.build(threshold=0)
+            if ProblemTypes[self.problem_type] == ProblemTypes.sequence_tagging:
+                self.output_dict.cell_id_map["<start>"] = len(self.output_dict.cell_id_map)
+                self.output_dict.id_cell_map[len(self.output_dict.id_cell_map)] = "<start>"
+                self.output_dict.cell_id_map["<eos>"] = len(self.output_dict.cell_id_map)
+                self.output_dict.id_cell_map[len(self.output_dict.id_cell_map)] = "<eos>"
             logging.info("%d types in target column" % (self.output_dict.cell_num()))
         logging.debug("training data dict built")
 
@@ -517,6 +527,28 @@ class Problem():
                     else:
                         tokens = line_split[i].split(' ')
 
+                    # for sequence labeling task, the length must be record the corpus truth length
+                    if ProblemTypes[self.problem_type] == ProblemTypes.sequence_tagging:
+                        if not branch in length_appended_set:
+                            lengths[branch]['sentence_length'].append(len(tokens))
+                            length_appended_set.add(branch)
+                        else:
+                            if len(tokens) != lengths[branch]['sentence_length'][-1]:
+                                # logging.warning(
+                                #     "The length of inputs are not consistent. Ingore now. %s" % line)
+                                cnt_illegal += 1
+                                if cnt_illegal / cnt_all > 0.33:
+                                    raise PreprocessError(
+                                        "The illegal data is too much. Please check the number of data columns or text token version.")
+                                lengths[branch]['sentence_length'].pop()
+                                true_len = len(lengths[branch]['sentence_length'])
+                                # need delete the last example
+                                check_list = ['data', 'lengths', 'target']
+                                for single_check in check_list:
+                                    single_check = eval(single_check)
+                                    self.delete_example(single_check, true_len)
+                                break
+
                     if fixed_lengths and type_branches[input_type[0]] in fixed_lengths:
                         if len(tokens) >= fixed_lengths[type_branches[input_type[0]]]:
                             tokens = tokens[:fixed_lengths[type_branches[input_type[0]]]]
@@ -532,24 +564,27 @@ class Problem():
                     if self.with_bos_eos is True:
                         tokens = ['<start>'] + tokens + ['<eos>']  # so that source_with_start && source_with_end should be True
 
-                    if not branch in length_appended_set:
-                        lengths[branch]['sentence_length'].append(len(tokens))
-                        length_appended_set.add(branch)
-                    else:
-                        if len(tokens) != lengths[branch]['sentence_length'][-1]:
-                            # logging.warning(
-                            #     "The length of inputs are not consistent. Ingore now. %s" % line)
-                            cnt_illegal += 1
-                            if cnt_illegal / cnt_all > 0.33:
-                                raise PreprocessError("The illegal data is too much. Please check the number of data columns or text token version.")
-                            lengths[branch]['sentence_length'].pop()
-                            true_len = len(lengths[branch]['sentence_length'])
-                            # need delete the last example
-                            check_list = ['data', 'lengths', 'target']
-                            for single_check in check_list:
-                                single_check = eval(single_check)
-                                self.delete_example(single_check, true_len)
-                            break
+                    # for other tasks, length must be same as data length because fix/max_length operation
+                    if not ProblemTypes[self.problem_type] == ProblemTypes.sequence_tagging:
+                        if not branch in length_appended_set:
+                            lengths[branch]['sentence_length'].append(len(tokens))
+                            length_appended_set.add(branch)
+                        else:
+                            if len(tokens) != lengths[branch]['sentence_length'][-1]:
+                                # logging.warning(
+                                #     "The length of inputs are not consistent. Ingore now. %s" % line)
+                                cnt_illegal += 1
+                                if cnt_illegal / cnt_all > 0.33:
+                                    raise PreprocessError(
+                                        "The illegal data is too much. Please check the number of data columns or text token version.")
+                                lengths[branch]['sentence_length'].pop()
+                                true_len = len(lengths[branch]['sentence_length'])
+                                # need delete the last example
+                                check_list = ['data', 'lengths', 'target']
+                                for single_check in check_list:
+                                    single_check = eval(single_check)
+                                    self.delete_example(single_check, true_len)
+                                break
 
                     for single_input_type in input_type:
                         if 'char' in single_input_type:
