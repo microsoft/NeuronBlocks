@@ -75,7 +75,7 @@ contact [opencode@microsoft.com](mailto:opencode@microsoft.com) with any additio
         *Tips: PROJECTROOT denotes the root directory of this project.*
         ```bash
         cd PROJECT_ROOT
-        python register_Block.py --block_name=new_block_name
+        python register_block.py --block_name=new_block_name
         ```
     
 *Tips: Before you contribute your code, we strongly suggest to verify that your improvements are valid by **[AUTOTEST](./autotest)**. We also encourage everyone to improve this autotest tool by contributing code, such as adding test tasks.*
