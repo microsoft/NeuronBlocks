@@ -458,7 +458,7 @@ This task is to train a query regression model to learn from a heavy teacher mod
     3. Calculate AUC metric
     ```bash
     cd PROJECT_ROOT
-    python tools/calculate_AUC.py --input_file models/kdqbc_bilstmattn_cnn/train/predict.tsv --predict_index 2 --label_index 1 
+    python tools/calculate_auc.py --input_file models/kdqbc_bilstmattn_cnn/train/predict.tsv --predict_index 2 --label_index 1 
     ```
     
      *Tips: you can try different models by running different JSON config files.*
@@ -502,7 +502,7 @@ This task is to train a query-passage regression model to learn from a heavy tea
     3. Calculate AUC metric
     ```bash
     cd PROJECT_ROOT
-    python tools/calculate_AUC.py --input_file=models/kdtm_match_linearAttn/predict.tsv --predict_index=3 --label_index=2 
+    python tools/calculate_auc.py --input_file=models/kdtm_match_linearAttn/predict.tsv --predict_index=3 --label_index=2 
     ```
     
      *Tips: you can try different models by running different JSON config files.*
@@ -574,7 +574,7 @@ Sequence Labeling is an important NLP task, which includes NER, Slot Tagging, Po
     
     - NeuronBlocks support both BIO and BIOES tag schemes.
     - The IOB scheme is not supported, because of its worse performance in most [experiment](https://arxiv.org/pdf/1707.06799.pdf).
-    - NeuronBlocks provides a [script](./tools/taggingSchemes_Converter.py) that converts the tag scheme among IOB/BIO/BIOES (NOTE: the script only supports tsv file which has data and label in two columns).
+    - NeuronBlocks provides a [script](tools/tagging_schemes_converter.py) that converts the tag scheme among IOB/BIO/BIOES (NOTE: the script only supports tsv file which has data and label in two columns).
 
 - ***Usages***
 
