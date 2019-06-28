@@ -171,6 +171,7 @@ def main(params):
     # data preprocessing
     ## build dictionary when (not in finetune model) and (not use cache or cache invalid)
     if (not conf.pretrained_model_path) and ((conf.use_cache == False) or cache.dictionary_invalid):
+        logging.info("="*100)
         logging.info("Preprocessing... Depending on your corpus size, this step may take a while.")
         # modify train_data_path to [train_data_path, valid_data_path, test_data_path]
         # remember the test_data may be None

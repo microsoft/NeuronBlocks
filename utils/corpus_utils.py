@@ -173,7 +173,7 @@ def corpus_permutation(*corpora):
     return corpora_perm
 
 
-def get_batches(problem, data, length, target, batch_size, input_types, pad_ids=None, permutate=False, transform_tensor=True):
+def get_batches(problem, data, length, target, batch_size, input_types, pad_ids=None, permutate=False, transform_tensor=True, predict_mode='batch'):
     """
 
     Args:
@@ -232,7 +232,8 @@ def get_batches(problem, data, length, target, batch_size, input_types, pad_ids=
         target_batches: ndarray/Variable shape: [number of batches, batch_size, targets]
 
     """
-    logging.info("Start making batches")
+    if predict_mode == 'batch':
+        logging.info("Start making batches")
     if permutate is True:
         #CAUTION! data and length would be revised
         data = copy.deepcopy(data)
@@ -392,7 +393,8 @@ def get_batches(problem, data, length, target, batch_size, input_types, pad_ids=
 
             target_batches.append(target_batch)
 
-    logging.info("Batches got!")
+    if predict_mode == 'batch':
+        logging.info("Batches got!")
     return data_batches, length_batches, target_batches
 
 

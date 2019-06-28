@@ -425,7 +425,7 @@ class Problem():
             yield output_data, lengths, target, cnt_legal, cnt_illegal
 
     def encode_data_list(self, data_list, file_columns, input_types, object_inputs, answer_column_name, min_sentence_len,
-                         extra_feature, max_lengths=None, fixed_lengths=None, file_format="tsv", bpe_encoder=None):
+                         extra_feature, max_lengths=None, fixed_lengths=None, file_format="tsv", bpe_encoder=None, predict_mode='batch'):
         data = dict()
         lengths = dict()
         char_emb = True if 'char' in [single_input_type.lower() for single_input_type in input_types] else False
@@ -483,11 +483,14 @@ class Problem():
             line_split = line.rstrip().split('\t')
             cnt_all += 1
             if len(line_split) != len(file_columns):
-                # logging.warning("Current line is inconsistent with configuration/inputs/file_header. Ingore now. %s" % line)
-                cnt_illegal += 1
-                if cnt_illegal / cnt_all > 0.33:
-                    raise PreprocessError('The illegal data is too much. Please check the number of data columns or text token version.')
-                continue
+                if predict_mode == 'batch':
+                    cnt_illegal += 1
+                    if cnt_illegal / cnt_all > 0.33:
+                        raise PreprocessError('The illegal data is too much. Please check the number of data columns or text token version.')
+                    continue
+                else:
+                    print('\tThe case is illegal! Please check your case and input again!')
+                    return [None]*5
             # cnt_legal += 1
             length_appended_set = set()  # to store branches whose length have been appended to lengths[branch]
 
