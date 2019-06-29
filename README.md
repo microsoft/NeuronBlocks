@@ -50,9 +50,9 @@ NeuronBlocks consists of two major components: ***Block Zoo*** and ***Model Zoo*
 ### Toolkit Usage
 Users can either pick existing models (config files) in *Model Zoo* to start model training or create new models by leveraging neural network blocks in *Block Zoo* just like playing with Lego. 
 
-<img src="https://i.imgur.com/q0p6Wvz.png" width="250">
+<img src="https://i.imgur.com/q0p6Wvz.png" width="300">
 
-<img src="https://i.imgur.com/lFaBtnh.png" width="550">
+<img src="https://i.imgur.com/lFaBtnh.png" width="700">
 
 
 
