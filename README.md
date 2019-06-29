@@ -31,7 +31,7 @@ NeuronBlocks consists of two major components: ***Block Zoo*** and ***Model Zoo*
 - In ***Block Zoo***, we provide commonly used neural network components as building blocks for model architecture design.  
 - In ***Model Zoo***, we provide a suite of NLP models for common NLP tasks, in the form of **JSON configuration** files. 
  
-<img src="https://i.imgur.com/LMD0PFQ.png" width="300">
+<img src="https://i.imgur.com/LMD0PFQ.png" width="250">
 
 ### <span id="language-supported">Language Supported</span>
 - English
@@ -49,8 +49,10 @@ NeuronBlocks consists of two major components: ***Block Zoo*** and ***Model Zoo*
 
 ### Toolkit Usage
 Users can either pick existing models (config files) in *Model Zoo* to start model training or create new models by leveraging neural network blocks in *Block Zoo* just like playing with Lego. 
+<img src="https://i.imgur.com/q0p6Wvz.png" width="250">
 
-<img src="https://i.imgur.com/q0p6Wvz.png" width="300">
+<img src="https://i.imgur.com/lFaBtnh.png" width="500">
+
 
 
 # Get Started in 60 Seconds

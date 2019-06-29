@@ -49,10 +49,11 @@ NeuronBlocks包括 ***Block Zoo*** 和 ***Model Zoo*** 两个重要组件，其�
 - 更多……
 
 ### 使用方法
-
 用户可以选择 *Model Zoo* 中的示例模型（JSON配置文件）开启模型训练，或者利用 *Block Zoo* 中的神经网络模块构建新的模型，就像玩乐高积木一样。
 
-<img src="https://i.imgur.com/q0p6Wvz.png" width="300">
+<img src="https://i.imgur.com/q0p6Wvz.png" width="250">
+
+<img src="https://i.imgur.com/lFaBtnh.png" width="500">
 
 
 # 快速入门
