@@ -11,6 +11,8 @@
 
 [Tutorial](Tutorial.md) [中文教程](Tutorial_zh_CN.md) 
 
+[Demo Video](https://youtu.be/x6cOpVSZcdo)
+
 
 # Table of Contents
 * [Overview](#Overview)
@@ -139,7 +141,7 @@ Anyone who are familiar with are highly encouraged to contribute code.
 ```
 @article{gong2019neuronblocks,
   title={NeuronBlocks--Building Your NLP DNN Models Like Playing Lego},
-  author={Gong, Ming and Shou, Linjun and Lin, Wutao and Sang, Zhijie and Yan, Quanjia and Yang, Ze and Jiang, Daxin},
+  author={Gong, Ming and Shou, Linjun and Lin, Wutao and Sang, Zhijie and Yan, Quanjia and Yang, Ze, Cheng, Feixiang and Jiang, Daxin},
   journal={arXiv preprint arXiv:1904.09535},
   year={2019}
 }
