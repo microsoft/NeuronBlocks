@@ -9,9 +9,7 @@
 
 [English version](README.md)
 
-[中文教程](Tutorial_zh_CN.md) [Tutorial](Tutorial.md)
-
-[Demo Video](https://youtu.be/x6cOpVSZcdo)
+[中文教程](Tutorial_zh_CN.md) [Tutorial](Tutorial.md) [Demo Video](https://youtu.be/x6cOpVSZcdo)
 
 # 目录
 
