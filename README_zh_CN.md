@@ -1,4 +1,6 @@
-# ***NeuronBlocks*** - 像搭积木一样构建自然语言理解深度学习模型
+<img src="https://i.imgur.com/IanH6xI.png" width="450"> 
+
+## 像搭积木一样构建自然语言理解深度学习模型
 
 [![language](https://img.shields.io/badge/language-en%20%7C%20中文-brightgreen.svg)](#language-supported)
 [![python](https://img.shields.io/badge/python-3.6%20%7C%203.7-blue.svg)](https://www.python.org)
@@ -7,7 +9,7 @@
 
 [English version](README.md)
 
-[中文教程](Tutorial_zh_CN.md) [Tutorial](Tutorial.md)
+[中文教程](Tutorial_zh_CN.md) [Tutorial](Tutorial.md) [Demo Video](https://youtu.be/x6cOpVSZcdo)
 
 # 目录
 
@@ -47,10 +49,11 @@ NeuronBlocks包括 ***Block Zoo*** 和 ***Model Zoo*** 两个重要组件，其�
 - 更多……
 
 ### 使用方法
-
 用户可以选择 *Model Zoo* 中的示例模型（JSON配置文件）开启模型训练，或者利用 *Block Zoo* 中的神经网络模块构建新的模型，就像玩乐高积木一样。
 
 <img src="https://i.imgur.com/q0p6Wvz.png" width="300">
+
+<img src="https://i.imgur.com/lFaBtnh.png" width="700">
 
 
 # 快速入门
@@ -135,7 +138,7 @@ NeuronBlocks以开放的模式运行。它由 **微软 STCA NLP Group** 设计�
 ```
 @article{gong2019neuronblocks,
   title={NeuronBlocks--Building Your NLP DNN Models Like Playing Lego},
-  author={Gong, Ming and Shou, Linjun and Lin, Wutao and Sang, Zhijie and Yan, Quanjia and Yang, Ze and Jiang, Daxin},
+  author={Gong, Ming and Shou, Linjun and Lin, Wutao and Sang, Zhijie and Yan, Quanjia and Yang, Ze, Cheng, Feixiang and Jiang, Daxin},
   journal={arXiv preprint arXiv:1904.09535},
   year={2019}
 }
@@ -156,4 +159,5 @@ Licensed under the [MIT](LICENSE) License.
 
 如果您有微信，也可以添加工具包的官方账号:
 
-<img src="https://i.imgur.com/lI2oQWo.jpg" width="200">
+<img src="https://i.imgur.com/UfOYvt1.jpg" width="200">
+

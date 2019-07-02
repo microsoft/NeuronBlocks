@@ -8,7 +8,7 @@ import logging
 sys.path.append('../')
 from settings import LossOperationType
 from torch.nn import CrossEntropyLoss, L1Loss, MSELoss, NLLLoss, PoissonNLLLoss, NLLLoss2d, KLDivLoss, BCELoss, BCEWithLogitsLoss, MarginRankingLoss, HingeEmbeddingLoss, MultiLabelMarginLoss, SmoothL1Loss, SoftMarginLoss, MultiLabelSoftMarginLoss, CosineEmbeddingLoss, MultiMarginLoss, TripletMarginLoss
-
+from .CRFLoss import CRFLoss
 
 class Loss(nn.Module):
     '''

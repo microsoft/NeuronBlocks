@@ -312,6 +312,9 @@ class ModelConf(object):
         self.fixed_lengths = self.get_item(['training_params', 'fixed_lengths'], default=None, use_default=True)
         if self.fixed_lengths:
             self.max_lengths = None
+        if ProblemTypes[self.problem_type] == ProblemTypes.sequence_tagging:
+            self.fixed_lengths = None
+            self.max_lengths = None
 
         if torch.cuda.device_count() > 1:
             self.batch_size_total = torch.cuda.device_count() * self.training_params['batch_size']
@@ -406,7 +409,8 @@ class ModelConf(object):
                     "The configuration file %s is illegal. There should be an item configuration[%s], "
                     "but the item %s is not found." % (self.conf_path, "][".join(error_keys), key))
             else:
-                print("configuration[%s] is not found in %s, use default value %s" % ("][".join(error_keys), self.conf_path, repr(default)))
+                # print("configuration[%s] is not found in %s, use default value %s" %
+                #               ("][".join(error_keys), self.conf_path, repr(default)))
                 item = default
 
         return item

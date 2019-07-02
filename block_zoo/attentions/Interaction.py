@@ -58,7 +58,7 @@ class InteractionConf(BaseConf):
     def verify(self):
         super(InteractionConf, self).verify()
         assert hasattr(self, 'matching_type'), "Please define matching_type attribute of BiGRUConf in default() or the configuration file"
-        assert self.matching_type in ['general', 'dot', 'mul', 'plus', 'minus', 'add'], "Invalid `matching_type`{self.matching_type} received. Must be in `mul`, `general`, `plus`, `minus`, `dot` and `concat`."
+        assert self.matching_type in ['general', 'dot', 'mul', 'plus', 'minus', 'add', 'concat'], "Invalid `matching_type`{self.matching_type} received. Must be in `mul`, `general`, `plus`, `minus`, `dot` and `concat`."
 
 
 class Interaction(BaseLayer):
@@ -120,7 +120,7 @@ class Interaction(BaseLayer):
                     return x - y
             elif self.matching_type == 'concat':
                 def func(x, y):
-                    return torch.concat([x, y], axis=-1)
+                    return torch.cat([x, y], dim=-1)
             else:
                 raise ValueError(f"Invalid matching type."
                                  f"{self.matching_type} received."

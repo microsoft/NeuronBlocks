@@ -1,4 +1,6 @@
-# ***NeuronBlocks*** - Building Your NLP DNN Models Like Playing Lego
+<img src="https://i.imgur.com/IanH6xI.png" width="450"> 
+
+## Building Your NLP DNN Models Like Playing Lego
 
 [![language](https://img.shields.io/badge/language-en%20%7C%20中文-brightgreen.svg)](#language-supported)
 [![python](https://img.shields.io/badge/python-3.6%20%7C%203.7-blue.svg)](https://www.python.org)
@@ -7,7 +9,7 @@
 
 [简体中文](README_zh_CN.md)
 
-[Tutorial](Tutorial.md) [中文教程](Tutorial_zh_CN.md) 
+[Tutorial](Tutorial.md) [中文教程](Tutorial_zh_CN.md) [Demo Video](https://youtu.be/x6cOpVSZcdo)
 
 
 # Table of Contents
@@ -29,7 +31,7 @@ NeuronBlocks consists of two major components: ***Block Zoo*** and ***Model Zoo*
 - In ***Block Zoo***, we provide commonly used neural network components as building blocks for model architecture design.  
 - In ***Model Zoo***, we provide a suite of NLP models for common NLP tasks, in the form of **JSON configuration** files. 
  
-<img src="https://i.imgur.com/LMD0PFQ.png" width="300">
+<img src="https://i.imgur.com/LMD0PFQ.png" width="250">
 
 ### <span id="language-supported">Language Supported</span>
 - English
@@ -49,6 +51,9 @@ NeuronBlocks consists of two major components: ***Block Zoo*** and ***Model Zoo*
 Users can either pick existing models (config files) in *Model Zoo* to start model training or create new models by leveraging neural network blocks in *Block Zoo* just like playing with Lego. 
 
 <img src="https://i.imgur.com/q0p6Wvz.png" width="300">
+
+<img src="https://i.imgur.com/lFaBtnh.png" width="700">
+
 
 
 # Get Started in 60 Seconds
@@ -134,7 +139,7 @@ Anyone who are familiar with are highly encouraged to contribute code.
 ```
 @article{gong2019neuronblocks,
   title={NeuronBlocks--Building Your NLP DNN Models Like Playing Lego},
-  author={Gong, Ming and Shou, Linjun and Lin, Wutao and Sang, Zhijie and Yan, Quanjia and Yang, Ze and Jiang, Daxin},
+  author={Gong, Ming and Shou, Linjun and Lin, Wutao and Sang, Zhijie and Yan, Quanjia and Yang, Ze, Cheng, Feixiang and Jiang, Daxin},
   journal={arXiv preprint arXiv:1904.09535},
   year={2019}
 }
@@ -155,5 +160,5 @@ If you have any questions, please contact NeuronBlocks@microsoft.com
 
 If you have wechat, you can also add the following account:
 
-<img src="https://i.imgur.com/lI2oQWo.jpg" width="200">
+<img src="https://i.imgur.com/UfOYvt1.jpg" width="200">
 

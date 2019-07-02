@@ -19,7 +19,7 @@ def main(params):
     problem = Problem("test", conf.problem_type, conf.input_types, conf.answer_column_name,
         with_bos_eos=conf.add_start_end_for_seq, tagging_scheme=conf.tagging_scheme, tokenizer=conf.tokenizer,
         remove_stopwords=conf.remove_stopwords, DBC2SBC=conf.DBC2SBC, unicode_fix=conf.unicode_fix)
-        
+
     if os.path.isfile(conf.saved_problem_path):
         problem.load_problem(conf.saved_problem_path)
         logging.info("Problem loaded!")

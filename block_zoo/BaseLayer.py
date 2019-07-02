@@ -154,6 +154,11 @@ class BaseConf(ABC):
         # To check if deepcopy is applied
         assert id(self.output_dim) != id(self.input_dims[0]), 'Please use copy.deepcopy to copy the input_dim to output_dim'
 
+    def verify_former_block(self, former_conf):
+        """check if has special attribute rely on former layer
+
+        """
+        return True
 
     def add_attr_type_assertion(self, attr, specified_type):
         """ check if the types of attributes are legal

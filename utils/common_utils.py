@@ -255,3 +255,16 @@ def md5(file_paths, chunk_size=1024*1024*1024):
                     break
                 md5.update(data)
     return md5.hexdigest()
+
+
+def get_layer_class(model, layer_id):
+    """get the layer class use layer_id
+
+    Args:
+        model: the model architecture, maybe nn.DataParallel type or model
+        layer_id: layer id from configuration
+    """
+    if isinstance(model, nn.DataParallel):
+        return model.module.layers[layer_id]
+    else:
+        return model.layers[layer_id]

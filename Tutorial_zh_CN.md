@@ -1,4 +1,4 @@
-# ***NeuronBlocks*** 教程
+# <img src="https://i.imgur.com/YLrkvW3.png" width="80">  ***NeuronBlocks*** 教程
 
 [English Version](Tutorial.md)
 
@@ -21,6 +21,7 @@
         4. [机器阅读理解模型的模型压缩](#task-6.4)
     * [任务 7: 中文情感分析](#task-7)
     * [任务 8：中文文本匹配](#task-8)
+    * [任务 9：序列标注](#task-9)
 * [高阶用法](#advanced-usage)
     * [额外的feature](#extra-feature)
     * [学习率衰减](#lr-decay)
@@ -446,7 +447,7 @@ This task is to train a query regression model to learn from a heavy teacher mod
     3. Calculate AUC metric
     ```bash
     cd PROJECT_ROOT
-    python tools/calculate_AUC.py --input_file models/kdqbc_bilstmattn_cnn/train/predict.tsv --predict_index 2 --label_index 1 
+    python tools/calculate_auc.py --input_file models/kdqbc_bilstmattn_cnn/train/predict.tsv --predict_index 2 --label_index 1 
     ```
     
      *Tips: you can try different models by running different JSON config files.*
@@ -490,7 +491,7 @@ This task is to train a query-passage regression model to learn from a heavy tea
     3. Calculate AUC metric
     ```bash
     cd PROJECT_ROOT
-    python tools/calculate_AUC.py --input_file=models/kdtm_match_linearAttn/predict.tsv --predict_index=3 --label_index=2 
+    python tools/calculate_auc.py --input_file=models/kdtm_match_linearAttn/predict.tsv --predict_index=3 --label_index=2 
     ```
     
      *Tips: you can try different models by running different JSON config files.*
@@ -551,6 +552,58 @@ This task is to train a query-passage regression model to learn from a heavy tea
     python test.py --conf_path=model_zoo/nlp_tasks/chinese_text_matching/conf_chinese_text_matching.json
     ```
      *提示：您可以通过运行不同的JSON配置文件来尝试不同的模型。当训练完成后，模型文件和训练日志文件可以在JSON配置的outputs/save_base_dir目录中找到。*
+
+### <span id="task-9">任务 9: 序列标注</span>
+序列标注是一项重要的NLP任务，包括 NER, Slot Tagging, Pos Tagging 等任务。
+
+- ***数据集***
+
+    在序列标注任务中，[CoNLL 2003](https://www.clips.uantwerpen.be/conll2003/)是一个很常用的数据集。在我们的序列标注任务中，使用 CoNLL 2003 中英文 NER 数据作为实验数据，其中数据格式可以参考我们给出的[抽样数据](https://github.com/microsoft/NeuronBlocks/tree/master/dataset/slot_tagging/conll_2003)。
+    
+- ***标注策略***
+
+    - NeuronBlocks 支持 BIO 和 BIOES 标注策略。
+    - IOB 标注标注是不被支持的，因为在大多[实验](https://arxiv.org/pdf/1707.06799.pdf)中它具有很差的表现。
+    - NeuronBlocks 提供一个在不同标注策略(IOB/BIO/BIOES)中的[转化脚本](tools/tagging_schemes_converter.py)(脚本仅支持具有 数据和标签 的两列tsv文件输入)。
+
+- ***用法***
+
+    1. Softmax 输出.
+    ```bash
+    # train model
+    cd PROJECT_ROOT
+    python train.py --conf_path=model_zoo/nlp_tasks/slot_tagging/conf_slot_tagging.json
+    
+    # test model
+    cd PROJECT_ROOT
+    python test.py --conf_path=model_zoo/nlp_tasks/slot_tagging/conf_slot_tagging.json
+    ``` 
+    2. CRF 输出.
+    ```bash
+    # train model
+    cd PROJECT_ROOT
+    python train.py --conf_path=model_zoo/nlp_tasks/slot_tagging/conf_slot_tagging_ccnn_wlstm_crf.json
+    
+    # test model
+    cd PROJECT_ROOT
+    python test.py --conf_path=model_zoo/nlp_tasks/slot_tagging/conf_slot_tagging_ccnn_wlstm_crf.json
+    ```
+    *提示 ：尝试更多模型可 [点击](https://github.com/microsoft/NeuronBlocks/tree/master/model_zoo/nlp_tasks/slot_tagging)。*
+    
+- ***结果***
+
+    实验采用 CoNLL 2003 英文 NER 数据集。
+    
+    Model    | F1-score 
+    -------- | -------- 
+    [Ma and Hovy(2016)](https://arxiv.org/pdf/1603.01354.pdf)|87.00
+    [BiLSTM+Softmax](https://github.com/microsoft/NeuronBlocks/blob/master/model_zoo/nlp_tasks/slot_tagging/conf_slot_tagging.json) (NeuronBlocks)|88.50
+    [Lample et al.(2016)](https://arxiv.org/pdf/1603.01360.pdf)| 89.15
+    [CLSTM+WLSTM+CRF](https://github.com/microsoft/NeuronBlocks/blob/master/model_zoo/nlp_tasks/slot_tagging/conf_slot_tagging_clstm_wlstm_crf.json) (NeuronBlocks)|90.83
+    [Chiu and Nichols(2016)](https://www.mitpressjournals.org/doi/pdf/10.1162/tacl_a_00104)|90.91
+    [CCNN+WLSTM+CRF](https://github.com/microsoft/NeuronBlocks/blob/master/model_zoo/nlp_tasks/slot_tagging/conf_slot_tagging_ccnn_wlstm_crf.json) (NeuronBlocks)|91.38
+    
+    *提示 : C 代表字符，W 代表单词。 CCNN 代表使用 CNN 模型的字符级别表示， CLSTM 代表使用 LSTM 模型的字符级别表示。*
 
 ## <span id="advanced-usage">高阶用法</span>
 

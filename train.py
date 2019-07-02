@@ -96,7 +96,7 @@ class Cache:
             if file_md5 != md5([os.path.join(conf.encoding_cache_dir, file_name)]):
                 return False
         
-        if hasattr(cache_index, st.cencoding_key_legal_cnt) and hasattr(cache_index, st.cencoding_key_illegal_cnt):
+        if (st.cencoding_key_legal_cnt in cache_index) and (st.cencoding_key_illegal_cnt in cache_index):
             conf.encoding_cache_legal_line_cnt = cache_index[st.cencoding_key_legal_cnt]
             conf.encoding_cache_illegal_line_cnt = cache_index[st.cencoding_key_illegal_cnt]
         
@@ -247,6 +247,7 @@ def main(params):
     # data preprocessing
     ## build dictionary when (not in finetune model) and (not use cache or cache invalid)
     if (not conf.pretrained_model_path) and ((conf.use_cache == False) or cache.dictionary_invalid):
+        logging.info("="*100)
         logging.info("Preprocessing... Depending on your corpus size, this step may take a while.")
         # modify train_data_path to [train_data_path, valid_data_path, test_data_path]
         # remember the test_data may be None
@@ -305,9 +306,20 @@ def main(params):
 
     ### optimizer
     if isinstance(lm.model, nn.DataParallel):
-        optimizer = eval(conf.optimizer_name)(list(lm.model.parameters()) + list(lm.model.module.layers['embedding'].get_parameters()), **conf.optimizer_params)
+        if isinstance(lm.model.module.layers['embedding'].embeddings, nn.ModuleDict):
+            optimizer = eval(conf.optimizer_name)(list(lm.model.parameters()), **conf.optimizer_params)
+        else:
+            optimizer = eval(conf.optimizer_name)(
+                list(lm.model.parameters()) + list(lm.model.module.layers['embedding'].get_parameters()),
+                **conf.optimizer_params)
     else:
-        optimizer = eval(conf.optimizer_name)(list(lm.model.parameters()) + list(lm.model.layers['embedding'].get_parameters()), **conf.optimizer_params)
+        if isinstance(lm.model.layers['embedding'].embeddings, nn.ModuleDict):
+            optimizer = eval(conf.optimizer_name)(
+                list(lm.model.parameters()), **conf.optimizer_params)
+        else:
+            optimizer = eval(conf.optimizer_name)(
+                list(lm.model.parameters()) + list(lm.model.layers['embedding'].get_parameters()),
+                **conf.optimizer_params)
 
     ## train
     lm.train(optimizer, loss_fn)

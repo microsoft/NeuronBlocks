@@ -65,6 +65,11 @@ class Problem():
             target_with_start, target_with_end, target_with_unk, target_with_pad, same_length = (False, ) * 5
             with_bos_eos = False
 
+        if ProblemTypes[problem_type] == ProblemTypes.sequence_tagging:
+            target_with_start = False
+            target_with_end = False
+            target_with_unk = False
+
         self.lowercase = lowercase
         self.problem_type = problem_type
         self.tagging_scheme = tagging_scheme
@@ -159,7 +164,10 @@ class Problem():
                     line_split[i] = self.text_preprocessor.preprocess(line_split[i])
 
                     if col_index_types[i] == 'word':
-                        token_list = self.tokenizer.tokenize(line_split[i])
+                        if ProblemTypes[self.problem_type] == ProblemTypes.sequence_tagging:
+                            token_list = line_split[i].split(" ")
+                        else:
+                            token_list = self.tokenizer.tokenize(line_split[i])
                         docs[col_index_types[i]].append(token_list)
                         if 'char' in docs:
                             # add char
@@ -288,6 +296,11 @@ class Problem():
             logging.info("%d types in %s column" % (self.input_dicts[input_type].cell_num(), input_type))
         if self.output_dict:
             self.output_dict.build(threshold=0)
+            if ProblemTypes[self.problem_type] == ProblemTypes.sequence_tagging:
+                self.output_dict.cell_id_map["<start>"] = len(self.output_dict.cell_id_map)
+                self.output_dict.id_cell_map[len(self.output_dict.id_cell_map)] = "<start>"
+                self.output_dict.cell_id_map["<eos>"] = len(self.output_dict.cell_id_map)
+                self.output_dict.id_cell_map[len(self.output_dict.id_cell_map)] = "<eos>"
             logging.info("%d types in target column" % (self.output_dict.cell_num()))
         logging.debug("training data dict built")
 
@@ -301,7 +314,12 @@ class Problem():
                 self.input_dicts['word'].update([list(word_emb_dict.keys())])
                 self.input_dicts['word'].build(threshold=0, max_vocabulary_num=len(word_emb_dict))
             else:
-                word_emb_dict = load_embedding(word2vec_path, word_emb_dim, format, file_type, with_head=False, word_set=self.input_dicts['word'].cell_id_map.keys())
+                extend_vocabulary = set()
+                for single_word in self.input_dicts['word'].cell_id_map.keys():
+                    extend_vocabulary.add(single_word)
+                    if single_word.lower() != single_word:
+                        extend_vocabulary.add(single_word.lower())
+                word_emb_dict = load_embedding(word2vec_path, word_emb_dim, format, file_type, with_head=False, word_set=extend_vocabulary)
 
             for word in word_emb_dict:
                 loaded_emb_dim = len(word_emb_dict[word])
@@ -317,11 +335,15 @@ class Problem():
 
             word_emb_matrix = []
             unknown_word_count = 0
+            scale = np.sqrt(3.0 / word_emb_dim)
             for i in range(self.input_dicts['word'].cell_num()):
-                if self.input_dicts['word'].id_cell_map[i] in word_emb_dict:
-                    word_emb_matrix.append(word_emb_dict[self.input_dicts['word'].id_cell_map[i]])
+                single_word = self.input_dicts['word'].id_cell_map[i]
+                if single_word in word_emb_dict:
+                    word_emb_matrix.append(word_emb_dict[single_word])
+                elif single_word.lower() in word_emb_dict:
+                    word_emb_matrix.append(word_emb_dict[single_word.lower()])
                 else:
-                    word_emb_matrix.append(word_emb_dict['<unk>'])
+                    word_emb_matrix.append(np.random.uniform(-scale, scale, word_emb_dim))
                     unknown_word_count += 1
             word_emb_matrix = np.array(word_emb_matrix)
             logging.info("word embedding matrix shape:(%d, %d); unknown word count: %d;" %
@@ -389,7 +411,7 @@ class Problem():
             yield output_data, lengths, target, cnt_legal, cnt_illegal
 
     def encode_data_list(self, data_list, file_columns, input_types, object_inputs, answer_column_name, min_sentence_len,
-                         extra_feature, max_lengths=None, fixed_lengths=None, file_format="tsv", bpe_encoder=None):
+                         extra_feature, max_lengths=None, fixed_lengths=None, file_format="tsv", bpe_encoder=None, predict_mode='batch'):
         data = dict()
         lengths = dict()
         char_emb = True if 'char' in [single_input_type.lower() for single_input_type in input_types] else False
@@ -447,11 +469,14 @@ class Problem():
             line_split = line.rstrip().split('\t')
             cnt_all += 1
             if len(line_split) != len(file_columns):
-                # logging.warning("Current line is inconsistent with configuration/inputs/file_header. Ingore now. %s" % line)
-                cnt_illegal += 1
-                if cnt_illegal / cnt_all > 0.33:
-                    raise PreprocessError('The illegal data is too much. Please check the number of data columns or text token version.')
-                continue
+                if predict_mode == 'batch':
+                    cnt_illegal += 1
+                    if cnt_illegal / cnt_all > 0.33:
+                        raise PreprocessError('The illegal data is too much. Please check the number of data columns or text token version.')
+                    continue
+                else:
+                    print('\tThe case is illegal! Please check your case and input again!')
+                    return [None]*5
             # cnt_legal += 1
             length_appended_set = set()  # to store branches whose length have been appended to lengths[branch]
 
@@ -482,7 +507,7 @@ class Problem():
                                 data[extra_info_type]['extra_passage_text'].append(line_split[i])
                                 data[extra_info_type]['extra_passage_token_offsets'].append(passage_token_offsets)
                         else:
-                            if extra_feature == False:
+                            if extra_feature == False and ProblemTypes[self.problem_type] != ProblemTypes.sequence_tagging:
                                 tokens = self.tokenizer.tokenize(line_split[i])
                             else:
                                 tokens = line_split[i].split(' ')
@@ -490,6 +515,28 @@ class Problem():
                         tokens = bpe_encoder.encode(line_split[i])
                     else:
                         tokens = line_split[i].split(' ')
+
+                    # for sequence labeling task, the length must be record the corpus truth length
+                    if ProblemTypes[self.problem_type] == ProblemTypes.sequence_tagging:
+                        if not branch in length_appended_set:
+                            lengths[branch]['sentence_length'].append(len(tokens))
+                            length_appended_set.add(branch)
+                        else:
+                            if len(tokens) != lengths[branch]['sentence_length'][-1]:
+                                # logging.warning(
+                                #     "The length of inputs are not consistent. Ingore now. %s" % line)
+                                cnt_illegal += 1
+                                if cnt_illegal / cnt_all > 0.33:
+                                    raise PreprocessError(
+                                        "The illegal data is too much. Please check the number of data columns or text token version.")
+                                lengths[branch]['sentence_length'].pop()
+                                true_len = len(lengths[branch]['sentence_length'])
+                                # need delete the last example
+                                check_list = ['data', 'lengths', 'target']
+                                for single_check in check_list:
+                                    single_check = eval(single_check)
+                                    self.delete_example(single_check, true_len)
+                                break
 
                     if fixed_lengths and type_branches[input_type[0]] in fixed_lengths:
                         if len(tokens) >= fixed_lengths[type_branches[input_type[0]]]:
@@ -506,24 +553,27 @@ class Problem():
                     if self.with_bos_eos is True:
                         tokens = ['<start>'] + tokens + ['<eos>']  # so that source_with_start && source_with_end should be True
 
-                    if not branch in length_appended_set:
-                        lengths[branch]['sentence_length'].append(len(tokens))
-                        length_appended_set.add(branch)
-                    else:
-                        if len(tokens) != lengths[branch]['sentence_length'][-1]:
-                            # logging.warning(
-                            #     "The length of inputs are not consistent. Ingore now. %s" % line)
-                            cnt_illegal += 1
-                            if cnt_illegal / cnt_all > 0.33:
-                                raise PreprocessError("The illegal data is too much. Please check the number of data columns or text token version.")
-                            lengths[branch]['sentence_length'].pop()
-                            true_len = len(lengths[branch]['sentence_length'])
-                            # need delete the last example
-                            check_list = ['data', 'lengths', 'target']
-                            for single_check in check_list:
-                                single_check = eval(single_check)
-                                self.delete_example(single_check, true_len)
-                            break
+                    # for other tasks, length must be same as data length because fix/max_length operation
+                    if not ProblemTypes[self.problem_type] == ProblemTypes.sequence_tagging:
+                        if not branch in length_appended_set:
+                            lengths[branch]['sentence_length'].append(len(tokens))
+                            length_appended_set.add(branch)
+                        else:
+                            if len(tokens) != lengths[branch]['sentence_length'][-1]:
+                                # logging.warning(
+                                #     "The length of inputs are not consistent. Ingore now. %s" % line)
+                                cnt_illegal += 1
+                                if cnt_illegal / cnt_all > 0.33:
+                                    raise PreprocessError(
+                                        "The illegal data is too much. Please check the number of data columns or text token version.")
+                                lengths[branch]['sentence_length'].pop()
+                                true_len = len(lengths[branch]['sentence_length'])
+                                # need delete the last example
+                                check_list = ['data', 'lengths', 'target']
+                                for single_check in check_list:
+                                    single_check = eval(single_check)
+                                    self.delete_example(single_check, true_len)
+                                break
 
                     for single_input_type in input_type:
                         if 'char' in single_input_type:

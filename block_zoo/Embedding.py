@@ -134,7 +134,6 @@ class Embedding(BaseLayer):
                     self.embeddings[input_cluster].weight.requires_grad = False
                     logging.info("The Embedding[%s][fix_weight] is true, fix the embeddings[%s]'s weight" % (input_cluster, input_cluster))
 
-
     def forward(self, inputs, use_gpu=False):
         """ process inputs
 
@@ -160,7 +159,7 @@ class Embedding(BaseLayer):
             #     emb = self.embeddings[input_cluster](input, lengths[input]).float()
             # else:
             #     emb = self.embeddings[input_cluster](input).float()
-            if self.embeddings[input_cluster].weight.device.type == 'cpu':
+            if list(self.embeddings[input_cluster].parameters())[0].device.type == 'cpu':
                 emb = self.embeddings[input_cluster](input.cpu()).float()
             else:
                 emb = self.embeddings[input_cluster](input).float()
