@@ -133,7 +133,7 @@ class LearningMachine(object):
                         self.conf.input_types, None, permutate=True, transform_tensor=True)
 
                 whole_batch_num = len(target_batches)
-                valid_batch_num = max(whole_batch_num // self.conf.valid_times_per_epoch, 1)
+                valid_batch_num = min(self.conf.steps_per_validation, whole_batch_num)
                 small_batch_num = whole_batch_num
                 valid_batch_num_show = valid_batch_num
                 if torch.cuda.device_count() > 1:

@@ -306,7 +306,9 @@ class ModelConf(object):
             self.max_epoch = self.params.max_epoch
         else:
             self.max_epoch = self.get_item(['training_params', 'max_epoch'], default=float('inf'))
-        self.valid_times_per_epoch = self.get_item(['training_params', 'valid_times_per_epoch'], default=1)
+        if 'valid_times_per_epoch' in self.conf['training_params']:
+            logging.info("configuration[training_params][valid_times_per_epoch] is deprecated, please use configuration[training_params][steps_per_validation] instead")
+        self.steps_per_validation = self.get_item(['training_params', 'steps_per_validation'], default=10)
         self.batch_num_to_show_results = self.get_item(['training_params', 'batch_num_to_show_results'], default=10)
         self.max_lengths = self.get_item(['training_params', 'max_lengths'], default=None, use_default=True)
         self.fixed_lengths = self.get_item(['training_params', 'fixed_lengths'], default=None, use_default=True)
