@@ -538,7 +538,9 @@ class ModelConf(object):
         # training data
         self.train_data_md5 = None
         if self.phase == 'train' and self.train_data_path:
+            logging.info("Calculating the md5 of traing data ...")
             self.train_data_md5 = md5([self.train_data_path])
+            logging.info("the md5 of traing data is %s"%(self.train_data_md5))
 
         # problem
         self.problem_md5 = None
