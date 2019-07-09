@@ -98,6 +98,19 @@ python test.py --conf_path=model_zoo/demo/conf.json
 python predict.py --conf_path=model_zoo/demo/conf.json
 ```
 
+对于预测，NeuronBlocks 提供了两种预测的形式： **交互式**和**批量式**。
+- *交互式：* 交互式模式预测提供了交互界面，用户可以根据输入提示信息每次输入一个样本并实时得到模型前向计算出的结果，输入 "exit" 时退出交互预测模式。
+```bash
+# use the above example
+# interactive prediction
+python predict.py --conf_path=model_zoo/demo/conf.json --predict_mode='interactive'
+```
+- *批量式：* 对于批量样本预测的需求，NeuronBlocks 提供批量预测模式，其接受一个包含批量样本的文件作为输入，并且将模型前向计算的结果写回这个文件。
+```bash
+# use the above example
+# batch prediction
+python predict.py --conf_path=model_zoo/demo/conf.json --predict_mode='batch' --predict_data_path=dataset/demo/predict.tsv
+```
 更多细节, 请查看[Tutorial_zh_CN.md](Tutorial_zh_CN.md) 和 [Code documentation](https://microsoft.github.io/NeuronBlocks/)。
 
 # 适用人群
