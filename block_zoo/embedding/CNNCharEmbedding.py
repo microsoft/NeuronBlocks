@@ -28,11 +28,11 @@ class CNNCharEmbeddingConf(BaseConf):
 
     @DocInherit
     def default(self):
-        self.dim = 30       # cnn's output channel dim
+        self.dim = [30]       # cnn's output channel dim
         self.embedding_matrix_dim = 30      #
-        self.stride = 1
+        self.stride = [1]
         self.padding = 0
-        self.window_size = 3
+        self.window_size = [3]
         self.activation = 'ReLU'
 
     @DocInherit
@@ -41,8 +41,14 @@ class CNNCharEmbeddingConf(BaseConf):
         self.num_of_inputs = 1
         self.input_ranks = [3]
 
+    def change_to_list(self, attribute):
+        for single in attribute:
+            if not isinstance(getattr(self, single), list):
+                setattr(self, single, [getattr(self, single)])
+
     @DocInherit
     def inference(self):
+        self.change_to_list(['dim', 'stride', 'window_size'])
         self.output_channel_num = self.dim
         self.output_rank = 3
 
@@ -65,20 +71,24 @@ class CNNCharEmbedding(BaseLayer):
         super(CNNCharEmbedding, self).__init__(layer_conf)
         self.layer_conf = layer_conf
 
+        assert len(layer_conf.dim) == len(layer_conf.window_size) == len(layer_conf.stride), "The attribute dim/window_size/stride must have the same length."
+
         self.char_embeddings = nn.Embedding(layer_conf.vocab_size, layer_conf.embedding_matrix_dim, padding_idx=self.layer_conf.padding)
         nn.init.uniform_(self.char_embeddings.weight, -0.001, 0.001)
 
-        self.char_cnn = nn.Conv2d(1, layer_conf.output_channel_num, (layer_conf.window_size, layer_conf.embedding_matrix_dim),
-                                   stride=self.layer_conf.stride, padding=self.layer_conf.padding)
+        self.char_cnn = nn.ModuleList()
+        for i in range(len(layer_conf.output_channel_num)):
+            self.char_cnn.append(nn.Conv2d(1, layer_conf.output_channel_num[i], (layer_conf.window_size[i], layer_conf.embedding_matrix_dim),
+                                   stride=self.layer_conf.stride[i], padding=self.layer_conf.padding))
         if layer_conf.activation:
             self.activation = eval("nn." + self.layer_conf.activation)()
         else:
             self.activation = None
-        if self.is_cuda():
-            self.char_embeddings = self.char_embeddings.cuda()
-            self.char_cnn = self.char_cnn.cuda()
-            if self.activation and hasattr(self.activation, 'weight'):
-                self.activation.weight = torch.nn.Parameter(self.activation.weight.cuda())
+        # if self.is_cuda():
+        #     self.char_embeddings = self.char_embeddings.cuda()
+        #     self.char_cnn = self.char_cnn.cuda()
+        #     if self.activation and hasattr(self.activation, 'weight'):
+        #         self.activation.weight = torch.nn.Parameter(self.activation.weight.cuda())
 
     def forward(self, string):
         """
@@ -102,14 +112,24 @@ class CNNCharEmbedding(BaseLayer):
         char_embs_lookup = char_embs_lookup.view(-1, string.size()[2], self.layer_conf.embedding_matrix_dim)    #[batch_size * seq_len, char num in words, embedding_dim]
 
         string_input = torch.unsqueeze(char_embs_lookup, 1)   # [batch_size * seq_len, input_channel_num=1, char num in words, embedding_dim]
-        string_conv = self.char_cnn(string_input).squeeze()
-        if self.activation:
-            string_conv = self.activation(string_conv)
 
-        string_maxpooling = F.max_pool1d(string_conv, string_conv.size(2)).squeeze()
-        string_out = string_maxpooling.view(string.size()[0], -1, self.layer_conf.output_channel_num)
+        outputs = []
+        for index, single_cnn in enumerate(self.char_cnn):
+            string_conv = single_cnn(string_input).squeeze(3)
+            if self.activation:
+                string_conv = self.activation(string_conv)
 
-        return string_out
+            string_maxpooling = F.max_pool1d(string_conv, string_conv.size(2)).squeeze()
+            string_out = string_maxpooling.view(string.size()[0], -1, self.layer_conf.output_channel_num[index])
+
+            outputs.append(string_out)
+
+        if len(outputs) > 1:
+            string_output = torch.cat(outputs, 2)
+        else:
+            string_output = outputs[0]
+
+        return string_output
 
 
 if __name__ == '__main__':

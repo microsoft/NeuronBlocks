@@ -331,7 +331,7 @@ class LearningMachine(object):
                     show_result_cnt += 1
 
                 del data_batches, length_batches, target_batches
-                lr_scheduler.step()
+            lr_scheduler.step()
             epoch += 1
 
     def test(self, loss_fn, test_data_path=None, predict_output_path=None):

@@ -66,7 +66,10 @@ class EmbeddingConf(BaseConf):
         for emb_type in self.conf:
             if emb_type == 'position':
                 continue
-            self.output_dim[2] += self.conf[emb_type]['dim']
+            if isinstance(self.conf[emb_type]['dim'], list):
+                self.output_dim[2] += sum(self.conf[emb_type]['dim'])
+            else:
+                self.output_dim[2] += self.conf[emb_type]['dim']
 
         super(EmbeddingConf, self).inference()
 
@@ -113,6 +116,7 @@ class Embedding(BaseLayer):
         self.layer_conf = layer_conf
 
         self.embeddings = nn.ModuleDict() if layer_conf.weight_on_gpu else dict()
+        self.char_embeddings = nn.ModuleDict()
         for input_cluster in layer_conf.conf:
             if 'type' in layer_conf.conf[input_cluster]:
                 # char embedding
@@ -122,7 +126,7 @@ class Embedding(BaseLayer):
                 char_emb_conf = eval(layer_conf.conf[input_cluster]['type'] + "Conf")(** char_emb_conf_dict)
                 char_emb_conf.inference()
                 char_emb_conf.verify()
-                self.embeddings[input_cluster] = eval(layer_conf.conf[input_cluster]['type'])(char_emb_conf)
+                self.char_embeddings[input_cluster] = eval(layer_conf.conf[input_cluster]['type'])(char_emb_conf)
             else:
                 # word embedding, postag embedding, and so on
                 self.embeddings[input_cluster] = nn.Embedding(layer_conf.conf[input_cluster]['vocab_size'], layer_conf.conf[input_cluster]['dim'], padding_idx=0)
@@ -155,14 +159,13 @@ class Embedding(BaseLayer):
             if 'extra' in input_cluster:
                 continue
             input = inputs[input_cluster]
-            # if 'type' in self.layer_conf.conf[input_cluster]:
-            #     emb = self.embeddings[input_cluster](input, lengths[input]).float()
-            # else:
-            #     emb = self.embeddings[input_cluster](input).float()
-            if list(self.embeddings[input_cluster].parameters())[0].device.type == 'cpu':
-                emb = self.embeddings[input_cluster](input.cpu()).float()
+            if input_cluster == 'char':
+                emb = self.char_embeddings[input_cluster](input).float()
             else:
-                emb = self.embeddings[input_cluster](input).float()
+                if list(self.embeddings[input_cluster].parameters())[0].device.type == 'cpu':
+                    emb = self.embeddings[input_cluster](input.cpu()).float()
+                else:
+                    emb = self.embeddings[input_cluster](input).float()
             if use_gpu is True:
                 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
                 emb = emb.to(device)
