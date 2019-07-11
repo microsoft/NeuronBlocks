@@ -14,11 +14,11 @@
     },
     "add_start_end_for_seq": false,
     "file_header": {
-      "word": 0,
+      "sequence": 0,
       "tag": 1
     },
     "model_inputs": {
-      "words": ["word"]
+      "words": ["sequence"]
     },
     "target": ["tag"]
   },
@@ -50,7 +50,7 @@
     "use_gpu": true,
     "batch_size": 10,
     "batch_num_to_show_results": 500,
-    "max_epoch": 50,
+    "max_epoch": 2,
     "valid_times_per_epoch": 1
   },
   "architecture":[
@@ -59,7 +59,7 @@
         "weight_on_gpu": true,
         "conf": {
           "word": {
-            "cols": ["word"],
+            "cols": ["sequence"],
             "dim": 100
           }
         }

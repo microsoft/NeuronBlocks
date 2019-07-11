@@ -34,13 +34,46 @@ def main(params):
     lm = LearningMachine('predict', conf, problem, vocab_info=None, initialize=False, use_gpu=conf.use_gpu)
     lm.load_model(conf.previous_model_path)
 
-    logging.info('Predicting %s with the model saved at %s' % (conf.predict_data_path, conf.previous_model_path))
-    lm.predict(conf.predict_data_path, conf.predict_output_path, conf.predict_file_columns, conf.predict_fields)
-    logging.info("Predict done! The predict result: %s" % conf.predict_output_path)
+    if params.predict_mode == 'batch':
+        logging.info('Predicting %s with the model saved at %s' % (conf.predict_data_path, conf.previous_model_path))
+    if params.predict_mode == 'batch':
+        lm.predict(conf.predict_data_path, conf.predict_output_path, conf.predict_file_columns, conf.predict_fields)
+        logging.info("Predict done! The predict result: %s" % conf.predict_output_path)
+    elif params.predict_mode == 'interactive':
+        print('='*80)
+        task_type = str(ProblemTypes[problem.problem_type]).split('.')[1]
+        sample_format = list(conf.predict_file_columns.keys())
+        target_ = conf.conf['inputs'].get('target', None)
+        target_list = list(target_) if target_ else []
+        for single_element in sample_format[:]:
+            if single_element in target_list:
+                sample_format.remove(single_element)
+        predict_file_columns = {}
+        for index, single in enumerate(sample_format):
+            predict_file_columns[single] = index
+        print('Enabling Interactive Inference Mode for %s Task...' % (task_type.upper()))
+        print('%s Task Interactive. The sample format is <%s>' % (task_type.upper(), ', '.join(sample_format)))
+        case_cnt = 1
+        while True:
+            print('Case%d:' % case_cnt)
+            sample = []
+            for single in sample_format:
+                temp_ = input('\t%s: ' % single)
+                if temp_.lower() == 'exit':
+                    exit(0)
+                sample.append(temp_)
+            sample = '\t'.join(sample)
+            result = lm.interactive([sample], predict_file_columns, conf.predict_fields, params.predict_mode)
+            print('\tInference result: %s' % result)
+            case_cnt += 1
+    else:
+        raise Exception('Predict mode support interactive|batch, get %s' % params.predict_mode)
+
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Prediction')
     parser.add_argument("--conf_path", type=str, help="configuration path")
+    parser.add_argument("--predict_mode", type=str, default='batch', help='interactive|batch')
     parser.add_argument("--predict_data_path", type=str, help='specify another predict data path, instead of the one defined in configuration file')
     parser.add_argument("--previous_model_path", type=str, help='load model trained previously.')
     parser.add_argument("--predict_output_path", type=str, help='specify another prediction output path, instead of conf[outputs][save_base_dir] + conf[outputs][predict_output_name] defined in configuration file')

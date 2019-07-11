@@ -9,7 +9,7 @@
 
 [English version](README.md)
 
-[中文教程](Tutorial_zh_CN.md) [Tutorial](Tutorial.md)
+[中文教程](Tutorial_zh_CN.md) [Tutorial](Tutorial.md) [Demo Video](https://youtu.be/x6cOpVSZcdo)
 
 # 目录
 
@@ -49,10 +49,11 @@ NeuronBlocks包括 ***Block Zoo*** 和 ***Model Zoo*** 两个重要组件，其�
 - 更多……
 
 ### 使用方法
-
 用户可以选择 *Model Zoo* 中的示例模型（JSON配置文件）开启模型训练，或者利用 *Block Zoo* 中的神经网络模块构建新的模型，就像玩乐高积木一样。
 
 <img src="https://i.imgur.com/q0p6Wvz.png" width="300">
+
+<img src="https://i.imgur.com/lFaBtnh.png" width="700">
 
 
 # 快速入门
@@ -97,6 +98,19 @@ python test.py --conf_path=model_zoo/demo/conf.json
 python predict.py --conf_path=model_zoo/demo/conf.json
 ```
 
+对于预测，NeuronBlocks 提供了两种预测的形式： **交互式**和**批量式**。
+- *交互式：* 交互式模式预测提供了交互界面，用户可以根据输入提示信息每次输入一个样本并实时得到模型前向计算出的结果，输入 "exit" 时退出交互预测模式。
+```bash
+# use the above example
+# interactive prediction
+python predict.py --conf_path=model_zoo/demo/conf.json --predict_mode='interactive'
+```
+- *批量式：* 对于批量样本预测的需求，NeuronBlocks 提供批量预测模式，其接受一个包含批量样本的文件作为输入，并且将模型前向计算的结果写回这个文件。
+```bash
+# use the above example
+# batch prediction
+python predict.py --conf_path=model_zoo/demo/conf.json --predict_mode='batch' --predict_data_path=dataset/demo/predict.tsv
+```
 更多细节, 请查看[Tutorial_zh_CN.md](Tutorial_zh_CN.md) 和 [Code documentation](https://microsoft.github.io/NeuronBlocks/)。
 
 # 适用人群
@@ -137,7 +151,7 @@ NeuronBlocks以开放的模式运行。它由 **微软 STCA NLP Group** 设计�
 ```
 @article{gong2019neuronblocks,
   title={NeuronBlocks--Building Your NLP DNN Models Like Playing Lego},
-  author={Gong, Ming and Shou, Linjun and Lin, Wutao and Sang, Zhijie and Yan, Quanjia and Yang, Ze and Jiang, Daxin},
+  author={Gong, Ming and Shou, Linjun and Lin, Wutao and Sang, Zhijie and Yan, Quanjia and Yang, Ze, Cheng, Feixiang and Jiang, Daxin},
   journal={arXiv preprint arXiv:1904.09535},
   year={2019}
 }

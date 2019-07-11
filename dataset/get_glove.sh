@@ -7,7 +7,9 @@ ZIPTOOL="unzip"
 
 # GloVe
 echo $glovepath
-mkdir GloVe
+if [ ! -d "/GloVe/"];then
+    mkdir GloVe
+fi
 curl -LO $glovepath
 $ZIPTOOL glove.840B.300d.zip -d GloVe/
 rm glove.840B.300d.zip
