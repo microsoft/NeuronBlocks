@@ -148,7 +148,7 @@ class Linear(BaseLayer):
             string = string * masks
         string_out = self.linear(string.float())
         if not self.layer_conf.keep_dim:
-            string_out = torch.squeeze(string_out)
+            string_out = torch.squeeze(string_out, -1)
         return string_out, string_len
 
 
