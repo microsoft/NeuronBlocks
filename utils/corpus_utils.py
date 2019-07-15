@@ -358,7 +358,7 @@ def get_batches(problem, data, length, target, batch_size, input_types, pad_ids=
                 else:
                     data_batch[input_cluster][input_type] = data[input_cluster][input_type][stidx: stidx + batch_size]
             # word_length is used for padding char sequence, now only save sentence_length
-            # length_batch[input_cluster] = length_batch[input_cluster]['sentence_length']
+            length_batch[input_cluster] = length_batch[input_cluster]['sentence_length']
 
         data_batches.append(data_batch)
         length_batches.append(length_batch)

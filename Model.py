@@ -382,9 +382,9 @@ class Model(nn.Module):
         for input in inputs:
             representation[input] = self.layers[EMBED_LAYER_ID](inputs[input], use_gpu=self.is_cuda())
             if self.use_gpu:
-                repre_lengths[input] = transfer_to_gpu(lengths[input]['sentence_length'])
+                repre_lengths[input] = transfer_to_gpu(lengths[input])
             else:
-                repre_lengths[input] = lengths[input]['sentence_length']
+                repre_lengths[input] = lengths[input]
 
         for layer_id in self.layer_topological_sequence:
             #logging.debug("To proces layer %s" % layer_id)

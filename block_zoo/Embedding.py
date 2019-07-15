@@ -134,7 +134,6 @@ class Embedding(BaseLayer):
                     self.embeddings[input_cluster].weight.requires_grad = False
                     logging.info("The Embedding[%s][fix_weight] is true, fix the embeddings[%s]'s weight" % (input_cluster, input_cluster))
 
-
     def forward(self, inputs, use_gpu=False):
         """ process inputs
 
@@ -144,9 +143,6 @@ class Embedding(BaseLayer):
                         'word': word ids (Variable), shape:[batch_size, seq_len],\n
                         'postag': postag ids (Variable), shape: [batch_size, seq_len],\n
                         ...
-            lengths (dict): a dictionary to describe each type input length. e.g.:\n
-                            'sentence_length':[batch_size]
-                            'word_length': [batch_size, sentence_length]
             use_gpu (bool): put embedding matrix on GPU (True) or not (False)
 
         Returns:
@@ -166,10 +162,7 @@ class Embedding(BaseLayer):
             if list(self.embeddings[input_cluster].parameters())[0].device.type == 'cpu':
                 emb = self.embeddings[input_cluster](input.cpu()).float()
             else:
-                if 'type' in self.layer_conf.conf[input_cluster]:
-                    emb = self.embeddings[input_cluster](input, lengths['word_length']).float()
-                else:
-                    emb = self.embeddings[input_cluster](input).float()
+                emb = self.embeddings[input_cluster](input).float()
             if use_gpu is True:
                 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
                 emb = emb.to(device)
