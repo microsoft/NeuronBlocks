@@ -40,7 +40,7 @@ class Combination2DConf(BaseConf):
 
     @DocInherit
     def default(self):
-        # supported operations: "origin", "difference", "dot_multiply"
+        # supported operations: "origin", "difference", "dot_multiply", "cosine"
         self.operations = ["origin", "difference", "dot_multiply", "cosine", "bilinear", "tensor"]
 
     @DocInherit
@@ -50,22 +50,8 @@ class Combination2DConf(BaseConf):
 
     @DocInherit
     def inference(self):
-        #说明上一层的dim就有问题！
         self.output_dim = [self.input_dims[0][0], self.input_dims[0][1], self.input_dims[0][1]]
-        #print("*&*&*")
-        #print(self.output_dim)   #[[-1, -1, 256], [-1, -1, 256], [-1, -1, 256]]
-        #copy.deepcopy(self.input_dims[0])
-        '''
-        self.output_dim[-1] = 0
-        if "origin" in self.operations:
-            self.output_dim[-1] += sum([input_dim[-1] for input_dim in self.input_dims])
-        if "difference" in self.operations:
-            self.output_dim[-1] += int(np.mean([input_dim[-1] for input_dim in self.input_dims]))     # difference operation requires dimension of all the inputs should be equal
-        if "dot_multiply" in self.operations:
-            self.output_dim[-1] += int(np.mean([input_dim[-1] for input_dim in self.input_dims]))     # dot_multiply operation requires dimension of all the inputs should be equal
-        if "cosine" in self.operations:
-            self.output_dim[-1]
-        '''
+
         super(Combination2DConf, self).inference()
 
     @DocInherit
@@ -104,11 +90,6 @@ class Combination2D(nn.Module):
     def __init__(self, layer_conf):
         super(Combination2D, self).__init__()
         self.layer_conf = layer_conf
-        #print("**************")
-        #print(layer_conf.input_dims)   #[[-1, -1, 256], [-1, -1, 256]]
-        #self.linear_bi = nn.Linear(layer_conf.input_dims[0][2], layer_conf.input_dims[0][2])
-        #self.linear_ten1 = nn.Linear(layer_conf.input_dims[0][2], layer_conf.input_dims[0][2])
-        #self.linear_ten2 = nn.Linear(layer_conf.input_dims[0][1], layer_conf.input_dims[0][2])
 
         logging.warning("The length Combination layer returns is the length of first input")
 
@@ -123,14 +104,7 @@ class Combination2D(nn.Module):
             Variable: [batch_size, output_dim], None
 
         """
-        '''
-        输入两个string都是[batch_size, seq_len, hidden_size]的
-        生成的每个矩阵都是[batch_size, seq_len, seq_len]的
-        最后输出的应该是[batch_size, num_map, seq_len, seq_len]的
-        '''
-        #print("&*&*&*")
-        #print(args[0].size())   #[8, 15, 256]  每次长度都不一样
-        #print(args[2].size())   #[8, 34, 256]
+
         result = []
         if "cosine" in self.layer_conf.operations:
             string1 = args[0]
@@ -157,5 +131,4 @@ class Combination2D(nn.Module):
 
         return torch.cat(result, 1), args[1]
 
-        #return torch.cat(result, 1), args[1]  
 
