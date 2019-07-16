@@ -89,6 +89,7 @@ class PoolingKmax2DConf(BaseConf):
 
         #assert all([input_rank >= 4 for input_rank in self.input_ranks]), "Cannot apply a pooling layer on a tensor of which the rank is less than 4. Usually, a tensor whose rank is at least 4, e.g. [batch size, length, width, feature]"
 
+        assert all([input_rank == 4 for input_rank in self.input_ranks]), "can only apply on a tensor which the rank is 4"
         assert self.output_dim[-1] != -1, "The shape of input is %s , and the input channel number of pooling should not be -1." % (str(self.input_dims[0]))
 
 class PoolingKmax2D(BaseLayer):
