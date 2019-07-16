@@ -15,7 +15,7 @@ class PoolingKmax2DConf(BaseConf):
     """
 
     Args:
-        pool_type (str): 'max' or 'mean', default is 'max'.
+        pool_type (str): 'max' .
         stride (int): which axis to conduct pooling, default is 1.
         padding (int): implicit zero paddings on both sides of the input. Can be a single number or a tuple (padH, padW). Default: 0
         window_size (int): the size of the pooling
@@ -27,7 +27,7 @@ class PoolingKmax2DConf(BaseConf):
 
     @DocInherit
     def default(self):
-        self.pool_type = 'max'  # Supported: ['max', mean']
+        self.pool_type = 'max'  # Supported: ['max']
         self.stride = 1
         self.padding = 0
         self.window_size = 3
@@ -85,7 +85,7 @@ class PoolingKmax2DConf(BaseConf):
         for attr in necessary_attrs_for_user:
             self.add_attr_exist_assertion_for_user(attr)
 
-        self.add_attr_value_assertion('pool_type', ['max', 'mean'])
+        self.add_attr_value_assertion('pool_type', ['max'])
 
         #assert all([input_rank >= 4 for input_rank in self.input_ranks]), "Cannot apply a pooling layer on a tensor of which the rank is less than 4. Usually, a tensor whose rank is at least 4, e.g. [batch size, length, width, feature]"
 
@@ -102,8 +102,6 @@ class PoolingKmax2D(BaseLayer):
         self.pool = None
         if layer_conf.pool_type == "max":
             self.pool = nn.MaxPool2d(kernel_size=layer_conf.window_size,stride=layer_conf.stride,padding=layer_conf.padding)
-        elif layer_conf.pool_type == "mean":
-            self.pool = nn.AvgPool2d(kernel_size=layer_conf.window_size,stride=layer_conf.stride,padding=layer_conf.padding)
         self.k = layer_conf.k
 
     def forward(self, string, string_len=None):
