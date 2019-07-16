@@ -99,9 +99,6 @@ class PoolingKmax2D(BaseLayer):
     """
     def __init__(self, layer_conf):
         super(PoolingKmax2D, self).__init__(layer_conf)
-        self.pool = None
-        if layer_conf.pool_type == "max":
-            self.pool = nn.MaxPool2d(kernel_size=layer_conf.window_size,stride=layer_conf.stride,padding=layer_conf.padding)
         self.k = layer_conf.k
 
     def forward(self, string, string_len=None):
