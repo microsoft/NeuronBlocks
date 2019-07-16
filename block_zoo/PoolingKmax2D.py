@@ -72,8 +72,7 @@ class PoolingKmax2DConf(BaseConf):
         self.output_dim.append(self.input_dims[0][-1])
         '''
         self.output_dim = [self.input_dims[0][0], -self.input_dims[0][1] * self.k]   #?怎么设定维度，input_dims都是-1
-        #print("&^&^&^")
-        #print(self.output_dim)
+
 
         # DON'T MODIFY THIS
         self.output_rank = len(self.output_dim)
@@ -118,21 +117,10 @@ class PoolingKmax2D(BaseLayer):
             Tensor: Pooling result of string
 
         """
-        #print("&&&&&&")
-        #print(string.size())   #[8, 11, 89]
-
-
-        #string = string.permute([0,3,1,2]).contiguous()
-
-        #string = self.pool(string)
-
-        #string = string.permute([0,2,3,1]).contiguous()
         string = string.view(string.size()[0], string.size()[1], -1)
         index = string.topk(self.k, dim=-1)[1].sort(dim=-1)[0]
         string = string.gather(-1, index)
         string = string.view(string.size()[0], -1)
-        #print("*****")
-        #print(string.size())
 
         return string, string_len
 
