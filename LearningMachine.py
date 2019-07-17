@@ -137,6 +137,7 @@ class LearningMachine(object):
                 small_batch_num = whole_batch_num
                 valid_batch_num_show = valid_batch_num
                 if torch.cuda.device_count() > 1:
+                    self.conf.batch_num_to_show_results *= torch.cuda.device_count() # total batch num overall all the gpus to log 
                     small_batch_num *= torch.cuda.device_count()       # total batch num over all the gpus
                     valid_batch_num_show *= torch.cuda.device_count()      # total batch num over all the gpus to do validation
                 
