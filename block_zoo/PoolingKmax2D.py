@@ -28,15 +28,11 @@ class PoolingKmax2DConf(BaseConf):
     @DocInherit
     def default(self):
         self.pool_type = 'max'  # Supported: ['max']
-        self.stride = 1
-        self.padding = 0
-        self.window_size = 3
         self.k = 50
         
     @DocInherit
     def declare(self):
         self.num_of_inputs = 1
-        #self.input_ranks = [4]
         self.input_ranks = [3]
 
     
@@ -52,25 +48,6 @@ class PoolingKmax2DConf(BaseConf):
             
     @DocInherit
     def inference(self):
-        '''
-        self.window_size = self.check_size(self.window_size, "window_size")
-        self.stride = self.check_size(self.stride, "stride")
-        self.padding = self.check_size(self.padding, "padding")
-        
-        self.output_dim = [self.input_dims[0][0]]
-        if self.input_dims[0][1] != -1:
-            self.output_dim.append((self.input_dims[0][1] + 2 * self.padding[0] - self.window_size[0]) // self.stride[0] + 1)
-        else:
-            self.output_dim.append(-1)
-        if self.input_dims[0][2] != -1:
-            self.output_dim.append((self.input_dims[0][2] + 2 * self.padding[1] - self.window_size[1]) // self.stride[1] + 1)
-        else:
-            self.output_dim.append(-1)
-        # print("pool",self.output_dim)
-        self.input_channel_num = self.input_dims[0][-1]
-
-        self.output_dim.append(self.input_dims[0][-1])
-        '''
         self.output_dim = [self.input_dims[0][0], -self.input_dims[0][1] * self.k]   #?怎么设定维度，input_dims都是-1
 
 
@@ -87,7 +64,6 @@ class PoolingKmax2DConf(BaseConf):
 
         self.add_attr_value_assertion('pool_type', ['max'])
 
-        #assert all([input_rank >= 4 for input_rank in self.input_ranks]), "Cannot apply a pooling layer on a tensor of which the rank is less than 4. Usually, a tensor whose rank is at least 4, e.g. [batch size, length, width, feature]"
 
         assert all([input_rank == 4 for input_rank in self.input_ranks]), "can only apply on a tensor which the rank is 4"
         assert self.output_dim[-1] != -1, "The shape of input is %s , and the input channel number of pooling should not be -1." % (str(self.input_dims[0]))
