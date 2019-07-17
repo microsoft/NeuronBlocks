@@ -431,6 +431,9 @@ class Problem():
 
         type_branches = dict()            # branch of input type, e.g. type_branches['query_index'] = 'query'
 
+        # for char: don't split these word
+        word_no_split = ['<start>', '<pad>', '<eos>', '<unk>']
+        
         for branch in object_inputs:
             data[branch] = dict()
             lengths[branch] = dict()
@@ -580,8 +583,18 @@ class Problem():
                             temp_word_char = []
                             temp_word_length = []
                             for single_token in tokens:
-                                temp_word_char.append(self.input_dicts[type2cluster[single_input_type]].lookup(single_token))
-                                temp_word_length.append(len(single_token))
+                                if single_token in word_no_split:
+                                    # temp_word_length.append(1)
+                                    temp_id = [self.input_dicts[type2cluster[single_input_type]].id(single_token)]
+                                else:
+                                    temp_id = self.input_dicts[type2cluster[single_input_type]].lookup(single_token)
+                                if fixed_lengths and 'word' in fixed_lengths:
+                                    if len(temp_id) >= fixed_lengths['word']:
+                                        temp_id = temp_id[:fixed_lengths['word']]
+                                    else:
+                                        temp_id = temp_id + [self.input_dicts[type2cluster[single_input_type]].id('<pad>')] * (fixed_lengths['word'] - len(temp_id))
+                                temp_word_char.append(temp_id)
+                                temp_word_length.append(len(temp_id))
                             data[branch][single_input_type].append(temp_word_char)
                             lengths[branch]['word_length'].append(temp_word_length)
                         else:

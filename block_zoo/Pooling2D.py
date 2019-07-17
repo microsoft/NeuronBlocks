@@ -30,7 +30,7 @@ class Pooling2DConf(BaseConf):
         self.pool_type = 'max'  # Supported: ['max', mean']
         self.stride = 1
         self.padding = 0
-        self.window_size = 3
+        # self.window_size = [self.input_dims[0][1], self.input_dims[0][2]]
         
     @DocInherit
     def declare(self):
@@ -39,7 +39,7 @@ class Pooling2DConf(BaseConf):
     
     def check_size(self, value, attr):
         res = value
-        if isinstance(value,int):
+        if isinstance(value, int):
             res = [value, value]
         elif (isinstance(self.window_size, tuple) or isinstance(self.window_size, list)) and len(value)==2:
             res = list(value)
@@ -49,6 +49,9 @@ class Pooling2DConf(BaseConf):
             
     @DocInherit
     def inference(self):
+
+        if not hasattr(self, "window_size"):
+            self.window_size = [self.input_dims[0][1], self.input_dims[0][2]]
         
         self.window_size = self.check_size(self.window_size, "window_size")
         self.stride = self.check_size(self.stride, "stride")

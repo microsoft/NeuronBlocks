@@ -90,10 +90,10 @@
             "cols": ["question_char", "answer_char"],
             "type": "CNNCharEmbedding",
             "dropout": 0.2,
-            "dim": 30,
-            "embedding_matrix_dim": 8,
-            "stride":1,
-            "window_size": 5,
+            "dim": [30, 20, 100],
+            "embedding_matrix_dim": 50,
+            "stride":[1, 2, 3],
+            "window_size": [3,3,5],
             "activation": "ReLU"
           }
         }

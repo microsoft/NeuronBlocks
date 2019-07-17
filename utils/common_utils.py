@@ -72,9 +72,15 @@ def get_trainable_param_num(model):
 
     """
     if isinstance(model, nn.DataParallel):
-        model_param = list(model.parameters()) + list(model.module.layers['embedding'].get_parameters())
+        if isinstance(model.module.layers['embedding'].embeddings, dict):
+            model_param = list(model.parameters()) + list(model.module.layers['embedding'].get_parameters())
+        else:
+            model_param = list(model.parameters())
     else:
-        model_param = list(model.parameters()) + list(model.layers['embedding'].get_parameters())
+        if isinstance(model.layers['embedding'].embeddings, dict):
+            model_param = list(model.parameters()) + list(model.layers['embedding'].get_parameters())
+        else:
+            model_param = list(model.parameters())
 
     return sum(p.numel() for p in model_param if p.requires_grad)
 
