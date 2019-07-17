@@ -100,7 +100,6 @@ class Combination2D(nn.Module):
             string2 = args[2]
             result_multiply = torch.matmul(string1, string2.transpose(1,2))
             result.append(torch.unsqueeze(result_multiply, 1))
-            #result.append(torch.unsqueeze(result_multiply, 1))
 
         if "bilinear" in self.layer_conf.operations:
             string1 = args[0]
