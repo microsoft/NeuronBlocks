@@ -18,30 +18,19 @@ class Combination2DConf(BaseConf):
     """ Configuration for combination layer
 
     Args:
-        operations (list):  a subset of ["origin", "difference", "dot_multiply"].
-                "origin" means to keep the original representations;\n
-                "difference" means abs(sequence1 - sequence2);
-                "dot_multiply" means element-wised product;
+        operations (list):  a subset of ["cosine", "bilinear"].
 
     """
     def __init__(self, **kwargs):
         super(Combination2DConf, self).__init__(**kwargs)
         if "bilinear" in self.operations:
-            #bilinear_trans = nn.Linear(self.output_dim, self.output_dim)
-
-            #ones=torch.Tensor(np.ones([2,2,3,3])) 
-            #w.weight=torch.nn.Parameter(ones)
-
-            #w = torch.empty(3, 5)
-            #nn.init.uniform_(w)
 
             weight_bilinear = Parameter(torch.Tensor(self.output_dim, self.output_dim))
 
 
     @DocInherit
     def default(self):
-        # supported operations: "origin", "difference", "dot_multiply", "cosine"
-        self.operations = ["origin", "difference", "dot_multiply", "cosine", "bilinear", "tensor"]
+        self.operations = ["cosine", "bilinear"]
 
     @DocInherit
     def declare(self):
@@ -119,15 +108,6 @@ class Combination2D(nn.Module):
             string1 = linear_bi(string1)
             result_multiply = torch.matmul(string1, string2.transpose(1,2))
             result.append(torch.unsqueeze(result_multiply, 1))
-
-        if "tensor" in self.layer_conf.operations:
-            string1 = args[0]
-            string2 = args[2]
-            c = 10
-            for i in range(0, c):
-                string1 = linear_ten_1(string1)
-                result_multiply = torch.matmul(string1, string2.transpose(1,2))
-                string_concat = torch.cat((string1, string2), 1)
 
         return torch.cat(result, 1), args[1]
 
