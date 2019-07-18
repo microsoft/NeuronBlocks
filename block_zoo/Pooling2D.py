@@ -19,7 +19,6 @@ class Pooling2DConf(BaseConf):
         stride (int): which axis to conduct pooling, default is 1.
         padding (int): implicit zero paddings on both sides of the input. Can be a single number or a tuple (padH, padW). Default: 0
         window_size (int): the size of the pooling
-        activation (string): activation functions, e.g. ReLU
 
     """
     def __init__(self, **kwargs):

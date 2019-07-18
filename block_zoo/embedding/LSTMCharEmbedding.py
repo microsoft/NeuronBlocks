@@ -118,7 +118,7 @@ if __name__ == '__main__':
         'input_ranks': [3],
         'use_gpu': True
     }
-    layer_conf = CNNCharEmbeddingConf(**conf)
+    layer_conf = LSTMCharEmbeddingConf(**conf)
 
     # make a fake input: [bs, seq_len, char num in words]
     # assume in this batch, the padded sentence length is 3 and the each word has 5 chars, including padding 0.
@@ -133,6 +133,5 @@ if __name__ == '__main__':
     output = char_emb_layer(input_chars)
 
     print(output)
-
 
 

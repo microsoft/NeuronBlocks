@@ -47,7 +47,6 @@ class CombinationConf(BaseConf):
             self.output_dim[-1] += int(np.mean([input_dim[-1] for input_dim in self.input_dims]))     # difference operation requires dimension of all the inputs should be equal
         if "dot_multiply" in self.operations:
             self.output_dim[-1] += int(np.mean([input_dim[-1] for input_dim in self.input_dims]))     # dot_multiply operation requires dimension of all the inputs should be equal
-
         super(CombinationConf, self).inference()
 
     @DocInherit
