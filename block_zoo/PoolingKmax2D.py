@@ -15,8 +15,9 @@ class PoolingKmax2DConf(BaseConf):
     """
 
     Args:
-        pool_type (str): 'max' .
-        k: how many elements does pooling contain
+        pool_type (str): 'max', default is 'max'.
+        k (int): how many element to reserve.
+
     """
     def __init__(self, **kwargs):
         super(PoolingKmax2DConf, self).__init__(**kwargs)
@@ -29,46 +30,34 @@ class PoolingKmax2DConf(BaseConf):
     @DocInherit
     def declare(self):
         self.num_of_inputs = 1
-        self.input_ranks = [3]
+        self.input_ranks = [4]
 
     
     def check_size(self, value, attr):
         res = value
-        if isinstance(value,int):
-            res = [value, value]
-        elif (isinstance(self.window_size, tuple) or isinstance(self.window_size, list)) and len(value)==2:
-            res = list(value)
-        else:
-            raise AttributeError("The Atrribute `%s' should be given an integer or a list/tuple with length of 2, instead of %s." %(attr,str(value)))
         return res
             
     @DocInherit
     def inference(self):
-        self.output_dim = [self.input_dims[0][0], -self.input_dims[0][1] * self.k]
-
-
-        # DON'T MODIFY THIS
+        self.output_dim = [self.input_dims[0][0], self.input_dims[0][1] * self.k] 
         self.output_rank = len(self.output_dim)
 
     @DocInherit
     def verify(self):
         super(PoolingKmax2DConf, self).verify()
-
         necessary_attrs_for_user = ['pool_type']
         for attr in necessary_attrs_for_user:
             self.add_attr_exist_assertion_for_user(attr)
-
         self.add_attr_value_assertion('pool_type', ['max'])
 
-
-        assert all([input_rank == 4 for input_rank in self.input_ranks]), "can only apply on a tensor which the rank is 4"
+        assert all([input_rank == 4 for input_rank in self.input_ranks]), "Cannot apply a pooling layer on a tensor of which the rank is not 4. Usually, a tensor whose rank is 4, e.g. [batch size, length, width, feature]"
         assert self.output_dim[-1] != -1, "The shape of input is %s , and the input channel number of pooling should not be -1." % (str(self.input_dims[0]))
 
 class PoolingKmax2D(BaseLayer):
     """ Pooling layer
 
     Args:
-        layer_conf (PoolingConf): configuration of a layer
+        layer_conf (PoolingKmax2DConf): configuration of a layer
     """
     def __init__(self, layer_conf):
         super(PoolingKmax2D, self).__init__(layer_conf)
