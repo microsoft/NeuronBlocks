@@ -56,25 +56,12 @@ class Combination2DConf(BaseConf):
         if rank_equal_flag == False:
             raise ConfigurationError("For layer Combination, the ranks of each inputs should be consistent!")
 
-        if "difference" in self.operations:
-            assert len(self.input_dims) == 2, "Difference operation requires that there should be two inputs"
-
-        if "difference" in self.operations or "dot_multiply" in self.operations:
-            input_dims = list(self.input_dims)
-            dim_equal_flag = True
-            for i in range(len(input_dims)):
-                if input_dims[i] != input_dims[0]:
-                    dim_equal_flag = False
-                    break
-            if dim_equal_flag == False:
-                raise Exception("Difference and dot multiply require that the input dimensions should be the same")
-
-
+            
 class Combination2D(nn.Module):
     """ Combination layer to merge the representation of two sequence
 
     Args:
-        layer_conf (CombinationConf): configuration of a layer
+        layer_conf (Combination2DConf): configuration of a layer
     """
     def __init__(self, layer_conf):
         super(Combination2D, self).__init__()
