@@ -16,17 +16,11 @@ import copy
 
 class Combination2DConf(BaseConf):
     """ Configuration for combination layer
-
     Args:
         operations (list):  a subset of ["cosine", "bilinear"].
-
     """
     def __init__(self, **kwargs):
         super(Combination2DConf, self).__init__(**kwargs)
-        if "bilinear" in self.operations:
-
-            weight_bilinear = Parameter(torch.Tensor(self.output_dim, self.output_dim))
-
 
     @DocInherit
     def default(self):
@@ -39,7 +33,7 @@ class Combination2DConf(BaseConf):
 
     @DocInherit
     def inference(self):
-        self.output_dim = [self.input_dims[0][0], self.input_dims[0][1], self.input_dims[0][1]]
+        self.output_dim = [self.input_dims[0][0], len(self.operations), self.input_dims[0][1], self.input_dims[1][1]]
 
         super(Combination2DConf, self).inference()
 
@@ -58,8 +52,7 @@ class Combination2DConf(BaseConf):
 
             
 class Combination2D(nn.Module):
-    """ Combination layer to merge the representation of two sequence
-
+    """ Combination2D layer to merge the representation of two sequence
     Args:
         layer_conf (Combination2DConf): configuration of a layer
     """
@@ -67,18 +60,18 @@ class Combination2D(nn.Module):
         super(Combination2D, self).__init__()
         self.layer_conf = layer_conf
 
+        self.weight_bilinear = torch.nn.Linear(self.layer_conf.input_dims[0][-1], self.layer_conf.input_dims[0][-1])
+
+
         logging.warning("The length Combination layer returns is the length of first input")
 
     def forward(self, *args):
         """ process inputs
-
         Args:
             args (list): [string, string_len, string2, string2_len, ...]
                 e.g. string (Variable): [batch_size, dim], string_len (ndarray): [batch_size]
-
         Returns:
             Variable: [batch_size, output_dim], None
-
         """
 
         result = []
@@ -86,15 +79,19 @@ class Combination2D(nn.Module):
             string1 = args[0]
             string2 = args[2]
             result_multiply = torch.matmul(string1, string2.transpose(1,2))
+
+            # normalize
+            #norm_matrix = torch.matmul(torch.norm(string1, p=2, dim=-1).unsqueeze(-1), torch.norm(string2, p=2, dim=-1).unsqueeze(-1).transpose(1,2))
+            #result_multiply = result_multiply / norm_matrix
+
             result.append(torch.unsqueeze(result_multiply, 1))
 
         if "bilinear" in self.layer_conf.operations:
             string1 = args[0]
             string2 = args[2]
-            string1 = linear_bi(string1)
+            string1 = self.weight_bilinear(string1)
             result_multiply = torch.matmul(string1, string2.transpose(1,2))
+
             result.append(torch.unsqueeze(result_multiply, 1))
 
         return torch.cat(result, 1), args[1]
-
-
