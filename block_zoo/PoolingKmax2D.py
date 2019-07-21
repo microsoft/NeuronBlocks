@@ -16,11 +16,7 @@ class PoolingKmax2DConf(BaseConf):
 
     Args:
         pool_type (str): 'max' .
-        stride (int): which axis to conduct pooling, default is 1.
-        padding (int): implicit zero paddings on both sides of the input. Can be a single number or a tuple (padH, padW). Default: 0
-        window_size (int): the size of the pooling
-        activation (string): activation functions, e.g. ReLU
-
+        k: how many elements does pooling contain
     """
     def __init__(self, **kwargs):
         super(PoolingKmax2DConf, self).__init__(**kwargs)
@@ -48,7 +44,7 @@ class PoolingKmax2DConf(BaseConf):
             
     @DocInherit
     def inference(self):
-        self.output_dim = [self.input_dims[0][0], -self.input_dims[0][1] * self.k]   #?怎么设定维度，input_dims都是-1
+        self.output_dim = [self.input_dims[0][0], -self.input_dims[0][1] * self.k]
 
 
         # DON'T MODIFY THIS
