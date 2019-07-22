@@ -136,7 +136,9 @@ class LearningMachine(object):
                 valid_batch_num = min(self.conf.steps_per_validation, whole_batch_num)
                 small_batch_num = whole_batch_num
                 valid_batch_num_show = valid_batch_num
+                batch_num_to_show_results = self.conf.batch_num_to_show_results
                 if torch.cuda.device_count() > 1:
+                    batch_num_to_show_results *= torch.cuda.device_count() # total batch num overall all the gpus to log 
                     small_batch_num *= torch.cuda.device_count()       # total batch num over all the gpus
                     valid_batch_num_show *= torch.cuda.device_count()      # total batch num over all the gpus to do validation
                 
@@ -288,7 +290,7 @@ class LearningMachine(object):
                             or ProblemTypes[self.problem.problem_type] == ProblemTypes.classification:
                         del prediction_indices
 
-                    if show_result_cnt == self.conf.batch_num_to_show_results:
+                    if show_result_cnt == batch_num_to_show_results:
                         if ProblemTypes[self.problem.problem_type] == ProblemTypes.classification:
                             result = self.evaluator.evaluate(streaming_recoder.get('target'),
                                 streaming_recoder.get('prediction'), y_pred_pos_score=streaming_recoder.get('pred_scores'),
