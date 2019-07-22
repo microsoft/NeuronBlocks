@@ -54,6 +54,3 @@ from .EncoderDecoder import EncoderDecoder, EncoderDecoderConf
 from .normalizations import LayerNorm, LayerNormConf
 
 from .HighwayLinear import HighwayLinear, HighwayLinearConf
-
-from .Gating import Gating, GatingConf
-from .HistogramMapping import HistogramMapping, HistogramMappingConf
