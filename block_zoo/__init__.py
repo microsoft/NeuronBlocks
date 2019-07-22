@@ -54,3 +54,4 @@ from .EncoderDecoder import EncoderDecoder, EncoderDecoderConf
 from .normalizations import LayerNorm, LayerNormConf
 
 from .HighwayLinear import HighwayLinear, HighwayLinearConf
+
