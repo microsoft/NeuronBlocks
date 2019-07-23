@@ -105,7 +105,7 @@
         "layer_id": "comb_qp",
         "layer": "Combination2D",
         "conf": {
-            "operations": ["cosine"]
+            "operations": ["dot"]
         },
         "inputs": ["question_1", "passage_1"]
     },
