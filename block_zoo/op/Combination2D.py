@@ -100,5 +100,12 @@ class Combination2D(nn.Module):
             result_multiply = torch.matmul(string1, string2.transpose(1,2))
 
             result.append(torch.unsqueeze(result_multiply, 1))
-
+        '''   
+        if "add" in self.layer_conf.operations:
+            string1 = args[0]
+            string2 = args[2]
+            x_new = torch.stack([string1]*string2.size()[1], 2) # [batch_size, x_max_len, y_max_len, dim]
+            y_new = torch.stack([string2]*string1.size()[1], 1) # [batch_size, x_max_len, y_max_len, dim]
+            result.append(x_new + y_new)
+        '''
         return torch.cat(result, 1), args[1]
