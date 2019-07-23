@@ -17,14 +17,14 @@ import copy
 class Combination2DConf(BaseConf):
     """ Configuration for combination layer
     Args:
-        operations (list):  a subset of ["cosine", "bilinear"].
+        operations (list):  a subset of ["dot", "cosine" "bilinear"].
     """
     def __init__(self, **kwargs):
         super(Combination2DConf, self).__init__(**kwargs)
 
     @DocInherit
     def default(self):
-        self.operations = ["cosine", "bilinear"]
+        self.operations = ["dot", "cosine", "bilinear"]
 
     @DocInherit
     def declare(self):
@@ -71,18 +71,25 @@ class Combination2D(nn.Module):
             args (list): [string, string_len, string2, string2_len, ...]
                 e.g. string (Variable): [batch_size, dim], string_len (ndarray): [batch_size]
         Returns:
-            Variable: [batch_size, output_dim], None
+            Variable: [batch_size, width, height, dim], None
         """
 
         result = []
+        if "dot" in self.layer_conf.operations:
+            string1 = args[0]
+            string2 = args[2]
+            result_multiply = torch.matmul(string1, string2.transpose(1,2))
+
+            result.append(torch.unsqueeze(result_multiply, 1))
+            
         if "cosine" in self.layer_conf.operations:
             string1 = args[0]
             string2 = args[2]
             result_multiply = torch.matmul(string1, string2.transpose(1,2))
 
             # normalize
-            #norm_matrix = torch.matmul(torch.norm(string1, p=2, dim=-1).unsqueeze(-1), torch.norm(string2, p=2, dim=-1).unsqueeze(-1).transpose(1,2))
-            #result_multiply = result_multiply / norm_matrix
+            norm_matrix = torch.matmul(torch.norm(string1, p=2, dim=-1).unsqueeze(-1), torch.norm(string2, p=2, dim=-1).unsqueeze(-1).transpose(1,2))
+            result_multiply = result_multiply / norm_matrix
 
             result.append(torch.unsqueeze(result_multiply, 1))
 
