@@ -32,10 +32,6 @@ class PoolingKmax2DConf(BaseConf):
         self.num_of_inputs = 1
         self.input_ranks = [4]
 
-    
-    def check_size(self, value, attr):
-        res = value
-        return res
             
     @DocInherit
     def inference(self):
