@@ -17,14 +17,14 @@ import copy
 class Combination2DConf(BaseConf):
     """ Configuration for combination layer
     Args:
-        operations (list):  a subset of ["dot", "cosine" "bilinear"].
+        operations (list):  a subset of ["dot", "bilinear", "add"].
     """
     def __init__(self, **kwargs):
         super(Combination2DConf, self).__init__(**kwargs)
 
     @DocInherit
     def default(self):
-        self.operations = ["dot", "cosine", "bilinear"]
+        self.operations = ["dot", "bilinear", "add"]
 
     @DocInherit
     def declare(self):
@@ -34,6 +34,8 @@ class Combination2DConf(BaseConf):
     @DocInherit
     def inference(self):
         self.output_dim = [self.input_dims[0][0], len(self.operations), self.input_dims[0][1], self.input_dims[1][1]]
+        if "add" in self.operations:
+            self.output_dim[1] = self.output_dim[1] + self.input_dims[0][-1] - 1
 
         super(Combination2DConf, self).inference()
 
@@ -82,16 +84,6 @@ class Combination2D(nn.Module):
 
             result.append(torch.unsqueeze(result_multiply, 1))
             
-        if "cosine" in self.layer_conf.operations:
-            string1 = args[0]
-            string2 = args[2]
-            result_multiply = torch.matmul(string1, string2.transpose(1,2))
-
-            # normalize
-            norm_matrix = torch.matmul(torch.norm(string1, p=2, dim=-1).unsqueeze(-1), torch.norm(string2, p=2, dim=-1).unsqueeze(-1).transpose(1,2))
-            result_multiply = result_multiply / norm_matrix
-
-            result.append(torch.unsqueeze(result_multiply, 1))
 
         if "bilinear" in self.layer_conf.operations:
             string1 = args[0]
@@ -100,12 +92,12 @@ class Combination2D(nn.Module):
             result_multiply = torch.matmul(string1, string2.transpose(1,2))
 
             result.append(torch.unsqueeze(result_multiply, 1))
-        '''   
+         
         if "add" in self.layer_conf.operations:
             string1 = args[0]
             string2 = args[2]
             x_new = torch.stack([string1]*string2.size()[1], 2) # [batch_size, x_max_len, y_max_len, dim]
             y_new = torch.stack([string2]*string1.size()[1], 1) # [batch_size, x_max_len, y_max_len, dim]
-            result.append(x_new + y_new)
-        '''
+            result.append((x_new + y_new).permute(0, 3, 1, 2))
+        
         return torch.cat(result, 1), args[1]
