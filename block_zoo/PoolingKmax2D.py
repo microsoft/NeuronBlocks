@@ -13,11 +13,9 @@ from utils.DocInherit import DocInherit
 
 class PoolingKmax2DConf(BaseConf):
     """
-
     Args:
         pool_type (str): 'max', default is 'max'.
         k (int): how many element to reserve.
-
     """
     def __init__(self, **kwargs):
         super(PoolingKmax2DConf, self).__init__(**kwargs)
@@ -35,7 +33,7 @@ class PoolingKmax2DConf(BaseConf):
             
     @DocInherit
     def inference(self):
-        self.output_dim = [self.input_dims[0][0], self.input_dims[0][1] * self.k] 
+        self.output_dim = [self.input_dims[0][0], self.input_dims[0][3] * self.k] 
         self.output_rank = len(self.output_dim)
 
     @DocInherit
@@ -51,7 +49,6 @@ class PoolingKmax2DConf(BaseConf):
 
 class PoolingKmax2D(BaseLayer):
     """ Pooling layer
-
     Args:
         layer_conf (PoolingKmax2DConf): configuration of a layer
     """
@@ -61,20 +58,16 @@ class PoolingKmax2D(BaseLayer):
 
     def forward(self, string, string_len=None):
         """ process inputs
-
         Args:
             string (Tensor): tensor with shape: [batch_size, length, width, feature_dim]
             string_len (Tensor): [batch_size], default is None.
-
         Returns:
             Tensor: Pooling result of string
-
         """
+        string = string.permute(0, 3, 1, 2)
         string = string.view(string.size()[0], string.size()[1], -1)
         index = string.topk(self.k, dim=-1)[1].sort(dim=-1)[0]
         string = string.gather(-1, index)
         string = string.view(string.size()[0], -1)
 
         return string, string_len
-
-
