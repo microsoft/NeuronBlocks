@@ -20,7 +20,7 @@ from utils.exceptions import ConfigurationError
 import numpy as np
 
 class ModelConf(object):
-    def __init__(self, phase, conf_path, nb_version, params=None, mode='normal'):
+    def __init__(self, phase, conf_path, nb_version, params=None, mode='normal', online_encoder=False):
         """ loading configuration from configuration file and argparse parameters
 
         Args:
@@ -32,6 +32,7 @@ class ModelConf(object):
         """
         self.phase = phase
         assert self.phase in set(['train', 'test', 'predict', 'cache'])
+        self.online_encoder = online_encoder
         self.conf_path = conf_path
         self.params = params
         self.mode = mode.lower()
@@ -70,6 +71,10 @@ class ModelConf(object):
             self.use_cache = True
 
         # OUTPUTS
+
+        # for encoder setting
+        self.encoder = self.get_item(['outputs', 'encoder'], default=None, use_default=True)
+
         if hasattr(self.params, 'model_save_dir') and self.params.model_save_dir:
             self.save_base_dir = self.params.model_save_dir
         else:
@@ -454,8 +459,11 @@ class ModelConf(object):
             assert self.test_data_path is not None, "Please define test_data_path"
             assert os.path.isfile(self.test_data_path), "Training data %s does not exist!" % self.test_data_path
         elif self.phase == 'predict':
-            assert self.predict_data_path is not None, "Please define predict_data_path"
-            assert os.path.isfile(self.predict_data_path), "Training data %s does not exist!" % self.predict_data_path
+            if self.online_encoder:
+                pass
+            else:
+                assert self.predict_data_path is not None, "Please define predict_data_path"
+                assert os.path.isfile(self.predict_data_path), "Training data %s does not exist!" % self.predict_data_path
 
         # check language types
         SUPPORTED_LANGUAGES = set(LanguageTypes._member_names_)

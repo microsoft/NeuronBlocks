@@ -154,7 +154,7 @@ class LearningMachine(object):
                 for i in progress:
                     # the result shape: for classification: [batch_size, # of classes]; for sequence tagging: [batch_size, seq_len, # of tags]
                     param_list, inputs_desc, length_desc = transform_params2tensors(data_batches[i], length_batches[i])
-                    logits = self.model(inputs_desc, length_desc, *param_list)
+                    logits, _ = self.model(inputs_desc, length_desc, *param_list)
 
                     logits_softmax = {}
                     if isinstance(self.model, nn.DataParallel):
@@ -447,7 +447,7 @@ class LearningMachine(object):
                 # batch_size_actual = target_batches[i].size(0)
 
                 param_list, inputs_desc, length_desc = transform_params2tensors(data_batches[i], length_batches[i])
-                logits = self.model(inputs_desc, length_desc, *param_list)
+                logits, _ = self.model(inputs_desc, length_desc, *param_list)
 
                 logits_softmax = {}
                 if isinstance(self.model, nn.DataParallel):
@@ -671,6 +671,8 @@ class LearningMachine(object):
             file_format='tsv', show_progress=True if self.conf.mode == 'normal' else False, 
             cpu_num_workers=self.conf.cpu_num_workers)
 
+        encode_vecs_all = dict()
+
         logging.info("Starting predict ...")
         self.model.eval()
         with torch.no_grad():
@@ -693,7 +695,13 @@ class LearningMachine(object):
                 for i in progress:
                     # batch_size_actual = target_batches[i].size(0)
                     param_list, inputs_desc, length_desc = transform_params2tensors(data_batches[i], length_batches[i])
-                    logits = self.model(inputs_desc, length_desc, *param_list)
+                    logits, encode_vec = self.model(inputs_desc, length_desc, *param_list)
+
+                    for key, value in encode_vec.items():
+                        if encode_vecs_all.get(key, None) is None:
+                            encode_vecs_all[key] = value
+                        else:
+                            encode_vecs_all[key] = np.insert(encode_vecs_all[key], 0, values=value, axis=0)
 
                     logits_softmax = {}
                     if isinstance(self.model, nn.DataParallel):
@@ -777,8 +785,14 @@ class LearningMachine(object):
                     streaming_recoder.clear_records()
 
                     del logits, logits_softmax
-
         fin.close()
+        # save encode vectors
+        for key, value in encode_vecs_all.items():
+            temp_sava_path = os.path.join(self.conf.save_base_dir, key+'.txt')
+            if not os.path.exists(temp_sava_path):
+                with open(temp_sava_path, 'w', encoding='utf-8') as fin:
+                    pass
+            np.savetxt(temp_sava_path, value)
 
     def interactive(self, sample, file_columns, predict_fields=['prediction'], predict_mode='batch'):
         """ interactive prediction
@@ -880,6 +894,21 @@ class LearningMachine(object):
                 streaming_recoder.record_one_row([prediction])
 
             return "\t".join([str(streaming_recoder.get(field)[0]) for field in predict_fields])
+
+    def predict_env(self, sample, file_columns):
+        predict_data, predict_length, _, _, _ = \
+            self.problem.encode_data_list(sample, file_columns, self.conf.input_types, self.conf.object_inputs, None,
+                                          self.conf.min_sentence_len, self.conf.extra_feature, self.conf.max_lengths,
+                                          self.conf.fixed_lengths)
+        self.model.eval()
+        with torch.no_grad():
+            data_batches, length_batches, _ = \
+                get_batches(self.problem, predict_data, predict_length, None, 1,
+                            self.conf.input_types, None, permutate=False, transform_tensor=True,
+                            predict_mode='interactive')
+        param_list, inputs_desc, length_desc = transform_params2tensors(data_batches[0], length_batches[0])
+        _, vecs = self.model(inputs_desc, length_desc, *param_list)
+        return list(vecs.values())[0][0]
 
     def load_model(self, model_path):
         if self.use_gpu is True:

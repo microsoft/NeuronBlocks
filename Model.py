@@ -199,6 +199,8 @@ class Model(nn.Module):
         self.layer_dependencies[EMBED_LAYER_ID] = set()
         # change output_layer_id to list for support multi_output
         self.output_layer_id = []
+        # add encoder
+        self.encoder = conf.encoder
 
         for layer_index, layer_arch in enumerate(layer_archs):
             output_layer_flag = True if 'output_layer_flag' in layer_arch and layer_arch['output_layer_flag'] is True else False
@@ -379,6 +381,8 @@ class Model(nn.Module):
         repre_lengths = dict()
         repre_lengths[EMBED_LAYER_ID] = dict()
 
+        encode_vec = dict()
+
         for input in inputs:
             representation[input] = self.layers[EMBED_LAYER_ID](inputs[input], use_gpu=self.is_cuda())
             if self.use_gpu:
@@ -400,7 +404,9 @@ class Model(nn.Module):
         representation_output = dict()
         for single_output_layer_id in self.output_layer_id:
             representation_output[single_output_layer_id] = representation[single_output_layer_id]
-        return representation_output
+        for single_input, single_encode in self.encoder.items():
+            encode_vec[single_input] = representation[single_encode].cpu().detach().numpy()
+        return representation_output, encode_vec
 
     def is_cuda(self):
         return list(self.parameters())[-1].data.is_cuda

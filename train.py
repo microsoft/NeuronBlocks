@@ -354,6 +354,7 @@ def get_vocab_info(conf, problem, emb_matrix):
     return vocab_info
 
 if __name__ == "__main__":
+    os.environ["CUDA_VISIBLE_DEVICES"] = "1"
     parser = argparse.ArgumentParser(description='Training')
     parser.add_argument("--conf_path", type=str, help="configuration path")
     parser.add_argument("--train_data_path", type=str)

@@ -13,7 +13,16 @@ from problem import Problem
 from LearningMachine import LearningMachine
 
 def main(params):
+    # the predict is dedicated function for input text encoder
     conf = ModelConf('predict', params.conf_path, version, params, mode=params.mode)
+    # the model's inputs is query/passage pairs, now we expand text
+    expand_file_path = os.path.join(conf.save_base_dir, 'expand_predict.tsv')
+    with open(expand_file_path, 'w', encoding='utf-8') as fin:
+        with open(conf.predict_data_path, 'r', encoding='utf-8') as fout:
+            for single in fout:
+                temp_single = single.replace('\n', '') + '\t' + single.replace('\n', '') + '\n'
+                fin.write(temp_single)
+    conf.predict_data_path = expand_file_path
     problem = Problem('predict', conf.problem_type, conf.input_types, None,
         with_bos_eos=conf.add_start_end_for_seq, tagging_scheme=conf.tagging_scheme, tokenizer=conf.tokenizer,
         remove_stopwords=conf.remove_stopwords, DBC2SBC=conf.DBC2SBC, unicode_fix=conf.unicode_fix)
@@ -71,6 +80,7 @@ def main(params):
 
 
 if __name__ == "__main__":
+    os.environ["CUDA_VISIBLE_DEVICES"] = "7"
     parser = argparse.ArgumentParser(description='Prediction')
     parser.add_argument("--conf_path", type=str, help="configuration path")
     parser.add_argument("--predict_mode", type=str, default='batch', help='interactive|batch')
