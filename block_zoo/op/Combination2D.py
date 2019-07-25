@@ -84,18 +84,6 @@ class Combination2D(nn.Module):
 
             result.append(torch.unsqueeze(result_multiply, 3))
             
-        '''
-        if "cosine" in self.layer_conf.operations:
-            string1 = args[0]
-            string2 = args[2]
-            result_multiply = torch.matmul(string1, string2.transpose(1,2))
-
-            # normalize
-            norm_matrix = torch.matmul(torch.norm(string1, p=2, dim=-1).unsqueeze(-1), torch.norm(string2, p=2, dim=-1).unsqueeze(-1).transpose(1,2))
-            result_multiply = result_multiply / norm_matrix
-
-            result.append(torch.unsqueeze(result_multiply, 1))
-        '''
 
         if "bilinear" in self.layer_conf.operations:
             string1 = args[0]
