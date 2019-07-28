@@ -52,7 +52,10 @@ class ConvConf(BaseConf):
 
         self.output_dim = [-1]
         if self.input_dims[0][1] != -1:
-            self.output_dim.append((self.input_dims[0][1] - self.window_size) // self.stride + 1)
+            if self.padding_type == 'SAME':
+                self.output_dim.append(self.input_dims[0][1])
+            else:
+                self.output_dim.append((self.input_dims[0][1] - self.window_size) // self.stride + 1)
         else:
             self.output_dim.append(-1)
         self.output_dim.append(self.output_channel_num)
