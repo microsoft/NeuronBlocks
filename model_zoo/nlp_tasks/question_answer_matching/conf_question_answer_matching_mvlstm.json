@@ -1,7 +1,7 @@
 {
   "license": "Copyright (c) Microsoft Corporation. All rights reserved. Licensed under the MIT license.",
   "tool_version": "1.1.0",
-  "model_description": "This model is used for question answer matching task, and it achieved auc: 0.7673 in WikiQACorpus test set",
+  "model_description": "This model is used for question answer matching task, and it achieved auc: 0.7144 in WikiQACorpus test set",
   "inputs": {
     "use_cache": true,
     "dataset_type": "classification",
