@@ -12,6 +12,7 @@ from .BiQRNN import BiQRNN, BiQRNNConf
 from .Conv import Conv, ConvConf
 from .Pooling import Pooling, PoolingConf
 from .ConvPooling import ConvPooling, ConvPoolingConf
+from .PoolingKMax import PoolingKMax, PoolingKMaxConf
 
 from .Dropout import Dropout, DropoutConf
 
