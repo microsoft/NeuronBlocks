@@ -49,7 +49,8 @@
   "training_params": {
     "vocabulary": {
       "min_word_frequency": 1,
-      "max_vocabulary": 100000
+      "max_vocabulary": 100000,
+      "max_building_lines": 1000000
     },
     "optimizer": {
       "name": "Adam",
@@ -57,6 +58,7 @@
         "lr": 0.001
       }
     },
+    "chunk_size": 1000000,
     "lr_decay": 0.95,
     "minimum_lr": 0.0001,
     "epoch_start_lr_decay": 1,
@@ -65,7 +67,7 @@
     "batch_size": 30,
     "batch_num_to_show_results": 10,
     "max_epoch": 3,
-    "valid_times_per_epoch": 1,
+    "steps_per_validation": 10,
     "text_preprocessing": ["DBC2SBC"],
     "max_lengths":{
       "question": 30,

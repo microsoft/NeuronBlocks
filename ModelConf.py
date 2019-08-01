@@ -14,7 +14,7 @@ import shutil
 
 from losses.BaseLossConf import BaseLossConf
 #import traceback
-from settings import LanguageTypes, ProblemTypes, TaggingSchemes, SupportedMetrics, PredictionTypes, DefaultPredictionFields
+from settings import LanguageTypes, ProblemTypes, TaggingSchemes, SupportedMetrics, PredictionTypes, DefaultPredictionFields, ConstantStatic
 from utils.common_utils import log_set, prepare_dir, md5
 from utils.exceptions import ConfigurationError
 import numpy as np
@@ -219,6 +219,10 @@ class ModelConf(object):
         # vocabulary setting
         self.max_vocabulary = self.get_item(['training_params', 'vocabulary', 'max_vocabulary'], default=800000, use_default=True)
         self.min_word_frequency = self.get_item(['training_params', 'vocabulary', 'min_word_frequency'], default=3, use_default=True)
+        self.max_building_lines = self.get_item(['training_params', 'vocabulary', 'max_building_lines'], default=1000 * 1000, use_default=True)
+
+        # chunk_size
+        self.chunk_size = self.get_item(['training_params', 'chunk_size'], default=1000 * 1000, use_default=True)
 
         # file column header setting
         self.file_with_col_header = self.get_item(['inputs', 'file_with_col_header'], default=False, use_default=True)

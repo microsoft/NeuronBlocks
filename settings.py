@@ -75,7 +75,5 @@ class Setting(ConstantStatic):
     cencoding_key_legal_cnt = 'legal_line_cnt'
     cencoding_key_illegal_cnt = 'illegal_line_cnt'
 
-    # lazy load
-    chunk_size = 1000 * 1000
 
 

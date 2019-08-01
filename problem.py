@@ -223,7 +223,7 @@ class Problem():
 
     def build(self, data_path_list, file_columns, input_types, file_with_col_header, answer_column_name, word2vec_path=None, word_emb_dim=None,
               format=None, file_type=None, involve_all_words=None, file_format="tsv", show_progress=True,
-              cpu_num_workers=-1, max_vocabulary=800000, word_frequency=3):
+              cpu_num_workers=-1, max_vocabulary=800000, word_frequency=3, max_building_lines=1000*1000):
         """
 
         Args:
@@ -268,10 +268,9 @@ class Problem():
         bpe_encoder = self._check_bpe_encoder(input_types)  
         self.file_column_num = len(file_columns)
 
-        chunk_size = st.chunk_size
         for data_path in data_path_list:
             if data_path:
-                progress = self.get_data_generator_from_file(data_path, file_with_col_header, chunk_size=chunk_size)
+                progress = self.get_data_generator_from_file(data_path, file_with_col_header, chunk_size=max_building_lines)
                 preprocessed_data_generator= self.build_training_multi_processor(progress, cpu_num_workers, file_columns, input_types, answer_column_name, bpe_encoder=bpe_encoder)
         
                 # update symbol universe
@@ -288,7 +287,7 @@ class Problem():
                 elif ProblemTypes[self.problem_type] == ProblemTypes.regression or \
                         ProblemTypes[self.problem_type] == ProblemTypes.mrc:
                     pass
-                logging.info("[Building Dictionary] in %s at most %d lines imported: %d legal lines, %d illegal lines." % (data_path, chunk_size, cnt_legal, cnt_illegal))
+                logging.info("[Building Dictionary] in %s at most %d lines imported: %d legal lines, %d illegal lines." % (data_path, max_building_lines, cnt_legal, cnt_illegal))
      
         # build dictionary
         for input_type in input_types:
@@ -674,7 +673,7 @@ class Problem():
 
     def encode(self, data_path, file_columns, input_types, file_with_col_header, object_inputs, answer_column_name,
                min_sentence_len, extra_feature, max_lengths=None, fixed_lengths=None, file_format="tsv", show_progress=True,
-               cpu_num_workers = -1):
+               cpu_num_workers=-1, chunk_size=1000*1000):
         """
 
         Args:
@@ -752,7 +751,7 @@ class Problem():
         """
         bpe_encoder = self._check_bpe_encoder(input_types)  
 
-        progress = self.get_data_generator_from_file(data_path, file_with_col_header, chunk_size=st.chunk_size)
+        progress = self.get_data_generator_from_file(data_path, file_with_col_header, chunk_size=chunk_size)
         encode_generator = self.encode_data_multi_processor(progress, cpu_num_workers,
                     file_columns, input_types, object_inputs, answer_column_name, min_sentence_len, extra_feature, max_lengths,
                     fixed_lengths, file_format, bpe_encoder=bpe_encoder)
@@ -784,7 +783,7 @@ class Problem():
             assert conf.encoding_cache_index_file_md5_path, 'There is no property encoding_cache_index_file_md5_path in object conf'
 
         bpe_encoder = self._check_bpe_encoder(conf.input_types)   
-        data_generator = self.get_data_generator_from_file(conf.train_data_path, conf.file_with_col_header, chunk_size=st.chunk_size)
+        data_generator = self.get_data_generator_from_file(conf.train_data_path, conf.file_with_col_header, chunk_size=conf.chunk_size)
         encode_generator = self.encode_data_multi_processor(data_generator, conf.cpu_num_workers,
                     conf.file_columns, conf.input_types, conf.object_inputs, conf.answer_column_name, 
                     conf.min_sentence_len, conf.extra_feature, conf.max_lengths,

@@ -97,13 +97,13 @@ class LearningMachine(object):
         valid_data, valid_length, valid_target = self.problem.encode(self.conf.valid_data_path, self.conf.file_columns,
             self.conf.input_types, self.conf.file_with_col_header, self.conf.object_inputs, self.conf.answer_column_name, max_lengths=self.conf.max_lengths,
             min_sentence_len = self.conf.min_sentence_len, extra_feature = self.conf.extra_feature,fixed_lengths=self.conf.fixed_lengths, file_format='tsv',
-            show_progress=True if self.conf.mode == 'normal' else False, cpu_num_workers=self.conf.cpu_num_workers)
+            show_progress=True if self.conf.mode == 'normal' else False, cpu_num_workers=self.conf.cpu_num_workers, chunk_size=self.conf.chunk_size)
 
         if self.conf.test_data_path is not None:
             test_data, test_length, test_target = self.problem.encode(self.conf.test_data_path, self.conf.file_columns, 
             self.conf.input_types, self.conf.file_with_col_header, self.conf.object_inputs, self.conf.answer_column_name, max_lengths=self.conf.max_lengths,
             min_sentence_len = self.conf.min_sentence_len, extra_feature = self.conf.extra_feature,fixed_lengths=self.conf.fixed_lengths, file_format='tsv', 
-            show_progress=True if self.conf.mode == 'normal' else False, cpu_num_workers=self.conf.cpu_num_workers)
+            show_progress=True if self.conf.mode == 'normal' else False, cpu_num_workers=self.conf.cpu_num_workers, chunk_size=self.conf.chunk_size)
 
         stop_training = False
         epoch = 1
@@ -345,7 +345,7 @@ class LearningMachine(object):
             test_data, test_length, test_target = self.problem.encode(test_data_path, self.conf.file_columns, self.conf.input_types,
                 self.conf.file_with_col_header, self.conf.object_inputs, self.conf.answer_column_name, max_lengths=self.conf.max_lengths,
                 min_sentence_len = self.conf.min_sentence_len, extra_feature = self.conf.extra_feature,fixed_lengths=self.conf.fixed_lengths, file_format='tsv',
-                show_progress=True if self.conf.mode == 'normal' else False, cpu_num_workers=self.conf.cpu_num_workers)
+                show_progress=True if self.conf.mode == 'normal' else False, cpu_num_workers=self.conf.cpu_num_workers, chunk_size=self.conf.chunk_size)
         else:
             test_pkl_data = load_from_pkl(test_data_path)
             test_data, test_length, test_target = test_pkl_data['data'], test_pkl_data['length'], test_pkl_data['target']
@@ -669,7 +669,7 @@ class LearningMachine(object):
             self.conf.file_with_col_header,self.conf.object_inputs, None, min_sentence_len=self.conf.min_sentence_len,
             extra_feature=self.conf.extra_feature,max_lengths=self.conf.max_lengths, fixed_lengths=self.conf.fixed_lengths,
             file_format='tsv', show_progress=True if self.conf.mode == 'normal' else False, 
-            cpu_num_workers=self.conf.cpu_num_workers)
+            cpu_num_workers=self.conf.cpu_num_workers, chunk_size=self.conf.chunk_size)
 
         logging.info("Starting predict ...")
         self.model.eval()

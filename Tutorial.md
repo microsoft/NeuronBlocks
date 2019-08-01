@@ -147,10 +147,12 @@ The architecture of the configuration file is:
         CUDA_VISIBLE_DEVICES= python train.py
         ```
     - ***cpu_num_workers***. [default: -1] Define the number of processes to preprocess the dataset. The number of processes is equal to that of logical cores CPU supports if value is negtive or 0, otherwise it is equal to *cpu_num_workers*.
+    - ***chunk_size***. [default: 1000000] Define the chunk size of files that NB reads every time for avoiding out of memory and the mechanism of lazy-loading.
     - ***batch_size***. Define the batch size here. If there are multiple GPUs, *batch_size* is the batch size of each GPU.
     - ***batch_num_to_show_results***. [necessary for training] During the training process, show the results every batch_num_to_show_results batches.
     - ***max_epoch***. [necessary for training] The maximum number of epochs to train.
-    - ***valid_times_per_epoch***. [optional for training, default: 1] Define how many times to conduct validation per epoch. Usually, we conduct validation after each epoch, but for a very large corpus, we'd better validate multiple times in case to miss the best state of our model. The default value is 1.
+    - ~~***valid_times_per_epoch***~~. [**deprecated**] Please use steps_per_validation instead.
+    - ***steps_per_validation***. [default: 10] Define how many steps does each validation take place. 
     - ***tokenizer***. [optional] Define tokenizer here. Currently, we support 'nltk' and 'jieba'. By default, 'nltk' for English and 'jieba' for Chinese.
 - **architecture**. Define the model architecture. The node is a list of layers (blocks) in block_zoo to represent a model. The supported layers of this toolkit are given in [block_zoo overview](https://microsoft.github.io/NeuronBlocks). 
     
@@ -726,6 +728,8 @@ To solve the above problems, NeuronBlocks supports *fixing embedding weight* (em
     ***training_params/vocabulary/min_word_frequency***. [int, optional for training, default: 3] The word will be removed from corpus vocabulary if its statistical frequency is less than *min_word_frequency*.
     
     ***training_params/vocabulary/max_vocabulary***. [int, optional for training, default: 800,000] The max size of corpus vocabulary. If corpus vocabulary size is larger than *max_vocabulary*, it will be cut according to word frequency.
+
+    ***training_params/vocabulary/max_building_lines***. [int, optional for training, default: 1,000,000] The max lines NB will read from every file to build vocabulary
 
 ## <span id="faq">Frequently Asked Questions</span>
 

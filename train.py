@@ -257,7 +257,7 @@ def main(params):
                                     word_emb_dim=conf.pretrained_emb_dim, format=conf.pretrained_emb_type,
                                     file_type=conf.pretrained_emb_binary_or_text, involve_all_words=conf.involve_all_words_in_pretrained_emb,
                                     show_progress=True if params.mode == 'normal' else False, cpu_num_workers = conf.cpu_num_workers,
-                                    max_vocabulary=conf.max_vocabulary, word_frequency=conf.min_word_frequency)
+                                    max_vocabulary=conf.max_vocabulary, word_frequency=conf.min_word_frequency, max_building_lines=conf.max_building_lines)
 
     # environment preparing
     ## cache save
