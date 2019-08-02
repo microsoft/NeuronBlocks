@@ -16,6 +16,7 @@ import codecs
 import copy
 from settings import ProblemTypes
 import torch
+import time
 
 
 if sys.version_info < (3,):
@@ -236,10 +237,10 @@ def get_batches(problem, data, length, target, batch_size, input_types, pad_ids=
         logging.info("Start making batches")
     if permutate is True:
         #CAUTION! data and length would be revised
-        data = copy.deepcopy(data)
-        length = copy.deepcopy(length)
-        if target is not None:
-            target = copy.deepcopy(target)
+        # data = copy.deepcopy(data)
+        # length = copy.deepcopy(length)
+        # if target is not None:
+        #     target = copy.deepcopy(target)
 
         # shuffle the data
         permutation = np.random.permutation(len(list(target.values())[0]))
