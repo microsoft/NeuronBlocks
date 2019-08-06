@@ -292,6 +292,7 @@ Question answer matching is a crucial subtask of the question answering problem,
     [ARC-I](https://arxiv.org/abs/1503.03244) (NeuronBlocks) | 0.7508
     [ARC-II](https://arxiv.org/abs/1503.03244) (NeuronBlocks) | 0.7612
     [MatchPyramid](https://arxiv.org/abs/1602.06359) (NeuronBlocks) | 0.763
+    [MV-LSTM](https://arxiv.org/abs/1511.08277) (NeuronBlocks) | 0.774
      BiLSTM+Match Attention (NeuronBlocks) | 0.786
 
     
