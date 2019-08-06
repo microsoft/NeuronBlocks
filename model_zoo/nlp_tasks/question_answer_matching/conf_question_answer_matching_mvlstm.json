@@ -1,14 +1,15 @@
 {
   "license": "Copyright (c) Microsoft Corporation. All rights reserved. Licensed under the MIT license.",
   "tool_version": "1.1.0",
-  "model_description": "This model is used for question answer matching task, and it achieved auc: 0.7144 in WikiQACorpus test set",
+  "model_description": "This model is used for question answer matching task, and it achieved auc: 0.7736 in WikiQACorpus test set",
   "inputs": {
     "use_cache": true,
     "dataset_type": "classification",
     "data_paths": {
       "train_data_path": "./dataset/WikiQACorpus/WikiQA-train.tsv",
       "valid_data_path": "./dataset/WikiQACorpus/WikiQA-dev.tsv",
-      "test_data_path": "./dataset/WikiQACorpus/WikiQA-test.tsv"
+      "test_data_path": "./dataset/WikiQACorpus/WikiQA-test.tsv",
+      "pre_trained_emb": "./dataset/GloVe/glove.840B.300d.txt"
     },
     "file_with_col_header": true,
     "add_start_end_for_seq": true,
@@ -46,17 +47,17 @@
       "params": {
       }
     },
-    "lr_decay": 0.95,
-    "minimum_lr": 0.0001,
+    "lr_decay": 0.9,
+    "minimum_lr": 0.00005,
     "epoch_start_lr_decay": 3,
     "use_gpu": true,
-    "batch_size": 8,
+    "batch_size": 64,
     "batch_num_to_show_results": 100,
-    "max_epoch": 2,
+    "max_epoch": 10,
     "valid_times_per_epoch": 5,
-    "max_lengths":{
-      "question": 30,
-      "passage": 100
+    "fixed_lengths":{
+      "question": 200,
+      "passage": 200
     }
   },
   "architecture":[
@@ -74,7 +75,7 @@
       "layer_id": "question_dropout",
       "layer": "Dropout",
       "conf": {
-          "dropout": 0.2
+          "dropout": 0.5
       },
       "inputs": ["question"]
     },
@@ -82,7 +83,7 @@
       "layer_id": "passage_dropout",
       "layer": "Dropout",
       "conf": {
-          "dropout": 0.2
+          "dropout": 0.5
       },
       "inputs": ["passage"]
     },
@@ -90,7 +91,7 @@
         "layer_id": "question_1",
         "layer": "BiLSTM",
         "conf": {
-          "hidden_dim": 128,
+          "hidden_dim": 256,
           "dropout": 0.2,
           "num_layers": 2
         },
@@ -105,7 +106,7 @@
         "layer_id": "comb_qp",
         "layer": "Combination2D",
         "conf": {
-            "operations": ["dot"]
+            "operations": ["dot", "bilinear"]
         },
         "inputs": ["question_1", "passage_1"]
     },
