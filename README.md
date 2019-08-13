@@ -98,6 +98,21 @@ python test.py --conf_path=model_zoo/demo/conf.json
 # predict
 python predict.py --conf_path=model_zoo/demo/conf.json
 ```
+
+For prediction, NeuronBlocks have two modes: **Interactive** and **Batch**.
+- *Interactive Prediction Mode:* The interactive mode provides interactive interface, users can input case according to corresponding prompt message and get realtime prediction result from trained model, and input "exit" to exit interactive interface.
+```bash
+# use the above example
+# interactive prediction
+python predict.py --conf_path=model_zoo/demo/conf.json --predict_mode='interactive'
+```
+- *Batch Prediction Mode:* For batched cases prediction, NeuronBlocks provides batch prediction mode which receives a cases file as input and write the prediction results in the prediction file.
+```bash
+# use the above example
+# batch prediction
+python predict.py --conf_path=model_zoo/demo/conf.json --predict_mode='batch' --predict_data_path=dataset/demo/predict.tsv
+```
+
 For more details, please refer to [Tutorial.md](Tutorial.md) and [Code documentation](https://microsoft.github.io/NeuronBlocks/).
 
 # Who should consider using NeuronBlocks

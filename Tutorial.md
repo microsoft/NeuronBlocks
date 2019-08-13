@@ -297,11 +297,13 @@ Question answer matching is a crucial subtask of the question answering problem,
     
      Model    | AUC 
      -------- | -------- 
-     CNN (WikiQA paper) | 0.735 
+     CNN (WikiQA paper) | 0.735
      CNN-Cnt (WikiQA paper) | 0.753 
      CNN (NeuronBlocks) | 0.747 
      BiLSTM (NeuronBlocks) | 0.767 
-     BiLSTM+Attn (NeuronBlocks) | 0.754 
+     BiLSTM+Attn (NeuronBlocks) | 0.754
+     [ARC-I](https://arxiv.org/abs/1503.03244) (NeuronBlocks) | 0.7508
+     [ARC-II](https://arxiv.org/abs/1503.03244) (NeuronBlocks) | 0.7612
      [MatchPyramid](https://arxiv.org/abs/1602.06359) (NeuronBlocks) | 0.763
      BiLSTM+Match Attention (NeuronBlocks) | 0.786
 

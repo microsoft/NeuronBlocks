@@ -5,3 +5,5 @@ from .Concat3D import Concat3D, Concat3DConf
 from .Combination import Combination, CombinationConf
 from .Match import Match, MatchConf
 from .Flatten import Flatten, FlattenConf
+from .Expand_plus import Expand_plus, Expand_plusConf
+from .CalculateDistance import CalculateDistance, CalculateDistanceConf
