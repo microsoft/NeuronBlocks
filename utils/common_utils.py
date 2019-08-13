@@ -202,6 +202,34 @@ def transform_tensors2params(inputs_desc, length_desc, param_list):
     return inputs, lengths
 
 
+def get_input_desc(conf):
+    type2cluster = dict()  # e.g. type2cluster['query_index'] = 'word'
+    for input_type in conf.input_types:
+        for col_name in conf.input_types[input_type]['cols']:
+            type2cluster[col_name] = input_type
+
+    inputs_desc = {}
+    cnt = 0
+    for input in conf.object_inputs:
+        for input_type in conf.object_inputs[input]:
+            inputs_desc[input + '___' + type2cluster[input_type]] = cnt
+            cnt += 1
+
+    length_desc = {}
+    for length in conf.object_inputs:
+        '''
+        if isinstance(lengths[length], dict):
+            for length_type in lengths[length]:
+                length_desc[length + '__' + length_type] = cnt
+        else:
+            length_desc[length] = cnt
+        '''
+        length_desc[length] = cnt
+        cnt += 1
+    return inputs_desc, length_desc
+
+
+
 def prepare_dir(path, is_dir, allow_overwrite=False, clear_dir_if_exist=False, extra_info=None):
     """ to make dir if a dir or the parent dir of a file does not exist
 

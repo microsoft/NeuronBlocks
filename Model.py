@@ -8,7 +8,7 @@ import copy
 import logging
 from utils.exceptions import ConfigurationError, LayerUndefinedError, LayerConfigUndefinedError
 from queue import Queue
-from utils.common_utils import transform_tensors2params, transfer_to_gpu
+from utils.common_utils import transform_tensors2params, transfer_to_gpu, get_input_desc
 
 from block_zoo.Embedding import *
 
@@ -190,6 +190,8 @@ class Model(nn.Module):
         else:
             fixed_lengths_corrected = None
 
+        self.inputs_desc, self.length_desc = get_input_desc(conf)
+
         self.use_gpu = use_gpu
 
         all_layer_configs = dict()
@@ -344,7 +346,7 @@ class Model(nn.Module):
         logging.debug("Topological sequence of nodes: %s" % (",".join(topological_list)))
         return topological_list
 
-    def forward(self, inputs_desc, length_desc, *param_list):
+    def forward(self, *param_list):
         """
 
         Args:
@@ -372,7 +374,7 @@ class Model(nn.Module):
         Returns:
 
         """
-        inputs, lengths = transform_tensors2params(inputs_desc, length_desc, param_list)
+        inputs, lengths = transform_tensors2params(self.inputs_desc, self.length_desc, param_list)
 
         representation = dict()
         representation[EMBED_LAYER_ID] = dict()

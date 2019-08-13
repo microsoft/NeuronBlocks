@@ -154,7 +154,7 @@ class LearningMachine(object):
                 for i in progress:
                     # the result shape: for classification: [batch_size, # of classes]; for sequence tagging: [batch_size, seq_len, # of tags]
                     param_list, inputs_desc, length_desc = transform_params2tensors(data_batches[i], length_batches[i])
-                    logits = self.model(inputs_desc, length_desc, *param_list)
+                    logits = self.model(*param_list)
 
                     logits_softmax = {}
                     if isinstance(self.model, nn.DataParallel):
@@ -447,7 +447,7 @@ class LearningMachine(object):
                 # batch_size_actual = target_batches[i].size(0)
 
                 param_list, inputs_desc, length_desc = transform_params2tensors(data_batches[i], length_batches[i])
-                logits = self.model(inputs_desc, length_desc, *param_list)
+                logits = self.model(*param_list)
 
                 logits_softmax = {}
                 if isinstance(self.model, nn.DataParallel):
@@ -693,7 +693,7 @@ class LearningMachine(object):
                 for i in progress:
                     # batch_size_actual = target_batches[i].size(0)
                     param_list, inputs_desc, length_desc = transform_params2tensors(data_batches[i], length_batches[i])
-                    logits = self.model(inputs_desc, length_desc, *param_list)
+                    logits = self.model(*param_list)
 
                     logits_softmax = {}
                     if isinstance(self.model, nn.DataParallel):
@@ -804,7 +804,7 @@ class LearningMachine(object):
                 list(length_batches[0].keys()).remove('target') if 'target' in list(length_batches[0].keys()) else
                 list(length_batches[0].keys()))
             param_list, inputs_desc, length_desc = transform_params2tensors(data_batches[0], length_batches[0])
-            logits = self.model(inputs_desc, length_desc, *param_list)
+            logits = self.model(*param_list)
 
             logits_softmax = {}
             if isinstance(self.model, nn.DataParallel):
