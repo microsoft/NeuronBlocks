@@ -1,7 +1,7 @@
 # Copyright (c) Microsoft Corporation. All rights reserved.
 # Licensed under the MIT license.
 
-from settings import ProblemTypes, version
+from settings import ProblemTypes, version, Setting as st
 
 import os
 import argparse
@@ -15,7 +15,7 @@ import torch
 import torch.nn as nn
 from ModelConf import ModelConf
 from problem import Problem
-from utils.common_utils import dump_to_pkl, load_from_pkl, prepare_dir
+from utils.common_utils import dump_to_pkl, load_from_pkl, load_from_json, dump_to_json, prepare_dir, md5
 from utils.philly_utils import HDFSDirectTransferer
 from losses import *
 from optimizers import *
@@ -34,33 +34,76 @@ class Cache:
         self.dictionary_invalid = True
         self.embedding_invalid = True
 
-        # cache_conf
-        cache_conf = None
-        cache_conf_path = os.path.join(conf.cache_dir, 'conf_cache.json')
-        if os.path.isfile(cache_conf_path):
-            params_cache = copy.deepcopy(params)
-            try:
-                cache_conf = ModelConf('cache', cache_conf_path, version, params_cache)
-            except Exception as e:
-                cache_conf = None
-        if cache_conf is None or not self._verify_conf(cache_conf, conf):
-            return False
-        
-        # problem
-        if not os.path.isfile(conf.problem_path):
-            return False
-
-        # embedding
-        if conf.emb_pkl_path:
-            if not os.path.isfile(conf.emb_pkl_path):
+        if not conf.pretrained_model_path:
+            # cache_conf
+            cache_conf = None
+            cache_conf_path = os.path.join(conf.cache_dir, 'conf_cache.json')
+            if os.path.isfile(cache_conf_path):
+                params_cache = copy.deepcopy(params)
+                try:
+                    cache_conf = ModelConf('cache', cache_conf_path, version, params_cache)
+                except Exception as e:
+                    cache_conf = None
+            if cache_conf is None or not self._verify_conf(cache_conf, conf):
                 return False
-            self.embedding_invalid = False
+            
+            # problem
+            if not os.path.isfile(conf.problem_path):
+                return False
+
+            # embedding
+            if conf.emb_pkl_path:
+                if not os.path.isfile(conf.emb_pkl_path):
+                    return False
+                self.embedding_invalid = False
         
-        self.dictionary_invalid = False
+            self.dictionary_invalid = False
+            logging.info('[Cache] dictionary found')
         return True
         
     def _check_encoding(self, conf):
+        self.encoding_invalid = True
+        if not conf.pretrained_model_path and self.dictionary_invalid:
+            return False
+        
+        # Calculate the MD5 of problem
+        problem_path = conf.problem_path if not conf.pretrained_model_path else conf.saved_problem_path
+        try:
+            conf.problem_md5 = md5([problem_path])
+        except Exception as e:
+            conf.problem_md5 = None
+            logging.info('Can not calculate md5 of problem.pkl from %s'%(problem_path))
+            return False
+        
+        # check the valid of encoding cache
+        ## encoding cache dir
+        conf.encoding_cache_dir = os.path.join(conf.cache_dir, conf.train_data_md5 + conf.problem_md5)
+        logging.debug('[Cache] conf.encoding_cache_dir %s' % (conf.encoding_cache_dir))
+        if not os.path.exists(conf.encoding_cache_dir):
+            return False
+        
+        ## encoding cache index 
+        conf.encoding_cache_index_file_path = os.path.join(conf.encoding_cache_dir, st.cencodig_index_file_name)
+        conf.encoding_cache_index_file_md5_path = os.path.join(conf.encoding_cache_dir, st.cencoding_index_md5_file_name)
+        if not os.path.exists(conf.encoding_cache_index_file_path) or not os.path.exists(conf.encoding_cache_index_file_md5_path):
+            return False
+        if md5([conf.encoding_cache_index_file_path]) != load_from_json(conf.encoding_cache_index_file_md5_path):
+            return False
+        cache_index = load_from_json(conf.encoding_cache_index_file_path)
+
+        ## encoding cache content
+        for index in cache_index[st.cencoding_key_index]:
+            file_name, file_md5 = index[0], index[1]
+            if file_md5 != md5([os.path.join(conf.encoding_cache_dir, file_name)]):
+                return False
+        
+        if (st.cencoding_key_legal_cnt in cache_index) and (st.cencoding_key_illegal_cnt in cache_index):
+            conf.encoding_cache_legal_line_cnt = cache_index[st.cencoding_key_legal_cnt]
+            conf.encoding_cache_illegal_line_cnt = cache_index[st.cencoding_key_illegal_cnt]
+        
         self.encoding_invalid = False
+        logging.info('[Cache] encoding found')
+        logging.info('%s: %d legal samples, %d illegal samples' % (conf.train_data_path, conf.encoding_cache_legal_line_cnt, conf.encoding_cache_illegal_line_cnt))
         return True
 
     def check(self, conf, params):
@@ -70,7 +113,7 @@ class Cache:
             return
         # encoding
         if not self._check_encoding(conf):
-            self._renew_cache(params, conf.cache_dir)
+            self._renew_cache(params, conf.encoding_cache_dir)
 
     def load(self, conf, problem, emb_matrix):
         # load dictionary when (not finetune) and (cache valid)
@@ -81,13 +124,17 @@ class Cache:
             logging.info('[Cache] loading dictionary successfully')
         
         if not self.encoding_invalid:
-            pass  
+            self._prepare_encoding_cache(conf, problem, build=False)
+            logging.info('[Cache] preparing encoding successfully')
         return problem, emb_matrix
 
     def save(self, conf, params, problem, emb_matrix):
+        # make cache dir
         if not os.path.exists(conf.cache_dir):
             os.makedirs(conf.cache_dir)
         shutil.copy(params.conf_path, os.path.join(conf.cache_dir, 'conf_cache.json'))
+
+        # dictionary
         if self.dictionary_invalid:
             if conf.mode == 'philly' and conf.emb_pkl_path.startswith('/hdfs/'):
                 with HDFSDirectTransferer(conf.problem_path, with_hdfs_command=True) as transferer:
@@ -101,10 +148,11 @@ class Cache:
                         transferer.pkl_dump(emb_matrix)
                 else:
                     dump_to_pkl(emb_matrix, conf.emb_pkl_path)
-            logging.info("Embedding matrix saved to %s" % conf.emb_pkl_path)
+            logging.info("[Cache] Embedding matrix saved to %s" % conf.emb_pkl_path)
         
+        # encoding
         if self.encoding_invalid:
-            pass
+            self._prepare_encoding_cache(conf, problem, build=params.make_cache_only) 
 
     def back_up(self, conf, problem):
         cache_bakup_path = os.path.join(conf.save_base_dir, 'necessary_cache/')
@@ -150,6 +198,34 @@ class Cache:
                 flag = False
         return flag
 
+    def _prepare_encoding_cache(self, conf, problem, build=False):
+        # encoding cache dir
+        problem_path = conf.problem_path if not conf.pretrained_model_path else conf.saved_problem_path
+        conf.problem_md5 = md5([problem_path])
+        conf.encoding_cache_dir = os.path.join(conf.cache_dir, conf.train_data_md5 + conf.problem_md5)
+        if not os.path.exists(conf.encoding_cache_dir):
+            os.makedirs(conf.encoding_cache_dir)
+        
+        # encoding cache files
+        conf.encoding_cache_index_file_path = os.path.join(conf.encoding_cache_dir, st.cencodig_index_file_name)
+        conf.encoding_cache_index_file_md5_path = os.path.join(conf.encoding_cache_dir, st.cencoding_index_md5_file_name) 
+        conf.load_encoding_cache_generator = self._load_encoding_cache_generator
+        
+        if build:
+            prepare_dir(conf.encoding_cache_dir, True, allow_overwrite=True, clear_dir_if_exist=True)
+            problem.build_encode_cache(conf)
+            self.encoding_invalid = False
+
+        if not self.encoding_invalid:
+            cache_index = load_from_json(conf.encoding_cache_index_file_path)
+            conf.encoding_file_index = cache_index[st.cencoding_key_index]
+
+    @staticmethod
+    def _load_encoding_cache_generator(cache_dir, file_index):
+        for index in file_index:
+            file_path = os.path.join(cache_dir, index[0])
+            yield load_from_pkl(file_path)
+    
 def main(params):
     # init
     conf = ModelConf("train", params.conf_path, version, params, mode=params.mode)
@@ -172,6 +248,7 @@ def main(params):
     # data preprocessing
     ## build dictionary when (not in finetune model) and (not use cache or cache invalid)
     if (not conf.pretrained_model_path) and ((conf.use_cache == False) or cache.dictionary_invalid):
+        logging.info("="*100)
         logging.info("Preprocessing... Depending on your corpus size, this step may take a while.")
         # modify train_data_path to [train_data_path, valid_data_path, test_data_path]
         # remember the test_data may be None
@@ -181,11 +258,7 @@ def main(params):
                                     word_emb_dim=conf.pretrained_emb_dim, format=conf.pretrained_emb_type,
                                     file_type=conf.pretrained_emb_binary_or_text, involve_all_words=conf.involve_all_words_in_pretrained_emb,
                                     show_progress=True if params.mode == 'normal' else False, cpu_num_workers = conf.cpu_num_workers,
-                                    max_vocabulary=conf.max_vocabulary, word_frequency=conf.min_word_frequency)
-
-    ## encode rawdata when do not use cache
-    if conf.use_cache == False:
-        pass
+                                    max_vocabulary=conf.max_vocabulary, word_frequency=conf.min_word_frequency, max_building_lines=conf.max_building_lines)
 
     # environment preparing
     ## cache save
@@ -234,9 +307,20 @@ def main(params):
 
     ### optimizer
     if isinstance(lm.model, nn.DataParallel):
-        optimizer = eval(conf.optimizer_name)(list(lm.model.parameters()) + list(lm.model.module.layers['embedding'].get_parameters()), **conf.optimizer_params)
+        if isinstance(lm.model.module.layers['embedding'].embeddings, nn.ModuleDict):
+            optimizer = eval(conf.optimizer_name)(list(lm.model.parameters()), **conf.optimizer_params)
+        else:
+            optimizer = eval(conf.optimizer_name)(
+                list(lm.model.parameters()) + list(lm.model.module.layers['embedding'].get_parameters()),
+                **conf.optimizer_params)
     else:
-        optimizer = eval(conf.optimizer_name)(list(lm.model.parameters()) + list(lm.model.layers['embedding'].get_parameters()), **conf.optimizer_params)
+        if isinstance(lm.model.layers['embedding'].embeddings, nn.ModuleDict):
+            optimizer = eval(conf.optimizer_name)(
+                list(lm.model.parameters()), **conf.optimizer_params)
+        else:
+            optimizer = eval(conf.optimizer_name)(
+                list(lm.model.parameters()) + list(lm.model.layers['embedding'].get_parameters()),
+                **conf.optimizer_params)
 
     ## train
     lm.train(optimizer, loss_fn)

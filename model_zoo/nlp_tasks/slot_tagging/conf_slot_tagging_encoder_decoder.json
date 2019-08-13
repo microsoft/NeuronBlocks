@@ -23,13 +23,13 @@
   },
   "outputs":{
     "save_base_dir": "./models/slot_tagging_encoder_decoder/",
-    "model_name": "model_debug.nb",
-    "train_log_name": "train_debug.log",
-    "test_log_name": "test_debug.log",
-    "predict_log_name": "predict_debug.log",
+    "model_name": "model.nb",
+    "train_log_name": "train.log",
+    "test_log_name": "test.log",
+    "predict_log_name": "predict.log",
     "predict_fields": ["prediction"],
-    "predict_output_name": "predict_debug.tsv",
-    "cache_dir": ".cache.atis/"
+    "predict_output_name": "predict.tsv",
+    "cache_dir": ".cache.slot_tagging_encoder_decoder/"
   },
   "training_params": {
     "vocabulary": {

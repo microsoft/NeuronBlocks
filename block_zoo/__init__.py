@@ -16,9 +16,13 @@ from .ConvPooling import ConvPooling, ConvPoolingConf
 from .Dropout import Dropout, DropoutConf
 
 from .Conv2D import Conv2D, Conv2DConf
+from .Pooling1D import Pooling1D, Pooling1DConf
 from .Pooling2D import Pooling2D, Pooling2DConf
 
 from .embedding import CNNCharEmbedding, CNNCharEmbeddingConf
+from .embedding import LSTMCharEmbedding, LSTMCharEmbeddingConf
+
+from .CRF import CRFConf, CRF
 
 from .attentions import FullAttention, FullAttentionConf
 from .attentions import Seq2SeqAttention, Seq2SeqAttentionConf
@@ -50,3 +54,4 @@ from .EncoderDecoder import EncoderDecoder, EncoderDecoderConf
 from .normalizations import LayerNorm, LayerNormConf
 
 from .HighwayLinear import HighwayLinear, HighwayLinearConf
+

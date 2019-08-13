@@ -49,7 +49,8 @@
   "training_params": {
     "vocabulary": {
       "min_word_frequency": 1,
-      "max_vocabulary": 100000
+      "max_vocabulary": 100000,
+      "max_building_lines": 1000000
     },
     "optimizer": {
       "name": "Adam",
@@ -57,6 +58,7 @@
         "lr": 0.001
       }
     },
+    "chunk_size": 1000000,
     "lr_decay": 0.95,
     "minimum_lr": 0.0001,
     "epoch_start_lr_decay": 1,
@@ -65,7 +67,7 @@
     "batch_size": 30,
     "batch_num_to_show_results": 10,
     "max_epoch": 3,
-    "valid_times_per_epoch": 1,
+    "steps_per_validation": 10,
     "text_preprocessing": ["DBC2SBC"],
     "max_lengths":{
       "question": 30,
@@ -75,6 +77,7 @@
   "architecture":[
     {
         "layer": "Embedding",
+        "weight_on_gpu": false,
         "conf": {
           "word": {
             "cols": ["question_text", "answer_text"],
@@ -89,11 +92,11 @@
             "cols": ["question_char", "answer_char"],
             "type": "CNNCharEmbedding",
             "dropout": 0.2,
-            "dim": 30,
-            "embedding_matrix_dim": 8,
-            "stride":1,
-            "window_size": 5,
-            "activation": null
+            "dim": [30, 20, 100],
+            "embedding_matrix_dim": 50,
+            "stride":[1, 2, 3],
+            "window_size": [3,3,5],
+            "activation": "ReLU"
           }
         }
     },

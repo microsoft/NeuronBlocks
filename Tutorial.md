@@ -1,4 +1,4 @@
-# ***NeuronBlocks*** Tutorial
+# <img src="https://i.imgur.com/YLrkvW3.png" width="80">  ***NeuronBlocks*** Tutorial
 
 [简体中文](Tutorial_zh_CN.md)
 
@@ -21,6 +21,7 @@
         4. [Compression for MRC Model](#task-6.4)
     * [Task 7: Chinese Sentiment Analysis](#task-7)
     * [Task 8: Chinese Text Matching](#task-8)
+    * [Task 9: Sequence Labeling](#task-9)
 * [Advanced Usage](#advanced-usage)
     * [Extra Feature Support](#extra-feature)
     * [Learning Rate Decay](#lr-decay)
@@ -146,10 +147,12 @@ The architecture of the configuration file is:
         CUDA_VISIBLE_DEVICES= python train.py
         ```
     - ***cpu_num_workers***. [default: -1] Define the number of processes to preprocess the dataset. The number of processes is equal to that of logical cores CPU supports if value is negtive or 0, otherwise it is equal to *cpu_num_workers*.
+    - ***chunk_size***. [default: 1000000] Define the chunk size of files that NB reads every time for avoiding out of memory and the mechanism of lazy-loading.
     - ***batch_size***. Define the batch size here. If there are multiple GPUs, *batch_size* is the batch size of each GPU.
     - ***batch_num_to_show_results***. [necessary for training] During the training process, show the results every batch_num_to_show_results batches.
     - ***max_epoch***. [necessary for training] The maximum number of epochs to train.
-    - ***valid_times_per_epoch***. [optional for training, default: 1] Define how many times to conduct validation per epoch. Usually, we conduct validation after each epoch, but for a very large corpus, we'd better validate multiple times in case to miss the best state of our model. The default value is 1.
+    - ~~***valid_times_per_epoch***~~. [**deprecated**] Please use steps_per_validation instead.
+    - ***steps_per_validation***. [default: 10] Define how many steps does each validation take place. 
     - ***tokenizer***. [optional] Define tokenizer here. Currently, we support 'nltk' and 'jieba'. By default, 'nltk' for English and 'jieba' for Chinese.
 - **architecture**. Define the model architecture. The node is a list of layers (blocks) in block_zoo to represent a model. The supported layers of this toolkit are given in [block_zoo overview](https://microsoft.github.io/NeuronBlocks). 
     
@@ -294,11 +297,13 @@ Question answer matching is a crucial subtask of the question answering problem,
     
      Model    | AUC 
      -------- | -------- 
-     CNN (WikiQA paper) | 0.735 
+     CNN (WikiQA paper) | 0.735
      CNN-Cnt (WikiQA paper) | 0.753 
      CNN (NeuronBlocks) | 0.747 
      BiLSTM (NeuronBlocks) | 0.767 
-     BiLSTM+Attn (NeuronBlocks) | 0.754 
+     BiLSTM+Attn (NeuronBlocks) | 0.754
+     [ARC-I](https://arxiv.org/abs/1503.03244) (NeuronBlocks) | 0.7508
+     [ARC-II](https://arxiv.org/abs/1503.03244) (NeuronBlocks) | 0.7612
      [MatchPyramid](https://arxiv.org/abs/1602.06359) (NeuronBlocks) | 0.763
      BiLSTM+Match Attention (NeuronBlocks) | 0.786
 
@@ -457,7 +462,7 @@ This task is to train a query regression model to learn from a heavy teacher mod
     3. Calculate AUC metric
     ```bash
     cd PROJECT_ROOT
-    python tools/calculate_AUC.py --input_file models/kdqbc_bilstmattn_cnn/train/predict.tsv --predict_index 2 --label_index 1 
+    python tools/calculate_auc.py --input_file models/kdqbc_bilstmattn_cnn/train/predict.tsv --predict_index 2 --label_index 1 
     ```
     
      *Tips: you can try different models by running different JSON config files.*
@@ -501,7 +506,7 @@ This task is to train a query-passage regression model to learn from a heavy tea
     3. Calculate AUC metric
     ```bash
     cd PROJECT_ROOT
-    python tools/calculate_AUC.py --input_file=models/kdtm_match_linearAttn/predict.tsv --predict_index=3 --label_index=2 
+    python tools/calculate_auc.py --input_file=models/kdtm_match_linearAttn/predict.tsv --predict_index=3 --label_index=2 
     ```
     
      *Tips: you can try different models by running different JSON config files.*
@@ -562,7 +567,58 @@ Here is an example using Chinese data, for text matching task.
     ```
      *Tips: you can try different models by running different JSON config files. The model file and train log file can be found in JOSN config file's outputs/save_base_dir after you finish training.*
 
+### <span id="task-9">Task 9: Sequence Labeling</span>
+Sequence Labeling is an important NLP task, which includes NER, Slot Tagging, Pos Tagging, etc.
 
+- ***Dataset***
+
+    [CoNLL 2003](https://www.clips.uantwerpen.be/conll2003/) is a popular dataset in Sequence Labeling task. We use CoNLL 2003 English NER data for our experiment and you can refer the data format in [sample data](https://github.com/microsoft/NeuronBlocks/tree/master/dataset/slot_tagging/conll_2003).
+    
+- ***Tagging Scheme***
+    
+    - NeuronBlocks support both BIO and BIOES tag schemes.
+    - The IOB scheme is not supported, because of its worse performance in most [experiment](https://arxiv.org/pdf/1707.06799.pdf).
+    - NeuronBlocks provides a [script](tools/tagging_schemes_converter.py) that converts the tag scheme among IOB/BIO/BIOES (NOTE: the script only supports tsv file which has data and label in two columns).
+
+- ***Usages***
+
+    1. Softmax output.
+    ```bash
+    # train model
+    cd PROJECT_ROOT
+    python train.py --conf_path=model_zoo/nlp_tasks/slot_tagging/conf_slot_tagging.json
+    
+    # test model
+    cd PROJECT_ROOT
+    python test.py --conf_path=model_zoo/nlp_tasks/slot_tagging/conf_slot_tagging.json
+    ``` 
+    2. CRF output.
+    ```bash
+    # train model
+    cd PROJECT_ROOT
+    python train.py --conf_path=model_zoo/nlp_tasks/slot_tagging/conf_slot_tagging_ccnn_wlstm_crf.json
+    
+    # test model
+    cd PROJECT_ROOT
+    python test.py --conf_path=model_zoo/nlp_tasks/slot_tagging/conf_slot_tagging_ccnn_wlstm_crf.json
+    ```
+    *Tips: you can try more model in [here](https://github.com/microsoft/NeuronBlocks/tree/master/model_zoo/nlp_tasks/slot_tagging).*
+    
+- ***Result***
+    
+    The result on CoNLL 2003 English NER dataset.
+    
+    Model    | F1-score 
+    -------- | -------- 
+    [Ma and Hovy(2016)](https://arxiv.org/pdf/1603.01354.pdf)|87.00
+    [BiLSTM+Softmax](https://github.com/microsoft/NeuronBlocks/blob/master/model_zoo/nlp_tasks/slot_tagging/conf_slot_tagging.json) (NeuronBlocks)|88.50
+    [Lample et al.(2016)](https://arxiv.org/pdf/1603.01360.pdf)| 89.15
+    [CLSTM+WLSTM+CRF](https://github.com/microsoft/NeuronBlocks/blob/master/model_zoo/nlp_tasks/slot_tagging/conf_slot_tagging_clstm_wlstm_crf.json) (NeuronBlocks)|90.83
+    [Chiu and Nichols(2016)](https://www.mitpressjournals.org/doi/pdf/10.1162/tacl_a_00104)|90.91
+    [CCNN+WLSTM+CRF](https://github.com/microsoft/NeuronBlocks/blob/master/model_zoo/nlp_tasks/slot_tagging/conf_slot_tagging_ccnn_wlstm_crf.json) (NeuronBlocks)|91.38
+    
+    *Tips: C means Char and W means Word. CCNN means Char-level representation with CNN model and CLSTM means Char-level representation with LSTM model.*
+    
 ## <span id="advanced-usage">Advanced Usage</span>
 
 After building a model, the next goal is to train a model with good performance. It depends on a highly expressive model and tricks of the model training. NeuronBlocks provides some tricks of model training.
@@ -674,6 +730,8 @@ To solve the above problems, NeuronBlocks supports *fixing embedding weight* (em
     ***training_params/vocabulary/min_word_frequency***. [int, optional for training, default: 3] The word will be removed from corpus vocabulary if its statistical frequency is less than *min_word_frequency*.
     
     ***training_params/vocabulary/max_vocabulary***. [int, optional for training, default: 800,000] The max size of corpus vocabulary. If corpus vocabulary size is larger than *max_vocabulary*, it will be cut according to word frequency.
+
+    ***training_params/vocabulary/max_building_lines***. [int, optional for training, default: 1,000,000] The max lines NB will read from every file to build vocabulary
 
 ## <span id="faq">Frequently Asked Questions</span>
 

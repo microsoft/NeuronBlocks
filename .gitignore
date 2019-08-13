@@ -5,4 +5,5 @@
 *.vs*
 dataset/GloVe/
 dataset/20_newsgroups/
+dataset/SST-2/
 models/

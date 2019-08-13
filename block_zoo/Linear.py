@@ -32,6 +32,7 @@ class LinearConf(BaseConf):
         self.activation = 'PReLU'
         self.last_hidden_activation = True
         self.last_hidden_softmax = False
+        self.keep_dim = True       # for exmaple if the output shape is [?, len, 1]. you want to squeeze it, set keep_dim=False, the the output shape is [?, len]
 
     @DocInherit
     def declare(self):
@@ -42,10 +43,16 @@ class LinearConf(BaseConf):
     def inference(self):
         if isinstance(self.hidden_dim, int):
             self.output_dim = copy.deepcopy(self.input_dims[0])
-            self.output_dim[-1] = self.hidden_dim
+            if not self.keep_dim and self.hidden_dim == 1:
+                self.output_dim.pop()
+            else:
+                self.output_dim[-1] = self.hidden_dim
         elif isinstance(self.hidden_dim, list):
             self.output_dim = copy.deepcopy(self.input_dims[0])
-            self.output_dim[-1] = self.hidden_dim[-1]
+            if not self.keep_dim and self.hidden_dim[-1] == 1:
+                self.output_dim.pop()
+            else:
+                self.output_dim[-1] = self.hidden_dim[-1]
 
         super(LinearConf, self).inference()  # PUT THIS LINE AT THE END OF inference()
 
@@ -87,6 +94,7 @@ class Linear(BaseLayer):
     def __init__(self, layer_conf):
 
         super(Linear, self).__init__(layer_conf)
+        self.layer_conf = layer_conf
 
         if layer_conf.input_ranks[0] == 3 and layer_conf.batch_norm is True:
             layer_conf.batch_norm = False
@@ -139,6 +147,8 @@ class Linear(BaseLayer):
                 masks = masks.to(device)
             string = string * masks
         string_out = self.linear(string.float())
+        if not self.layer_conf.keep_dim:
+            string_out = torch.squeeze(string_out, -1)
         return string_out, string_len
 
 

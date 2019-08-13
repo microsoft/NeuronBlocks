@@ -35,6 +35,9 @@ class ConvConf(BaseConf):
         self.output_channel_num = 16
         self.batch_norm = True
         self.activation = 'ReLU'
+        self.padding_type = 'VALID'
+        self.dropout = 0
+        self.remind_lengths = True
 
     @DocInherit
     def declare(self):
@@ -43,9 +46,16 @@ class ConvConf(BaseConf):
 
     @DocInherit
     def inference(self):
+
+        if self.padding_type == 'SAME':
+            self.padding = int((self.window_size-1)/2)
+
         self.output_dim = [-1]
         if self.input_dims[0][1] != -1:
-            self.output_dim.append((self.input_dims[0][1] - self.window_size) // self.stride + 1)
+            if self.padding_type == 'SAME':
+                self.output_dim.append(self.input_dims[0][1])
+            else:
+                self.output_dim.append((self.input_dims[0][1] - self.window_size) // self.stride + 1)
         else:
             self.output_dim.append(-1)
         self.output_dim.append(self.output_channel_num)
@@ -67,6 +77,13 @@ class ConvConf(BaseConf):
         for attr in necessary_attrs_for_user:
             self.add_attr_exist_assertion_for_user(attr)
 
+    @DocInherit
+    def verify_former_block(self, former_conf):
+        if 'conv' in str(type(former_conf)).lower():
+            self.mask = False
+        else:
+            self.mask = True
+
 
 class Conv(BaseLayer):
     """ Convolution along just 1 direction
@@ -82,16 +99,29 @@ class Conv(BaseLayer):
         else:
             self.activation = None
 
-        self.filters = nn.ParameterList([nn.Parameter(torch.randn(layer_conf.output_channel_num,
-            layer_conf.input_channel_num, layer_conf.window_size, layer_conf.input_dims[0][-1],
-            requires_grad=True).float())])
+        self.conv = nn.Conv1d(layer_conf.input_dims[0][-1], layer_conf.output_channel_num, kernel_size=layer_conf.window_size, padding=layer_conf.padding)
 
         if layer_conf.batch_norm:
-            self.batch_norm = nn.BatchNorm2d(layer_conf.output_channel_num)    # the output_chanel of Conv is the input_channel of BN
+            # self.batch_norm = nn.BatchNorm2d(layer_conf.output_channel_num)    # the output_chanel of Conv is the input_channel of BN
+            self.batch_norm = nn.BatchNorm1d(layer_conf.output_channel_num)
         else:
             self.batch_norm = None
 
-    def forward(self, string, string_len=None):
+        if layer_conf.dropout > 0:
+            self.cov_dropout = nn.Dropout(layer_conf.dropout)
+        else:
+            self.cov_dropout = None
+
+        if layer_conf.use_gpu:
+            self.conv = self.conv.cuda()
+            if self.batch_norm:
+                self.batch_norm = self.batch_norm.cuda()
+            if self.cov_dropout:
+                self.cov_dropout = self.cov_dropout.cuda()
+            if self.activation:
+                self.activation = self.activation.cuda()
+
+    def forward(self, string, string_len):
         """ process inputs
 
         Args:
@@ -102,7 +132,7 @@ class Conv(BaseLayer):
             Tensor: shape: [batch_size, (seq_len - conv_window_size) // stride + 1, output_channel_num]
 
         """
-        if string_len is not None:
+        if string_len is not None and self.layer_conf.mask:
             string_len_val = string_len.cpu().data.numpy()
             masks = []
             for i in range(len(string_len)):
@@ -113,17 +143,21 @@ class Conv(BaseLayer):
                 masks = masks.to(device)
             string = string * masks
 
-        string = torch.unsqueeze(string, 1)     # [batch_size, input_channel_num=1, seq_len, feature_dim]
-        string_out = F.conv2d(string, self.filters[0], stride=self.layer_conf.stride, padding=self.layer_conf.padding)
-        if hasattr(self, 'batch_norms') and self.batch_norm:
-            string_out = self.batch_norm(string_out)
-
-        string_out = torch.squeeze(string_out, 3).permute(0, 2, 1)
+        string_ = string.transpose(2, 1).contiguous()
+        string_out = self.conv(string_)
 
         if self.activation:
             string_out = self.activation(string_out)
-        if string_len is not None:
-            string_len_out = (string_len - self.layer_conf.window_size) // self.layer_conf.stride + 1
-        else:
-            string_len_out = None
+
+        if self.cov_dropout:
+            string_out = self.cov_dropout(string_out)
+
+        if self.batch_norm:
+            string_out = self.batch_norm(string_out)
+
+        string_out = string_out.transpose(2, 1).contiguous()
+
+        string_len_out = None
+        if string_len is not None and self.layer_conf.remind_lengths:
+            string_len_out = string_len
         return string_out, string_len_out

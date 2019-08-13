@@ -18,11 +18,11 @@ LanguageTypes = Enum('LanguageTypes', ('english', 'chinese'))
 ProblemTypes = Enum('ProblemTypes', ('sequence_tagging', 'classification', 'regression', 'mrc'))
 
 # Supported sequence tagging scheme
-TaggingSchemes = Enum('TaggingSchemes', ('BIO'))
+TaggingSchemes = Enum('TaggingSchemes', ('BIO', 'BIOES'))
 
 # supported metrics
 SupportedMetrics = {
-    ProblemTypes.sequence_tagging: set(['seq_tag_f1', 'accuracy']),
+    ProblemTypes.sequence_tagging: set(['seq_tag_f1', 'seq_tag_accuracy']),
     ProblemTypes.classification: set(['auc', 'accuracy', 'f1', 'macro_f1', 'macro_precision', 'macro_recall', 'micro_f1', 'micro_precision', 'micro_recall', 'weighted_f1', 'weighted_precision', 'weighted_recall']),
     # In addition, for auc in multi-type classification,
     # if there is a type named 1, auc@1 means use 1 as the positive label
@@ -52,4 +52,28 @@ DefaultPredictionFields = {
 
 # nltk's models
 nltk.data.path.append(os.path.join(os.getcwd(), 'dataset', 'nltk_data'))
+
+
+class Constant(type):
+    def __setattr__(self, name, value):
+        raise AttributeError("Class %s can not be modified"%(self.__name__))
+
+class ConstantStatic(metaclass=Constant):
+    def __init__(self, *args,**kwargs):
+        raise Exception("Class %s can not be instantiated"%(self.__class__.__name__))
+
+
+class Setting(ConstantStatic):
+    # cache
+
+    ## cencoding (cache_encoding)
+    cencodig_index_file_name = 'index.json'
+    cencoding_index_md5_file_name = 'index_md5.json'
+    cencoding_file_name_pattern = 'encoding_cache_%s.pkl'
+    cencoding_key_finish = 'finish'
+    cencoding_key_index = 'index'
+    cencoding_key_legal_cnt = 'legal_line_cnt'
+    cencoding_key_illegal_cnt = 'illegal_line_cnt'
+
+
 

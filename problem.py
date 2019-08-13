@@ -12,9 +12,9 @@ nltk.download('stopwords', quiet=True)
 from utils.BPEEncoder import BPEEncoder
 import os
 import pickle as pkl
-from utils.common_utils import load_from_pkl, dump_to_pkl
+from utils.common_utils import load_from_pkl, dump_to_pkl, load_from_json, dump_to_json, prepare_dir, md5
 
-from settings import ProblemTypes
+from settings import ProblemTypes, Setting as st
 import math
 from utils.ProcessorsScheduler import ProcessorsScheduler
 
@@ -65,6 +65,11 @@ class Problem():
             target_with_start, target_with_end, target_with_unk, target_with_pad, same_length = (False, ) * 5
             with_bos_eos = False
 
+        if ProblemTypes[problem_type] == ProblemTypes.sequence_tagging:
+            target_with_start = False
+            target_with_end = False
+            target_with_unk = False
+
         self.lowercase = lowercase
         self.problem_type = problem_type
         self.tagging_scheme = tagging_scheme
@@ -107,24 +112,21 @@ class Problem():
         else:
             return None
 
-    def get_data_generator_from_file(self, data_path_list, file_with_col_header, chunk_size=1000000):
-        # NOTE: file_path is a list type
-        for single_path in data_path_list:
-            data_list = list()
-            if single_path is not None:
-                with open(single_path, "r", encoding='utf-8') as f:
-                    if file_with_col_header:
-                        f.readline()
-                    for index, line in enumerate(f):
-                        line = line.rstrip()
-                        if not line:
-                            break
-                        data_list.append(line)
-                        if (index + 1) % chunk_size == 0:
-                            yield data_list
-                            data_list = list()
-                    if len(data_list) > 0:
-                        yield data_list
+    def get_data_generator_from_file(self, data_path, file_with_col_header, chunk_size=1000000):
+        data_list = list()
+        with open(data_path, "r", encoding='utf-8') as f:
+            if file_with_col_header:
+                f.readline()
+            for index, line in enumerate(f):
+                line = line.rstrip()
+                if not line:
+                    break
+                data_list.append(line)
+                if (index + 1) % chunk_size == 0:
+                    yield data_list
+                    data_list = list()
+            if len(data_list) > 0:
+                yield data_list
 
     def build_training_data_list(self, training_data_list, file_columns, input_types, answer_column_name, bpe_encoder=None):
         docs = dict()           # docs of each type of input
@@ -162,7 +164,10 @@ class Problem():
                     line_split[i] = self.text_preprocessor.preprocess(line_split[i])
 
                     if col_index_types[i] == 'word':
-                        token_list = self.tokenizer.tokenize(line_split[i])
+                        if ProblemTypes[self.problem_type] == ProblemTypes.sequence_tagging:
+                            token_list = line_split[i].split(" ")
+                        else:
+                            token_list = self.tokenizer.tokenize(line_split[i])
                         docs[col_index_types[i]].append(token_list)
                         if 'char' in docs:
                             # add char
@@ -218,11 +223,11 @@ class Problem():
 
     def build(self, data_path_list, file_columns, input_types, file_with_col_header, answer_column_name, word2vec_path=None, word_emb_dim=None,
               format=None, file_type=None, involve_all_words=None, file_format="tsv", show_progress=True,
-              cpu_num_workers=-1, max_vocabulary=800000, word_frequency=3):
+              cpu_num_workers=-1, max_vocabulary=800000, word_frequency=3, max_building_lines=1000*1000):
         """
 
         Args:
-            training_data_path:
+            data_path_list:
             file_columns: {
                   "word1": 0,
                   "word2": 1,
@@ -260,39 +265,29 @@ class Problem():
 
         """
         # parameter check
-        if not word2vec_path:
-            word_emb_dim, format, file_type, involve_all_words = None, None, None, None
-
-        if 'bpe' in input_types:
-            try:
-                bpe_encoder = BPEEncoder(input_types['bpe']['bpe_path'])
-            except KeyError:
-                raise Exception('Please define a bpe path at the embedding layer.')
-        else:
-            bpe_encoder = None
-
+        bpe_encoder = self._check_bpe_encoder(input_types)  
         self.file_column_num = len(file_columns)
-        progress = self.get_data_generator_from_file(data_path_list, file_with_col_header)
-        preprocessed_data_generator = self.build_training_multi_processor(progress, cpu_num_workers, file_columns, input_types, answer_column_name, bpe_encoder=bpe_encoder)
-        
-        # update symbol universe
-        total_cnt_legal, total_cnt_illegal = 0, 0
-        for docs, target_docs, cnt_legal, cnt_illegal in tqdm(preprocessed_data_generator):
-            total_cnt_legal += cnt_legal
-            total_cnt_illegal += cnt_illegal
 
-            # input_type
-            for input_type in input_types:
-                self.input_dicts[input_type].update(docs[input_type])
-            
-            # problem_type
-            if ProblemTypes[self.problem_type] == ProblemTypes.classification or \
-                ProblemTypes[self.problem_type] == ProblemTypes.sequence_tagging:
-                self.output_dict.update(list(target_docs.values())[0])
-            elif ProblemTypes[self.problem_type] == ProblemTypes.regression or \
-                    ProblemTypes[self.problem_type] == ProblemTypes.mrc:
-                pass
-        logging.info("Corpus imported: %d legal lines, %d illegal lines." % (total_cnt_legal, total_cnt_illegal))
+        for data_path in data_path_list:
+            if data_path:
+                progress = self.get_data_generator_from_file(data_path, file_with_col_header, chunk_size=max_building_lines)
+                preprocessed_data_generator= self.build_training_multi_processor(progress, cpu_num_workers, file_columns, input_types, answer_column_name, bpe_encoder=bpe_encoder)
+        
+                # update symbol universe
+                docs, target_docs, cnt_legal, cnt_illegal = next(preprocessed_data_generator)
+
+                # input_type
+                for input_type in input_types:
+                    self.input_dicts[input_type].update(docs[input_type])
+        
+                # problem_type
+                if ProblemTypes[self.problem_type] == ProblemTypes.classification or \
+                    ProblemTypes[self.problem_type] == ProblemTypes.sequence_tagging:
+                    self.output_dict.update(list(target_docs.values())[0])
+                elif ProblemTypes[self.problem_type] == ProblemTypes.regression or \
+                        ProblemTypes[self.problem_type] == ProblemTypes.mrc:
+                    pass
+                logging.info("[Building Dictionary] in %s at most %d lines imported: %d legal lines, %d illegal lines." % (data_path, max_building_lines, cnt_legal, cnt_illegal))
      
         # build dictionary
         for input_type in input_types:
@@ -300,6 +295,11 @@ class Problem():
             logging.info("%d types in %s column" % (self.input_dicts[input_type].cell_num(), input_type))
         if self.output_dict:
             self.output_dict.build(threshold=0)
+            if ProblemTypes[self.problem_type] == ProblemTypes.sequence_tagging:
+                self.output_dict.cell_id_map["<start>"] = len(self.output_dict.cell_id_map)
+                self.output_dict.id_cell_map[len(self.output_dict.id_cell_map)] = "<start>"
+                self.output_dict.cell_id_map["<eos>"] = len(self.output_dict.cell_id_map)
+                self.output_dict.id_cell_map[len(self.output_dict.id_cell_map)] = "<eos>"
             logging.info("%d types in target column" % (self.output_dict.cell_num()))
         logging.debug("training data dict built")
 
@@ -313,7 +313,12 @@ class Problem():
                 self.input_dicts['word'].update([list(word_emb_dict.keys())])
                 self.input_dicts['word'].build(threshold=0, max_vocabulary_num=len(word_emb_dict))
             else:
-                word_emb_dict = load_embedding(word2vec_path, word_emb_dim, format, file_type, with_head=False, word_set=self.input_dicts['word'].cell_id_map.keys())
+                extend_vocabulary = set()
+                for single_word in self.input_dicts['word'].cell_id_map.keys():
+                    extend_vocabulary.add(single_word)
+                    if single_word.lower() != single_word:
+                        extend_vocabulary.add(single_word.lower())
+                word_emb_dict = load_embedding(word2vec_path, word_emb_dim, format, file_type, with_head=False, word_set=extend_vocabulary)
 
             for word in word_emb_dict:
                 loaded_emb_dim = len(word_emb_dict[word])
@@ -329,11 +334,15 @@ class Problem():
 
             word_emb_matrix = []
             unknown_word_count = 0
+            scale = np.sqrt(3.0 / word_emb_dim)
             for i in range(self.input_dicts['word'].cell_num()):
-                if self.input_dicts['word'].id_cell_map[i] in word_emb_dict:
-                    word_emb_matrix.append(word_emb_dict[self.input_dicts['word'].id_cell_map[i]])
+                single_word = self.input_dicts['word'].id_cell_map[i]
+                if single_word in word_emb_dict:
+                    word_emb_matrix.append(word_emb_dict[single_word])
+                elif single_word.lower() in word_emb_dict:
+                    word_emb_matrix.append(word_emb_dict[single_word.lower()])
                 else:
-                    word_emb_matrix.append(word_emb_dict['<unk>'])
+                    word_emb_matrix.append(np.random.uniform(-scale, scale, word_emb_dim))
                     unknown_word_count += 1
             word_emb_matrix = np.array(word_emb_matrix)
             logging.info("word embedding matrix shape:(%d, %d); unknown word count: %d;" %
@@ -382,8 +391,6 @@ class Problem():
 
     def encode_data_multi_processor(self, data_generator, cpu_num_workers, file_columns, input_types, object_inputs,
                 answer_column_name, min_sentence_len, extra_feature, max_lengths=None, fixed_lengths=None, file_format="tsv", bpe_encoder=None):
-        
-        
         for data in data_generator:
             scheduler = ProcessorsScheduler(cpu_num_workers)
             func_args = (data, file_columns, input_types, object_inputs,
@@ -403,7 +410,7 @@ class Problem():
             yield output_data, lengths, target, cnt_legal, cnt_illegal
 
     def encode_data_list(self, data_list, file_columns, input_types, object_inputs, answer_column_name, min_sentence_len,
-                         extra_feature, max_lengths=None, fixed_lengths=None, file_format="tsv", bpe_encoder=None):
+                         extra_feature, max_lengths=None, fixed_lengths=None, file_format="tsv", bpe_encoder=None, predict_mode='batch'):
         data = dict()
         lengths = dict()
         char_emb = True if 'char' in [single_input_type.lower() for single_input_type in input_types] else False
@@ -423,6 +430,9 @@ class Problem():
 
         type_branches = dict()            # branch of input type, e.g. type_branches['query_index'] = 'query'
 
+        # for char: don't split these word
+        word_no_split = ['<start>', '<pad>', '<eos>', '<unk>']
+        
         for branch in object_inputs:
             data[branch] = dict()
             lengths[branch] = dict()
@@ -461,11 +471,14 @@ class Problem():
             line_split = line.rstrip().split('\t')
             cnt_all += 1
             if len(line_split) != len(file_columns):
-                # logging.warning("Current line is inconsistent with configuration/inputs/file_header. Ingore now. %s" % line)
-                cnt_illegal += 1
-                if cnt_illegal / cnt_all > 0.33:
-                    raise PreprocessError('The illegal data is too much. Please check the number of data columns or text token version.')
-                continue
+                if predict_mode == 'batch':
+                    cnt_illegal += 1
+                    if cnt_illegal / cnt_all > 0.33:
+                        raise PreprocessError('The illegal data is too much. Please check the number of data columns or text token version.')
+                    continue
+                else:
+                    print('\tThe case is illegal! Please check your case and input again!')
+                    return [None]*5
             # cnt_legal += 1
             length_appended_set = set()  # to store branches whose length have been appended to lengths[branch]
 
@@ -496,7 +509,7 @@ class Problem():
                                 data[extra_info_type]['extra_passage_text'].append(line_split[i])
                                 data[extra_info_type]['extra_passage_token_offsets'].append(passage_token_offsets)
                         else:
-                            if extra_feature == False:
+                            if extra_feature == False and ProblemTypes[self.problem_type] != ProblemTypes.sequence_tagging:
                                 tokens = self.tokenizer.tokenize(line_split[i])
                             else:
                                 tokens = line_split[i].split(' ')
@@ -504,6 +517,28 @@ class Problem():
                         tokens = bpe_encoder.encode(line_split[i])
                     else:
                         tokens = line_split[i].split(' ')
+
+                    # for sequence labeling task, the length must be record the corpus truth length
+                    if ProblemTypes[self.problem_type] == ProblemTypes.sequence_tagging:
+                        if not branch in length_appended_set:
+                            lengths[branch]['sentence_length'].append(len(tokens))
+                            length_appended_set.add(branch)
+                        else:
+                            if len(tokens) != lengths[branch]['sentence_length'][-1]:
+                                # logging.warning(
+                                #     "The length of inputs are not consistent. Ingore now. %s" % line)
+                                cnt_illegal += 1
+                                if cnt_illegal / cnt_all > 0.33:
+                                    raise PreprocessError(
+                                        "The illegal data is too much. Please check the number of data columns or text token version.")
+                                lengths[branch]['sentence_length'].pop()
+                                true_len = len(lengths[branch]['sentence_length'])
+                                # need delete the last example
+                                check_list = ['data', 'lengths', 'target']
+                                for single_check in check_list:
+                                    single_check = eval(single_check)
+                                    self.delete_example(single_check, true_len)
+                                break
 
                     if fixed_lengths and type_branches[input_type[0]] in fixed_lengths:
                         if len(tokens) >= fixed_lengths[type_branches[input_type[0]]]:
@@ -520,32 +555,45 @@ class Problem():
                     if self.with_bos_eos is True:
                         tokens = ['<start>'] + tokens + ['<eos>']  # so that source_with_start && source_with_end should be True
 
-                    if not branch in length_appended_set:
-                        lengths[branch]['sentence_length'].append(len(tokens))
-                        length_appended_set.add(branch)
-                    else:
-                        if len(tokens) != lengths[branch]['sentence_length'][-1]:
-                            # logging.warning(
-                            #     "The length of inputs are not consistent. Ingore now. %s" % line)
-                            cnt_illegal += 1
-                            if cnt_illegal / cnt_all > 0.33:
-                                raise PreprocessError("The illegal data is too much. Please check the number of data columns or text token version.")
-                            lengths[branch]['sentence_length'].pop()
-                            true_len = len(lengths[branch]['sentence_length'])
-                            # need delete the last example
-                            check_list = ['data', 'lengths', 'target']
-                            for single_check in check_list:
-                                single_check = eval(single_check)
-                                self.delete_example(single_check, true_len)
-                            break
+                    # for other tasks, length must be same as data length because fix/max_length operation
+                    if not ProblemTypes[self.problem_type] == ProblemTypes.sequence_tagging:
+                        if not branch in length_appended_set:
+                            lengths[branch]['sentence_length'].append(len(tokens))
+                            length_appended_set.add(branch)
+                        else:
+                            if len(tokens) != lengths[branch]['sentence_length'][-1]:
+                                # logging.warning(
+                                #     "The length of inputs are not consistent. Ingore now. %s" % line)
+                                cnt_illegal += 1
+                                if cnt_illegal / cnt_all > 0.33:
+                                    raise PreprocessError(
+                                        "The illegal data is too much. Please check the number of data columns or text token version.")
+                                lengths[branch]['sentence_length'].pop()
+                                true_len = len(lengths[branch]['sentence_length'])
+                                # need delete the last example
+                                check_list = ['data', 'lengths', 'target']
+                                for single_check in check_list:
+                                    single_check = eval(single_check)
+                                    self.delete_example(single_check, true_len)
+                                break
 
                     for single_input_type in input_type:
                         if 'char' in single_input_type:
                             temp_word_char = []
                             temp_word_length = []
                             for single_token in tokens:
-                                temp_word_char.append(self.input_dicts[type2cluster[single_input_type]].lookup(single_token))
-                                temp_word_length.append(len(single_token))
+                                if single_token in word_no_split:
+                                    # temp_word_length.append(1)
+                                    temp_id = [self.input_dicts[type2cluster[single_input_type]].id(single_token)]
+                                else:
+                                    temp_id = self.input_dicts[type2cluster[single_input_type]].lookup(single_token)
+                                if fixed_lengths and 'word' in fixed_lengths:
+                                    if len(temp_id) >= fixed_lengths['word']:
+                                        temp_id = temp_id[:fixed_lengths['word']]
+                                    else:
+                                        temp_id = temp_id + [self.input_dicts[type2cluster[single_input_type]].id('<pad>')] * (fixed_lengths['word'] - len(temp_id))
+                                temp_word_char.append(temp_id)
+                                temp_word_length.append(len(temp_id))
                             data[branch][single_input_type].append(temp_word_char)
                             lengths[branch]['word_length'].append(temp_word_length)
                         else:
@@ -625,7 +673,7 @@ class Problem():
 
     def encode(self, data_path, file_columns, input_types, file_with_col_header, object_inputs, answer_column_name,
                min_sentence_len, extra_feature, max_lengths=None, fixed_lengths=None, file_format="tsv", show_progress=True,
-               cpu_num_workers = -1):
+               cpu_num_workers=-1, chunk_size=1000*1000):
         """
 
         Args:
@@ -701,22 +749,16 @@ class Problem():
             target: [...]
 
         """
-        if 'bpe' in input_types:
-            try:
-                bpe_encoder = BPEEncoder(input_types['bpe']['bpe_path'])
-            except KeyError:
-                raise Exception('Please define a bpe path at the embedding layer.')
-        else:
-            bpe_encoder = None
+        bpe_encoder = self._check_bpe_encoder(input_types)  
 
-        progress = self.get_data_generator_from_file([data_path], file_with_col_header)
-        encoder_generator = self.encode_data_multi_processor(progress, cpu_num_workers,
+        progress = self.get_data_generator_from_file(data_path, file_with_col_header, chunk_size=chunk_size)
+        encode_generator = self.encode_data_multi_processor(progress, cpu_num_workers,
                     file_columns, input_types, object_inputs, answer_column_name, min_sentence_len, extra_feature, max_lengths,
                     fixed_lengths, file_format, bpe_encoder=bpe_encoder)
         
         data, lengths, target = dict(), dict(), dict()
         cnt_legal, cnt_illegal = 0, 0
-        for temp_data, temp_lengths, temp_target, temp_cnt_legal, temp_cnt_illegal in tqdm(encoder_generator):
+        for temp_data, temp_lengths, temp_target, temp_cnt_legal, temp_cnt_illegal in tqdm(encode_generator):
             data = self._merge_encode_data(data, temp_data)
             lengths = self._merge_encode_lengths(lengths, temp_lengths)
             target = self._merge_target(target, temp_target)   
@@ -725,6 +767,59 @@ class Problem():
 
         logging.info("%s: %d legal samples, %d illegal samples" % (data_path, cnt_legal, cnt_illegal))
         return data, lengths, target
+
+    def build_encode_cache(self, conf, file_format="tsv"):
+        logging.info("[Cache] building encoding cache") 
+        build_encode_cache_generator = self.get_encode_generator(conf, build_cache=True, file_format=file_format)
+        for _ in build_encode_cache_generator:
+            continue
+        logging.info("[Cache] encoding is saved to %s" % conf.encoding_cache_dir)    
+        
+    def get_encode_generator(self, conf, build_cache=True, file_format="tsv"):
+        # parameter check
+        if build_cache:
+            assert conf.encoding_cache_dir, 'There is no property encoding_cache_dir in object conf'
+            assert conf.encoding_cache_index_file_path, 'There is no property encoding_cache_index_file_path in object conf'
+            assert conf.encoding_cache_index_file_md5_path, 'There is no property encoding_cache_index_file_md5_path in object conf'
+
+        bpe_encoder = self._check_bpe_encoder(conf.input_types)   
+        data_generator = self.get_data_generator_from_file(conf.train_data_path, conf.file_with_col_header, chunk_size=conf.chunk_size)
+        encode_generator = self.encode_data_multi_processor(data_generator, conf.cpu_num_workers,
+                    conf.file_columns, conf.input_types, conf.object_inputs, conf.answer_column_name, 
+                    conf.min_sentence_len, conf.extra_feature, conf.max_lengths,
+                    conf.fixed_lengths, file_format, bpe_encoder=bpe_encoder)
+      
+        file_index = []
+        total_cnt_legal, total_cnt_illegal = 0, 0
+        for part_number, encode_data in enumerate(encode_generator):
+            data, lengths, target, cnt_legal, cnt_illegal = encode_data
+            if build_cache:
+                total_cnt_legal = total_cnt_legal + cnt_legal
+                total_cnt_illegal = total_cnt_illegal + cnt_illegal
+                file_name = st.cencoding_file_name_pattern % (part_number)
+                file_path = os.path.join(conf.encoding_cache_dir, file_name)
+                dump_to_pkl((data, lengths, target), file_path)
+                file_index.append([file_name, md5([file_path])])
+                logging.info("Up to now, in %s: %d legal samples, %d illegal samples" % (conf.train_data_path, total_cnt_legal, total_cnt_illegal))
+            yield data, lengths, target
+        
+        if build_cache:
+            cache_index = dict()
+            cache_index[st.cencoding_key_index] = file_index
+            cache_index[st.cencoding_key_legal_cnt] = total_cnt_legal
+            cache_index[st.cencoding_key_illegal_cnt] = total_cnt_illegal
+            dump_to_json(cache_index, conf.encoding_cache_index_file_path)
+            dump_to_json(md5([conf.encoding_cache_index_file_path]), conf.encoding_cache_index_file_md5_path)            
+            
+    @staticmethod
+    def _check_bpe_encoder(input_types):
+        bpe_encoder = None
+        if 'bpe' in input_types:
+            try:
+                bpe_encoder = BPEEncoder(input_types['bpe']['bpe_path'])
+            except KeyError:
+                raise Exception('Please define a bpe path at the embedding layer.')
+        return bpe_encoder
 
     def decode(self, model_output, lengths=None, batch_data=None):
         """ decode the model output, either a batch of output or a single output

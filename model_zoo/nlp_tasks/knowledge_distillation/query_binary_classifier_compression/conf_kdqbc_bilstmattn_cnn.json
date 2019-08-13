@@ -53,7 +53,7 @@
     "batch_size": 256,
     "batch_num_to_show_results": 10,
     "max_epoch": 30,
-    "valid_times_per_epoch": 10,
+    "steps_per_validation": 10,
     "fixed_lengths":{
       "query": 30
     }

@@ -4,6 +4,7 @@
 from sklearn import metrics
 from sklearn.metrics import mean_squared_error
 from .conlleval import countChunks, evaluate, to_conll_format
+from .slot_tagging_metrics import get_ner_BIOES, get_ner_BIO
 from settings import TaggingSchemes
 import numpy as np
 import re
@@ -138,24 +139,72 @@ class Evaluator(object):
     def accuracy(self, y_true, y_pred):
         return metrics.accuracy_score(y_true, y_pred)
 
-    def seq_tag_f1(self, y_true, y_pred):
-        """ For sequence tagging task, calculate F1-score(e.g. CONLL 2000)
+    def seq_tag_f1(self, y_ture, y_pred):
+        '''
 
-        Args:
-            y_true:
-            y_pred:
-
-        Returns:
-
-        """
+        :param y_ture:
+        :param y_pred:
+        :return:
+        '''
         assert self.__tagging_scheme is not None, "Please define tagging scheme!"
-        if TaggingSchemes[self.__tagging_scheme] == TaggingSchemes.BIO:
-            result_conll_format = to_conll_format(y_true, y_pred)
-            correctChunk, foundGuessed, foundCorrect, correctTags, tokenCounter = countChunks(result_conll_format)
-            overall_precision, overall_recall, overall_FB1 = evaluate(correctChunk, foundGuessed, foundCorrect, correctTags, tokenCounter)
+        sent_num = len(y_pred)
+        golden_full = []
+        predict_full = []
+        right_full = []
+        for idx in range(0, sent_num):
+            golden_list = y_ture[idx]
+            predict_list = y_pred[idx]
+            if self.__tagging_scheme == "BMES" or self.__tagging_scheme == "BIOES":
+                gold_matrix = get_ner_BIOES(golden_list)
+                pred_matrix = get_ner_BIOES(predict_list)
+            elif self.__tagging_scheme == "BIO":
+                gold_matrix = get_ner_BIO(golden_list)
+                pred_matrix = get_ner_BIO(predict_list)
+            else:
+                # raise Exception("DETECT UNKNOWN TAGGING SCHEMES! YOU CAN USE OUR SCRIPT TO CONVERT TAG SCHEME!")
+                raise Exception("DETECT UNKNOWN TAGGING SCHEMES!")
+            right_ner = list(set(gold_matrix).intersection(set(pred_matrix)))
+            golden_full += gold_matrix
+            predict_full += pred_matrix
+            right_full += right_ner
+        right_num = len(right_full)
+        golden_num = len(golden_full)
+        predict_num = len(predict_full)
+        if predict_num == 0:
+            precision = -1
         else:
-            raise Exception("TO DO: SUPPORT MORE TAGGING SCHEMES")
-        return overall_FB1
+            precision = (right_num + 0.0) / predict_num
+        if golden_num == 0:
+            recall = -1
+        else:
+            recall = (right_num + 0.0) / golden_num
+        if (precision == -1) or (recall == -1) or (precision + recall) <= 0.:
+            f_measure = -1
+        else:
+            f_measure = 2 * precision * recall / (precision + recall)
+        return f_measure
+
+
+    def seq_tag_accuracy(self, y_ture, y_pred):
+        '''
+
+        :param y_ture:
+        :param y_pred:
+        :return:
+        '''
+        sent_num = len(y_pred)
+        right_tag = 0
+        all_tag = 0
+        for idx in range(0, sent_num):
+            golden_list = y_ture[idx]
+            predict_list = y_pred[idx]
+            for idy in range(len(golden_list)):
+                if golden_list[idy] == predict_list[idy]:
+                    right_tag += 1
+            all_tag += len(golden_list)
+        accuracy = (right_tag + 0.0) / all_tag
+        return accuracy
+
 
     def macro_f1(self, y_true, y_pred):
         """ For classification task, calculate f1-score for each label, and find their unweighted mean. This does not take label imbalance into account.

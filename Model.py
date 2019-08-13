@@ -18,7 +18,7 @@ EMBED_LAYER_ID = 'embedding'
 
 def get_conf(layer_id, layer_name, input_layer_ids, all_layer_configs, model_input_ids, use_gpu,
         conf_dict=None, shared_conf=None, succeed_embedding_flag=False, output_layer_flag=False,
-        target_num=None, fixed_lengths=None):
+        target_num=None, fixed_lengths=None, target_dict=None):
     """ get layer configuration
 
     Args
@@ -51,14 +51,24 @@ def get_conf(layer_id, layer_name, input_layer_ids, all_layer_configs, model_inp
 
             # for classification tasks, we usually add a Linear layer to project the output to dimension of number of classes. If we don't know the #classes, we can use '-1' instead and we would calculate the number of classes from the corpus.
             if layer_name == 'Linear':
-                if isinstance(conf_dict['hidden_dim'], list) and conf_dict['hidden_dim'][-1] == -1:
-                    assert output_layer_flag is True, "Only in the last layer, hidden_dim == -1 is allowed!"
-                    assert target_num is not None, "Number of targets should be given!"
-                    conf_dict['hidden_dim'][-1] = target_num
+                if isinstance(conf_dict['hidden_dim'], list):
+                    if conf_dict['hidden_dim'][-1] == -1:
+                        assert output_layer_flag is True, "Only in the last layer, hidden_dim == -1 is allowed!"
+                        assert target_num is not None, "Number of targets should be given!"
+                        conf_dict['hidden_dim'][-1] = target_num
+                    elif conf_dict['hidden_dim'][-1] == '#target#':
+                        logging.info('#target# position will be replace by target num: %d' % target_num)
+                        conf_dict['hidden_dim'][-1] = target_num
                 elif isinstance(conf_dict['hidden_dim'], int) and conf_dict['hidden_dim'] == -1:
                     assert output_layer_flag is True, "Only in the last layer, hidden_dim == -1 is allowed!"
                     assert target_num is not None, "Number of targets should be given!"
                     conf_dict['hidden_dim'] = target_num
+                elif isinstance(conf_dict['hidden_dim'], str) and conf_dict['hidden_dim'] == '#target#':
+                    logging.info('#target# position will be replace by target num: %d' % target_num)
+                    conf_dict['hidden_dim'] = target_num
+            # add some necessary attribute for CRF layer
+            if layer_name == 'CRF':
+                conf_dict['target_dict'] = target_dict
 
             conf = eval(layer_name + "Conf")(**conf_dict)
         except NameError as e:
@@ -104,6 +114,8 @@ def get_conf(layer_id, layer_name, input_layer_ids, all_layer_configs, model_inp
     # inference and varification inside the layer
     conf.inference()        # update some attributes which relies on input dimension or something else
     conf.verify()           # verify if the configuration is legal
+    former_conf = None if len(all_layer_configs) == 0 else list(all_layer_configs.values())[-1]
+    conf.verify_former_block(former_conf)  # check if has special attribute rely on former layer
 
     logging.debug('Layer id: %s; name: %s; input_dims: %s; input_ranks: %s; output_dim: %s; output_rank: %s' % (layer_id, layer_name, conf.input_dims if layer_id != 'embedding' else 'None', conf.input_ranks, conf.output_dim, conf.output_rank))
 
@@ -211,7 +223,7 @@ class Model(nn.Module):
                 all_layer_configs[EMBED_LAYER_ID] = get_conf(EMBED_LAYER_ID, layer_arch['layer'],
                     None, all_layer_configs, inputs, self.use_gpu, conf_dict={'conf': emb_conf},
                     shared_conf=None, succeed_embedding_flag=False, output_layer_flag=output_layer_flag,
-                    target_num=target_num, fixed_lengths=fixed_lengths_corrected)
+                    target_num=target_num, fixed_lengths=fixed_lengths_corrected, target_dict=problem.output_dict)
                 self.add_layer(EMBED_LAYER_ID, get_layer(layer_arch['layer'], all_layer_configs[EMBED_LAYER_ID]))
             else:
                 if layer_arch['layer'] in self.layers and not 'conf' in layer_arch:
@@ -230,7 +242,7 @@ class Model(nn.Module):
                     layer_arch['inputs'], all_layer_configs, inputs, self.use_gpu, conf_dict=conf_dict,
                     shared_conf=shared_conf, succeed_embedding_flag=succeed_embedding_flag,
                     output_layer_flag=output_layer_flag, target_num=target_num,
-                    fixed_lengths=fixed_lengths_corrected)
+                    fixed_lengths=fixed_lengths_corrected, target_dict=problem.output_dict)
 
                 if layer_arch['layer'] in self.layers and not 'conf' in layer_arch:
                     self.add_layer(layer_arch['layer_id'], self.layers[layer_arch['layer']])
@@ -391,7 +403,7 @@ class Model(nn.Module):
         return representation_output
 
     def is_cuda(self):
-        return next(self.parameters()).data.is_cuda
+        return list(self.parameters())[-1].data.is_cuda
 
     def update_use_gpu(self, new_use_gpu):
         self.use_gpu = new_use_gpu
