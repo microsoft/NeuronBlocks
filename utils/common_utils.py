@@ -12,6 +12,7 @@ import time
 import tempfile
 import subprocess
 import hashlib
+from .exceptions import ConfigurationError
 
 def log_set(log_path, console_level='INFO', console_detailed=False, disable_log_file=False):
     """
@@ -53,7 +54,10 @@ def dump_to_pkl(obj, pkl_path):
 def load_from_json(json_path):
     data = None
     with open(json_path, 'r', encoding='utf-8') as f:
-        data = json.loads(f.read())
+        try:
+            data = json.loads(f.read())
+        except Exception as e:
+            raise ConfigurationError("%s is not a legal JSON file, please check your JSON format!" % json_path)
     logging.debug("%s loaded!" % json_path)
     return data
 
