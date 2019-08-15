@@ -13,6 +13,8 @@ from losses import *
 
 from LearningMachine import LearningMachine
 
+import torch
+import numpy as np
 
 def main(params):
     conf = ModelConf("test", params.conf_path, version, params, mode=params.mode)
@@ -37,8 +39,6 @@ def main(params):
     lm.load_model(conf.previous_model_path)
 
     lm.model.eval()
-    import torch
-    import numpy as np
     export_onnx_model = True
     export_onnx_input_data = True
     if export_onnx_model:
@@ -54,8 +54,10 @@ def main(params):
         answer_len = torch.from_numpy(np.ones(30, dtype=int) * 100).to(device)
         target_len = torch.from_numpy(np.ones(30, dtype=int)).to(device)
 
+    # verified on torch 1.2.0;
     torch.onnx.export(lm.model, (query_word, answer_word, question_len, answer_len, target_len), "export/from_pytorch_10.onnx", input_names=['query_word', 'answer_word', 'question_len', 'answer_len', 'target_len'], output_names=["logits"], aten=False,
         operator_export_type=torch.onnx.OperatorExportTypes.ONNX, verbose=True, _retain_param_name=True, opset_version=9, do_constant_folding=True)
+
     logging.info('DONE!')
 
 
