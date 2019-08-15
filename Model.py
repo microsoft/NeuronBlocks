@@ -346,7 +346,7 @@ class Model(nn.Module):
         logging.debug("Topological sequence of nodes: %s" % (",".join(topological_list)))
         return topological_list
 
-    def forward(self, *param_list):
+    def forward(self, query_word, answer_word, question_len, answer_len, target_len):
         """
 
         Args:
@@ -374,6 +374,7 @@ class Model(nn.Module):
         Returns:
 
         """
+        param_list = [query_word, answer_word, question_len, answer_len, target_len]
         inputs, lengths = transform_tensors2params(self.inputs_desc, self.length_desc, param_list)
 
         representation = dict()
@@ -402,7 +403,7 @@ class Model(nn.Module):
         representation_output = dict()
         for single_output_layer_id in self.output_layer_id:
             representation_output[single_output_layer_id] = representation[single_output_layer_id]
-        return representation_output
+        return representation_output['output']
 
     def is_cuda(self):
         return list(self.parameters())[-1].data.is_cuda
