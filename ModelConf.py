@@ -483,7 +483,7 @@ class ModelConf(object):
         self.loss = BaseLossConf.get_conf(**self.loss)
 
         if 'auc' in self.metrics and ProblemTypes[self.problem_type] == ProblemTypes.classification:
-            self.pos_label - self.positive_label
+            self.pos_label = self.positive_label
 
     def configurate_cache(self):
         # whether use cache
