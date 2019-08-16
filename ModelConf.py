@@ -165,37 +165,7 @@ class ModelConf(object):
         architecture = ConstantStaticItems.add_item('architecture')
         loss = ConstantStaticItems.add_item('loss', use_default=True, default=None)
         metrics = ConstantStaticItems.add_item('metrics', use_default=True, default=None)
-    '''
-    def get_item(self, keys, default=None, use_default=False):
-        """
-        Args:
-            keys:
-            default: if some key is not found and default is None, we would raise an Exception, except that use_default is True
-            use_default: if you really want to set default to None, set use_default=True
 
-        Returns:
-
-        """
-        item = self.conf
-        valid_keys = []
-        try:
-            for key in keys:
-                item = item[key]
-                valid_keys.append(key)
-        except:
-            error_keys = copy.deepcopy(valid_keys)
-            error_keys.append(key)
-            if default is None and use_default is False:
-                raise ConfigurationError(
-                    "The configuration file %s is illegal. There should be an item configuration[%s], "
-                    "but the item %s is not found." % (self.conf_path, "][".join(error_keys), key))
-            else:
-                # print("configuration[%s] is not found in %s, use default value %s" %
-                #               ("][".join(error_keys), self.conf_path, repr(default)))
-                item = default
-
-        return item
-    '''
     def raise_configuration_error(self, key):
         raise ConfigurationError(
             "The configuration file %s is illegal. the item [%s] is not found." % (self.conf_path,  key))
@@ -644,14 +614,3 @@ class ModelConf(object):
     def back_up(self, params):
         shutil.copy(params.conf_path, self.save_base_dir)
         logging.info('Configuration file is backed up to %s' % (self.save_base_dir))
-
-
-if __name__ == '__main__':
-    class Temp:
-        pass
-    temp = Temp()
-    json = load_from_json('model_zoo/advanced/conf.json')
-    temp = ModelConf.Conf.load_data(temp, {'Conf' : json}, key_prefix_desc='Conf')
-    print(type(temp.use_cache))
-    #print(temp.__dict__)
-    dump_to_json(temp.__dict__, 'models/temp.json')
