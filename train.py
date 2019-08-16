@@ -380,7 +380,7 @@ if __name__ == "__main__":
     params, _ = parser.parse_known_args()
     # use for debug, remember delete
     # params.conf_path = 'configs_example/conf_debug_charemb.json'
-    params.conf_path="model_zoo/nlp_tasks/knowledge_distillation/query_binary_classifier_compression/conf_kdqbc_bilstmattn_cnn.json"
+
     assert params.conf_path, 'Please specify a configuration path via --conf_path'
     if params.pretrained_emb_path and not os.path.isabs(params.pretrained_emb_path):
         params.pretrained_emb_path = os.path.join(os.getcwd(), params.pretrained_emb_path)

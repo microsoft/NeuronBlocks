@@ -202,7 +202,7 @@ class ModelConf(object):
 
     def load_from_file(self, conf_path):
         # load file
-        self.conf = load_from_json(conf_path)
+        self.conf = load_from_json(conf_path, debug=False)
         self = self.Conf.load_data(self, {'Conf' : self.conf}, key_prefix_desc='Conf')
         self.language = self.language.lower()
         self.configurate_outputs()
@@ -368,7 +368,7 @@ class ModelConf(object):
         model_path = None
         if self.phase == 'train':
             model_path = self.pretrained_model_path
-        elif self.phase == 'test' and self.phase == 'predict':
+        elif self.phase == 'test' or self.phase == 'predict':
             model_path = self.previous_model_path
         if model_path:
             model_path_dir = os.path.dirname(model_path)
