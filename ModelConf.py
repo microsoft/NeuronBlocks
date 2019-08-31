@@ -56,7 +56,8 @@ class ConstantStaticItems(ConstantStatic):
 
     @classmethod
     def load_data(cls, obj, json, key_prefix_desc=''):
-        json = json[cls.__name__]
+        if cls.__name__ in json.keys():
+            json = json[cls.__name__]
         for key in cls.__dict__.keys():
             if not hasattr(cls.__dict__[key], 'load_data'):
                 continue
