@@ -12,6 +12,7 @@ import time
 import tempfile
 import subprocess
 import hashlib
+from .exceptions import ConfigurationError
 
 def log_set(log_path, console_level='INFO', console_detailed=False, disable_log_file=False):
     """
@@ -38,29 +39,36 @@ def log_set(log_path, console_level='INFO', console_detailed=False, disable_log_
     logging.getLogger().addHandler(console)
 
 
-def load_from_pkl(pkl_path):
+def load_from_pkl(pkl_path, debug=True):
     with open(pkl_path, 'rb') as fin:
         obj = pkl.load(fin)
-    logging.debug("%s loaded!" % pkl_path)
+    if debug:
+        logging.debug("%s loaded!" % pkl_path)
     return obj
 
 
-def dump_to_pkl(obj, pkl_path):
+def dump_to_pkl(obj, pkl_path, debug=True):
     with open(pkl_path, 'wb') as fout:
         pkl.dump(obj, fout, protocol=pkl.HIGHEST_PROTOCOL)
-    logging.debug("Obj dumped to %s!" % pkl_path)
+    if debug:
+        logging.debug("Obj dumped to %s!" % pkl_path)
 
-def load_from_json(json_path):
+def load_from_json(json_path, debug=True):
     data = None
     with open(json_path, 'r', encoding='utf-8') as f:
-        data = json.loads(f.read())
-    logging.debug("%s loaded!" % json_path)
+        try:
+            data = json.loads(f.read())
+        except Exception as e:
+            raise ConfigurationError("%s is not a legal JSON file, please check your JSON format!" % json_path)
+    if debug:
+        logging.debug("%s loaded!" % json_path)
     return data
 
-def dump_to_json(obj, json_path):
+def dump_to_json(obj, json_path, debug=True):
     with open(json_path, 'w', encoding='utf-8') as f:
         f.write(json.dumps(obj))
-    logging.debug("Obj dumped to %s!" % json_path)
+    if debug:
+        logging.debug("Obj dumped to %s!" % json_path)
 
 def get_trainable_param_num(model):
     """ get the number of trainable parameters
