@@ -150,7 +150,7 @@ Anyone who are familiar with are highly encouraged to contribute code.
 * Multi-Task Training Support 
 
 # Reference
-**NeuronBlocks -- Building Your NLP DNN Models Like Playing Lego**, at https://arxiv.org/abs/1904.09535.
+**NeuronBlocks -- Building Your NLP DNN Models Like Playing Lego. EMNLP 2019**, at https://arxiv.org/abs/1904.09535.
 ```
 @article{gong2019neuronblocks,
   title={NeuronBlocks--Building Your NLP DNN Models Like Playing Lego},
