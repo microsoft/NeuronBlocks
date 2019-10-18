@@ -285,6 +285,7 @@ class ModelConf(object):
                 if self.file_columns is None:
                     self.raise_configuration_error('file_columns')
             if self.phase == 'predict':
+                self.file_columns, self.predict_file_columns = self.file_header, self.predict_file_header
                 if self.file_columns is None and self.predict_file_columns is None:
                     self.raise_configuration_error('predict_file_columns')
                 if self.file_columns and self.predict_file_columns is None:
