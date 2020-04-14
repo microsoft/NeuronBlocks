@@ -114,8 +114,9 @@
     },
     {
         "layer_id": "match",
-        "layer": "Expand_plus",
+        "layer": "Combination2D",
         "conf": {
+            "operations": ["add"]
         },
         "inputs": ["s1_conv_1", "s2_conv_1"]
     },
