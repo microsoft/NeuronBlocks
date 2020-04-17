@@ -10,6 +10,7 @@ import copy
 from block_zoo.BaseLayer import BaseLayer, BaseConf
 from utils.DocInherit import DocInherit
 from utils.common_utils import transfer_to_gpu
+from utils.exceptions import ConfigurationError
 
 
 class InteractionConf(BaseConf):
