@@ -17,11 +17,11 @@ class TransformerConf(BaseConf):
     Args:
         attention (str): attention name
         attention_conf (dict): configurations of attention
-        layernorm1 (str): layernorm1 name
+        layernorm_1 (str): layernorm1 name
         layernorm1_conf (dict): configurations of layernorm1
         mlp (str): mlp name
         mlp_conf (dict): configuration of mlp
-        layernorm2 (str): layernorm2 name
+        layernorm_2 (str): layernorm2 name
         layernorm2_conf (dict): configurations of layernorm2
         n_layer (int) layer num of transformer
 
