@@ -6,10 +6,10 @@
     "use_cache": false,
     "dataset_type": "classification",
     "data_paths": {
-      "train_data_path": "/mnt/confignfs-data/NeuronBlocks_v-bzhang/qa_corpus/nb_qp_train_data.tsv",
-      "valid_data_path": "/mnt/confignfs-data/NeuronBlocks_v-bzhang/qa_corpus/nb_qp_dev_data.tsv",
-      "test_data_path": "/mnt/confignfs-data/NeuronBlocks_v-bzhang/qa_corpus/nb_qp_test_data.tsv",
-      "pre_trained_emb": "/mnt/confignfs-data/NeuronBlocks_v-bzhang/dataset/GloVe/glove.840B.300d.txt"
+      "train_data_path": "/data/data6/v-bzhang/neuralBlocks/qa_corpus/nb_qp_train_data.tsv",
+      "valid_data_path": "/data/data6/v-bzhang/neuralBlocks/qa_corpus/nb_qp_dev_data.tsv",
+      "test_data_path": "/data/data6/v-bzhang/neuralBlocks/qa_corpus/nb_qp_test_data.tsv",
+      "pre_trained_emb": "/data/data6/v-bzhang/neuralBlocks/glove.840B.300d.txt"
     },
     "file_with_col_header": true,
     "add_start_end_for_seq": true,

@@ -358,7 +358,7 @@ def get_vocab_info(conf, problem, emb_matrix):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Training')
-    parser.add_argument("--automl", type=bool, default=False, action='store_true', help="whether autoML will be used (rely on NNI)")
+    parser.add_argument("--automl", default=False, action='store_true', help="whether autoML will be used (rely on NNI)")
     parser.add_argument("--conf_path", type=str, help="configuration path")
     parser.add_argument("--train_data_path", type=str)
     parser.add_argument("--valid_data_path", type=str)

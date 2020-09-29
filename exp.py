@@ -4,6 +4,7 @@ import os
 import sys
 import yaml
 import argparse
+import nni
 
 
 def parser():
@@ -15,7 +16,7 @@ def parser():
 
 
 if __name__ == '__main__':
-    args = parse()
+    args = parser()
     exp = Experiment()
     # exp.stop_experiment()
     exp.start_experiment(args.config_file, port=args.port)

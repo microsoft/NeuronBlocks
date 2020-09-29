@@ -1,6 +1,6 @@
 authorName: default
 experimentName: lstm
-trialConcurrency: 3
+trialConcurrency: 1
 maxExecDuration: 1000h
 maxTrialNum: 500
 # 可选项: local, remote, pai, kubeflow
