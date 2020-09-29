@@ -1,0 +1,190 @@
+{
+  "license": "Copyright (c) Microsoft Corporation. All rights reserved. Licensed under the MIT license.",
+  "tool_version": "1.1.0",
+  "model_description": "This model is used for question answer matching task, and it achieved auc: 0.7854 in WikiQACorpus test set.",
+  "inputs": {
+    "use_cache": false,
+    "dataset_type": "classification",
+    "data_paths": {
+      "train_data_path": "/mnt/confignfs-data/NeuronBlocks_v-bzhang/qa_corpus/nb_qp_train_data.tsv",
+      "valid_data_path": "/mnt/confignfs-data/NeuronBlocks_v-bzhang/qa_corpus/nb_qp_dev_data.tsv",
+      "test_data_path": "/mnt/confignfs-data/NeuronBlocks_v-bzhang/qa_corpus/nb_qp_test_data.tsv",
+      "pre_trained_emb": "/mnt/confignfs-data/NeuronBlocks_v-bzhang/dataset/GloVe/glove.840B.300d.txt"
+    },
+    "file_with_col_header": true,
+    "add_start_end_for_seq": true,
+    "file_header": {
+      "question_text": 0,
+      "passage_text": 1,
+      "label":  2
+    },
+    "model_inputs": {
+      "question": ["question_text"],
+      "passage": ["passage_text"]
+    },
+    "target": ["label"]
+  },
+  "outputs":{
+    "save_base_dir": "models_wikiqa_matchatt/",
+    "model_name": "model.nb",
+    "train_log_name": "train.log",
+    "test_log_name": "test.log",
+    "predict_log_name": "predict.log",
+    "predict_fields": ["prediction"],
+    "predict_output_name": "predict.tsv"
+  },
+  "training_params": {
+    "vocabulary": {
+      "min_word_frequency": 1
+    },
+    "optimizer": {
+      "name": "Adam",
+      "params": {
+        "lr": 0.002
+      }
+    },
+    "lr_decay": 1,
+    "minimum_lr": 0.0001,
+    "epoch_start_lr_decay": 3,
+    "steps_per_validation": 50,
+    "use_gpu": true,
+    "batch_size": 128,
+    "batch_num_to_show_results": 100,
+    "max_epoch": 10,
+    "valid_times_per_epoch": 5,
+    "max_lengths": {
+        "query": 50,
+        "passage": 200
+    },
+    "cpu_num_workers": 4
+  },
+  "architecture":[
+    {
+        "layer": "Embedding",
+        "conf": {
+          "word": {
+            "cols": ["question_text", "passage_text"],
+            "dim": 300,
+            "fix_weight": true,
+            "dropout": 0
+          }
+        }
+    },
+    {
+        "layer_id": "query_dropout",
+        "layer": "Dropout",
+        "conf": {
+            "dropout": 0.1
+        },
+        "inputs": ["question"]
+    },
+    {
+        "layer_id": "passage_dropout",
+        "layer": "Dropout",
+        "conf": {
+            "dropout": 0.1
+        },
+        "inputs": ["passage"]
+    },
+    {
+        "layer_id": "query_1",
+        "layer": "BiLSTM",
+        "conf": {
+            "hidden_dim": 128,
+            "dropout": 0.1,
+            "num_layers": 2
+        },
+        "inputs": ["query_dropout"]
+    },
+	{
+        "layer_id": "passage_1",
+        "layer": "BiLSTM",
+        "conf": {
+            "hidden_dim": 128,
+            "dropout": 0.1,
+            "num_layers": 2
+        },
+        "inputs": ["passage_dropout"]
+    },
+	{
+        "layer_id": "query_matched",
+        "layer": "MatchAttention",
+        "conf": {
+        },
+        "inputs": ["query_dropout", "passage_dropout"]
+    },
+    {
+        "layer_id": "passage_matched",
+        "layer": "MatchAttention",
+        "conf": {
+        },
+        "inputs": ["passage_dropout", "query_dropout"]
+    },
+	{
+        "layer_id": "query_combined",
+        "layer": "Combination",
+        "conf": {
+          "operations": ["origin"]
+        },
+        "inputs": ["query_1","query_matched"]
+    },
+    {
+        "layer_id": "passage_combined",
+        "layer": "Combination",
+        "conf": {
+          "operations": ["origin"]
+        },
+        "inputs": ["passage_1","passage_matched"]
+    },
+    {
+        "layer_id": "query_linear_att",
+        "layer": "Pooling",
+        "conf": {
+          "pool_axis": 1,
+          "pool_type": "max"
+        },
+        "inputs": ["query_combined"]
+    },
+    {
+        "layer_id": "passage_linear_att",
+        "layer": "Pooling",
+        "conf": {
+          "pool_axis": 1,
+          "pool_type": "max"
+        },
+        "inputs": ["passage_combined"]
+    },
+    {
+        "layer_id": "comb",
+        "layer": "Combination",
+        "conf": {
+          "operations": ["origin"]
+        },
+        "inputs": ["query_linear_att","passage_linear_att"]
+    },
+    {
+        "output_layer_flag": true,
+        "layer_id": "output",
+        "layer": "Linear",
+        "conf": {
+          "hidden_dim": [128,2],
+          "activation": "PReLU",
+          "last_hidden_activation": false
+        },
+        "inputs": ["comb"]
+    }
+  ],
+  "loss": {
+    "losses": [
+      {
+        "type": "CrossEntropyLoss",
+        "conf": {
+          "weight": [0.4,0.6],
+          "size_average": true
+        },
+        "inputs": ["output","label"]
+      }
+    ]
+  },
+  "metrics": ["auc","accuracy"]
+}

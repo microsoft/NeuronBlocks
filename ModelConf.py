@@ -12,12 +12,16 @@ import torch
 import logging
 import shutil
 
+import nni
+
 from losses.BaseLossConf import BaseLossConf
 #import traceback
 from settings import LanguageTypes, ProblemTypes, TaggingSchemes, SupportedMetrics, PredictionTypes, DefaultPredictionFields, ConstantStatic
 from utils.common_utils import log_set, prepare_dir, md5, load_from_json, dump_to_json
 from utils.exceptions import ConfigurationError
 import numpy as np
+import torch
+import random
 
 class ConstantStaticItems(ConstantStatic):
     @staticmethod
@@ -174,6 +178,11 @@ class ModelConf(object):
     def load_from_file(self, conf_path):
         # load file
         self.conf = load_from_json(conf_path, debug=False)
+
+        if self.params.automl:
+            from exp import get_hyperparameters
+            self.conf = get_hyperparameters(self.conf)
+
         self = self.Conf.load_data(self, {'Conf' : self.conf}, key_prefix_desc='Conf')
         self.language = self.language.lower()
         self.configurate_outputs()
