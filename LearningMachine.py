@@ -328,8 +328,6 @@ class LearningMachine(object):
                         renew_flag = best_result != new_result
                         best_result = new_result
 
-                        # import ipdb; ipdb.set_trace()
-
                         if renew_flag and self.conf.test_data_path is not None:
                             self.evaluate(test_data, test_length, test_target,
                                 self.conf.input_types, self.evaluator, loss_fn, pad_ids=None, phase="test", epoch=epoch)
