@@ -11,8 +11,6 @@ import random
 import codecs
 import pickle as pkl
 
-import nni
-
 from utils.common_utils import dump_to_pkl, load_from_pkl, get_param_num, get_trainable_param_num, \
     transfer_to_gpu, transform_params2tensors, get_layer_class, load_from_json, dump_to_json
 from utils.philly_utils import HDFSDirectTransferer, open_and_move, convert_to_tmppath, \
@@ -56,6 +54,8 @@ class LearningMachine(object):
         self.phase = phase
         self.use_gpu = use_gpu
         self.automl = automl
+        if self.automl:
+            import nni
 
         # if it is a 2-class classification problem, figure out the real positive label
         # CAUTION: multi-class classification
