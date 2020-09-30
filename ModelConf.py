@@ -12,10 +12,7 @@ import torch
 import logging
 import shutil
 
-import nni
-
 from losses.BaseLossConf import BaseLossConf
-#import traceback
 from settings import LanguageTypes, ProblemTypes, TaggingSchemes, SupportedMetrics, PredictionTypes, DefaultPredictionFields, ConstantStatic
 from utils.common_utils import log_set, prepare_dir, md5, load_from_json, dump_to_json
 from utils.exceptions import ConfigurationError

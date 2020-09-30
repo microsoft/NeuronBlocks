@@ -387,9 +387,7 @@ if __name__ == "__main__":
     parser.add_argument("--debug", type=bool, default=False)
 
     params, _ = parser.parse_known_args()
-    # use for debug, remember delete
-    # params.conf_path = 'configs_example/conf_debug_charemb.json'
-
+    
     assert params.conf_path, 'Please specify a configuration path via --conf_path'
     if params.pretrained_emb_path and not os.path.isabs(params.pretrained_emb_path):
         params.pretrained_emb_path = os.path.join(os.getcwd(), params.pretrained_emb_path)

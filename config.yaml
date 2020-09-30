@@ -19,5 +19,6 @@ tuner:
 trial:
   command: pip install -r requirements.txt && python train.py --conf_path lstm_base.json --automl
   codeDir: .
+  gpuNum: 1
 localConfig:
   useActiveGpu: true

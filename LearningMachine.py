@@ -54,8 +54,6 @@ class LearningMachine(object):
         self.phase = phase
         self.use_gpu = use_gpu
         self.automl = automl
-        if self.automl:
-            import nni
 
         # if it is a 2-class classification problem, figure out the real positive label
         # CAUTION: multi-class classification
@@ -338,6 +336,7 @@ class LearningMachine(object):
             lr_scheduler.step()
             epoch += 1
         if self.automl:
+            import nni
             nni.report_final_result(float(best_result))
 
     def test(self, loss_fn, test_data_path=None, predict_output_path=None):
@@ -627,6 +626,7 @@ class LearningMachine(object):
             if phase == 'valid':
                 cur_result = evaluator.get_first_metric_result()
                 if self.automl:
+                    import nni
                     nni.report_intermediate_result(cur_result)
                 if self.evaluator.compare(cur_result, cur_best_result) == 1:
                     logging.info(
