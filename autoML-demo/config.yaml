@@ -17,7 +17,7 @@ tuner:
     parallel_optimize: True
     constant_liar_type: min
 trial:
-  command: pip install -r requirements.txt && python train.py --conf_path lstm_base.json --automl
+  command: pip install -r requirements.txt && python train.py --conf_path model.json --automl
   codeDir: .
   gpuNum: 1
 localConfig:
