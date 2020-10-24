@@ -1,10 +1,8 @@
 {
-    "LSTM_dropout_rate": { "_type": "uniform", "_value": [0, 0.999] },
-    "batch_size": { "_type": "choice", "_value": [32, 64, 128, 256] },
-    "learning_rate": { "_type": "loguniform", "_value": [0.0001, 0.01] },
-    "embedding_drop": { "_type": "uniform", "_value": [0, 0.999] },
-    "passage_drop": { "_type": "uniform", "_value": [0, 0.999] },
-    "query_drop": { "_type": "uniform", "_value": [0, 0.999] },
-    "decay":   { "_type": "uniform", "_value": [0.95, 1] },
-    "loss_weight": { "_type": "uniform", "_value": [0.001, 0.999] }
+    "architecture.3.conf.dropout": { "_type": "uniform", "_value": [0, 0.999] },
+    "training_params.batch_size": { "_type": "choice", "_value": [32, 64, 128, 256] },
+    "training_params.optimizer.params.lr": { "_type": "loguniform", "_value": [0.0001, 0.01] },
+    "architecture.0.conf.word.dropout": { "_type": "uniform", "_value": [0, 0.999] },
+    "architecture.2.conf.dropout'": { "_type": "uniform", "_value": [0, 0.999] },
+    "training_params.lr_decay":   { "_type": "uniform", "_value": [0.95, 1] }
 }

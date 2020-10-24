@@ -20,9 +20,3 @@ if __name__ == '__main__':
     exp = Experiment()
     # exp.stop_experiment()
     exp.start_experiment(args.config_file, port=args.port)
-
-
-def get_hyperparameters(conf):
-    parameters = nni.get_next_parameter()
-    raise NotImplementedError
-    return conf
