@@ -744,7 +744,7 @@ Here are some instructions about the files mentioned above.
 以下是之前提到文件的一些说明。
 
 * `config.yaml`：在此文件中，指定了基本的实验设置，包括实验名称，作者名称，要使用的调参算法以及开启实验的命令。用户还可以进行一些额外的设置，例如一次实验可以使用多少个GPU。
-* `search_space.json`：自动调参算法将在此文件中指定的范围内寻找超参数。用户可以根据经验为搜索的每个超参数设置先验分布来加快搜索。
+* `search_space.json`：自动调参算法将在此文件中指定的范围内寻找超参数。用户可以根据经验为搜索的每个超参数设置先验分布来加快搜索。search space文件里定义的变量通过一定的格式和描述结构的json文件中的变量进行关联。举个例子，如果需要调整 json 文件中的 `architecture['training_params']['batch_size']`，在 search_space 中的变量名应该是 `training_params.batch_size`。通过 `.` 连接访问希望调整的变量路径来关联描述模型结构的 json 文件和搜索空间中的变量。
 * `exp.py`：函数 `get_hyperparameters` 接受来自 `model.json` 的模型作为参数，并从 NNI 获取新的超参数。模型中的某些超参数需要被手动替换为新的。
 
 设置完成后，只需通过 `python3 exp.py --config_file CONFIG_FILE --port PORT` 即可启动实验。
