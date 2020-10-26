@@ -745,7 +745,7 @@ Before launching an AutoML experiment, it is essential to specify the search spa
 Here are some instructions about the files mentioned above. 
 
 * `config.yaml`: In this file, basic experiment settings are specified, including experiment name, author name, which tuner to use, and how to start a trial. Users can also do some extra settings, like how many GPUs are available for one trial.
-* `search_space.json`: Tuners are going to find hyperparameters within the range specified in this file. Users can set the prior distribution empirically for every hyperparameter searched to speed up the HPO process.
+* `search_space.json`: Tuners are going to find hyperparameters within the range specified in this file. Users can set the prior distribution empirically for every hyperparameter searched to speed up the HPO process. The names of tuning variables should follow the pattern to align with the architecture described in json file. Here is an example, if you want to tune `architecture['training_params']['batch_size']` automatically, the variable name in `search_space.json` should be `training_params.batch_size`. In a word, concatenate variable paths with dot to map from search space to architecture in json file.
 * `exp.py`: Function `get_hyperparameters` accepts the model from `model.json` as a parameter and get new hyperparameters from NNI. Some hyperparameters in the model are replaced by the new ones manually.
 		
 After setting up, an experiment can be launched simply by `python3 exp.py --config_file CONFIG_FILE --port PORT`.
