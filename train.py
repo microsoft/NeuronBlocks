@@ -1,6 +1,8 @@
 # Copyright (c) Microsoft Corporation. All rights reserved.
 # Licensed under the MIT license.
 
+import torch
+import torch.nn as nn
 from settings import ProblemTypes, version, Setting as st
 
 import os
@@ -11,8 +13,6 @@ import time
 import numpy as np
 import copy
 
-import torch
-import torch.nn as nn
 from ModelConf import ModelConf
 from problem import Problem
 from utils.common_utils import dump_to_pkl, load_from_pkl, load_from_json, dump_to_json, prepare_dir, md5
@@ -21,6 +21,9 @@ from losses import *
 from optimizers import *
 
 from LearningMachine import LearningMachine
+
+logger = logging.getLogger()
+
 
 class Cache:
     def __init__(self):
@@ -285,7 +288,7 @@ def main(params):
     if not conf.pretrained_model_path:
         vocab_info, initialize = get_vocab_info(conf, problem, emb_matrix), True
   
-    lm = LearningMachine('train', conf, problem, vocab_info=vocab_info, initialize=initialize, use_gpu=conf.use_gpu)
+    lm = LearningMachine('train', conf, problem, vocab_info=vocab_info, initialize=initialize, use_gpu=conf.use_gpu, automl=params.automl)
     if conf.pretrained_model_path:
         logging.info('Loading the pretrained model: %s...' % conf.pretrained_model_path)
         lm.load_model(conf.pretrained_model_path)
@@ -355,6 +358,7 @@ def get_vocab_info(conf, problem, emb_matrix):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Training')
+    parser.add_argument("--automl", default=False, action='store_true', help="whether autoML will be used (rely on NNI)")
     parser.add_argument("--conf_path", type=str, help="configuration path")
     parser.add_argument("--train_data_path", type=str)
     parser.add_argument("--valid_data_path", type=str)
@@ -362,25 +366,28 @@ if __name__ == "__main__":
     parser.add_argument("--pretrained_emb_path", type=str)
     parser.add_argument("--pretrained_emb_type", type=str, default='glove', help='glove|word2vec|fasttext')
     parser.add_argument("--pretrained_emb_binary_or_text", type=str, default='text', help='text|binary')
-    parser.add_argument("--involve_all_words_in_pretrained_emb", type=bool, default=False, help='By default, only words that show up in the training data are involved.')
+    parser.add_argument("--involve_all_words_in_pretrained_emb", type=bool, default=False,
+                        help='By default, only words that show up in the training data are involved.')
     parser.add_argument("--pretrained_model_path", type=str, help='load pretrained model, and then finetune it.')
-    parser.add_argument("--cache_dir", type=str, help='where stores the built problem.pkl where there are dictionaries like word2id, id2word. CAUTION: if there is a previous model, the dictionaries would be loaded from os.path.dir(previous_model_path)/.necessary_cache/problem.pkl')
+    parser.add_argument("--cache_dir", type=str,
+                        help='where stores the built problem.pkl where there are dictionaries like word2id, id2word. CAUTION: if there is a previous model, the dictionaries would be loaded from os.path.dir(previous_model_path)/.necessary_cache/problem.pkl')
     parser.add_argument("--model_save_dir", type=str, help='where to store models')
-    parser.add_argument("--predict_output_path", type=str, help='specify another prediction output path, instead of conf[outputs][save_base_dir] + conf[outputs][predict_output_name] defined in configuration file')
-    parser.add_argument("--log_dir", type=str, help='If not specified, logs would be stored in conf_bilstmlast.json/outputs/save_base_dir')
+    parser.add_argument("--predict_output_path", type=str,
+                        help='specify another prediction output path, instead of conf[outputs][save_base_dir] + conf[outputs][predict_output_name] defined in configuration file')
+    parser.add_argument("--log_dir", type=str,
+                        help='If not specified, logs would be stored in conf_bilstmlast.json/outputs/save_base_dir')
     parser.add_argument("--make_cache_only", type=bool, default=False, help='make cache without training')
     parser.add_argument("--max_epoch", type=int, help='maximum number of epochs')
     parser.add_argument("--batch_size", type=int, help='batch_size of each gpu')
     parser.add_argument("--learning_rate", type=float, help='learning rate')
     parser.add_argument("--mode", type=str, default='normal', help='normal|philly')
-    parser.add_argument("--force", type=bool, default=False, help='Allow overwriting if some files or directories already exist.')
+    parser.add_argument("--force", type=bool, default=True,
+                        help='Allow overwriting if some files or directories already exist.')
     parser.add_argument("--disable_log_file", type=bool, default=False, help='If True, disable log file')
     parser.add_argument("--debug", type=bool, default=False)
 
     params, _ = parser.parse_known_args()
-    # use for debug, remember delete
-    # params.conf_path = 'configs_example/conf_debug_charemb.json'
-
+    
     assert params.conf_path, 'Please specify a configuration path via --conf_path'
     if params.pretrained_emb_path and not os.path.isabs(params.pretrained_emb_path):
         params.pretrained_emb_path = os.path.join(os.getcwd(), params.pretrained_emb_path)
