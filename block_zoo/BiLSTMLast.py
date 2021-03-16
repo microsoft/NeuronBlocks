@@ -76,7 +76,7 @@ class BiLSTMLast(BaseLayer):
         string = string.index_select(0, idx_sort)
 
         # Handling padding in Recurrent Networks
-        string_packed = nn.utils.rnn.pack_padded_sequence(string, str_len, batch_first=True)
+        string_packed = nn.utils.rnn.pack_padded_sequence(string, str_len.cpu(), batch_first=True)
         self.lstm.flatten_parameters()
         string_output, (hn, cn) = self.lstm(string_packed)  # seqlen x batch x 2*nhid
 
