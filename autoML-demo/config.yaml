@@ -1,0 +1,24 @@
+authorName: default
+experimentName: lstm
+trialConcurrency: 1
+maxExecDuration: 1000h
+maxTrialNum: 500
+# 可选项: local, remote, pai, kubeflow
+trainingServicePlatform: local
+searchSpacePath: ./lstm_search_space.json
+# 可选项: true, false, 默认值: false
+useAnnotation: false
+# 可选项: true, false, 默认值: false
+multiThread: false
+tuner:
+  builtinTunerName: TPE
+  classArgs:
+    optimize_mode: maximize
+    parallel_optimize: True
+    constant_liar_type: min
+trial:
+  command: pip install -r requirements.txt && python train.py --conf_path model.json --automl
+  codeDir: .
+  gpuNum: 1
+localConfig:
+  useActiveGpu: true

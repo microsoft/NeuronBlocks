@@ -3,7 +3,6 @@
 
 import torch
 import torch.nn as nn
-
 import os
 import time
 import numpy as np
@@ -29,7 +28,7 @@ from losses.CRFLoss import CRFLoss
 
 
 class LearningMachine(object):
-    def __init__(self, phase, conf, problem, vocab_info=None, initialize=True, use_gpu=False, **kwargs):
+    def __init__(self, phase, conf, problem, vocab_info=None, initialize=True, use_gpu=False, automl=False, **kwargs):
         if initialize is True:
             assert vocab_info is not None
             self.model = Model(conf, problem, vocab_info, use_gpu)
@@ -54,6 +53,7 @@ class LearningMachine(object):
         self.problem = problem
         self.phase = phase
         self.use_gpu = use_gpu
+        self.automl = automl
 
         # if it is a 2-class classification problem, figure out the real positive label
         # CAUTION: multi-class classification
@@ -335,6 +335,9 @@ class LearningMachine(object):
                 del data_batches, length_batches, target_batches
             lr_scheduler.step()
             epoch += 1
+        if self.automl:
+            import nni
+            nni.report_final_result(float(best_result))
 
     def test(self, loss_fn, test_data_path=None, predict_output_path=None):
         if test_data_path is None:
@@ -622,6 +625,9 @@ class LearningMachine(object):
 
             if phase == 'valid':
                 cur_result = evaluator.get_first_metric_result()
+                if self.automl:
+                    import nni
+                    nni.report_intermediate_result(cur_result)
                 if self.evaluator.compare(cur_result, cur_best_result) == 1:
                     logging.info(
                         'Cur result %f is better than previous best result %s, renew the best model now...' % (cur_result, "%f" % cur_best_result if cur_best_result else "None"))
